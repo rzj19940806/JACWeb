@@ -1,0 +1,146 @@
+@{
+    ViewBag.Title = "_BBdbR_GetItemBase》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var WcCd = GetQuery('WcCd');//工位编号
+    var WcNm = GetQuery('WcNm');//工位名称
+    $(function () {
+        BindDropItem("#GetItemTy", "GetItemTy");
+        $('#WcCd').val(WcCd);
+        $('#WcNm').val(WcNm);
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_GetItemBase/SetGetItemForm", { KeyValue: KeyValue }, function (data) {
+                var GetItemType = data.GetItemType;
+                if (GetItemType == "0") {//定性
+                    document.getElementById("getitemuplimit").style.display = "none";
+                    document.getElementById("getitemvalue").style.display = "none";
+                }
+                else {
+                    document.getElementById("getitemuplimit").style.display = "";
+                    document.getElementById("getitemvalue").style.display = "";
+                }
+                SetWebControls(data);
+                document.getElementById("GetItemCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_GetItemBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("GetItemCd",data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+    function Show1() {
+        var GetItemType = $("#GetItemType").val();
+        if (GetItemType == "0") {//定性
+            document.getElementById("getitemuplimit").style.display = "none";
+            document.getElementById("getitemvalue").style.display = "none";
+        }
+        else {          
+            document.getElementById("getitemuplimit").style.display = "";
+            document.getElementById("getitemvalue").style.display = "";
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style=" height :30px">
+            <th class='formTitle'>采集项编号：</th>
+            <td class='formValue'>
+                <input id="GetItemCd" maxlength=50 type="text" class="txt required checkdata" err="采集项编号" checkexpession="NotNull" datacol="yes" />
+            </td>
+            <th class='formTitle'>采集项名称：</th>
+            <td class='formValue'>
+                <input id="GetItemNm" maxlength=50 type="text" class="txt required checkdata" err="采集项名称" checkexpession="NotNull" datacol="yes" />
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>工位编号：</th>
+            <td class='formValue'>
+                <input id="WcCd" maxlength=50 type="text" class="txt required checkdata" err="工位编号" checkexpession="NotNull" datacol="yes" />
+            </td>
+            <th class='formTitle'>工位名称：</th>
+            <td class='formValue'>
+                <input id="WcNm" maxlength=50 type="text" class="txt required checkdata" err="工位名称" checkexpession="NotNull" datacol="yes" />
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>采集类别：</th>
+            <td class='formValue' colspan="3">
+                <select id="GetItemType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="采集类别" onclick="Show1()">
+                    <option value="0">定性</option>
+                    <option value="1">定量</option>
+                </select>
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>采集方式：</th>
+            <td class='formValue' colspan="3">
+                <select id="GetItemTy" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="采集方式" onclick=""></select>
+            </td>
+        </tr>
+        <tr id="getitemuplimit" style=" display: none; height: 30px">
+            <th class='formTitle'>采集项上限：</th>
+            <td class='formValue'>
+                <input id="GetItemUpLimit" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>采集项下限：</th>
+            <td class='formValue'>
+                <input id="GetItemLowLimit" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr id="getitemvalue" style=" display: none; height: 30px">
+            <th class='formTitle'>采集项标准值：</th>
+            <td class='formValue'>
+                <input id="GetItemValue" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>采集项参数单位：</th>
+            <td class='formValue'>
+                <input id="GetItemUnit" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>采集频次：</th>
+            <td class='formValue' colspan="3">
+                <input id="GetItemFq" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue' colspan="3">
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        <tr style=" height :30px">
+            <th class='formTitle'>采集项说明：</th>
+            <td class='formValue' colspan="3">
+                <input id="GetItemExplain" maxlength=200 type="text" class="txt" row="3" />
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>

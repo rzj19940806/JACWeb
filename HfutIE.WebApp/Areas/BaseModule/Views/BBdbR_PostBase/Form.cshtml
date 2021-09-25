@@ -1,0 +1,110 @@
+@{
+    ViewBag.Title = "_PostBaseInformation》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    
+    var KeyValue = GetQuery('KeyValue');//主键
+    var WcId = GetQuery('WcId');//主键
+    $(function () {
+        BindDropItem("#PostType", "PostType", "==全部==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_PostBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("PostCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        if (!GetQuery('KeyValue')) {
+            postData.WcId = WcId;
+        }
+        AjaxJson("/BaseModule/BBdbR_PostBase/SubmitForm?KeyValue=" + escape(KeyValue), postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+
+        <tr>
+            <th class='formTitle'>岗位编号：</th>
+            <td class='formValue'>
+                <input id="PostCd" maxlength=100 type="text" class="txt required" datacol="yes" err="岗位编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>岗位名称：</th>
+            <td class='formValue'>
+                <input id="PostNm" maxlength=100 type="text" class="txt required" datacol="yes" err="岗位名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">岗位类型：</th>
+            <td class='formValue'>
+                <select id="PostType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="岗位类型"></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>岗位位置：</th>
+            <td class='formValue'>
+                <input id="PostPosition" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        <tr style="display: none">
+            <th class='formTitle'>岗位主键：</th>
+            <td class='formValue'>
+                <input id="PostId" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>工位主键：</th>
+            <td class='formValue'>
+                <input id="WcId" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" display:none">
+            <th class='formTitle'>开始：</th>
+            <td class='formValue'>
+                <input id="StartPoint" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>预警：</th>
+            <td class='formValue'>
+                <input id="PreAlarmPoint" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" display:none">
+            <th class='formTitle'>结束：</th>
+            <td class='formValue'>
+                <input id="EndPoint" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" height:50px">
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

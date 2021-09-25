@@ -1,0 +1,490 @@
+@{
+    ViewBag.Title = "信息推送基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetTree();
+        GetGrid();       
+        GetGrid1();
+        GetGrid2();
+        GetGrid3();
+        Tabchange('check1');
+    })
+    //新增时树节点变量
+    var InforTypID = "";
+    var Name = "";
+    //配置用户时，选中行变量
+    var selectTycd = "";
+    var selectTy = "";
+    var selectRank = "";
+    var selectTm = "";
+    var selectUnit = "";
+    var objecttype = 1;
+
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                InforTypID = item.id;            //ID
+                Name = item.text;        //名称
+                PId = item.parentnodes;      //父Id序列化后不再是parentId
+                $("#gridTable").jqGrid('setGridParam',
+                    { url: "@Url.Content("~/InformationPublishModule/Configration/GridTreepush")?InforTypID=" + escape(InforTypID), page: 1, datatype: 'json' }).trigger('reloadGrid');
+                $("#gridTable1").jqGrid('clearGridData');
+            },
+            url: "@Url.Content("~/InformationPublishModule/Configration/TreeJson")"
+        };
+        $("#ItemsTree").treeview(itemtree);
+    }
+
+    //加载推送信息基础表
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/InformationPublishModule/Configration/GridPushPageJson")",
+        datatype: "json",
+        height: $(window).height() - 470,
+        autowidth: true,
+        colModel: [
+                { label: '主键', name: 'recid', index: 'recid', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '推送类型编号', name: 'infortypcd', index: 'infortypcd', width: 0, align: 'center',sortable: true  },
+                { label: '推送类型', name: 'infortyp', index: 'infortyp', width: 0, align: 'center',sortable: true  },                
+                { label: '推送等级', name: 'pushrank', index: 'pushrank', width: 0, align: 'center',sortable: true  },
+                { label: '间隔时长', name: 'intvltm', index: 'intvltm', width: 0, align: 'center',sortable: true  },
+                { label: '时长单位', name: 'tmunit', index: 'tmunit', width: 0, align: 'center',sortable: true  },
+                { label: '有效性', name: 'enabled', index: 'enabled', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: '创建时间', name: 'cretm', index: 'cretm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'crecd', index: 'crecd', width: 0, align: 'center',sortable: true ,  hidden: true },
+                { label: '创建人名称', name: 'crenm', index: 'crenm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'mdftm', index: 'mdftm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'mdfcd', index: 'mdfcd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'mdfnm', index: 'mdfnm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'rem', index: 'rem', width: 0, align: 'center', sortable: true, hidden: true  },
+        ],
+         viewrecords: true,//显示总的记录条数
+            rowNum: 30,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            //multiselect: true,
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            onSelectRow: function () {
+                InforID = GetJqGridRowValue("#gridTable", "recid");
+                selectTycd = GetJqGridRowValue("#gridTable", "infortypcd");
+                selectTy = GetJqGridRowValue("#gridTable", "infortyp");
+                selectRank = GetJqGridRowValue("#gridTable", "pushrank");
+                selectTm = GetJqGridRowValue("#gridTable", "intvltm");
+                selectUnit = GetJqGridRowValue("#gridTable", "tmunit");
+                //var Text = GetJqGridRowValue("#gridTable", "intvltm");
+                //$("#BottomTitle").html(" - " + Text);//用于显示下表的名字
+                $("#gridTable1").jqGrid('setGridParam',
+                    { url: "@Url.Content("~/InformationPublishModule/Configration/Getpushuserinfor")?selectTycd=" + selectTycd, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                $("#gridTable2").jqGrid('setGridParam',
+                    { url: "@Url.Content("~/InformationPublishModule/Configration/Getpushroleinfor")?selectTycd=" + selectTycd, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                $("#gridTable3").jqGrid('setGridParam',
+                    { url: "@Url.Content("~/InformationPublishModule/Configration/Getpushgroupinfor")?selectTycd=" + selectTycd, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            },
+        });       
+    }
+
+    //加载下方用户表格
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+            url: "",
+            datatype: "json",
+           // height: $(window).height() * 0.35,
+            height: $(window).height() - 140,
+            //height: $(window).height() - $("#gridTable").height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'recid', index: 'recid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '推送类型编号', name: 'infortypcd', index: 'infortypcd', width: 300, align: 'center', sortable: true },
+                { label: '推送类型', name: 'infortyp', index: 'infortyp', width: 300, align: 'center', sortable: true },
+                //{ label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'left', sortable: true },
+                {
+                    label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "用户";
+                        else if (cellvalue == '2') return "角色";
+                        else if (cellvalue == '3') return "群聊";                        
+                    }
+                },
+                { label: '推送对象id', name: 'objectid', index: 'objectid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '人员编号', name: 'stfcd', index: 'stfcd', width: 300, align: 'center', sortable: true },
+                { label: '人员名称', name: 'stfnm', index: 'stfnm', width: 300, align: 'center', sortable: true },
+                { label: '推送等级', name: 'pushrank', index: 'pushrank', width: 300, align: 'center', sortable: true },
+                { label: '间隔时长', name: 'intvltm', index: 'intvltm', width: 300, align: 'center', sortable: true },
+                { label: '时长单位', name: 'tmunit', index: 'tmunit', width: 300, align: 'center', sortable: true },
+                { label: '有效性', name: 'enabled', index: 'enabled', width: 100, align: 'center', sortable: true, hidden: true },
+
+            ],
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            pager: "#gridPager1",
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            loadonce: true,
+            //objecttype = 1,
+        });
+        
+    }
+
+    //加载下方角色表格
+    function GetGrid2() {
+        $("#gridTable2").jqGrid({
+            url: "",
+            datatype: "json",
+            //height: $(window).height() * 0.35,
+            height: $(window).height() - 140,
+            //height: $(window).height() - $("#gridTable").height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'recid', index: 'recid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '推送类型编号', name: 'infortypcd', index: 'infortypcd', width: 300, align: 'center', sortable: true },
+                { label: '推送类型', name: 'infortyp', index: 'infortyp', width: 300, align: 'center', sortable: true },
+                //{ label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'left', sortable: true },
+                {
+                    label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "用户";
+                        else if (cellvalue == '2') return "角色";
+                        else if (cellvalue == '3') return "群聊";
+                    }
+                },
+                { label: '推送对象id', name: 'objectid', index: 'objectid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '角色编号', name: 'code', index: 'code', width: 300, align: 'center', sortable: true },
+                { label: '角色名称', name: 'fullname', index: 'fullname', width: 300, align: 'center', sortable: true },
+                { label: '推送等级', name: 'pushrank', index: 'pushrank', width: 300, align: 'center', sortable: true },
+                { label: '间隔时长', name: 'intvltm', index: 'intvltm', width: 300, align: 'center', sortable: true },
+                { label: '时长单位', name: 'tmunit', index: 'tmunit', width: 300, align: 'center', sortable: true },
+                { label: '有效性', name: 'enabled', index: 'enabled', width: 100, align: 'center', sortable: true, hidden: true },
+
+            ],
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            pager: "#gridPager2",
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            loadonce: true,
+            //objecttype = 2,
+        });
+        
+    }
+
+    //加载下方群聊表格
+    function GetGrid3() {
+        $("#gridTable3").jqGrid({
+            url: "",
+            datatype: "json",
+            //height: $(window).height() * 0.35,
+            height: $(window).height() - 140,
+            //height: $(window).height() - $("#gridTable").height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'recid', index: 'recid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '推送类型编号', name: 'infortypcd', index: 'infortypcd', width: 300, align: 'center', sortable: true },
+                { label: '推送类型', name: 'infortyp', index: 'infortyp', width: 300, align: 'center', sortable: true },
+                //{ label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'left', sortable: true },
+                {
+                    label: '推送对象类型', name: 'objecttyp', index: 'objecttyp', width: 300, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "用户";
+                        else if (cellvalue == '2') return "角色";
+                        else if (cellvalue == '3') return "群聊";
+                    }
+                },
+                { label: '推送对象id', name: 'objectid', index: 'objectid', width: 300, align: 'center', sortable: true, hidden: true },
+                { label: '群号', name: 'qrcode', index: 'qrcode', width: 300, align: 'center', sortable: true },
+                { label: '群名称', name: 'groupchatnm', index: 'groupchatnm', width: 300, align: 'center', sortable: true },
+                { label: '推送等级', name: 'pushrank', index: 'pushrank', width: 300, align: 'center', sortable: true },
+                { label: '间隔时长', name: 'intvltm', index: 'intvltm', width: 300, align: 'center', sortable: true },
+                { label: '时长单位', name: 'tmunit', index: 'tmunit', width: 300, align: 'center', sortable: true },
+                { label: '有效性', name: 'enabled', index: 'enabled', width: 100, align: 'center', sortable: true, hidden: true },
+
+            ],
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            pager: "#gridPager3",
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            loadonce: true,
+            //objecttype = 3,
+        });
+      
+    }
+
+
+    //新增推送信息
+    function btn_addinfor() {
+        if (!!InforTypID) {
+            var url = "/InformationPublishModule/Configration/AddInfor?InforTypID=" + InforTypID + "&Name=" + Name;
+            openDialog(url, "AddInfor", "新增推送项 - " + Name, 450, 250, function (iframe) {
+                top.frames[iframe].AcceptClick();
+                windowload();
+                //Replace();
+            });
+        }
+        else {
+            alertDialog("请选择左边推送信息", 0);
+        }
+        
+    }
+    //编辑推送信息
+    function btn_editinfor() {
+        var RecId = GetJqGridRowValue("#gridTable", "recid");
+        var infortyp = GetJqGridRowValue("#gridTable", "infortyp");
+        var content = "推送项";
+        if (IsChecked(RecId, content)) {
+            var url = "/InformationPublishModule/Configration/AddInfor?RecId=" + RecId;
+            openDialog(url, "AddInfor", "编辑推送信息 - " + infortyp, 450, 250, function (iframe) {
+                top.frames[iframe].AcceptClick();
+                windowload();
+                //Replace();
+            });
+        }
+        else {
+            tipDialog("请选择一行推送信息", 0);
+        }
+    }
+    //推送信息用户配置
+    function btn_adduser() {
+        var RecId = GetJqGridRowValue("#gridTable", "recid");
+        if (IsChecked(RecId)) {
+            var url = "/InformationPublishModule/Configration/UserForm?selectTycd=" + selectTycd + "&selectTy=" + selectTy + "&selectRank=" + selectRank + "&selectTm=" + selectTm + "&selectUnit=" + selectUnit;
+            openDialog(url, "UserForm", "推送信息用户配置", 850, 600, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+        else {
+            tipDialog("请选择一行推送信息", 0);
+        }
+    }
+
+    //推送信息角色配置
+    function btn_addrole() {
+        var RecId = GetJqGridRowValue("#gridTable", "recid");
+        if (IsChecked(RecId)) {
+            var url = "/InformationPublishModule/Configration/RoleForm?selectTycd=" + selectTycd + "&selectTy=" + selectTy + "&selectRank=" + selectRank + "&selectTm=" + selectTm + "&selectUnit=" + selectUnit;
+            openDialog(url, "UserForm", "推送信息角色配置", 850, 600, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+        else {
+            tipDialog("请选择一行推送信息", 0);
+        }
+    }
+
+    //推送信息群聊配置
+    function btn_addgroup() {
+        var RecId = GetJqGridRowValue("#gridTable", "recid");
+        if (IsChecked(RecId)) {
+            var url = "/InformationPublishModule/Configration/GroupForm?selectTycd=" + selectTycd + "&selectTy=" + selectTy + "&selectRank=" + selectRank + "&selectTm=" + selectTm + "&selectUnit=" + selectUnit;
+            openDialog(url, "UserForm", "推送信息群聊配置", 850, 600, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+        else {
+            tipDialog("请选择一行推送信息", 0);
+        }
+    }
+
+    //删除推送信息
+    function btn_delete() {
+        var KeyValueuser = GetJqGridRowValue("#gridTable", "recid");       
+        if (IsDelData(KeyValueuser)) {
+            var delparm = 'KeyValueuser=' + KeyValueuser;
+            delConfig('/InformationPublishModule/Configration/DeleteInfor', delparm, KeyValueuser.split(",").length);
+            windowload();
+            //Replace();
+        }  
+        else {
+            tipDialog("请选择一行推送信息", 0);
+        }
+    }
+
+    //删除配置
+    function btn_deleteconfig() {
+        var KeyValuetable1 = GetJqGridRowValue("#gridTable1", "recid");
+        var KeyValuetable2 = GetJqGridRowValue("#gridTable2", "recid");
+        var KeyValuetable3 = GetJqGridRowValue("#gridTable3", "recid");
+        if (IsDelData(KeyValuetable1)) {
+            var delparm = 'KeyValuetable1=' + KeyValuetable1;
+            delConfig('/InformationPublishModule/Configration/Deleteconfig1', delparm, KeyValuetable1.split(",").length);
+            windowload();
+        }
+        else if (IsDelData(KeyValuetable2)) {
+            var delparm = 'KeyValuetable2=' + KeyValuetable2;
+            delConfig('/InformationPublishModule/Configration/Deleteconfig2', delparm, KeyValuetable2.split(",").length);
+            windowload();
+        }
+        else if (IsDelData(KeyValuetable3)){
+            var delparm = 'KeyValuetable3=' + KeyValuetable3;
+            delConfig('/InformationPublishModule/Configration/Deleteconfig3', delparm, KeyValuetable3.split(",").length);
+            windowload();
+        }
+        else {
+            tipDialog("请选择一行配置信息", 0);
+        }
+    }
+
+    function setType() {
+        var searchtype = $("#Condition").val();
+        if (searchtype == "1") {//查询所有
+            $("#infortypcd").hide();
+            $("#Code_s").hide();
+            $("#infortyp").hide();
+            $("#RealName_s").hide();
+            $("#infortypcd").val("");
+            $("#infortyp").val("");
+            objecttype = 1;
+        }
+        else if (searchtype == "infortypcd") {//按用户编号查询
+            $("#infortypcd").show();
+            $("#Code_s").show();
+            $("#infortyp").hide();
+            $("#RealName_s").hide();
+            $("#infortyp").val("");
+            objecttype = 2;
+        }
+        else if (searchtype == "infortyp") {//按用户名称查询
+            $("#infortypcd").hide();
+            $("#Code_s").hide();
+            $("#infortyp").show();
+            $("#RealName_s").show();
+            $("#infortypcd").val("");
+            objecttype = 3;
+        }
+    }
+     //搜索
+    function btn_Search() {
+        var condition = $("#Condition").val();
+        var keywords = "";
+        if ($("#infortypcd").val() != "" && $("#infortypcd").val() != null) {
+            keywords = $("#infortypcd").val();
+        }
+        else if ($("#infortyp").val() != "" && $("#infortyp").val() != null) {
+            keywords = $("#infortyp").val();
+        }
+        else {
+            keywords = "";
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridPushInfor")?condition=" + escape(condition) + "&keywords=" + escape(keywords) , page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        $("#gridTable1").jqGrid('setGridParam', {
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridUserConfig")?condition=" + escape(condition) + "&keywords=" + escape(keywords) , page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        $("#gridTable2").jqGrid('setGridParam', {
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridRoleConfig")?condition=" + escape(condition) + "&keywords=" + escape(keywords) , page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        $("#gridTable3").jqGrid('setGridParam', {
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridGroupConfig")?condition=" + escape(condition) + "&keywords=" + escape(keywords) , page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入      
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入      
+        $("#gridTable1").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入           
+        $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入          
+        $("#gridTable3").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
+        
+    }
+</script>
+<!--工具栏-->
+<div id="layout" class="layout">
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                推送信息类型
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <div class="layoutPanel layout-center">
+        <div class="btnbartitle">
+            <div>
+                推送信息<span id="CenterTitle"></span>
+            </div>
+        </div>
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+            <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+                <div class="PartialButton">
+                    @Html.Partial("_PartialButton")
+                </div>
+            </div>
+            <div class="bottomline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+                <table border="0" class="form-find" style="height: 45px;">
+                    <tr>
+                        <th>
+                            搜索条件：
+                        </th>
+                        <td>
+                            <select id="Condition" onchange="setType()" class="txt" style="height: 28px;width: 150px">
+                                <option value="1">全部</option>
+                                <option value="infortypcd">推送类型编号</option>
+                                <option value="infortyp">推送类型</option>
+                            </select>
+                        </td>
+                        <th id="Code_s" style="display:none">推送类型编号：</th>
+                        <td>
+                            <input id="infortypcd" type="text" class="txt" style="width: 200px;display:none" />
+                        </td>
+                        <th id="RealName_s" style="display:none">推送类型：</th>
+                        <td>
+                            <input id="infortyp" type="text" class="txt" style="width: 200px;display:none" />
+                        </td>
+                        <td>
+                            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+        <div class="bd" style="border-bottom: none; margin: 1px;">
+            <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+                <div class="tab_list_top" style="position: absolute">
+                    <div id="Tabcheck1" class="tab_list bd actived" onclick="Tabchange('check1')">配置人员信息</div>
+                    <div id="Tabcheck2" class="tab_list bd " onclick="Tabchange('check2')">配置角色信息</div>
+                    <div id="Tabcheck3" class="tab_list bd " onclick="Tabchange('check3')">配置群聊信息</div>
+                </div>
+            </div>
+        </div>
+        <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+            <!--配置人员信息-->
+            <div id="check1" class="tabPanel">
+                <table id="gridTable1"></table>
+                <div id="gridPager1"></div>
+            </div>
+            <!--配置角色信息-->
+            <div id="check2" class="tabPanel">
+                <table id="gridTable2"></table>
+                <div id="gridPager2"></div>
+            </div>
+            <!--配置群聊信息-->
+            <div id="check3" class="tabPanel">
+                <table id="gridTable3"></table>
+                <div id="gridPager3"></div>
+            </div>
+        </div>
+    </div>
+</div>

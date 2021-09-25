@@ -1,0 +1,129 @@
+@{
+    ViewBag.Title = "数采地址信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        Show()
+        DvcList();
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_CntlAddrConf/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_CntlAddrConf/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+    //加载设备列表
+    function DvcList() {
+        AjaxJson("/BaseModule/BBdbR_CntlAddrConf/GetDvcNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#DvcId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["dvcnm"] + "</option>");
+            }
+        });
+
+    }
+    function Show() {
+        document.getElementById("Rate").style.display = "none";
+        var IsMonitoring = $("#IsMonitoring").val();
+        if (IsMonitoring == "0") {
+            document.getElementById("Rate").style.display = "none";
+        }
+        else {
+            document.getElementById("Rate").style.display = "table-row";
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        @*<tr>
+            <th class='formTitle'>工位名称：</th>
+            <td class='formValue' colspan="3">
+                <input id="WcId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>设备名称：</th>
+            <td class='formValue' colspan="3">
+                <select id="DvcId" maxlength=50 type="text" class="txt  checkdata">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>数采类型：</th>
+            <td class='formValue' colspan="3">
+                <input id="CntlType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>地址名称：</th>
+            <td class='formValue' colspan="3">
+                <input id="SingnalNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>地址值：</th>
+            <td class='formValue' colspan="3">
+                <input id="CntlAddr" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>地址描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="CntlAddrDsc" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>地址数据类型：</th>
+            <td class='formValue' colspan="3">
+                <input id="CntlDateType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>地址来源：</th>
+            <td class='formValue' colspan="3">
+                <input id="SglSource" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>是否监控：</th>
+            <td class='formValue' colspan="3">
+                <select id="IsMonitoring" maxlength=50 type="text" class="txt" onclick="Show()">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+        <tr id="Rate" style=" display :none">
+            <th class='formTitle'>监控频率：</th>
+            <td class='formValue' colspan="3">
+                <input id="MonitorRate" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        
+        <tr>
+        </tr>
+    </table>
+</form>

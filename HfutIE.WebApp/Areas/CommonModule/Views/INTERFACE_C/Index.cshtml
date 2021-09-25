@@ -1,0 +1,130 @@
+@{
+    ViewBag.Title = "INTERFACE_C";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        @*url: "@Url.Content("~/CommonModule/INTERFACE_C/ListJson")",*@
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '主键', name: 'interface_key', index: 'interface_key', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '接口编号', name: 'interface_code', index: 'interface_code', width: 0, align: 'left', sortable: true },
+                { label: '接口名称', name: 'interface_name', index: 'interface_name', width: 0, align: 'left', sortable: true },
+                { label: '接口类型', name: 'interface_type', index: 'interface_type', width: 0, align: 'left', sortable: true },
+                { label: '接口IP地址', name: 'interface_ip', index: 'interface_ip', width: 0, align: 'left', sortable: true },
+                { label: '数据库名称', name: 'database_name', index: 'database_name', width: 0, align: 'left', sortable: true },
+                { label: '用户名', name: 'user_name', index: 'user_name', width: 0, align: 'left', sortable: true },
+                { label: '密码', name: 'password', index: 'password', width: 0, align: 'left', sortable: true },
+                { label: '数据来源表名', name: 'from_table_name', index: 'from_table_name', width: 0, align: 'left', sortable: true },
+                { label: '数据去向表名', name: 'to_table_name', index: 'to_table_name', width: 0, align: 'left', sortable: true },
+                { label: '接收模式', name: 'rx_mode', index: 'rx_mode', width: 0, align: 'left', sortable: true },
+                { label: '首次接收时间', name: 'start_time', index: 'start_time', width: 0, align: 'left', sortable: true },
+                { label: '接收周期', name: 'period', index: 'period', width: 0, align: 'left', sortable: true },
+                { label: '接收周期单位', name: 'period_unit', index: 'period_unit', width: 0, align: 'left', sortable: true },
+                { label: 'frequency', name: 'frequency', index: 'frequency', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '备注', name: 'remarks', index: 'remarks', width: 0, align: 'left', sortable: true },
+                { label: 'CreateDate', name: 'CreateDate', index: 'CreateDate', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'CreateUserId', name: 'CreateUserId', index: 'CreateUserId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'CreateUserName', name: 'CreateUserName', index: 'CreateUserName', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyDate', name: 'ModifyDate', index: 'ModifyDate', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyUserId', name: 'ModifyUserId', index: 'ModifyUserId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyUserName', name: 'ModifyUserName', index: 'ModifyUserName', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve06', name: 'reserve06', index: 'reserve06', width: 0, align: 'left', sortable: true, hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //新增
+    function btn_add() {
+        var url = "/CommonModule/INTERFACE_C/Form"
+        openDialog(url, "Form", "新增接口", 770, 395, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "interface_key");
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/INTERFACE_C/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑接口", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "interface_key");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/CommonModule/INTERFACE_C/DeleteINTERFACE', delparm, KeyValue.split(",").length);
+        }
+    }
+    //接口字段配置
+    function btn_fieldmatch() {
+        var interface_key = GetJqGridRowValue("#gridTable", "interface_key");
+        var interface_code = GetJqGridRowValue("#gridTable", "interface_code");
+        var interface_name = GetJqGridRowValue("#gridTable", "interface_name");
+        if (IsChecked(interface_key)) {
+            var url = "/CommonModule/INTERFACE_FIELD/Index?interface_key=" + interface_key + "&interface_code=" + interface_code + "&interface_name=" + interface_name;
+            Dialog(url, "Index", "接口字段配置", 1000, 618, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/CommonModule/INTERFACE_C/GridPageListJson")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
+    }).trigger('reloadGrid');
+    }
+</script>
+    <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>
+                    检索条件：
+                </th>
+                <td>
+                    <select id="Condition" class="txt" style="height: 28px;width: 100px">
+                        <option value="">==全部==</option>
+                        <option value="interface_code">接口编号</option>
+                        <option value="interface_name">接口名称</option>
+                        <option value="interface_type">接口类型</option>
+                    </select>
+                </td>
+                <td id="tdsearch">
+                    <input id="keywords" type="text" class="txt" style="height: 18px;width: 180px" />
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable"></table>
+        <div id="gridPager"></div>
+    </div>

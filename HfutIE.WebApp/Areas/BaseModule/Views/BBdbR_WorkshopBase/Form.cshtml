@@ -1,0 +1,146 @@
+@{
+    ViewBag.Title = "车间基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var FacId = GetQuery('areaId');//主键
+    var StfId = GetQuery('StfId');//负责人
+    $(function () {
+        RateGradeList();
+        BindDropItem("#WorkshopTyp", "WorkShopType");
+        RateGrade()
+        InitControl();
+    })
+
+    var stfid = ''; 
+    var stfcd = '';
+    var stfnm = '';
+    var phn = '';
+
+    //加载人员列表
+    function RateGradeList() {
+        var sel = document.getElementById("StfId");
+        document.getElementById("StfId").options.length = 0;
+        AjaxJson("/BaseModule/BBdbR_WorkshopBase/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {           
+                $("#StfId").append("<option value='" + data.rows[i]["stfid"] + "' >" + data.rows[i]["stfnm"] + "</option>");
+            }
+        });
+    }
+
+
+
+    ////加载人员信息
+    function RateGrade() {
+        let StfId = $("#StfId").val();
+        AjaxJson("/BaseModule/BBdbR_WorkshopBase/GetPlineNm2?StfId=" + StfId, {}, function (data) {
+            $("#Phn").val(data.rows[0]["phn"]); 
+            stfid = data.rows[0]["stfid"];
+            stfcd = data.rows[0]["stfcd"];
+            stfnm = data.rows[0]["stfnm"];
+            phn = data.rows[0]["phn"];
+        });
+    }
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_WorkshopBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("WorkshopCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_WorkshopBase/SubmitFormWC?KeyValue=" + KeyValue + "&stfid=" + stfid + "&stfcd=" + stfcd + "&stfnm=" + stfnm + "&phn=" + phn + "&FacId=" + FacId, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("WorkshopCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">车间编号：</th>
+            <td class='formValue'>
+                <input id="WorkshopCd" maxlength=50 type="text" class="txt required" datacol="yes" err="车间编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">车间类型：</th>
+            <td class='formValue'>
+                <select id="WorkshopTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="车间类型" onclick=""></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">车间名称：</th>
+            <td class='formValue' colspan="3">
+                <input id="WorkshopNm" maxlength=50 type="text" class="txt required" datacol="yes" err="车间名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td> 
+        </tr>
+        <tr>
+            <th class='formTitle'>负责人员姓名：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="负责人员姓名" onchange="RateGrade()"> </select>
+            </td>
+            <th class='formTitle'>负责人手机号：</th>
+            <td class='formValue'>
+                <input id="Phn" maxlength=10 type="text" class="txt" readonly="readonly"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>标准在制：</th>
+            <td class='formValue'>
+                <input id="WspInPro" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>JPH：</th>
+            <td class='formValue'>
+                <input id="WspJPH" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缓存上限：</th>
+            <td class='formValue'>
+                <input id="CacheQantity" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>缓存下限：</th>
+            <td class='formValue'>
+                <input id="CacheLimit" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>最高在制：</th>
+            <td class='formValue'>
+                <input id="HighestQantity" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>最低在制：</th>
+            <td class='formValue'>
+                <input id="LowestQantity" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车间描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="Dsc" maxlength=500 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3" >
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+    </table>
+</form>

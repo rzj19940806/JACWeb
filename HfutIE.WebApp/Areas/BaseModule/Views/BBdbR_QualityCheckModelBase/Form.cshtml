@@ -1,0 +1,91 @@
+@{
+    ViewBag.Title = "检查模板基本信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var ParentId = GetQuery('ParentId');//父节点
+    var ChildId = GetQuery('areaId');//子节点
+    $(function () {
+        //if (ParentId == 0) {
+        //    $("#QualityCheckPointId").val(ChildId);
+        //}
+        //else {
+        //    $("#QualityCheckPointId").val(ParentId);
+        //    $("#WcCd").val(ChildId);
+        //}
+        $("#QualityCheckPointId").val(ChildId);
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_QualityCheckModelBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById('QualityCheckModelCd').setAttribute("readOnly", true);//编号不可修改
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_QualityCheckModelBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("AviCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style="display:none">
+            <th class='formTitle'>质控点主键：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检查模板编号：</th>
+            <td class='formValue'>
+                <input id="QualityCheckModelCd" maxlength=50 type="text" class="txt required" datacol="yes" err="检查模板编号" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检查模板名称：</th>
+            <td class='formValue'>
+                <input id="QualityCheckModelNm" maxlength=50 type="text" class="txt required" datacol="yes" err="检查模板名称" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>检查模板描述：</th>
+            <td class='formValue'>
+                <textarea id="QualityCheckModelDsc" maxlength=200 class="txt"  ></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <textarea id="Rem" maxlength=200 class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

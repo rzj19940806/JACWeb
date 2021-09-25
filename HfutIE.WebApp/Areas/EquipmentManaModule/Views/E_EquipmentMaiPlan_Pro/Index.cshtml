@@ -1,0 +1,167 @@
+﻿@{
+    ViewBag.Title = "设备维保计划表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        Show();
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+            { label: '维保计划主键', name: 'MaiPlanId', index: 'MaiPlanId', width: 0, align: 'center',sortable: true ,hidden: true },
+            { label: '维保计划编号', name: 'MaiPlanCode', index: 'MaiPlanCode', width: 0, align: 'center',sortable: true  },
+            { label: '维保计划名称', name: 'MaiPlanName', index: 'MaiPlanName', width: 0, align: 'center',sortable: true  },
+            { label: '设备编号', name: 'DvcCd', index: 'DvcCd', width: 0, align: 'center',sortable: true  },
+            { label: '设备名称', name: 'DvcNm', index: 'DvcNm', width: 0, align: 'center',sortable: true  },
+            { label: '设备部件主键', name: 'CarPartId', index: 'CarPartId', width: 0, align: 'center',sortable: true  },
+            { label: '维护类别', name: 'MaiPlanCatg', index: 'MaiPlanCatg', width: 0, align: 'center',sortable: true  },
+            { label: '维护类型', name: 'MaiPlanType', index: 'MaiPlanType', width: 0, align: 'center',sortable: true  },
+            { label: '维护内容', name: 'MaiPlanCon', index: 'MaiPlanCon', width: 0, align: 'center',sortable: true  },
+            { label: '维修标准', name: 'MaiPlanStandard', index: 'MaiPlanStandard', width: 0, align: 'center',sortable: true  },
+            { label: '维护周期', name: 'MaiPlanCycle', index: 'MaiPlanCycle', width: 0, align: 'center',sortable: true  },
+            { label: '维护状态', name: 'MaiPlanSta', index: 'MaiPlanSta', width: 0, align: 'center',sortable: true  },
+            { label: '责任产线', name: 'PlineId', index: 'PlineId', width: 0, align: 'center',sortable: true  },
+            { label: '责任人', name: 'StfId', index: 'StfId', width: 0, align: 'center',sortable: true  },
+            { label: '频次', name: 'Frequency', index: 'Frequency', width: 0, align: 'center',sortable: true  },
+            { label: '维护人员', name: 'MaiPlanPer', index: 'MaiPlanPer', width: 0, align: 'center',sortable: true  },
+            { label: '维护时间', name: 'MaiPlanTime', index: 'MaiPlanTime', width: 0, align: 'center',sortable: true  },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '是否转档', name: 'IsFile', index: 'IsFile', width: 0, align: 'center',sortable: true  },
+            { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+            { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+            { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+            gridview: true,
+            loadonce: true,
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+    //新增按钮
+    function btn_add() {
+        var url = "/EquipmentManaModule/E_EquipmentMaiPlan_Pro/Form"
+        openDialog(url, "Form", "新增设备维护信息", 750, 450, function (iframe) {
+            top.frames[iframe].AcceptClick()
+       });
+    }
+
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "MaiPlanId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = KeyValue.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/EquipmentManaModule/E_EquipmentMaiPlan_Pro/Form?KeyValue=" + KeyValue ;
+                openDialog(url, "tForm", "编辑设备维护信息", 750, 450, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "MaiPlanId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/EquipmentManaModule/E_EquipmentMaiPlan_Pro/Delete', delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }
+    //导入
+    function btn_import() {
+        //var OrderID = GetJqGridRowValue("#gridTable", "DvcId");
+        openDialog("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/ExcelImportDialog", "ExcelImportDialog", "设备维护信息导入", 750, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+    }
+    //导出Excel
+    function btn_derive() {
+        SetDeriveExcel("#gridTable", "设备维护基本信息-" + formatDate(CurrentTime(), 'yyyyMMdd'));
+        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "设备维护基本信息导出", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition) , page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
+                    <option value="all">==全部==</option>
+                    <option value="MaiPlanCode">维护计划编号</option>
+                    <option value="MaiPlanName">维护计划名称</option>
+                    <option value="MaiPlanCatg">维护类别</option>
+                    <option value="MaiPlanType">维护类型</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

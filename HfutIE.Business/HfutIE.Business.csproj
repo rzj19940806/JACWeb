@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{83AEDA4A-ABDA-408F-956D-F664F05C1D6C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HfutIE.Business</RootNamespace>
+    <AssemblyName>HfutIE.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseModule\BBdbR_AlarmAddressBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_AVIGroupConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_AVIBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_AVIActionConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_AVIWhereaboutsConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CarPartBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CarPartQuaCheckItemConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CarSchedulRuleConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CarStrandedBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CntlAddrConfBll.cs" />
+    <Compile Include="BaseModule\BBdbR_CompanyBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_DefectCatgBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_DefectCatgDeTailBll.cs" />
+    <Compile Include="BaseModule\BBdbR_DepartmentBasetBll.cs" />
+    <Compile Include="BaseModule\BBdbR_DvcBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_FacBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_FaultBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_GetItemBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_MatBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_MatFileConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_PlineBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_PostBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_PushRuleBll.cs" />
+    <Compile Include="BaseModule\BBdbR_QuaCheckItemBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_QuaCheckModelCarConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_QuaCheckModelCarPartConfigBll.cs" />
+    <Compile Include="BaseModule\BBdbR_QualityCheckModelBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_QualityCheckPointBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_SchedulRuleBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_StfBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_SupplierBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_WcBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_WorkSectionBaseBll.cs" />
+    <Compile Include="BaseModule\BBdbR_WorkshopBaseBll.cs" />
+    <Compile Include="BaseModule\BFacR_ClassBaseBll.cs" />
+    <Compile Include="BaseModule\BFacR_ClassConfigBll.cs" />
+    <Compile Include="BaseModule\BFacR_ClassTeamConfigBll.cs" />
+    <Compile Include="BaseModule\BFacR_ShiftBaseBll.cs" />
+    <Compile Include="BaseModule\BFacR_TeamBaseBll.cs" />
+    <Compile Include="BaseModule\BFacR_TeamOrgBll.cs" />
+    <Compile Include="BaseModule\BFacR_TeamStfBll.cs" />
+    <Compile Include="BaseModule\BPdb_DtBll.cs" />
+    <Compile Include="BaseModule\ClassConfigViewBll.cs" />
+    <Compile Include="BaseModule\DepartmentStaffConfigViewBll.cs" />
+    <Compile Include="EquipmentManaModule\E_EquipmentMaiPlan_ProBll.cs" />
+    <Compile Include="BaseModule\TeamPlineConfigViewBll.cs" />
+    <Compile Include="BaseModule\TeamStaffConfigViewBll.cs" />
+    <Compile Include="BaseUtility\BaseFactory.cs" />
+    <Compile Include="BaseUtility\BaseManager.cs" />
+    <Compile Include="BaseUtility\IBaseManager.cs" />
+    <Compile Include="CommonModule\AD_MAC_INFOBll.cs" />
+    <Compile Include="CommonModule\A_CutterDemandBll.cs" />
+    <Compile Include="CommonModule\A_MaterialProgramDemandBll.cs" />
+    <Compile Include="CommonModule\Base_CompanyBll.cs" />
+    <Compile Include="CommonModule\A_ProjectPlanInfomationBll.cs" />
+    <Compile Include="CommonModule\A_ProjectInfomationBll.cs" />
+    <Compile Include="CommonModule\INTERFACE_CBll.cs" />
+    <Compile Include="CommonModule\INTERFACE_FIELDBll.cs" />
+    <Compile Include="CommonModule\IP_MANAGEMENTBll.cs" />
+    <Compile Include="CommonModule\Base_ButtonBll.cs" />
+    <Compile Include="CommonModule\Base_ButtonPermissionBll.cs" />
+    <Compile Include="CommonModule\Base_CodeRuleBll.cs" />
+    <Compile Include="CommonModule\A_OrderBaseBll.cs" />
+    <Compile Include="CommonModule\Base_DataBaseBll.cs" />
+    <Compile Include="CommonModule\Base_DataDictionaryBll.cs" />
+    <Compile Include="CommonModule\Base_DataScopePermissionBll.cs" />
+    <Compile Include="CommonModule\Base_DepartmentBll.cs" />
+    <Compile Include="CommonModule\Base_ExcelImportBll.cs" />
+    <Compile Include="CommonModule\Base_FactoryBll.cs" />
+    <Compile Include="CommonModule\Base_FormAttributeBll.cs" />
+    <Compile Include="CommonModule\Base_GroupUserBll.cs" />
+    <Compile Include="CommonModule\Base_InterfaceManageBll.cs" />
+    <Compile Include="CommonModule\Base_ModuleBll.cs" />
+    <Compile Include="CommonModule\Base_ModulePermissionBll.cs" />
+    <Compile Include="CommonModule\Base_ObjectUserRelationBll.cs" />
+    <Compile Include="CommonModule\Base_PostBll.cs" />
+    <Compile Include="CommonModule\Base_ProductBll.cs" />
+    <Compile Include="CommonModule\Base_ProductLineBll.cs" />
+    <Compile Include="CommonModule\Base_ProvinceCityBll.cs" />
+    <Compile Include="CommonModule\Base_QueryRecordBll.cs" />
+    <Compile Include="CommonModule\Base_RolesBll.cs" />
+    <Compile Include="CommonModule\Base_ShortcutsBll.cs" />
+    <Compile Include="CommonModule\Base_SysLogBll.cs" />
+    <Compile Include="CommonModule\Base_UserBll.cs" />
+    <Compile Include="CommonModule\Base_ViewBll.cs" />
+    <Compile Include="CommonModule\Base_ViewPermissionBll.cs" />
+    <Compile Include="CommonModule\Base_ViewWhereBll.cs" />
+    <Compile Include="CommonModule\CodeMaticBll.cs" />
+    <Compile Include="ExampleModule\Base_EmailBll.cs" />
+    <Compile Include="ExampleModule\Base_NetworkFileBll.cs" />
+    <Compile Include="ExampleModule\Base_PhoneNoteBll.cs" />
+    <Compile Include="ExampleModule\PettyCashBll.cs" />
+    <Compile Include="ExampleModule\POOrderBll.cs" />
+    <Compile Include="ExampleModule\ReportBll.cs" />
+    <Compile Include="FileModule\AD_DocumentBll.cs" />
+    <Compile Include="FileModule\AD_document_typeBll.cs" />
+    <Compile Include="FileModule\PROCESS_FILESBll.cs" />
+    <Compile Include="InformationPublish\BBdbR_GroupChatBll.cs" />
+    <Compile Include="InformationPublish\BBdbR_PushInforBll.cs" />
+    <Compile Include="InformationPublish\BBdbR_PushObjectConfBll.cs" />
+    <Compile Include="InformationPublish\PushObject_BaseRoles_VBll.cs" />
+    <Compile Include="InformationPublish\PushObject_Groupchat_VBll.cs" />
+    <Compile Include="InformationPublish\PushObject_StfBase_VBll.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="QualityModule\QAS_DTSItemStaBaseBll.cs" />
+    <Compile Include="QualityModule\QAS_JunctData_SWDBll.cs" />
+    <Compile Include="QualityModule\QAS_JunctionDataDocBll.cs" />
+    <Compile Include="QualityModule\QAS_JunctionDataMidBll.cs" />
+    <Compile Include="QualityModule\QAS_JunctionItemBaseBll.cs" />
+    <Compile Include="QualityModule\QAS_TorsionItemBaseBll.cs" />
+    <Compile Include="QualityModule\QAS_DTSItemBaseBll.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemManaModule\Base_Roles3Bll.cs" />
+    <Compile Include="SystemManaModule\Base_StfRoleConfBll.cs" />
+    <Compile Include="SystemManaModule\S_ButtonPermissionBll.cs" />
+    <Compile Include="SystemManaModule\S_LogErrBll.cs" />
+    <Compile Include="SystemManaModule\S_ModulePermissionBll.cs" />
+    <Compile Include="SystemManaModule\S_SysLogBll.cs" />
+    <Compile Include="SystemManaModule\S_SysLogDetailBll.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HfutIE.Cache\HfutIE.Cache.csproj">
+      <Project>{e984e0cc-2c1a-4812-9b71-40fa086f0f86}</Project>
+      <Name>HfutIE.Cache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HfutIE.DataAccess\HfutIE.DataAccess.csproj">
+      <Project>{0c8324b3-df14-45f5-9d20-d5fbba4e3278}</Project>
+      <Name>HfutIE.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HfutIE.Entity\HfutIE.Entity.csproj">
+      <Project>{bc2b9d63-b819-4275-b8df-2f4c9a598621}</Project>
+      <Name>HfutIE.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HfutIE.Repository\HfutIE.Repository.csproj">
+      <Project>{e0b30f33-66f0-4b5d-a788-2b511dae3530}</Project>
+      <Name>HfutIE.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HfutIE.Utilities\HfutIE.Utilities.csproj">
+      <Project>{3ff4ec75-7d1d-48da-9d08-8db021d011ea}</Project>
+      <Name>HfutIE.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\HfutIE.Business.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\build.force" />
+    <None Include="obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Release\HfutIE.Business.csprojResolveAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\HfutIE.Business.dll" />
+    <Content Include="bin\Debug\HfutIE.Business.pdb" />
+    <Content Include="bin\Debug\HfutIE.Cache.dll" />
+    <Content Include="bin\Debug\HfutIE.Cache.pdb" />
+    <Content Include="bin\Debug\HfutIE.DataAccess.dll" />
+    <Content Include="bin\Debug\HfutIE.DataAccess.pdb" />
+    <Content Include="bin\Debug\HfutIE.Entity.dll" />
+    <Content Include="bin\Debug\HfutIE.Entity.pdb" />
+    <Content Include="bin\Debug\HfutIE.Repository.dll" />
+    <Content Include="bin\Debug\HfutIE.Repository.pdb" />
+    <Content Include="bin\Debug\HfutIE.Utilities.dll" />
+    <Content Include="bin\Debug\HfutIE.Utilities.pdb" />
+    <Content Include="bin\Debug\log4net.dll" />
+    <Content Include="bin\Debug\MySql.Data.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\NPOI.dll" />
+    <Content Include="bin\Debug\NPOI.OOXML.dll" />
+    <Content Include="bin\Debug\NPOI.OpenXml4Net.dll" />
+    <Content Include="bin\Debug\NPOI.OpenXmlFormats.dll" />
+    <Content Include="bin\Debug\Oracle.DataAccess.dll" />
+    <Content Include="bin\Debug\SharpZipLib.dll" />
+    <Content Include="bin\Debug\System.Data.SQLite.dll" />
+    <Content Include="bin\Debug\System.Web.Mvc.dll" />
+    <Content Include="bin\Debug\System.Web.Mvc.xml" />
+    <Content Include="obj\Debug\HfutIE.Business.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\HfutIE.Business.dll" />
+    <Content Include="obj\Debug\HfutIE.Business.pdb" />
+    <Content Include="obj\Release\HfutIE.Business.csproj.FileListAbsolute.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="obj\Release\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,204 @@
+@{
+    ViewBag.Title = "推送任务生成规则配置表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        CellItem_PushType('PushType');
+        GetGrid();
+        Show();
+        BindDropItem("#PushType", "PushType");
+    })
+
+    let PushTypeCellItem = "";
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_PushRule/GetGridPage")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '主键', name: 'RuleId', index: 'RuleId', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: '区域编号', name: 'AreaCd', index: 'AreaCd', width: 0, align: 'center',sortable: true  },
+            { label: '产线Id', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '产线编号', name: 'PlineCd', index: 'PlineCd', width: 0, align: 'center', sortable: true },
+            { label: '产线名称', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true},
+            { label: '工位Id', name: 'WcId', index: 'WcId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 0, align: 'center', sortable: true },
+            { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 0, align: 'center', sortable: true},
+            {
+                label: '推送类型', name: 'PushType', index: 'PushType', width: 0, align: 'center', sortable: true,
+                formatter: "select", formatoptions: { value: PushTypeCellItem }
+            },
+                { label: '推送时间临界值', name: 'PushTm', index: 'PushTm', width: 0, align: 'center',sortable: true  },
+                { label: '异常日志存放路径', name: 'AndonFile', index: 'AndonFile', width: 0, align: 'center',sortable: true  },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true  },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true},
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true},
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true},
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true},
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true},
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true},
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true},
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+    }
+
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#PushType").hide();
+            $("#keywords").hide();
+        }
+        else if (Condition == "PushType") {
+            $("#PushType").show();
+            $("#keywords").hide();
+        }
+        else {
+            $("#PushType").hide();
+            $("#keywords").show();
+        }
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+    }
+    //新增
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_PushRule/Form"
+        openDialog(url, "Form", "新增推送任务生成规则配置信息", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RuleId");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, 0);
+            return;
+        }
+        var url = "/BaseModule/BBdbR_PushRule/Form?KeyValue=" + KeyValue;
+        openDialog(url, "tForm", "编辑推送任务生成规则配置信息", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RuleId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_PushRule/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+
+
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords;
+        if (Condition == "PushType") {
+            keywords = $("#PushType").val();
+        }
+        else {
+            keywords = $("#keywords").val();
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_PushRule/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+    //根据数据字典显示内容
+    function CellItem_PushType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                PushTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                PushTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+        })
+    }
+
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
+                    <option value="all">==全部==</option>
+                    <option value="AreaCd">区域编号</option>
+                    <option value="PushType">推送类型</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <select id="PushType" style="width: 150px;height:25px"></select>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+@*表格区域*@
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

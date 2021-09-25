@@ -1,0 +1,120 @@
+@{
+    ViewBag.Title = "推送任务生成规则配置表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#PushType", "PushType");
+        InitControl();
+        RateGradeList();
+    })
+
+    //区域名称下拉框
+    function RateGradeList() {
+        qyID = $("#qvY").val();
+        if (qyID == 'PlineId') {
+            document.getElementById("city").options.length = 0;
+            AjaxJson("/BaseModule/BBdbR_PushRule/GetPlineNm", {}, function (data) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    $("#city").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["plinenm"] + "</option>");
+                }
+            });
+        }
+        else
+        {
+            document.getElementById("city").options.length = 0;
+            AjaxJson("/BaseModule/BBdbR_PushRule/GetWcNm?", {}, function (data) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    $("#city").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["wcnm"] + "</option>");
+                }
+            });
+        }
+    }
+
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_PushRule/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("AreaCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        let idvalue = $('#city option:selected').val();
+        qyID = $("#qvY").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_PushRule/SubmitPushRule?KeyValue=" + KeyValue + '&idvalue=' + idvalue + '&qyID=' + qyID, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' >区域编号：</th>
+            <td class='formValue'>
+                <input id="AreaCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>区域：</th>
+            <td class='formValue'>
+                <select id="qvY" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onchange="RateGradeList()">
+                    <option value="PlineId">产线</option>
+                    <option value="WcId">工位</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>区域名称：</th>
+            <td class='formValue'>
+                <select id="city" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="区域名称" onclick="" ></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>推送类型：</th>
+            <td class='formValue'>
+                <select id="PushType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="推送类型" onclick=""></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>推送时间临界值：</th>
+            <td class='formValue'>
+                <input id="PushTm" maxlength=18 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>异常日志存放路径：</th>
+            <td class='formValue'>
+                <input id="AndonFile" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>    
+        <tr>
+            <th class='formTitle' style="height :50px">备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        
+        <tr>
+        </tr>
+    </table>
+</form>

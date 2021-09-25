@@ -1,0 +1,192 @@
+@{
+    ViewBag.Title = "供应商基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        Show();
+        
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_SupplierBase/GridPage")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '供应商主键', name: 'SupplierId', index: 'SupplierId', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '供应商代码', name: 'SupplierCd', index: 'SupplierCd', width: 0, align: 'left',sortable: true  },
+                { label: '供应商名称', name: 'SupplierNm', index: 'SupplierNm', width: 0, align: 'left',sortable: true  },
+                { label: '供应商类型', name: 'SupplierCatg', index: 'SupplierCatg', width: 0, align: 'left',sortable: true  },
+                { label: '供应商等级', name: 'SupplierGrade', index: 'SupplierGrade', width: 0, align: 'left',sortable: true  },
+                { label: '供应商联系电话', name: 'SupplierTeleph', index: 'SupplierTeleph', width: 0, align: 'left',sortable: true  },
+                { label: '负责人', name: 'Mgr', index: 'Mgr', width: 0, align: 'left',sortable: true  },
+                { label: '供应商地址', name: 'SupplierAddress', index: 'SupplierAddress', width: 0, align: 'left',sortable: true  },
+                { label: '供应商邮箱', name: 'SupplierEmail', index: 'SupplierEmail', width: 0, align: 'left',sortable: true  },
+                { label: '供应商网址', name: 'SupplierWebsite', index: 'SupplierWebsite', width: 0, align: 'left',sortable: true  },
+                { label: '供应商描述', name: 'Description', index: 'Description', width: 0, align: 'left',sortable: true  },
+                { label: '备注', name: 'Remark', index: 'Remark', width: 0, align: 'left',sortable: true  },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left',sortable: true  },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left',sortable: true ,hidden: true },
+                { label: '预留字段3', name: 'RsvFld3', index: 'RsvFld3', width: 0, align: 'left',sortable: true ,hidden: true },
+        ],
+        viewrecords: true,//显示总的记录条数
+        rowNum: 200,
+        rowList: [30, 50, 100, 200],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        multiselect: true,
+        multiboxonly: true,
+        gridview: true,
+        loadonce: true,
+    });
+    }
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+            $("#SupplierSelect").hide();
+        }
+        else if (Condition == "SupplierCatg") {
+            BindDropItem("#SupplierSelect", "SupplierCatg", "==全部==");
+            $("#SupplierSelect").show();
+            $("#keywords").hide();
+        } else if (Condition == "SupplierGrade") {
+            BindDropItem("#SupplierSelect", "SupplierGrade", "==全部==");
+            $("#SupplierSelect").show();
+            $("#keywords").hide();
+        }else {
+            $("#keywords").show();
+            $("#SupplierSelect").hide();
+        }
+    }
+    //新增
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_SupplierBase/Form"
+        openDialog(url, "Form", "新增供应商基础信息", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "SupplierId");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_SupplierBase/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑供应商基础信息", 600, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "SupplierId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_SupplierBase/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        
+    }
+    //导入
+    function btn_import() {
+        var SupplierId = GetJqGridRowValue("#gridTable", "SupplierId");
+        openDialog("/BaseModule/BBdbR_SupplierBase/ExcelImportDialog", "ExcelImportDialog", "供应商基本信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //导出Excel
+    function btn_derive() {
+        SetDeriveExcel("#gridTable", "供应商基本信息");
+        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "供应商基本信息导出", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();;
+        if (Condition == "SupplierCatg" || Condition == "SupplierGrade") {
+            keywords = $("#SupplierSelect").val();
+        } else {
+            keywords = $("#keywords").val();
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_SupplierBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    function CellItem_QuaCheckItemTy(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                AviCatgCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                AviCatgCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="SupplierCd">供应商代码</option>
+                    <option value="SupplierNm">供应商名称</option>
+                    <option value="SupplierCatg">供应商类型</option>
+                    <option value="SupplierGrade">供应商等级</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <select id="SupplierSelect" style="width: 150px;height:25px"></select>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

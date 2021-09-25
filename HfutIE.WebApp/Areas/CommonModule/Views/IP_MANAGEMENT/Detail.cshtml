@@ -1,0 +1,167 @@
+@{
+    ViewBag.Title = "IP_MANAGEMENT》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/IP_MANAGEMENT/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>ip_management_key：</th>
+            <td class='formValue'>
+                <label id="ip_management_key" />
+            </td>
+            <th class='formTitle'>p_line_key：</th>
+            <td class='formValue'>
+                <label id="p_line_key" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>p_line_code：</th>
+            <td class='formValue'>
+                <label id="p_line_code" />
+            </td>
+            <th class='formTitle'>p_line_name：</th>
+            <td class='formValue'>
+                <label id="p_line_name" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>wc_key：</th>
+            <td class='formValue'>
+                <label id="wc_key" />
+            </td>
+            <th class='formTitle'>wc_code：</th>
+            <td class='formValue'>
+                <label id="wc_code" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>wc_name：</th>
+            <td class='formValue'>
+                <label id="wc_name" />
+            </td>
+            <th class='formTitle'>equip_key：</th>
+            <td class='formValue'>
+                <label id="equip_key" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>equip_code：</th>
+            <td class='formValue'>
+                <label id="equip_code" />
+            </td>
+            <th class='formTitle'>equip_name：</th>
+            <td class='formValue'>
+                <label id="equip_name" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>equip_type：</th>
+            <td class='formValue'>
+                <label id="equip_type" />
+            </td>
+            <th class='formTitle'>IP_addr：</th>
+            <td class='formValue'>
+                <label id="IP_addr" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>remark：</th>
+            <td class='formValue'>
+                <label id="remark" />
+            </td>
+            <th class='formTitle'>reserve1：</th>
+            <td class='formValue'>
+                <label id="reserve1" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve2：</th>
+            <td class='formValue'>
+                <label id="reserve2" />
+            </td>
+            <th class='formTitle'>reserve3：</th>
+            <td class='formValue'>
+                <label id="reserve3" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve4：</th>
+            <td class='formValue'>
+                <label id="reserve4" />
+            </td>
+            <th class='formTitle'>reserve5：</th>
+            <td class='formValue'>
+                <label id="reserve5" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve6：</th>
+            <td class='formValue'>
+                <label id="reserve6" />
+            </td>
+            <th class='formTitle'>reserve7：</th>
+            <td class='formValue'>
+                <label id="reserve7" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve8：</th>
+            <td class='formValue'>
+                <label id="reserve8" />
+            </td>
+            <th class='formTitle'>reserve9：</th>
+            <td class='formValue'>
+                <label id="reserve9" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve10：</th>
+            <td class='formValue'>
+                <label id="reserve10" />
+            </td>
+            <th class='formTitle'>CreateDate：</th>
+            <td class='formValue'>
+                <label id="CreateDate" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateUserId：</th>
+            <td class='formValue'>
+                <label id="CreateUserId" />
+            </td>
+            <th class='formTitle'>CreateUserName：</th>
+            <td class='formValue'>
+                <label id="CreateUserName" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyDate：</th>
+            <td class='formValue'>
+                <label id="ModifyDate" />
+            </td>
+            <th class='formTitle'>ModifyUserId：</th>
+            <td class='formValue'>
+                <label id="ModifyUserId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyUserName：</th>
+            <td class='formValue'>
+                <label id="ModifyUserName" />
+            </td>
+        </tr>
+    </table>
+</form>

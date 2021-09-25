@@ -1,0 +1,198 @@
+@{
+    ViewBag.Title = "system_advice";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .someClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({     
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: 'key', name: 'advice_key', index: 'advice_code', width: 0, align: 'left', sortable: true ,hidden:true},
+                { label: '编号', name: 'advice_code', index: 'advice_code', width: 120, align: 'left', sortable: true },
+                { label: '问题摘要', name: 'advice_name', index: 'advice_name', width: 300, align: 'left', sortable: true },
+                { label: '处理结果', name: 'deal_result', index: 'deal_result', width: 300, align: 'left', sortable: true },
+                { label: '状态', name: 'state', index: 'state', width: 100, align: 'left', sortable: true },
+                { label: '类型', name: 'advice_type', index: 'advice_type', width: 100, align: 'left', sortable: true },
+                { label: '优先级', name: 'priority', index: 'priority', width: 80, align: 'left', sortable: true },
+                { label: '问题描述', name: 'advice_description', index: 'advice_description', width: 150, align: 'left',sortable: true  },
+                { label: '处理时长', name: 'process_time', index: 'process_time', width: 80, align: 'left', sortable: true },
+                { label: '申报人编号', name: 'reportor_code', index: 'reportor_code', width: 100, align: 'left',sortable: true  },
+                { label: '申报人姓名', name: 'reportor_name', index: 'reportor_name', width: 100, align: 'left', sortable: true },
+                { label: '申报时间', name: 'report_time', index: 'report_time', width: 120, align: 'left',sortable: true  },
+                { label: '处理人编号', name: 'processor_code', index: 'processor_code', width: 100, align: 'left',sortable: true  },
+                { label: '处理人姓名', name: 'processor_name', index: 'processor_name', width: 100, align: 'left',sortable: true  },
+                { label: '备注', name: 'process_remark', index: 'process_remark', width: 200, align: 'left', sortable: true },
+                { label: '创建时间', name: 'create_time', index: 'create_time', width: 200, align: 'left', sortable: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        altRows: true,
+        viewrecords: true,
+        altclass: 'someClass',
+    });
+    }
+    //新增
+    function btn_add() {
+        var url = "/CommonModule/system_advice/Form"
+        openDialog(url, "Form", "新增建议", 550, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit1() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "advice_key");
+        var state = GetJqGridRowValue("#gridTable", "state");
+        var type = 0;
+        if (IsChecked(KeyValue)) {
+            if(state=="待处理"){
+                var url = "/CommonModule/system_advice/Form?KeyValue=" + KeyValue + "&type=" + type;
+                openDialog(url, "Form", "编辑问题", 550, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+            else{
+                alertDialog("该项建议已处理，不能编辑！", 0);
+            }
+        }
+    }
+    //处理
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "advice_key");
+        var create_time = GetJqGridRowValue("#gridTable", "create_time");
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/system_advice/Form1?KeyValue=" + KeyValue + "&create_time=" + create_time;
+            openDialog(url, "Form", "处理问题", 550, 300, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "advice_key");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/CommonModule/system_advice/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //明细
+    function btn_detail() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "advice_key");
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/system_advice/Detail?KeyValue=" + KeyValue;
+            Dialog(url, "Detail", "问题明细", 820, 500, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable1").trigger("reloadGrid");
+    }
+    function setType() {
+        var searchtype = $("#type").val();
+        if (searchtype == "1") {
+            $("#advicecode").hide();
+            $("#advice_code").hide();
+            $("#advice_name").hide();
+            $("#advicename").hide();
+            $("#advice_code").val("");
+            $("#advice_name").val("");
+        }
+        else if (searchtype == "2") {
+            $("#advicename").hide();
+            $("#advice_name").hide();
+            $("#advicecode").show();
+            $("#advice_code").show();
+            $("#advice_name").val("");
+        }
+        else if (searchtype == "3") {
+            $("#advicecode").hide();
+            $("#advice_code").hide();
+            $("#advicename").show();
+            $("#advice_name").show();
+            $("#advice_code").val("");
+        }
+    }
+    //搜索
+    function btn_Search() {
+        var type = $("#type").val();
+        var keywords = "";
+        if ($("#advice_code").val() != "" && $("#advice_code").val() != null) {
+            keywords = $("#advice_code").val();
+        } else if ($("#advice_name").val() != "" && $("#advice_name").val() != null) {
+            keywords = $("#advice_name").val();
+        }
+        else {
+            keywords = "";
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/CommonModule/system_advice/ListJson")?type=" + escape(type) + "&keywords=" + escape(keywords), page: 1
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+</script>
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>
+                检索类型：
+            </th>
+            <td>
+                <select id="type" class="select" style="width: 140px" onchange="setType()">
+                    <option value="0">===请选择=== </option>
+                    <option value="1">所有</option>
+                    <option value="2">编号</option>
+                    <option value="3">内容摘要</option>
+                    @*<option value="4">状态</option>
+                    <option value="5">优先级</option>*@
+                </select>
+            </td>
+            <th id="advicecode" style="display:none">编号：</th>
+            <td>
+                <input id="advice_code" type="text" class="txt" style="width: 200px;display:none" />
+            </td>
+            <th id="advicename" style="display:none">内容摘要：</th>
+            <td>
+                <input id="advice_name" type="text" class="txt" style="width: 200px;display:none" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

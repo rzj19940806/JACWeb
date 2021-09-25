@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "点连接检测项维护";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//单元函数主键
+    $(function () {     
+        BindCombobox()
+        SetControl();
+        CellPropertySet();
+    })
+    //初始化绑定下拉框
+    function BindCombobox() {
+        //角色分类
+        BindDropItem("#CarType", "CarNm", "");
+    }
+    //编辑的时候给对象赋值
+    function SetControl() {
+        if (!!KeyValue) {
+            AjaxJson("/QualityModule/CheckItem/GridJunItemJson", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data); //基本信息赋值
+            });           
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            AjaxJson("/QualityModule/CheckItem/SubmitFormJun?KeyValue=" + escape(KeyValue), postData, function (data) {
+                //if (data.Message == "数据格式异常") {
+                //    tipCss("", "数据格式异常，请输入数字");
+                //    return;
+                //}
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+
+    //单元格根据检测项类别设置属性
+    function CellPropertySet() {
+        var category = $("#Category").val();
+        if(category == "LW"){
+            document.getElementById("CCSC").readOnly = false;
+            document.getElementById("WcNm").readOnly = true;       
+            document.getElementById("PartNm").readOnly = true;
+            document.getElementById("HeadHeghitSta").readOnly = true;
+            document.getElementById("HeadGapSta").readOnly = true;
+            document.getElementById("LengthSta").readOnly = true;
+            document.getElementById("TightenTOR").readOnly = true;
+            document.getElementById("SpotLocation").readOnly = true;
+            document.getElementById("SpotStaValue").readOnly = true;
+            document.getElementById("CCSC").style.backgroundColor = "";
+            document.getElementById("WcNm").style.backgroundColor = "#dddddd";
+            document.getElementById("PartNm").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadGapSta").style.backgroundColor = "#dddddd";
+            document.getElementById("LengthSta").style.backgroundColor = "#dddddd";
+            document.getElementById("TightenTOR").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotLocation").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotStaValue").style.backgroundColor = "#dddddd";
+        }
+        else if (category == "T5" || category == "T6" || category == "M8") {
+            document.getElementById("CCSC").readOnly = true;
+            document.getElementById("WcNm").readOnly = true;
+            document.getElementById("PartNm").readOnly = true;
+            document.getElementById("HeadHeghitSta").readOnly = true;
+            document.getElementById("HeadGapSta").readOnly = true;
+            document.getElementById("LengthSta").readOnly = true;
+            document.getElementById("TightenTOR").readOnly = false;
+            document.getElementById("SpotLocation").readOnly = true;
+            document.getElementById("SpotStaValue").readOnly = true;
+            document.getElementById("CCSC").style.backgroundColor = "#dddddd";
+            document.getElementById("WcNm").style.backgroundColor = "#dddddd";
+            document.getElementById("PartNm").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadGapSta").style.backgroundColor = "#dddddd";
+            document.getElementById("LengthSta").style.backgroundColor = "#dddddd";
+            document.getElementById("TightenTOR").style.backgroundColor = "";
+            document.getElementById("SpotLocation").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotStaValue").style.backgroundColor = "#dddddd";
+        }
+        else if (category == "SPR") {
+            document.getElementById("CCSC").readOnly = false;
+            document.getElementById("WcNm").readOnly = false;
+            document.getElementById("PartNm").readOnly = true;
+            document.getElementById("HeadHeghitSta").readOnly = false;
+            document.getElementById("HeadGapSta").readOnly = true;
+            document.getElementById("LengthSta").readOnly = true;
+            document.getElementById("TightenTOR").readOnly = true;
+            document.getElementById("SpotLocation").readOnly = true;
+            document.getElementById("SpotStaValue").readOnly = true;
+            document.getElementById("CCSC").style.backgroundColor = "";
+            document.getElementById("WcNm").style.backgroundColor = "";
+            document.getElementById("PartNm").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "";
+            document.getElementById("HeadGapSta").style.backgroundColor = "#dddddd";
+            document.getElementById("LengthSta").style.backgroundColor = "#dddddd";
+            document.getElementById("TightenTOR").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotLocation").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotStaValue").style.backgroundColor = "#dddddd";
+        }
+        else if (category == "FDS") {
+            document.getElementById("CCSC").readOnly = false;
+            document.getElementById("WcNm").readOnly = false;
+            document.getElementById("PartNm").readOnly = true;
+            document.getElementById("HeadHeghitSta").readOnly = true;
+            document.getElementById("HeadGapSta").readOnly = false;
+            document.getElementById("LengthSta").readOnly = true;
+            document.getElementById("TightenTOR").readOnly = true;
+            document.getElementById("SpotLocation").readOnly = true;
+            document.getElementById("SpotStaValue").readOnly = true;
+            document.getElementById("CCSC").style.backgroundColor = "";
+            document.getElementById("WcNm").style.backgroundColor = "";
+            document.getElementById("PartNm").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadGapSta").style.backgroundColor = "";
+            document.getElementById("LengthSta").style.backgroundColor = "#dddddd";
+            document.getElementById("TightenTOR").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotLocation").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotStaValue").style.backgroundColor = "#dddddd";
+        }
+        else if (category == "CMT") {
+            document.getElementById("CCSC").readOnly = true;
+            document.getElementById("WcNm").readOnly = true;
+            document.getElementById("PartNm").readOnly = true;
+            document.getElementById("HeadHeghitSta").readOnly = true;
+            document.getElementById("HeadGapSta").readOnly = true;
+            document.getElementById("LengthSta").readOnly = false;
+            document.getElementById("TightenTOR").readOnly = true;
+            document.getElementById("SpotLocation").readOnly = true;
+            document.getElementById("SpotStaValue").readOnly = true;
+            document.getElementById("CCSC").style.backgroundColor = "#dddddd";
+            document.getElementById("WcNm").style.backgroundColor = "#dddddd";
+            document.getElementById("PartNm").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadGapSta").style.backgroundColor = "#dddddd";
+            document.getElementById("LengthSta").style.backgroundColor = "";
+            document.getElementById("TightenTOR").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotLocation").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotStaValue").style.backgroundColor = "#dddddd";
+        }
+        else if (category == "SWD") {
+            document.getElementById("CCSC").readOnly = false;
+            document.getElementById("WcNm").readOnly = true;
+            document.getElementById("PartNm").readOnly = false;
+            document.getElementById("HeadHeghitSta").readOnly = true;
+            document.getElementById("HeadGapSta").readOnly = true;
+            document.getElementById("LengthSta").readOnly = true;
+            document.getElementById("TightenTOR").readOnly = true;
+            document.getElementById("SpotLocation").readOnly = false;
+            document.getElementById("SpotStaValue").readOnly = false;
+            document.getElementById("CCSC").style.backgroundColor = "";
+            document.getElementById("WcNm").style.backgroundColor = "#dddddd";
+            document.getElementById("PartNm").style.backgroundColor = "";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "#dddddd";
+            document.getElementById("HeadGapSta").style.backgroundColor = "#dddddd";
+            document.getElementById("LengthSta").style.backgroundColor = "#dddddd";
+            document.getElementById("TightenTOR").style.backgroundColor = "#dddddd";
+            document.getElementById("SpotLocation").style.backgroundColor = "";
+            document.getElementById("SpotStaValue").style.backgroundColor = "";
+        }
+        else {
+            document.getElementById("CCSC").readOnly = false;
+            document.getElementById("WcNm").readOnly = false;
+            document.getElementById("PartNm").readOnly = false;
+            document.getElementById("HeadHeghitSta").readOnly = false;
+            document.getElementById("HeadGapSta").readOnly = false;
+            document.getElementById("LengthSta").readOnly = false;
+            document.getElementById("TightenTOR").readOnly = false;
+            document.getElementById("SpotLocation").readOnly = false;
+            document.getElementById("SpotStaValue").readOnly = false;
+            document.getElementById("CCSC").style.backgroundColor = "";
+            document.getElementById("WcNm").style.backgroundColor = "";
+            document.getElementById("PartNm").style.backgroundColor = "";
+            document.getElementById("HeadHeghitSta").style.backgroundColor = "";
+            document.getElementById("HeadGapSta").style.backgroundColor = "";
+            document.getElementById("LengthSta").style.backgroundColor = "";
+            document.getElementById("TightenTOR").style.backgroundColor = "";
+            document.getElementById("SpotLocation").style.backgroundColor = "";
+            document.getElementById("SpotStaValue").style.backgroundColor = "";
+        }
+    }
+
+</script>
+<form id="form1" style="margin: 0px">
+    <div id="message" style="display: none"></div>
+    <div class="btnbartitle">
+        <div>
+            基本信息<span id="BaseInfo"></span>
+        </div>
+    </div>
+    <table class="form" style="border-right: none;">
+        <tr>
+            <th class="formTitle" style="height: 28px">类别：</th>
+            <td class="formValue">
+                <input id="RecordId" type="hidden" />
+                <select id="Category" class="txtselect" onchange="CellPropertySet()">
+                    <option value="LW">LW</option>
+                    <option value="T5">T5</option>
+                    <option value="T6">T6</option>
+                    <option value="M8">M8</option>
+                    <option value="SPR">SPR</option>
+                    <option value="FDS">FDS</option>
+                    <option value="CMT">CMT</option>
+                   @* <option value="SWD">SWD</option>*@
+                </select>
+            </td>
+            <th class="formTitle" style="height: 28px">车型：</th>
+            <td class="formValue">
+                <select id="CarType" class="txtselect required" datacol="yes" err="车型" checkexpession="NotNull"></select>
+            </td>           
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 28px">编号：</th>
+            <td class="formValue">
+                <input id="Code" maxlength="50" type="text" class="txt required" datacol="yes" err="编号" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle" style="height: 28px">检测项：</th>
+            <td class="formValue" >               
+                <input id="ItemNm" maxlength="50" type="text" class="txt required" datacol="yes" err="检测项" checkexpession="NotNull" />
+            </td>
+        </tr>   
+        <tr>
+            <th class="formTitle" style="height: 28px">生产工位：</th>
+            <td class="formValue">
+                <input id="WcNm" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle" style="height: 28px">零件名称：</th>
+            <td class="formValue">
+                <input id="PartNm" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>   
+        <tr>
+            <th class="formTitle" style="height: 28px">CC/SC：</th>
+            <td class="formValue">
+                <input id="CCSC" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle" style="height: 28px">头高标准：</th>
+            <td class="formValue">
+                <input id="HeadHeghitSta" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>    
+        <tr>
+            <th class="formTitle" style="height: 28px">头部间隙：</th>
+            <td class="formValue">
+                <input id="HeadGapSta" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle" style="height: 28px">长度标准：</th>
+            <td class="formValue">
+                <input id="LengthSta" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>  
+        <tr>
+            <th class="formTitle" style="height: 28px">拧紧扭矩：</th>
+            <td class="formValue">
+                <input id="TightenTOR" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle" style="height: 28px">焊点位置：</th>
+            <td class="formValue">
+                <input id="SpotLocation" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr> 
+        <tr>
+            <th class="formTitle" style="height: 28px">焊核标准值：</th>
+            <td class="formValue">
+                <input id="SpotStaValue" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle" style="height: 28px">单位：</th>
+            <td class="formValue">
+                <input id="Unit" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>       
+        @*<tr>
+            <th class="formTitle" style="height: 28px">
+                有效性：
+            </th>
+            <td class="formValue" colspan="3">
+                <span class="item">
+                    <input id="Enabled" type="checkbox" name="checkbox" checked="checked" />
+                </span>
+            </td>
+        </tr>*@
+        <tr>
+            <th class="formTitle" style="height: 28px">类型：</th>
+            <td class="formValue">
+                <input id="Type" maxlength="50" type="text" class="txt" />
+            </td>
+            <th class="formTitle">备注：</th>
+            <td class="formValue">
+                <textarea id="Rem" name="Rem" maxlength="200" class="txtArea" rows="2"></textarea>
+            </td>           
+        </tr>
+    </table>
+</form>
+

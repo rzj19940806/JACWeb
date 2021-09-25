@@ -1,0 +1,47 @@
+@{
+    ViewBag.Title = "备用金申请表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/ExampleModule/PettyCash/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>申请部门主键：</th>
+            <td class='formValue'>
+                <label id="DepartmentId" />
+            </td>
+            <th class='formTitle'>申请金额：</th>
+            <td class='formValue'>
+                <label id="Amount" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>保管人：</th>
+            <td class='formValue'>
+                <label id="Keeper" />
+            </td>
+            <th class='formTitle'>保管方式：</th>
+            <td class='formValue'>
+                <label id="KeepType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Remark" />
+            </td>
+        </tr>
+    </table>
+</form>

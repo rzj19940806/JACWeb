@@ -1,0 +1,246 @@
+@{
+    ViewBag.Title = "人员管理页面";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        CellItem_DeptCd('DeptCd');//需在GetGrid()之前进行初始化赋值
+        GetGrid();
+        GetTree();
+        $(document).keypress(function (e) {
+            //回车键事件
+            if (e.which == 13) {
+                $("#keywords").focus();
+                $("#keywords").select();
+                $("#btnSearch").click();
+            }
+        });
+
+    })
+    var area_key, area_name = "";
+    var selectnodeishaschild = "";//选中树节点是否有子节点
+    var parentId = "";//父节点编号
+
+    var WorkSectionBaseTypeCellItem = "";
+    var DeptCdCellItem = "";
+    var CompanyId = "", DepartmentID = "";
+
+       //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                selectnodeishaschild = item.hasChildren;
+                area_key = item.id;            //ID
+                area_name = item.text;         //名称
+                parentId = item.parentnodes;   //父节点编号
+                //2.点击树展示表格
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_StfBase/GridListJson")?areaId=" + area_key + "&parentId=" + parentId, datatype: 'json'}).trigger('reloadGrid');
+            },
+            url: "@Url.Content("~/BaseModule/BBdbR_StfBase/TreeJson")"    //1.获取树
+         };
+         $("#ItemsTree").treeview(itemtree);
+    }
+
+    //搜索
+    function btn_Search() {
+        var keywords = $("#keywords").val();
+        var Condition = $("#Condition").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_StfBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
+    }).trigger('reloadGrid');
+    }
+    //加载表格
+    function GetGrid() {
+        var SelectRowIndx;
+        $("#gridTable").jqGrid({
+            url: "/BaseModule/BBdbR_StfBase/GridListJson",
+            datatype: "json",
+            height: $(window).height() - 148,
+            autowidth: true,
+            colModel: [
+                { label: '人员主键', name: 'StfId', index: 'StfId', width: 80, align: 'center', hidden: true },
+                { label: '部门主键', name: 'DepartmentID', index: 'DepartmentID', width: 80, align: 'center', hidden: true },
+                { label: '部门编号', name: 'DepartmentCode', index: 'DepartmentCode', width: 80, align: 'center'},
+                { label: '部门名称', name: 'DepartmentName', index: 'DepartmentName', width: 80, align: 'center'},
+                { label: '人员编号', name: 'StfCd', index: 'StfCd', width: 80, align: 'center' },
+                { label: '人员姓名', name: 'StfNm', index: 'StfNm', width: 80, align: 'center' },
+                {
+                    label: '性别', name: 'StfGndr', index: 'StfGndr', width: 50, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') return "男";
+                        else if (cellvalue == '1') return "女";
+                        else return "";
+                    }
+                },
+                { label: '手机号', name: 'Phn', index: 'Phn', width: 100, align: 'center' },
+                { label: '企业微信号', name: 'Wechat', index: 'Wechat', width: 100, align: 'center' },
+                { label: '邮箱', name: 'Email', index: 'Email', width: 100, align: 'center' },
+                { label: '人员类型', name: 'StfTyp', index: 'StfTyp', width: 80, align: 'center', hidden: true },
+                { label: '人员职位', name: 'StfPosn', index: 'StfPosn', width: 80, align: 'center', hidden: true },
+                { label: '人员职称', name: 'StfTitl', index: 'StfTitl', width: 80, align: 'center', hidden: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 45, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 100, align: 'center' },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            viewrecords: true,
+            rowNum: 30,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager",
+            sortname: 'CompanyId,DepartmentId,SortCode',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            onSelectRow: function () {
+                SelectRowIndx = GetJqGridRowIndx("#" + this.id);
+            },
+            gridComplete: function () {
+                $("#" + this.id).jqGrid('setSelection', SelectRowIndx);
+            }
+        });
+        columnModelData("#gridTable");
+        //自应高度
+        $(window).resize(function () {
+            $("#gridTable").setGridHeight($(window).height() - 178);
+        });
+    }
+    //高级查询
+    var QueryParamJson = "";
+    function btn_query() {
+	    var keywords = $("#keywords").val();
+        QueryDialog("/Utility/QueryPage", "QueryPage", "查询过滤", 770, 395, function (iframe) {
+            top.frames[iframe].QueryClick(function (JsonData) {
+                QueryParamJson = JsonData;
+                $("#gridTable").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/CommonModule/User/GridPageListJson")?keywords=" + escape(keywords) + "&CompanyId=" + CompanyId + "&DepartmentId=" + DepartmentId + "&ParameterJson=" + escape(JsonData), page: 1
+                }).trigger('reloadGrid');
+            });
+        });
+    }
+
+    //新增
+    function btn_add() {
+        if (!!area_key) {
+            var url = "/BaseModule/BBdbR_StfBase/Form?DepartmentId=" + area_key;
+            openDialog(url, "Form", "新增人员信息", 550, 300, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+        else {
+            alertDialog("请选择左边部门信息", 0);
+        }
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "StfId");
+        var DepartmentId = GetJqGridRowValue("#gridTable", "DepartmentID");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_StfBase/Form?KeyValue=" + KeyValue + "&DepartmentId=" + DepartmentId;
+            openDialog(url, "Form", "编辑人员信息", 550, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除20210623_Delete=>DeleteNew
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "StfId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_StfBase/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //根据数据字典显示内容
+    function CellItem_DeptCd(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                DeptCdCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                DeptCdCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+</script>
+
+<div id="layout" class="layout">
+    @*树区域*@
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                部门索引
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <!--按钮工具栏 -->
+        <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+            <div class="PartialButton">
+                <a id="Ir_replace" ids="repalce" onclick="windowload()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b></span></a>
+                <div class="tools_separator"></div>
+                <a id="Ir_add" ids="add" onclick="btn_add()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/add.png') 50% 4px no-repeat;">新增</b></span></a>
+                <div class="tools_separator"></div>
+                <a id="Ir_edit" ids="edit" onclick="btn_edit()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/edit.gif') 50% 4px no-repeat;">编辑</b></span></a>
+                <div class="tools_separator"></div>
+                <a id="Ir_delete" ids="delete" onclick="btn_delete()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/DeleteRed.png') 50% 4px no-repeat;">删除</b></span></a>
+                <div class="tools_separator"></div>
+                <a id="Ir_back" ids="back" onclick="btn_back()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">离开</b></span></a>
+                <div class="tools_separator"></div>
+            </div>
+        </div>
+        @*搜索框区域*@
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>关键字：</th>
+                <td>
+                    <select id="Condition" style="width: 150px;height:25px">
+                        <option value="all">==全部==</option>
+                        <option value="StfCd">人员编号</option>
+                        <option value="StfNm">人员姓名</option>
+                    </select>
+                </td>
+                <td>
+                    <input id="keywords" type="text" class="txt" style="width: 200px" />
+                </td>
+
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        @*</div>*@
+        @*表格区域*@
+        <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+            <table id="gridTable" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

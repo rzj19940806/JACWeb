@@ -1,0 +1,106 @@
+@{
+    ViewBag.Title = "人员基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var DepartmentId = GetQuery('DepartmentId');
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_StfBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("StfCd").readOnly = true;
+            });
+        }
+        else {
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            $("#DepartmentId").val(DepartmentId);
+            var postData = GetWebControls("#form1");
+            AjaxJson("/BaseModule/BBdbR_StfBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">人员编号：</th>
+            <td class='formValue'>
+                <input id="StfCd" maxlength=50 type="text" class="txt required" datacol="yes" err="人员编号" checkexpession="NotNull" />
+            </td>
+            <th class='formTitle' style="height:30px">人员姓名：</th>
+            <td class='formValue'>
+                <input id="StfNm" maxlength=50 type="text" class="txt required" datacol="yes" err="人员姓名" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">人员职位：</th>
+            <td class='formValue' colspan="3">
+                <input id="StfPosn" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style=" display:none">
+            <th class='formTitle' style="height:30px">部门主键：</th>
+            <td class='formValue' colspan="3">
+                <input id="DepartmentId" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>    
+        <tr>
+            <th class='formTitle' style="height:30px">手机号：</th>
+            <td class='formValue'>
+                <input id="Phn" type="text" class="txt" />
+            </td>
+            <th class='formTitle' style="height:30px">企业微信号：</th>
+            <td class='formValue'>
+                <input id="Wechat" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">邮箱：</th>
+            <td class='formValue' colspan="3">
+                <input id="Email" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">性别：</th>
+            <td class='formValue'  colspan="3">
+                <select id="StfGndr" class="txtselect">
+                    <option value="">==请选择==</option>
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue' colspan="3">
+                <select id="Enable" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class="formValue" colspan="3">
+                <textarea id="Rem" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

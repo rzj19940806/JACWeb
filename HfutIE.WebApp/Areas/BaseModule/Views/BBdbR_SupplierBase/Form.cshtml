@@ -1,0 +1,97 @@
+@{
+    ViewBag.Title = "供应商基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#SupplierCatg", "SupplierCatg", "");
+        BindDropItem("#SupplierGrade", "SupplierGrade", "");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_SupplierBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById('SupplierCd').setAttribute("readOnly", true);//编号不可修改
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_SupplierBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>供应商代码：</th>
+            <td class='formValue'>
+                <input id="SupplierCd" maxlength=50 type="text" class="txt required" datacol="yes" err="供应商代码" checkexpession="NotNull"  />
+            </td>
+            <th class='formTitle'>供应商名称：</th>
+            <td class='formValue'>
+                <input id="SupplierNm" maxlength=50 type="text" class="txt required" datacol="yes" err="供应商名称" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>供应商联系电话：</th>
+            <td class='formValue'>
+                <input id="SupplierTeleph" maxlength=50 type="text" class="txt required" datacol="yes" err="供应商联系电话" checkexpession="NotNull"  />
+            </td>
+            <th class='formTitle'>负责人：</th>
+            <td class='formValue'>
+                <input id="Mgr" maxlength=50 type="text" class="txt required" datacol="yes" err="负责人" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>供应商类型：</th>
+            <td class='formValue'>
+                <select id="SupplierCatg"class="txt required" datacol="yes" err="供应商类型" checkexpession="NotNull" ></select>
+            </td>
+            <th class='formTitle'>供应商等级：</th>
+            <td class='formValue'>
+                <select id="SupplierGrade"class="txt required" datacol="yes" err="供应商等级" checkexpession="NotNull" ></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>供应商地址：</th>
+            <td class='formValue'>
+                <input id="SupplierAddress" maxlength=100 type="text" class="txt"   />
+            </td>
+            <th class='formTitle'>供应商邮箱：</th>
+            <td class='formValue'>
+                <input id="SupplierEmail" maxlength=100 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>供应商网址：</th>
+            <td class='formValue'>
+                <input id="SupplierWebsite" maxlength=100 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>供应商描述：</th>
+            <td class='formValue'>
+                <textarea id="Description" maxlength=200 class="txt"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength=200 class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

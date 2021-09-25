@@ -1,0 +1,44 @@
+@{
+    ViewBag.Title = "_FactoryBaseInformation》表单页面";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        GetGrid();
+    })
+   
+    //加载表格,展示所有的公司信息
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/BaseModule/Factory/GridPage")",
+            datatype: "json",
+            height: 240,
+            width:495,
+            //autowidth: true,
+            colModel: [
+                    { label: '主键', name: 'FactoryID', index: 'FactoryID', width: 0, align: 'left', sortable: true, hidden: true },
+                    { label: '工厂编号', name: 'FactoryCode', index: 'FactoryCode', width: 0, align: 'left', sortable: true },
+                    { label: '工厂名称', name: 'FactoryName', index: 'FactoryName', width: 0, align: 'left', sortable: true },
+            ],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            //shrinkToFit: false,
+            //gridview: true,
+        });
+    }
+    //保存事件
+    function AcceptClick() {
+        var Name = GetJqGridRowValue("#gridTable", "FactoryName");
+        var ID = GetJqGridRowValue("#gridTable", "FactoryID");
+        closeDialog();
+        return [ID,Name];
+        
+    }
+</script>
+     <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+         <table id="gridTable" style="width:500px;" ></table>
+         <div id="gridPager"></div>
+     </div>

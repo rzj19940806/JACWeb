@@ -1,0 +1,159 @@
+@{
+    ViewBag.Title = "设备基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var ClassId = GetQuery('ClassId');//
+    var Class = "";
+    $(function () {
+        BindDropItem("#DvcCatg", "DvcCatg", "==全部==");
+        BindDropItem("#DvcTyp", "DvcTyp", "==全部==");
+        InitControl();  
+    })
+    
+    function RateGradeList(Classv) {
+        if (Classv == "" || Classv == undefined || Classv == "undefined" || Classv == null) {
+            Classv = $("#Class").val();
+        }
+        document.getElementById("ClassId").options.length = 0;
+        AjaxJson("/BaseModule/BBdbR_DvcBase/GetClassNm?classv=" + Classv, {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#ClassId").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["name"] + "</option>");
+            }
+        });
+    }
+    
+    // 得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_DvcBase/SetFormcity", { KeyValue: KeyValue }, function (data) {
+                RateGradeList(data.Class);
+                SetWebControls(data);
+                $("#ClassId").val(data.ClassId);
+                document.getElementById("DvcCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_DvcBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("DeviceCode", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>设备编号：</th>
+            <td class='formValue'>
+                <input id="DvcCd" maxlength=50 type="text" class="txt required" datacol="yes" err="设备编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle'>设备名称：</th>
+            <td class='formValue'>
+                <input id="DvcNm" maxlength=50 type="text" class="txt required" datacol="yes" err="设备名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>机构级别：</th>
+            <td class='formValue'>
+                <select id="Class" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构级别" onchange="RateGradeList()">
+                    <option value="">--请先选择机构级别--</option>
+                    <option value="车间">车间</option>
+                    <option value="工位">工位</option>
+                    <option value="产线">产线</option>
+                    <option value="岗位">岗位</option>
+                </select>
+            </td>
+            <th class='formTitle'>机构名称：</th>
+            <td class='formValue'>
+                <select id="ClassId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onchange="RateGrade()">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备位置：</th>
+            <td class='formValue' colspan="3">
+                <input id="DvcLocatn" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备类别：</th>
+            <td class='formValue'>
+                <select id="DvcCatg" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="设备类别" onclick=""></select>
+            </td>
+            <th class='formTitle'>设备类型：</th>
+            <td class='formValue'>
+                <select id="DvcTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="设备类型" onclick=""></select>
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle'>设备型号：</th>
+            <td class='formValue'>
+                <input id="DvcMdl" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>设备产商：</th>
+            <td class='formValue'>
+                <input id="DvcMaker" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备寿命：</th>
+            <td class='formValue'>
+                <input id="DvcLife" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>设备制造日期：</th>
+            <td class='formValue'>
+                <input id="DvcMDt" type="text" class="txt" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>维保周期(天)：</th>
+            <td class='formValue'>
+                <input id="MaintCycle" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>提前期（天）：</th>
+            <td class='formValue'>
+                <input id="LeadTm" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>IP地址：</th>
+            <td class='formValue'>
+                <input id="IPAddr" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>端口：</th>
+            <td class='formValue'>
+                <input id="Port" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="Dsc" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <input id="Rem" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+    </table>
+</form>

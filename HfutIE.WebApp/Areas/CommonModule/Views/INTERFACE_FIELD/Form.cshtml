@@ -1,0 +1,157 @@
+@{
+    ViewBag.Title = "INTERFACE_FIELD》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/INTERFACE_FIELD/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/INTERFACE_FIELD/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>interface_field_key：</th>
+            <td class='formValue'>
+                <input id="interface_field_key" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>interface_key：</th>
+            <td class='formValue'>
+                <input id="interface_key" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>from_table_field：</th>
+            <td class='formValue'>
+                <input id="from_table_field" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>to_table_field：</th>
+            <td class='formValue'>
+                <input id="to_table_field" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve1：</th>
+            <td class='formValue'>
+                <input id="reserve1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve2：</th>
+            <td class='formValue'>
+                <input id="reserve2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve3：</th>
+            <td class='formValue'>
+                <input id="reserve3" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve4：</th>
+            <td class='formValue'>
+                <input id="reserve4" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve5：</th>
+            <td class='formValue'>
+                <input id="reserve5" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve6：</th>
+            <td class='formValue'>
+                <input id="reserve6" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve7：</th>
+            <td class='formValue'>
+                <input id="reserve7" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve8：</th>
+            <td class='formValue'>
+                <input id="reserve8" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve9：</th>
+            <td class='formValue'>
+                <input id="reserve9" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve10：</th>
+            <td class='formValue'>
+                <input id="reserve10" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateDate：</th>
+            <td class='formValue'>
+                <input id="CreateDate" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateUserId：</th>
+            <td class='formValue'>
+                <input id="CreateUserId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateUserName：</th>
+            <td class='formValue'>
+                <input id="CreateUserName" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyDate：</th>
+            <td class='formValue'>
+                <input id="ModifyDate" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyUserId：</th>
+            <td class='formValue'>
+                <input id="ModifyUserId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyUserName：</th>
+            <td class='formValue'>
+                <input id="ModifyUserName" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

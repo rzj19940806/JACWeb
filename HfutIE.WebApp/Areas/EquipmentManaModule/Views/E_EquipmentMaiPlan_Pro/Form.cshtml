@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "E_EquipmentMaiPlan_Pro》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        DvcList();
+        PlineList();
+        StfList();
+        InitControl();
+    })
+    //加载产线名称列表
+    function PlineList() {
+        AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#PlineId").append("<option value='" + data.rows[i]["plinenm"] + "'>" + data.rows[i]["plinenm"] + "</option>");
+            }
+        });
+        RateGrade();
+    }
+    //加载人员列表
+    function StfList() {
+        AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GetStfNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#StfId").append("<option value='" + data.rows[i]["stfnm"] + "'>" + data.rows[i]["stfnm"] + "</option>");
+            }
+        });
+        RateGrade();
+    }
+    //加载设备名称列表
+    function DvcList() {
+        AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GetDvcNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#DvcNm").append("<option value='" + data.rows[i]["dvcnm"] + "'>" + data.rows[i]["dvcnm"] + "</option>");
+            }
+        });
+        RateGrade();
+    }
+    //加载设备编号信息
+    function RateGrade() {
+        let DvcNm = $("#DvcNm").val();
+        if (DvcNm != "") {
+            AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/GetDvcCd?DvcNm=" + DvcNm, {}, function (data) {
+                $("#DvcCd").val(data.rows[0]["dvccd"]);
+            });
+        }
+    }
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/EquipmentManaModule/E_EquipmentMaiPlan_Pro/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！" || data.Message == "该名称已经存在！") {
+                tipCss("MaiPlanCode", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>维保计划编号：</th>
+            <td class='formValue'>
+                <input id="MaiPlanCode" maxlength=50 type="text" class="txt required" datacol="yes" err="维保计划编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle'>维保计划名称：</th>
+            <td class='formValue'>
+                <input id="MaiPlanName" maxlength=50 type="text" class="txt required" datacol="yes" err="维保计划名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备名称：</th>
+            <td class='formValue'>
+                <select id="DvcNm" maxlength=50 type="text" class="txt  checkdata" onchange="RateGrade()">
+                </select>
+            </td>
+            <th class='formTitle'>设备编号：</th>
+            <td class='formValue'>
+                <input id="DvcCd" maxlength=50 type="text" class="txt" readonly />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备部件名称：</th>
+            <td class='formValue'>
+                <input id="CarPartId" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>维护类别：</th>
+            <td class='formValue'>
+                <select id="MaiPlanCatg" maxlength=50 type="text" class="txt  checkdata">
+                    <option value="点检">点检</option>
+                    <option value="润滑">润滑</option>
+                    <option value="清洁">清洁</option>
+                    <option value="调试">调试</option>
+                    <option value="检测">检测</option>
+                    <option value="更换">更换</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>维护类型：</th>
+            <td class='formValue'>
+                <input id="MaiPlanType" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>维护内容：</th>
+            <td class='formValue'>
+                <input id="MaiPlanCon" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+
+            <th class='formTitle'>维修标准：</th>
+            <td class='formValue'>
+                <input id="MaiPlanStandard" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>维护周期：</th>
+            <td class='formValue'>
+                <input id="MaiPlanCycle" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>维护状态：</th>
+            <td class='formValue'>
+                <input id="MaiPlanSta" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>责任产线：</th>
+            <td class='formValue'>
+               
+                <select id="PlineId" maxlength=50 type="text" class="txt  checkdata" >
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>责任人：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata">
+                </select>
+            </td>
+            <th class='formTitle'>频次：</th>
+            <td class='formValue'>
+                <input id="Frequency" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>维护人员：</th>
+            <td class='formValue'>
+                <input id="MaiPlanPer" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>维护时间：</th>
+            <td class='formValue'>
+                <input id="MaiPlanTime" maxlength=50 type="datetime" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>是否转档：</th>
+            <td class='formValue'>
+                <select id="IsFile" maxlength=300 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否转档" onclick="">
+
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

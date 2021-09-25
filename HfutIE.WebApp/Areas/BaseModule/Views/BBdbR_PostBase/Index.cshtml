@@ -1,0 +1,262 @@
+@{
+    ViewBag.Title = "岗位基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        GetTree();
+        Show();
+        BindDropItem("#PostType", "PostType", "==全部==");
+        BindDropItem("#WcTyp", "WcTyp", "==全部==");
+    })
+
+    var areaId, area_name = "";
+    var selectnodeishaschild = "";//选中树节点是否有子节点
+    var parentId = "";//父节点编号
+    var sort = "";//层级编号
+    //var CellItem = "";
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                selectnodeishaschild = item.hasChildren;
+                areaId = item.id;            //ID
+                area_name = item.text;         //名称
+                parentId = item.parentnodes;   //父节点编号
+                sort = item.Type;    //层级编号
+                //2.点击树展示表格
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_PostBase/GridListJson")?areaId=" + areaId + "&parentId=" + parentId + "&sort=" + sort, datatype: 'json'}).trigger('reloadGrid');
+        },
+        url: "@Url.Content("~/BaseModule/BBdbR_PostBase/TreeJson")"    //1.获取树
+        };
+      $("#ItemsTree").treeview(itemtree);
+    }
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_PostBase/GridListJson?areaId=''&parentId=''&sort=''")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+            colModel: [
+                { label: '岗位主键', name: 'PostId', index: 'PostId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '岗位编号', name: 'PostCd', index: 'PostCd', width: 0, align: 'center', sortable: true },
+                { label: '岗位名称', name: 'PostNm', index: 'PostNm', width: 0, align: 'center', sortable: true },
+                {
+                    label: '岗位类型', name: 'PostType', index: 'PostType', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return CellItem1('PostType', cellvalue);
+                    }
+                },
+                { label: '工位主键', name: 'WcId', index: 'WcId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 0, align: 'center', sortable: true },
+                { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 0, align: 'center', sortable: true},
+                {
+                    label: '工位类型', name: 'WcTyp', index: 'WcTyp', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return CellItem('WcTyp', cellvalue);
+                    }
+                },
+                { label: '岗位位置', name: 'PostPosition', index: 'PostPosition', width: 0, align: 'center', sortable: true },
+                { label: '开始', name: 'StartPoint', index: 'StartPoint', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '预警', name: 'PreAlarmPoint', index: 'PreAlarmPoint', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '结束', name: 'EndPoint', index: 'EndPoint', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center',sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                        else if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //新增按钮
+    function btn_add() {
+        var WcId = areaId;
+        if (sort =="2") {
+            var url = "/BaseModule/BBdbR_PostBase/Form?WcId=" + WcId;
+            openDialog(url, "Form", "新增岗位信息", 500, 300, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+        else {
+            alertDialog("请选择左边工位信息", 0);
+        }
+    }
+    //编辑按钮
+    function btn_edit() {
+        var WcId = areaId;
+        var KeyValue = GetJqGridRowValue("#gridTable", "PostId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = KeyValue.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_PostBase/Form?KeyValue=" + KeyValue + "&WcId=" + WcId;
+                openDialog(url, "Form", "编辑岗位信息", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PostId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_PostBase/Delete?KeyValue=' + KeyValue, delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }
+    //明细
+    function btn_detail() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PostId");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_PostBase/Detail?KeyValue=" + KeyValue;
+            Dialog(url, "Detail", "岗位基础信息表明细", 820, 500, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    
+     //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#PostType").hide();
+            $("#keywords").hide();
+        }
+        else if (Condition == "PostType") {
+            $("#PostType").show();
+            $("#keywords").hide();
+        }
+        else {
+            $("#PostType").hide();
+            $("#keywords").show();
+        }
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = "";
+        if (Condition =="PostType") {
+            keywords = $("#PostType").val();
+        }
+        else {
+            keywords = $("#keywords").val();
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_PostBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+
+    //根据数据字典显示内容
+    function CellItem1(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+<div id="layout" class="layout">
+    @*树区域*@
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                工位索引
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        @*搜索框区域*@
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>关键字：</th>
+                <td>
+                    <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                        <option value="all">==全部==</option>
+                        <option value="PostCd">岗位编号</option>
+                        <option value="PostNm">岗位名称</option>
+                        <option value="PostType">岗位类型</option>
+                    </select>
+                </td>
+                <td>
+                    <input id="keywords" type="text" class="txt" style="width: 200px" />
+                </td>
+                <td>
+                    <select id="PostType" style="width: 150px;height:25px"></select>
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+
+        @*表格区域*@
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

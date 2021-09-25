@@ -1,0 +1,174 @@
+@{
+    ViewBag.Title = "备用金申请表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    var taskid = GetQuery('taskid');//
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        var Parameter = "";
+        if (taskid) {
+            Parameter = [{
+                paramName: "PettyCashId",
+                paramValue: taskid,
+                Operation: "Equal"
+            }]
+            Parameter = JSON.stringify(Parameter);
+        }
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/ExampleModule/PettyCash/GridPageJson")?ParameterJson=" + escape(Parameter),
+            datatype: "json",
+            height: $(window).height() - 149,
+            autowidth: true,
+            colModel: [
+                    { label: '备用金申请主键', name: 'PettyCashId', index: 'PettyCashId', width: 0, align: 'left', sortable: true, hidden: true },
+                    { label: '申请部门', name: 'DepartmentId', index: 'DepartmentId', width: 0, align: 'left', sortable: true },
+                    { label: '申请金额', name: 'Amount', index: 'Amount', width: 0, align: 'left', sortable: true },
+                    { label: '保管人', name: 'Keeper', index: 'Keeper', width: 0, align: 'left', sortable: true },
+                    { label: '保管方式', name: 'KeepType', index: 'KeepType', width: 0, align: 'left', sortable: true },
+                    { label: '备注', name: 'Remark', index: 'Remark', width: 0, align: 'left', sortable: true },
+                    {
+                        label: '创建时间', name: 'CreateDate', index: 'CreateDate', width: 0, align: 'left', sortable: true, formatter: function (cellvalue, options, rowObject) {
+                            return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                        }
+                    },
+                   { label: '创建用户', name: 'CreateUserName', index: 'CreateUserName', width: 0, align: 'left', sortable: true }
+            ],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: false,
+            gridview: true,
+        });
+    }
+    //新增
+    function btn_add() {
+        var url = "/ExampleModule/PettyCash/Form"
+        openDialog(url, "Form", "新增备用金申请表", 770, 395, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(KeyValue)) {
+            var url = "/ExampleModule/PettyCash/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑备用金申请表", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/ExampleModule/PettyCash/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+    //提交
+    function btn_LRSubmit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        AjaxJson("/Utility/ExcuteFlow", { taskId: taskId, buttonId: buttonId, executyType: 1 }, function (data) {
+            tipDialog(data[1], 5, data[0]);
+        })
+    }
+    //主管审核
+    function btn_Audit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "主管审核", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //财务审核
+    function btn_CFAudit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "财务审核", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //行政审核
+    function btn_AdminAudit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "行政审核", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //审计审核
+    function btn_CheckAudit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "行政审核", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //CEO审核
+    function btn_CEOAudit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "CEO审核", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+    //财务划账
+    function btn_CashierAudit() {
+        var buttonId = $(window.event.srcElement || window.event.target).attr("ids") || $(window.event.srcElement || window.event.target).parent().parent().attr("ids");
+        var taskId = GetJqGridRowValue("#gridTable", "PettyCashId");
+        if (IsChecked(taskId)) {
+            openDialog("/Utility/AuditIndex?taskId=" + taskId + "&buttonId=" + buttonId, "Audit", "财务划账", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });
+        }
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入  
+    }
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

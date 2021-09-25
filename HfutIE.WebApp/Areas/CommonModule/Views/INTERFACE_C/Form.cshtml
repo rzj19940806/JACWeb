@@ -1,0 +1,185 @@
+@{
+    ViewBag.Title = "INTERFACE_C》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindCombobox0();
+        BindCombobox1();
+        BindCombobox2();
+        mesTableName();
+        InitControl();
+    })
+    function BindCombobox0() {
+        //接口类型
+        BindDropItem("#interface_type", "TYPE", "==请选择=");
+    }
+    function BindCombobox1() {
+        //周期单位
+        BindDropItem("#period_unit", "UNIT", "==请选择=");
+    }
+    function BindCombobox2() {
+        //接受模式
+        BindDropItem("#rx_mode", "MODE", "==请选择=");
+    }
+    //接受模式，加载出本系统中所有表数据
+    function mesTableName() {
+        AjaxJson("/CommonModule/INTERFACE_C/SqlTableListJson", {}, function (DataJson) {//这个方法是在工厂日历中写的，此处没有更改
+            $.each(DataJson, function (i) {
+                //$("#p_line_key").append($("<option></option>").val(DataJson[i].p_line_key).html(DataJson[i].p_line_name));//此句可赋两个属性，value和text
+                $("#to_table_name").append("<option value='" + DataJson[i].name + "'>" + DataJson[i].name + "</option>");
+            });
+        })
+    }
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/INTERFACE_C/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                $("#interface_code").attr("disabled", "disabled");
+                $("#interface_name").attr("disabled", "disabled");
+            });
+        }
+    }
+    //接收模式改变
+    function rx_mode_change(value) {
+        if (value == "自动") {
+            $("#start_time").attr("datacol", "yes");
+            $("#start_time").attr("err", "首次接收时间");
+            $("#start_time").attr("checkexpession", "NotNull");
+            $("#period").attr("class", "txt required");
+            $("#period").attr("datacol", "yes");
+            $("#period").attr("err", "接收周期");
+            $("#period").attr("checkexpession", "Double");
+            $("#period_unit").attr("class", "txt required");
+            $("#period_unit").attr("datacol", "yes");
+            $("#period_unit").attr("err", "接收周期单位");
+            $("#period_unit").attr("checkexpession", "NotNull");
+        }
+        else {
+            $("#start_time").removeAttr("datacol");
+            $("#start_time").removeAttr("err");
+            $("#start_time").removeAttr("checkexpession");
+            $("#period").attr("class", "txt");
+            $("#period").removeAttr("datacol");
+            $("#period").removeAttr("err");
+            $("#period").removeAttr("checkexpession");
+            $("#period_unit").attr("class", "txt");
+            $("#period_unit").removeAttr("datacol");
+            $("#period_unit").removeAttr("err");
+            $("#period_unit").removeAttr("checkexpession");
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/INTERFACE_C/SubmitINTERFACEForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>接口编号：</th>
+            <td class='formValue'>
+                <input id="interface_code" maxlength=50 type="text"class="txt required checkdata" datacol="yes" err="接口编号" url="/CommonModule/INTERFACE_C" checkexpession="NotNull"  checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接口名称：</th>
+            <td class='formValue'>
+                <input id="interface_name" maxlength=50 type="text" class="txt required" datacol="yes" err="接口名称" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接口类型：</th>
+            <td class='formValue'>
+                <select id="interface_type" maxlength=50 type="txtselect" class="txt required" datacol="yes" err="接口类型" checkexpession="NotNull">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接口IP地址：</th>
+            <td class='formValue'>
+                <input id="interface_ip" maxlength=50 type="text" class="txt required" datacol="yes" err="接口IP地址" checkexpession="IPOrNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>数据库名称：</th>
+            <td class='formValue'>
+                <input id="database_name" maxlength=50 type="text" class="txt required" datacol="yes" err="数据库名称" checkexpession="NotNull"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>用户名：</th>
+            <td class='formValue'>
+                <input id="user_name" maxlength=50 type="text" class="txt required" datacol="yes" err="用户名" checkexpession="NotNull"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>密码：</th>
+            <td class='formValue'>
+                <input id="password" maxlength=50 type="text" class="txt required" datacol="yes" err="密码" checkexpession="NotNull"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>数据来源表名：</th>
+            <td class='formValue'>
+                <input id="from_table_name" maxlength=50 type="text" class="txt required" datacol="yes" err="数据来源表名" checkexpession="NotNull"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>数据去向表名：</th>
+            <td class='formValue'>
+                <select id="to_table_name" maxlength=50 type="txt select" class="txt required" datacol="yes" err="数据去向表名" checkexpession="NotNull">
+                <option>==请选择==</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接收模式：</th>
+            <td class='formValue'>
+                <select id="rx_mode" maxlength=50 type="txt select" class="txt required" onchange="rx_mode_change(value)" datacol="yes" err="接收模式" checkexpession="NotNull">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>首次接收时间：</th>
+            <td class='formValue'>
+                <input id="start_time" maxlength=50 type="text" class="txt Wdate"  onclick="WdatePicker({ dateFmt: 'H:mm' })"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接收周期：</th>
+            <td class='formValue'>
+                <input id="period" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接收周期单位：</th>
+            <td class='formValue'>
+                <select id="period_unit" maxlength=50 type="txt select" class="txt">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="remarks" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

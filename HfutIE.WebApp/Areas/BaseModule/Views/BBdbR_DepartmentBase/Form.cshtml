@@ -1,0 +1,171 @@
+@{
+    ViewBag.Title = "部门基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+
+    var KeyValue = GetQuery('KeyValue');//主键-部门id
+    var FacId = GetQuery('FacId');//主键-工厂id
+
+    $(function () {
+        StaffList();
+        DepartmentList();
+        BindDropItem("#DepartmentType", "DepartmentType",);
+        InitControl();
+        $("#FacId").val(FacId);
+    })
+    //得到一个对象实体
+    function InitControl() {   
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_DepartmentBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                var DepartmentType = data.DepartmentType;
+                if (DepartmentType == "父部门") {
+                    document.getElementById("ParentDepartment").style.display = "none";
+                    $("#ParentDepartmentID").val("");
+                }
+                else {
+                    document.getElementById("ParentDepartment").style.display = "table-row";
+                   /* $("#ParentDepartmentID").val("");*/
+                }
+            });
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_DepartmentBase/SubmitForm1?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+    //加载人员列表
+    function StaffList() {
+        AjaxJson("/BaseModule/BBdbR_DepartmentBase/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["stfnm"] + "</option>");
+            }
+        });
+        RateGrade();
+    }
+    //加载人员信息
+    function RateGrade() {
+        let StfId = $("#StfId").val();
+        if (StfId != "") {
+            AjaxJson("/BaseModule/BBdbR_DepartmentBase/GetPlineNm2?StfId=" + StfId, {}, function (data) {
+                $("#StfNm").val(data.rows[0]["StfNm"]);
+                $("#Phn").val(data.rows[0]["Phn"]);
+                $("#StfCd").val(data.rows[0]["StfCd"]);
+            });
+        }
+    }
+
+    //加载父部门列表
+    function DepartmentList() {
+        AjaxJson("/BaseModule/BBdbR_DepartmentBase/GetDepartMentNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#ParentDepartmentID").append("<option value='" + data.rows[i]["DepartmentID"] + "'>" + data.rows[i]["DepartmentName"] + "</option>");
+            }
+        });
+        $("#DepartmentType").change(
+            function DepartmentShow() {
+                document.getElementById("ParentDepartment").style.display = "none";
+                var DepartmentType = $("#DepartmentType").val();
+                if (DepartmentType == "父部门") {
+                    document.getElementById("ParentDepartment").style.display = "none";
+                    $("#ParentDepartmentID").val("");
+                }
+                else {
+                    document.getElementById("ParentDepartment").style.display = "table-row";
+                    $("#ParentDepartmentID").val("");
+                }
+            }
+        )
+    }  
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style=" display :none">
+            <th class='formTitle'>工厂主键：</th>
+            <td class='formValue'>
+                <input id="FacId" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>部门编号：</th>
+            <td class='formValue'>
+                <input id="DepartmentCode" maxlength=50 type="text" class="txt" required" datacol="yes" err="部门编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>部门名称：</th>
+            <td class='formValue'>
+                <input id="DepartmentName" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="部门名称" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>部门类别：</th>
+            <td class='formValue'>
+                <select id="DepartmentType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="部门类别" onclick="">
+                </select>
+            </td>
+        </tr>
+        <tr id="ParentDepartment" style=" display :none">
+            <th class='formTitle'>父部门名称：</th>
+            <td class='formValue'>
+                <select id="ParentDepartmentID" maxlength=50 type="text" class="txt  checkdata">
+                    <option value=" ">请选择父部门 </option>
+                </select>
+            </td>
+        </tr>
+       
+        <tr style=" display :none">
+            <th class='formTitle'>负责人员主键：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata" onchange="RateGrade()">
+                </select>
+            </td>
+        </tr>
+        <tr style=" display :none">
+            <th class='formTitle'>负责人员编号：</th>
+            <td class='formValue'>
+                <input id="StfCd" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>负责人员姓名：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata" onchange="RateGrade()">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>负责人手机号：</th>
+            <td class='formValue'>
+                <input id="Phn" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>部门描述：</th>
+            <td class='formValue'>
+                <input id="DepartmentDescription" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>

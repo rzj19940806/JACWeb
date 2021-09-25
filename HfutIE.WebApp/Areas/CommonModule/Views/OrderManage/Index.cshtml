@@ -1,0 +1,410 @@
+﻿@{
+    ViewBag.Title = "订单管理";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+@*<script src="~/Content/Scripts/jqgrid/grid.treegrid.js"></script>*@
+<script type="text/javascript">
+    var orderselectrow = "";
+    var projectselectrow = "";
+    $(document).ready(function () {
+        GetGrid();
+        //jQuery(”#grid_id”).setColProp('colname',{editoptions:{value:“True:False”}});
+        //$("#gridTable").setGridParam().hideCol("Remarks").trigger("reloadGrid");
+    });
+
+    /* convert Number to Roman Number with scope(1-3999)*/
+    function convertToRoman(num) {
+        var aArray = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        var rArray = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+        var result = "";
+        for (var i = 0; i < aArray.length; i++) {
+            while (num >= aArray[i]) {
+                result += rArray[i];
+                num -= aArray[i];
+            }
+        }
+        return result;
+    }
+    //加载表格
+    function GetGrid() {
+        var SelectRowIndx;
+        var SelectRowIndxs;
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/CommonModule/OrderManage/GridList")",
+            datatype: "json",
+            //treeGrid: true,
+            //treeGridModel: "nested",
+            //ExpandColumn: "Code",
+            height: $(window).height() - 150,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'ID', index: 'ID', width: 80, hidden: true, align: 'center', sortable: true},
+                { label: "订单编号", name: "OrderCode", index: "OrderCode", width: 100, align: 'center', sortable: true},
+                { label: "订单名称", name: "OrderName", index: "OrderName", width: 100, align: 'center', sortable: true},
+                {
+                    label: "订单类型", name: "OrderType", index: "OrderType", width: 100,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "标准生产订单";
+                        if (cellvalue == '2') return "返工订单";
+                        if (cellvalue == '3') return "试制订单";
+                    }
+                },
+                {
+                    label: "订单状态", name: "State", index: "State", width: 50, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') return "待评估";
+                        if (cellvalue == '1') return "未上线";
+                        if (cellvalue == '2') return "执行中";
+                        if (cellvalue == '3') return "已完成";
+                    }
+                },
+                { label: "客户编号", name: "CustomerCode", index: "CustomerCode", width: 100, align: 'center', sortable: true},
+            { label: "客户名称", name: "CustomerName", index: "CustomerName", width: 100, align: 'center', sortable: true},
+                {
+                    label: "优先级", name: "Priority", index: "Priority", width: 50, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return convertToRoman(cellvalue);
+                    }
+                },
+            {
+                label: '创建时间', name: "CreateTime", width: 130, sortable: true, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                }
+            },
+            { label: "创建人", name: "CreatorID", index: "CreatorID", width: 100, align: 'center', sortable: true},
+            {
+                label: '上次修改时间', name: "LastModifiedTime", width: 130, sortable: true, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                }
+            },
+            { label: "修改人", name: "ModifierID", index: "ModifierID", width: 100, align: 'center', sortable: true },
+            {
+                label: '有效性', name: 'IsAvailable', index: 'IsAvailable', width: 45, align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                    if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                }
+            },
+                { label: '订单描述', name: 'Description', index: 'Description', width: 150, align: 'center'},
+                { label: '备注', name: 'Remarks', index: 'Remarks', width: 120, align: 'center'}
+            ],
+            rowNum: 1000,
+            pager: "#gridPager",
+            sortname: 'OrderCode',
+            sortorder: 'OrderCode',
+            rownumbers: true,
+            shrinkToFit: false,
+            gridview: true,
+            multiselect: true,
+            onSelectRow: function () {
+                SelectRowIndx = GetJqGridRowIndx("#" + this.id);
+                orderselectrow = SelectRowIndx;
+            },
+            gridComplete: function () {
+                $("#" + this.id).jqGrid('setSelection', SelectRowIndx);
+            },
+            subGrid: true,
+            subGridRowExpanded: function (subgrid_id, row_id) {
+                var ID = GetJqGridValue("#gridTable", row_id, "ID");
+                var subgrid_table_id = subgrid_id + "_t";
+                $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "'></table>");
+                $("#" + subgrid_table_id).jqGrid({
+
+                    url: "@Url.Content("~/CommonModule/OrderManage/GetDetailList")?ID=" + ID,
+                    datatype: "json",
+                    colModel: [
+                        { label: '主键', name: "ID", index: "ID", width: 78, sortable: false, align: 'center', hidden: true },
+                        { label: '项目编号', name: "ProjectCode", index: "ProjectCode", width: 100, sortable: false, align: 'center' },
+                        { label: '项目名称', name: "ProjectName", index: "ProjectName", width: 100, sortable: false, align: 'center' },
+                        {
+                            label: '项目类型', name: "Type", index: "Type", width: 100, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue == '1') return "项目类型1";
+                                if (cellvalue == '2') return "项目类型2";
+                                if (cellvalue == '3') return "项目类型3";
+                            }
+                        },
+                        { label: '产品ID', name: "ProductID", index: "ProductID", width: 100, sortable: false, align: 'center', hidden: true },
+                        { label: '产品编号', name: "ProductCode", index: "ProductCode", width: 70, sortable: false, align: 'center' },
+                        { label: '产品名称', name: "ProductName", index: "ProductName", width: 70, sortable: false, align: 'center' },
+                        { label: '产品数量', name: "Num", index: "Num", width: 50, sortable: false, align: 'center' },
+                        { label: '单价', name: "Price", index: "Price", width: 50, sortable: false, align: 'center' },
+                        { label: '单位', name: "Unit", index: "Unit", width: 50, sortable: false, align: 'center' },
+                        {
+                            label: '创建时间', name: "CreateTime", width: 120, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                            }
+                        },
+                        { label: '创建人', name: "CreatorID", width: 90, sortable: false, align: 'center' },
+                        {
+                            label: '上次修改时间', name: "LastModifiedTime", width: 120, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                            }
+                        },
+                        { label: "修改人", name: "ModifierID", index: "ModifierID", width: 90, align: 'center' },
+                        {
+                            label: '交货期', name: "DeadLine", width: 120, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                            }
+                        },
+                        {
+                            label: '优先级', name: "SubPriority", index: "SubPriority", width: 50, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                return convertToRoman(cellvalue);
+                            }
+                        },
+                        {
+                            label: '状态', name: "State", index: "State", width: 50, sortable: false, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue == '0') return "待评估";
+                                if (cellvalue == '1') return "未上线";
+                                if (cellvalue == '2') return "执行中";
+                                if (cellvalue == '3') return "已完成";
+                            }
+                        },
+                        {
+                            label: '有效性', name: 'IsAvailable', index: 'IsAvailable', width: 45, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                                if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                            }
+                        },
+                        {label: '备注', name: "Remarks", index: "Remarks", width: 100, sortable: false, align: 'center'}
+                    ],
+                    //width: "1408",
+                    multiselect: false,
+                    //multiboxonly: true,
+                    onSelectRow: function () {
+                        SelectRowIndxs = GetJqGridRowIndx("#" + this.id);
+                        var x = document.getElementById(subgrid_table_id).rows[SelectRowIndxs].cells;
+                        projectselectrow = x[0].innerText;//获取选中项目ID
+                        //console.log(x);
+                        //console.log(x[1].innerText);
+                    },
+                    gridComplete: function () {
+                        $("#" + this.id).jqGrid('setSelection', SelectRowIndxs);
+                    },
+                    rowNum: "all"
+                });
+            }
+        });
+        columnModelData("#gridTable");
+    }
+
+  
+    //新增班制
+    function btn_add() {
+        var url = "/CommonModule/OrderManage/OrderForm";
+        openDialog(url, "OrderForm", "新增订单", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑班制
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "ID");
+        orderselectrow = KeyValue;//选中行订单ID
+        if (!!KeyValue) {
+            if (!!projectselectrow) {
+                KeyValue = KeyValue + "," + projectselectrow;
+            }
+        } else {
+            KeyValue = projectselectrow;
+        }
+        if (IsChecked(KeyValue)) {
+            if (!!projectselectrow) {
+                var url = "/CommonModule/OrderManage/ProjectForm?ProjectID=" + projectselectrow;
+                openDialog(url, "ProjectForm", "编辑订单", 650, 380, function (iframe) {
+                    top.frames[iframe].AcceptClick();
+                });
+            } else {
+                var url = "/CommonModule/OrderManage/OrderForm?KeyValue=" + orderselectrow;
+                openDialog(url, "OrderForm", "编辑订单", 650, 380, function (iframe) {
+                    top.frames[iframe].AcceptClick();
+                });
+            }
+        }
+        
+        
+    }
+    //删除班制
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "ID");
+        var orderdel = KeyValue;//获取选中订单ID集合
+        if (!!KeyValue) {
+            if (!!projectselectrow) {
+                KeyValue = KeyValue + "," + projectselectrow;
+            }
+        } else {
+            KeyValue = projectselectrow;
+        }
+        //var KeyValue = GetJqGridRowValue("#gridTable", "ID");
+        if (IsDelData(KeyValue)) {
+            if ((!!projectselectrow) && (!!orderdel)) {
+                tipDialog('很抱歉,您只能选择订单或项目进行删除。', 4, 'warning');
+            } else if (!!projectselectrow) {
+                var delparm = 'KeyValue=' + KeyValue;
+                delConfig('/CommonModule/OrderManage/DeleteProject', delparm, KeyValue.split(",").length);
+            } else {
+                var delparm = 'KeyValue=' + KeyValue;
+                delConfig('/CommonModule/OrderManage/DeleteOrder', delparm, KeyValue.split(",").length);
+            }
+        }
+        //if (IsDelData(KeyValue)) {
+        //    var delparm = 'KeyValue=' + KeyValue;
+        //    delConfig('/CommonModule/OrderManage/DeleteOrder', delparm, KeyValue.split(",").length);
+        //}
+    }
+    //配置班组
+    function btn_addproject() {
+        var OrderID = GetJqGridRowValue("#gridTable", "ID");
+        if (IsChecked(OrderID)) {
+            var url = "/CommonModule/OrderManage/ProjectForm?OrderID=" + OrderID;
+            openDialog(url, "ProjectForm", "新增项目", 650, 380, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var Keyword = "";
+        if (Condition != "") {
+            if (Condition == "OrderCode" || Condition == "OrderName") {
+                Keyword = $("#keywordstxt").val();
+            } else {
+                Keyword = $("#list").val();
+            }
+        //加载数据表格
+        $("#gridTable").jqGrid("clearGridData");
+            $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/OrderManage/SearchList")?Condition=" + escape(Condition) + "&Keyword=" + escape(Keyword), }).trigger('reloadGrid');
+        } else {
+            
+        //加载数据表格
+        $("#gridTable").jqGrid("clearGridData");
+        $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/OrderManage/GridList")" }).trigger('reloadGrid');
+        }
+    }
+    //加载订单状态下拉框
+    function OrderState() {
+        //$("#list").append("<option value='' selected='selected'>==请选择==</option>");
+        AjaxJson("/CommonModule/OrderManage/SetOrderState", {}, function (data) {
+            //console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                $("#list").append("<option value='" + i + "'>" + data[i]["FullName"] + "</option>");
+            }
+        });
+    }
+    //加载订单优先级下拉框
+    function OrderPriority() {
+        //$("#list").append("<option value='' selected='selected'>==请选择==</option>");
+        //AjaxJson("/CommonModule/OrderManage/SetOrderPriority", {}, function (data) {
+        //    for (var i = 0; i < data.length; i++) {
+        //        $("#list").append("<option value='" + (i + 1) + "'>" + data[i]["FullName"] + "</option>");
+        //    }
+        //});
+        for (var i = 0; i < 3; i++) {
+            $("#list").append("<option value='" + (i + 1) + "'>" + (i+1) + "</option>");
+        }
+    }
+    //根据搜索条件改变样式
+    function GetCondition() {
+        var Condition = $("#Condition").val();
+        if (Condition != "") {
+            $("#keywords").show();
+            if (Condition == "OrderCode" || Condition == "OrderName") {
+                $("#list").remove();
+                $("#keywordstxt").remove();
+                $("#keywords").append("<input id='keywordstxt' type='text' class='txt' style='width: 200px' />");
+            } else {
+                $("#list").remove();
+                $("#keywordstxt").remove();
+                $("#keywords").append("<select id='list'  style='width: 150px; height: 25px'></select>");
+                if (Condition == "State") {
+                    OrderState();
+                } else {
+                    OrderPriority();
+                    //$("#keywords").append("<option value='1' selected='selected'>1</option>");
+                    //$("#keywords").append("<option value='2' selected='selected'>2</option>");
+                }
+            }
+        }
+        else {
+            $("#keywords").hide();
+        }
+    }
+    //导入订单Excel
+    function btn_import() {
+        var OrderID = GetJqGridRowValue("#gridTable", "ID");
+        openDialog("/CommonModule/OrderManage/ExcelImportDialog" ,"ExcelImportDialog", "订单项目信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入  
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px">
+                    <option value="all">==全部==</option>
+                    <option value="FacCd">班组编号</option>
+                    <option value="FacNm">班组名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    @*表格区域*@
+    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:22px">
+                    班制清单 <span class="ModuleName"></span>
+                </div>
+            </div>
+            <div style="height: 49% ;width:auto; ">
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:22px;">
+                    班组清单 <span class="ModuleName"></span>
+                </div>
+            </div>
+            <div style="height: 40%; width:auto;">
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_right" class="ui-jqgrid tr.jqgrow td"></table>
+                    <div id="gridPager_right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+@{
+    ViewBag.Title = "公司基础信息表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/BBdbR_CompanyBase/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>公司主键：</th>
+            <td class='formValue'>
+                <label id="CompanyId" />
+            </td>
+            <th class='formTitle'>公司编号：</th>
+            <td class='formValue'>
+                <label id="CompanyCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>公司名称：</th>
+            <td class='formValue'>
+                <label id="CompanyNm" />
+            </td>
+            <th class='formTitle'>法人：</th>
+            <td class='formValue'>
+                <label id="ArtificialPerson" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>联系电话：</th>
+            <td class='formValue'>
+                <label id="CompanyTelephone" />
+            </td>
+            <th class='formTitle'>传真：</th>
+            <td class='formValue'>
+                <label id="CompanyFax" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>邮箱：</th>
+            <td class='formValue'>
+                <label id="CompanyEmail" />
+            </td>
+            <th class='formTitle'>公司地址：</th>
+            <td class='formValue'>
+                <label id="CompanyAddress" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>公司描述：</th>
+            <td class='formValue'>
+                <label id="CompanyDescription" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Remark" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <label id="Enable" />
+            </td>
+            <th class='formTitle'>版本号：</th>
+            <td class='formValue'>
+                <label id="VersionNumber" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <label id="CreatorCode" />
+            </td>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <label id="CreatorName" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreateTime" />
+            </td>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <label id="ModifierCode" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <label id="ModifierName" />
+            </td>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="ModifyTime" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <label id="ReserveFiled1" />
+            </td>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <label id="ReserveFiled2" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

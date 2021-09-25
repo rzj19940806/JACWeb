@@ -1,0 +1,360 @@
+﻿@{
+    ViewBag.Title = "DTS检测项维护";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//单元函数主键
+    $(function () {
+        BindCombobox()
+        //CreateTable();
+        TableTdEvent();
+        SetControl();
+        //GetGuid();
+    })
+    //初始化绑定下拉框
+    function BindCombobox() {
+        //角色分类
+        BindDropItem("#CarType", "CarNm", "==请选择=");
+    }
+    //编辑的时候给对象赋值
+    function SetControl() {
+        if (!!KeyValue) {
+            AjaxJson("/QualityModule/CheckItem/GridItemJson", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);  //基本信息赋值
+            });
+            var RowIndex = 1;
+            AjaxJson("/QualityModule/CheckItem/GetItemStaList", { PropertyName: "ParId", PropertyValue: KeyValue }, function (Data) {
+                var JsonData = Data.rows;
+                $.each(JsonData, function (i) {
+                    if (RowIndex > 0) {  //有参数时增加行
+                        InsetTableRow();
+                    }
+                    //配置信息赋值
+                    SetControls("SerialNumber➩" + RowIndex, JsonData[i].SerialNumber);
+                    SetControls("BaseValue➩" + RowIndex, JsonData[i].BaseValue);
+                    SetControls("TolValue➩" + RowIndex, JsonData[i].TolValue);
+                    SetControls("TOLUp➩" + RowIndex, JsonData[i].TOLUp);
+                    SetControls("TOLDown➩" + RowIndex, JsonData[i].TOLDown);
+                    SetControls("Direction➩" + RowIndex, JsonData[i].Direction);
+                    $("#grid_Field tbody tr:eq(" + RowIndex + ")").find('input,select').removeAttr('disabled');
+                    RowIndex++;
+                });
+            });
+            //if (RowIndex > 1) {
+            //    InsetTableRow();
+            //}
+            function SetControls(key, value) {
+                var id = $('#' + key);
+                var type = id.prop('type');
+                switch (type) {
+                    case "checkbox":
+                        id.show();
+                        if (value == "1") {
+                            id.prop("checked", true);
+                        } else {
+                            id.prop("checked", false);
+                        }
+                        break;
+                    default:
+                        id.parent().find('div').html(value);
+                        id.val(value);
+                        break;
+                }
+            }
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            postData["ConfigInfoJson"] = GetTableDataJson("#grid_Field");
+            AjaxJson("/QualityModule/CheckItem/SubmitFormDTS?KeyValue=" + escape(KeyValue), postData, function (data) {
+                if (data.Message == "数据格式异常") {
+                    tipCss("", "基准值/公差值/TOL+/TOL-/数据格式异常，请输入数字");
+                    return;
+                }
+                else if (data.Message == "该编号已经存在！") {
+                    tipCss("DTSItemID", data.Message);
+                    return;
+                }
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+
+    //默认添加表格1行
+    function CreateTable() {
+        var RowIndex = ($('#grid_Field tbody tr').length + 1);
+        for (var i = 0; i < 1; i++) {
+            $("#grid_Field tbody").append(CreateTableRow(RowIndex));
+            RowIndex++;
+        };
+        $("#grid_Field tbody tr").find('input,select').attr('disabled', 'disabled').hide();
+        $("#grid_Field tbody tr:eq(0)").find('input,select').removeAttr('disabled');
+        //$("#ParaNm➩1").attr('datacol', 'yes');
+    };
+    //创建行
+    function CreateTableRow(index) {
+        var tr = '';
+        tr += '<tr>';
+        tr += '<td class="td-div" style="width: 30px; height: 27px; text-align: center;border-left: none;">' + index + '</td>';
+        tr += '<td style="width: auto;text-align: center;"><div></div><input id="SerialNumber➩' + index + '" type="text" class="txt" datacol="no" err="检测序号" checkexpession="NotNull" /></td>';
+        //if (KeyValue!="") {
+        //    tr += '<td style="width: 120px; text-align: left;"><div></div><input id="ParaDataTyp➩' + index + '" type="text" class="txt" /></td>';//编辑
+        //} else {
+        //    tr += '<td style="width: 120px; text-align: left;"><div></div>' + DataBaseType(index) + '</td>'; //新增
+        //}
+        tr += '<td style="width: auto; text-align: center;"><div></div><input id="BaseValue➩' + index + '" type="text" class="txt" /></td>';
+        tr += '<td style="width: auto; text-align: center;"><div></div><input id="TolValue➩' + index + '" type="text" class="txt" /></td>';
+        tr += '<td style="width: auto; text-align: center;"><div></div><input id="TOLUp➩' + index + '" type="text" class="txt" /></td>';
+        tr += '<td style="width: auto; text-align: center;"><div></div><input id="TOLDown➩' + index + '" type="text" class="txt" /></td>';
+        tr += '<td style="width: auto; text-align: center;"><div></div><input id="Direction➩' + index + '" type="text" class="txt" datacol="no" err="方向" checkexpession="Double"</td>';
+        tr += '</tr>';
+        return tr;
+    }
+
+    //参数名输入事件
+    function ParaInputEvent(index) {
+        if ($("#ParaNm➩" + index).val() != "") {
+            //$("#ParaDsc➩" + index).removeAttr('disabled').show();
+            $("#Enabled➩" + index).removeAttr('disabled').show();
+            //$("#ParaDataTyp➩" + index).parent().trigger("click");
+            if ($("#ParaDataTyp➩" + index).val() == "") {
+                $("#ParaDataTyp➩" + index).parent().trigger("click");
+                $("#ParaDataTyp➩" + index).val('string');
+            }
+            if ($("#ParaCatg➩" + index).val() == "") {
+                $("#ParaCatg➩" + index).parent().trigger("click");
+                $("#ParaCatg➩" + index).val('I');
+            }
+            $("#grid_Field tbody tr:eq(" + index + ")").find('input,select').removeAttr('disabled');
+            $("#ParaDataTyp➩" + index).attr('datacol', 'yes');
+            $("#ParaCatg➩" + index).attr('datacol', 'yes');
+        }
+    }
+
+    //数据类型
+    function DataBaseType(index) {
+        var html = '<select id="ParaDataTyp➩' + index + '" class="txtselect" datacol="no" err="参数数据类型" checkexpession="NotNull">';
+        html += '<option value=""></option>';
+        html += '<option value="string">string</option>';
+        html += '<option value="DateTime">DateTime</option>';
+        html += '<option value="int">int</option>';
+        html += '<option value="Object">Object</option>';
+        html += '<option value="Decimal">Decimal</option>';
+        html += '<option value="Double">Double</option>';
+        html += '<option value="Guid">Guid</option>';
+        html += '<option value="string[]">string[]</option>';
+        html += '<option value="Boolean">Boolean</option>';
+        html += '</select>';
+        return html;
+    }
+    //方向
+    function Direction(index) {
+        var html = '<select id="Direction➩' + index + '" class="txtselect" datacol="no" err="方向" checkexpession="NotNull">';
+        html += '<option value="I">输入参数</option>';
+        html += '<option value="O">返回值</option>';
+        html += '</select>';
+        return html;
+    }
+
+    //表格点击事件
+    function TableTdEvent() {
+        $("#grid_Field tbody tr .td-div").toggle(function () {
+            $(".grid tbody tr").removeClass("tdhover");
+            $(".grid tbody tr").removeClass("selected");
+            $(this).parent().addClass("selected");
+        }, function () {
+            $(this).parent().removeClass("selected");
+        });
+        $("#grid_Field tbody tr td").click(function () {
+            if ($(this).find('div').length > 0) {
+                var oldText = $(this).find('div').text();
+                var obj = $(this).find('input,select');
+                if (obj.attr('disabled')) {
+                    return false;
+                }
+                var type = obj.attr('class');
+                obj.show();
+                obj.parent().find('div').html("");
+                obj.trigger("focus");
+                obj.blur(function () {
+                    if (obj.parent().find('div').length > 0) {
+                        var newText = obj.val();
+                        obj.hide();
+                        obj.parent().find('div').html(newText);
+                    }
+                });
+            }
+        })
+    }
+
+    //表格tr上移
+    function Gridup() {
+        var objParentTR = $("#grid_Field tbody .selected");
+        var prevTR = objParentTR.prev();
+        if (prevTR.length > 0) {
+            prevTR.insertAfter(objParentTR);
+            //更新表格序列号
+            var indexrow = 1; $("#grid_Field tbody tr").each(function () { $(this).find('td:eq(0)').html(indexrow); indexrow++; });
+        } else {
+            return;
+        }
+    }
+    //表格tr下移
+    function Griddown(obj) {
+        var objParentTR = $("#grid_Field tbody .selected");
+        var nextTR = objParentTR.next();
+        if (nextTR.length > 0) {
+            nextTR.insertBefore(objParentTR);
+            //更新表格序列号
+            var indexrow = 1; $("#grid_Field tbody tr").each(function () { $(this).find('td:eq(0)').html(indexrow); indexrow++; });
+        } else {
+            return;
+        }
+    }
+    //清空表格当前行
+    function EmptyTableRow() {
+        var trobj = $("#grid_Field tbody .selected");
+        var selectedindex = (trobj.find('td:eq(0)').html()) - 1; $("#grid_Field tbody tr:eq(" + selectedindex + ")").find('input,select').hide();
+        $("#grid_Field tbody tr:eq(" + selectedindex + ")").find('td').find('div').html('');
+        $("#grid_Field tbody tr:eq(" + selectedindex + ")").find('input,select').val("").hide();
+        $("#grid_Field tbody tr:eq(" + selectedindex + ")").find('input[name="checkbox"]').attr("checked", false);
+        trobj.removeClass("selected");
+    }
+    //插入一个空行
+    function InsetTableRow() {
+        var RowIndex = $('#grid_Field tbody tr').length + Number(1);
+        var trobj = $("#grid_Field tbody .selected");
+        if (trobj.length) {
+            trobj.before(CreateTableRow(RowIndex));
+            var selectedindex = (trobj.find('td:eq(0)').html()) - 1; $("#grid_Field tbody tr:eq(" + selectedindex + ")").find('input,select').hide();
+            //更新表格序列号
+            var indexrow = 1; $("#grid_Field tbody tr").each(function () { $(this).find('td:eq(0)').html(indexrow); indexrow++; });
+        } else {
+            $("#grid_Field tbody").append(CreateTableRow(RowIndex));
+            $("#grid_Field tbody tr:eq(" + (RowIndex - 1) + ")").find('input,select').hide();
+        }
+        TableTdEvent();
+    }
+    //编号生成
+    function CodeAutoGet(){
+        var cartype = $("#CarType").val();
+        var location = $("#Location").val();
+        if (cartype != "" && location != "" && !KeyValue) {
+            AjaxJson("/QualityModule/CheckItem/DTSCodeGet", { PropValue1: cartype, PropValue2: location }, function (data) {
+                $("#DTSItemID").val(data.Code); //编号赋值
+            });        
+        }
+    }
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <div class="btnbartitle">
+        <div>
+            基本信息<span id="BaseInfo"></span>
+        </div>
+    </div>
+    <table class="form" style="border-right: none;">
+        <tr>
+            <th class="formTitle" style="height: 28px">车型：</th>
+            <td class="formValue">
+                <select id="CarType" class="txtselect required" datacol="yes" err="车型" checkexpession="NotNull" onchange="CodeAutoGet()"></select>
+            </td>
+            <th class="formTitle">方位：</th>
+            <td class="formValue">
+                <select id="Location" class="txtselect required" datacol="yes" err="方位" checkexpession="NotNull" onchange="CodeAutoGet()">
+                    <option value="">==请选择=</option>
+                    <option value="左侧">左侧</option>
+                    <option value="右侧">右侧</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 28px">编号：</th>
+            <td class="formValue">
+                <input id="RecordId" type="hidden" />
+                <input id="DTSItemID" type="text" class="txt required" datacol="yes" err="编号" checkexpession="NotNull">
+            </td>
+            <th class="formTitle" style="height: 28px">检测项：</th>
+            <td class="formValue">
+                <input id="DTSItem" maxlength="50" type="text" class="txt required" datacol="yes" err="检测项" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 28px">有效性：</th>
+            <td class="formValue">
+                <span class="item">
+                    <input id="Enabled" type="checkbox" name="checkbox" checked="checked" />
+                </span>
+            </td>
+            <th class="formTitle">备注：</th>
+            <td class="formValue">
+                <textarea id="Rem" name="Rem" maxlength="200" class="txtArea" rows="2"></textarea>
+            </td>
+        </tr>
+    </table>
+    <div class="bd">
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="" style="position: absolute">
+                <div>
+                    配置信息<span id="ConfInfo"></span>
+                </div>
+            </div>
+            <div style="float: right;">
+                <div class="tools_bar_icon">
+                    <div class="icon-botton" title="上移" onclick="Gridup()">
+                        <img src="~/Content/Images/Icon16/resultset_top.png" />
+                    </div>
+                    <div class="icon-botton" title="下移" onclick="Griddown()">
+                        <img src="~/Content/Images/Icon16/resultset_bottom.png" />
+                    </div>
+                    <div class="tools_separator" style="height: 23px; margin-right: 5px;"></div>
+                    <div class="icon-botton" title="清空行" onclick="EmptyTableRow()">
+                        <img src="~/Content/Images/Icon16/toggle.png" />
+                    </div>
+                    <div class="icon-botton" title="插入行" onclick="InsetTableRow()">
+                        <img src="~/Content/Images/Icon16/toggle_expand.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="grid_Field" class="grid" style="width: 100%">
+            <thead>
+                <tr>
+                    <td style="width: 30px; text-align: center; border-left: none;">
+                        <div class="table-header">&nbsp;</div>
+                    </td>
+                    <td style="width: auto; text-align: center;">
+                        <div class="table-header">检测序号</div>
+                    </td>
+                    <td style="width: auto; text-align: center;">
+                        <div class="table-header">基准值</div>
+                    </td>
+                    <td style="width: auto; text-align: center;">
+                        <div class="table-header">公差值</div>
+                    </td>
+                    <td style="width: auto; text-align: center;">
+                        <div class="table-header">TOL+</div>
+                    </td>
+                    <td style="width: auto; text-align: center;">
+                        <div class="table-header">TOL-</div>
+                    </td>
+                    <td style="text-align: center;">
+                        <div class="table-header">方向</div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</form>
+

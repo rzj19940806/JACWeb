@@ -1,0 +1,277 @@
+@{
+    ViewBag.Title = "AVI站点组配置";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('AVIGroupId');
+    var AVIGroupNm = GetQuery('AVIGroupNm');
+    var AVIGroupCd = GetQuery('AVIGroupCd');
+    $(function () {
+        GetGrid_up();
+        GetGrid_down();
+    })
+
+    
+    function GetGrid_up() {
+        $("#gridTable_up").jqGrid({
+            url: "/BaseModule/BBdbR_AVIGroupConfig/AVIGroupConfig_Up?KeyValue=" + KeyValue,
+            datatype: "json",
+            autowidth: false,
+            //width: 850,  
+            height: 160,
+            colModel: [
+                //{ label: 'AVI站点组主键', name: 'AVIGroupId', index: 'AVIGroupId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'AVI站点组编号', name: 'AVIGroupCd', index: 'AVIGroupCd', width: 0, align: 'center', sortable: true },
+                { label: 'AVI站点组名称', name: 'AVIGroupNm', index: 'AVIGroupNm', width: 0, align: 'center', sortable: true },
+                { label: 'AVI主键', name: 'AVIId', index: 'AVIId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'AVI编号', name: 'AVICd', index: 'AVICd', width: 0, align: 'center', sortable: true },
+                { label: 'AVI名称', name: 'AVINm', index: 'AVINm', width: 0, align: 'center', sortable: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                //    }
+                //},
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 10,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager_up",
+            sortname: '',
+            sortorder: 'desc',
+            sortname: '',
+            rownumbers: true,
+            shrinkToFit: true,
+            loadonce: true,
+            gridview: true,
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            ondblClickRow: function (RowId) {
+                //var groupid = GetJqGridRowValue("#gridTable_down", "AVIGroupId");
+                //var groupcd = GetJqGridRowValue("#gridTable_down", "AVIGroupCd");
+                //var groupnm = GetJqGridRowValue("#gridTable_down", "AVIGroupNm");
+                var id = GetJqGridRowValue("#gridTable_up", "AVIId");
+                var code = GetJqGridRowValue("#gridTable_up", "AVICd");
+                var fullname = GetJqGridRowValue("#gridTable_up", "AVINm");
+                var Content = GetJqGridRowValue("#gridTable_up", "Rem");
+                //var Enabled = GetJqGridRowValue("#gridTable_up", "Enabled");
+                var groupnm = AVIGroupNm;
+                var groupcd = AVIGroupCd;
+                var equipment = KeyValue;//获取grid1选中行的数据
+                if (KeyValue != "") {
+                    $("#gridTable_down").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_down").jqGrid("setRowData", RowId, {
+                        /*AVIGroupId: groupid,*/AVIGroupNm: groupnm, AVIGroupCd: groupcd, AVIId: id, AVICd: code, AVINm: fullname,
+                        Rem: Content
+                    });//将grid选中行数据复制给grid1中新增的行
+                        $("#gridTable_up").jqGrid("delRowData", RowId);//删除grid选中行的数据                   
+                }
+                else {
+                    alertDialog("请先选择AVI站点，再进分组则配置！")
+                }          
+            }
+        });
+    }
+
+    //检查项目已配置表格
+    function GetGrid_down() {
+        $("#gridTable_down").jqGrid({
+            url: "/BaseModule/BBdbR_AVIGroupConfig/AVIGroupConfig_Down?KeyValue=" + KeyValue,
+            datatype: "json",
+            height: 170,
+            autowidth: false,
+            colModel: [
+                //{ label: 'AVI站点组主键', name: 'AVIGroupId', index: 'AVIGroupId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'AVI站点组编号', name: 'AVIGroupCd', index: 'AVIGroupCd', width: 0, align: 'center', sortable: true },
+                { label: 'AVI站点组名称', name: 'AVIGroupNm', index: 'AVIGroupNm', width: 0, align: 'center', sortable: true },
+                { label: 'AVI主键', name: 'AVIId', index: 'AVIId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'AVI编号', name: 'AVICd', index: 'AVICd', width: 0, align: 'center', sortable: true },
+                { label: 'AVI名称', name: 'AVINm', index: 'AVINm', width: 0, align: 'center', sortable: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                //    }
+                //},
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 10,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager_down",
+            sortname: '',
+            sortorder: 'desc',
+            sortname: '',
+            rownumbers: true,
+            shrinkToFit: true,
+            loadonce: true,
+            gridview: true,
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            ondblClickRow: function (RowId) {
+                //var groupid = GetJqGridRowValue("#gridTable_down", "AVIGroupId");
+                var groupcd = GetJqGridRowValue("#gridTable_down", "AVIGroupCd");
+                var groupnm = GetJqGridRowValue("#gridTable_down", "AVIGroupNm");
+                var id = GetJqGridRowValue("#gridTable_down", "AVIId");
+                var code = GetJqGridRowValue("#gridTable_down", "AVICd");
+                var fullname = GetJqGridRowValue("#gridTable_down", "AVINm");
+                var Content = GetJqGridRowValue("#gridTable_down", "Rem");
+                //var Enabled = GetJqGridRowValue("#gridTable_down", "Enabled");
+                var equipment = KeyValue;//获取grid1选中行的数据
+                if (KeyValue != "") {
+                    $("#gridTable_up").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_up").jqGrid("setRowData", RowId, {
+                        /*AVIGroupId: groupid,*/ AVIGroupNm: groupnm, AVIGroupCd: groupcd,AVIId: id, AVICd: code, AVINm: fullname,
+                        Rem: Content
+                    });//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_down").jqGrid("delRowData", RowId);//删除grid选中行的数据
+                }
+                else {
+                    alertDialog("请先选择AVI站点，再进分组配置！")
+                }
+            },
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                lastrow = iRow;//行号
+                lastcell = iCol;//列号
+            }
+        });
+        jQuery("#gridTable_down").jqGrid('navGrid', '#pgwidth', { edit: false, add: false, del: false });
+    }
+
+    
+    //刷新
+    function windowload() {
+        $("#gridTable_up").trigger("reloadGrid"); //重新载入
+        $("#gridTable_down").trigger("reloadGrid"); //重新载入
+    }
+
+    //确认配置车身调度规则
+    function btn_accept() {     
+        var ids1 = $("#gridTable_up").jqGrid("getRowData"); //获取gridSelectTable表中多行配置数据
+        var ids2 = $("#gridTable_down").jqGrid("getRowData"); //获取gridSelectTable表中未分组的多行数据
+        AjaxJson('/BaseModule/BBdbR_AVIGroupConfig/SubmitScheduleRuleConfig?', { listdto1: ids1, listdto2: ids2, AVIGroupId: KeyValue }, function (data) {
+            var t = data;
+            if (t.Code == "1")//提交成功
+            {
+                alertDialog("提交成功！")
+                $("#gridTable_down").trigger('reloadGrid');
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            }
+            else {
+                alertDialog("提交失败！", '-1');
+                closeDialog();
+            }
+        });
+    }
+    
+    //搜索条件
+    function GetCondition() {
+        var Condition = $("#Condition").val();
+        if (Condition == "") {
+            $("#tdsearch").hide();
+        }
+        else {
+            $("#tdsearch").show();
+        }
+    }
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+
+<div id="message" style="display: none; padding: 1px; padding-bottom: 0px;"></div>
+<div class="bd" style="border-bottom: none; margin: 1px;">
+    <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+        <div class="tab_list_top" style="position: absolute">
+            <div id="Tabbasic" class="tab_list bd actived">AVI站点分组配置</div>
+        </div>
+    </div>
+</div>
+<div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+    <!--配置人员-->
+    <div id="Staff" class="tabPanel">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+            <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+                <div class="note-prompt" style="margin: 1px;">
+                    温馨提示：双击上表增加至该AVI组；双击下表移除该AVI组。
+                </div>
+                <div style="background-color:gainsboro ;color:#27a4aB;font-size:medium;width:100%;font-weight: bold">
+                    &nbsp操作按钮<span class="ModuleName"></span>
+                </div>
+                <div class="tools_bar leftline rightline" style="margin-bottom: 0px; margin: 1px;">
+                    <div class="PartialButton">
+                        <a id="lr-replace" ids="lr-replace" title="刷新当前" onclick="Replace()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b>
+                            </span>
+                        </a>
+                        <div class="tools_separator"></div>
+                        <a id="lr-add" ids="lr-add" title="确认此项配置" onclick="btn_accept()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/accept.png') 50% 4px no-repeat;">确认配置</b>
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="layout">
+
+            <div>
+                <div class="btnbartitle">
+                    <div>
+                        未在该AVI分组的站点信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_up"></table>
+                    <div id="gridPager_up" @*style="height:50px;background-color:transparent;position:relative"*@></div>
+                </div>
+                <div class="btnbartitle">
+                    <div>
+                        已在该AVI分组的站点信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_down"></table>
+                    <div id="gridPager_down"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

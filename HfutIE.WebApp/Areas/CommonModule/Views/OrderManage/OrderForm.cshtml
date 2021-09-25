@@ -1,0 +1,197 @@
+﻿@{
+    ViewBag.Title = "模块管理》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');
+    $(function () {
+        StateCombobox();
+        //LoadManagerName();
+        InitControl();
+    })
+    //初始化订单状态下拉框
+    function StateCombobox() {
+        $("#State").append("<option value='' selected='selected'>==请选择==</option>");
+        AjaxJson("/CommonModule/OrderManage/SetOrderState", {}, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#State").append("<option value='" + i + "'>" + data[i]["FullName"] + "</option>");
+            }
+        });
+        //添加一个选项
+        //obj.add(new Option("文本", "值"));    //方法一：
+        //obj.options.add(new Option("text", "value")); //方法二：
+        //for (var i = 0; i < 10; i++) {
+        //    obj.options[i] = new Option("新文本", "新值");    //方法三：
+        //}
+        //订单类型
+        //BindDropItem("#Nature", "DepartmentNature", "==请选择==");
+    }
+    
+    //得到一个对象实体
+    function InitControl() {
+        if (!!KeyValue) {
+            AjaxJson("/CommonModule/OrderManage/SetOrderForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                //$("#IsAvailable").val(data.);
+                //AjaxJson("/CommonModule/OrderManage/SetForm", { KeyValue: data.Manager }, function (data) {
+                //    $("#ManagerName").val(data.RealName);
+                //})
+            });
+        }
+        
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            AjaxJson("/CommonModule/OrderManage/SubmitOrderForm?KeyValue=" + KeyValue, postData, function (data) {
+                if (data.Message == "") {
+                    tipDialog("很抱歉,该订单编号已存在。", 4, 'warning');
+                } else {
+                    tipDialog(data.Message, 3, data.Code);
+                    top.frames[tabiframeId()].windowload();
+                    closeDialog();
+                }
+                
+            });
+        }, 200);
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class="formTitle" style="display:none">
+                主键：
+            </th>
+            <td class="formValue" style="display:none">
+                <input id="ID" type="hidden" />
+            </td>
+            <th class="formTitle">
+                订单编号：
+            </th>
+            <td class="formValue">
+                <input id="OrderCode" type="text" class="txt required" datacol="yes" err="订单编号" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle">
+                订单名称：
+            </th>
+            <td class="formValue">
+                <input id="OrderName" type="text" class="txt required" datacol="yes" err="订单名称" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="display:none">
+                客户ID：
+            </th>
+            <td class="formValue" style="display:none">
+                <input id="CustomerID" type="text" class="txt " />
+            </td>
+            <th class="formTitle">
+                客户编号：
+            </th>
+            <td class="formValue">
+                <input id="CustomerCode" type="text" class="txt " />
+            </td>
+            <th class="formTitle">
+                客户名称：
+            </th>
+            <td class="formValue">
+                <input id="CustomerName" type="text" class="txt " />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                订单类型：
+            </th>
+            <td class="formValue">
+                <select id="OrderType" class="txtselect" datacol="yes" err="订单类型" checkexpession="NotNull">
+                    <option value="">==请选择==</option>
+                    <option value="1">标准生产订单</option>
+                    <option value="2">返工订单</option>
+                    <option value="3">试制订单</option>
+                </select>
+            </td>
+            <th class="formTitle">
+                订单状态：
+            </th>
+            <td class="formValue">
+                <select id="State" class="txtselect" datacol="yes" err="订单状态" checkexpession="NotNull">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                优先级：
+            </th>
+            <td class="formValue">
+                <input id="Priority" type="text" class="txt required" datacol="yes" err="优先级" value="1" checkexpession="NotNull" onkeyup="value=value.replace(/[^\d]/g,'') " />
+            </td>
+            <th class="formTitle">有效性：</th>
+            <td class="formValue">
+                <span class="item">
+                    <input type="checkbox" name="checkbox" checked="checked" id="IsAvailable" />
+                    <label for="IsAvailable">有效</label>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                技术负责人：
+            </th>
+            <td class="formValue">
+                @*<input id="Contact" type="hidden" class="txt" />
+                <input id="ContactName" type="text" class="txt icontree" />*@
+                <input id="TechnicalDirector" type="text" class="txt required" datacol="yes" err="技术负责人" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle">
+                生产负责人：
+            </th>
+            <td class="formValue">
+                <input id="ManufacturingDirector" type="text" class="txt required" datacol="yes" err="生产负责人" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="display:none">
+                创建人：
+            </th>
+            <td class="formValue" style="display:none">
+                <input id="CreatorID" type="text" class="txt " />
+            </td>
+            <th class="formTitle" style="display:none">创建时间：</th>
+            <td class="formValue" style="display:none">
+                <input id="CreateTime" type="text" class="txt Wdate"  onclick="WdatePicker()" readonly />
+            </td>
+            <th class="formTitle" style="display:none">
+                修改人：
+            </th>
+            <td class="formValue" style="display:none">
+                <input id="ModifierID" type="text" class="txt " />
+            </td>
+            <th class="formTitle" style="display:none">修改时间：</th>
+            <td class="formValue" style="display:none">
+                <input id="LastModifiedTime" type="text" class="txt Wdate"  onclick="WdatePicker()" readonly />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                订单描述：
+            </th>
+            <td class="formValue" colspan="3">
+                <textarea id="Description" name="Description" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                备注：
+            </th>
+            <td class="formValue" colspan="3">
+                <textarea id="Remarks" name="Remarks" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

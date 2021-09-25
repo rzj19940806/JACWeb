@@ -1,0 +1,67 @@
+@{
+    ViewBag.Title = "备用金申请表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/ExampleModule/PettyCash/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/ExampleModule/PettyCash/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>申请部门：</th>
+            <td class='formValue'>
+                <input id="DepartmentId" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>申请金额：</th>
+            <td class='formValue'>
+                <input id="Amount" maxlength="18" type="text" class="txt" datacol="yes" err="申请金额" checkexpession="Double" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>保管人：</th>
+            <td class='formValue'>
+                <input id="Keeper" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>保管方式：</th>
+            <td class='formValue'>
+                <input id="KeepType" maxlength="50" type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Remark" maxlength="200" type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

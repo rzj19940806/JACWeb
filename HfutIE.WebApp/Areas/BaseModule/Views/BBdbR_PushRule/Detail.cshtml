@@ -1,0 +1,113 @@
+@{
+    ViewBag.Title = "推送任务生成规则配置表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/BBdbR_PushRule/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <label id="RuleId" />
+            </td>
+            <th class='formTitle'>区域编号：</th>
+            <td class='formValue'>
+                <label id="AreaCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>产线Id：</th>
+            <td class='formValue'>
+                <label id="PlineId" />
+            </td>
+            <th class='formTitle'>工位Id：</th>
+            <td class='formValue'>
+                <label id="WcId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>推送类型：</th>
+            <td class='formValue'>
+                <label id="PushType" />
+            </td>
+            <th class='formTitle'>推送时间临界值：</th>
+            <td class='formValue'>
+                <label id="PushTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>异常日志存放路径：</th>
+            <td class='formValue'>
+                <label id="AndonFile" />
+            </td>
+            <th class='formTitle'>版本号：</th>
+            <td class='formValue'>
+                <label id="VersionNumber" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <label id="Enabled" />
+            </td>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <label id="CreCd" />
+            </td>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <label id="CreNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="MdfTm" />
+            </td>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <label id="MdfCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <label id="MdfNm" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

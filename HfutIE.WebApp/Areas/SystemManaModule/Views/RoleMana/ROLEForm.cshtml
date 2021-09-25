@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "角色管理》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script src="../../Content/Scripts/jquery.form.js"></script>
+<script type="text/javascript">
+    var RoleId = GetQuery('RoleId');//主键
+    $(function () {
+        BindCombobox();
+        InitControl();
+    })
+   
+    //初始化绑定下拉框
+    function BindCombobox() {
+        //角色分类
+        BindDropItem("#RoleCatg", "FASRolesCategory", "==请选择=");
+    }
+    //得到一个对象实体
+    function InitControl() {       
+        if (!!GetQuery('RoleId')) {
+            AjaxJson("/SystemManaModule/RoleMana/SetRoleForm", { RoleId: GetQuery('RoleId') }, function (data) {
+                $("#RoleCd").val(data.rows[0]["rolecd"]);
+                $("#RoleNm").val(data.rows[0]["rolenm"]);
+                $("#RoleCatg").val(data.rows[0]["rolecatg"]);
+                $("#RoleTyp").val(data.rows[0]["roletyp"]);
+                $("#SortCode").val(data.rows[0]["sortcode"]);
+                $("#Enabled").val(data.rows[0]["enabled"]);
+            });
+        } 
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/SystemManaModule/RoleMana/SubmitRoleInfor?RoleId=" + escape(RoleId), postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+
+        //if (!CheckDataValid('#form1')) {
+        //    return false;
+        //}
+        //Loading(true, "正在提交数据...");
+        //window.setTimeout(function () {
+        //    var postData = GetWebControls("#form1");
+        //    AjaxJson("/SystemManaModule/RoleMana/SubmitRoleInfor?RecId=" + GetQuery('RecId'), postData, function (data) {
+        //        tipDialog(data.Message, 3, data.Code);
+        //        top.frames[tabiframeId()].windowload();
+        //        closeDialog();
+        //    });
+        //}, 200);
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class="formTitle">
+                角色编码：
+            </th>
+            <td class="formValue">
+                <input id="RoleCd" type="text" class="txt required" datacol="yes" err="角色编号" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                角色名称：
+            </th>
+            <td class="formValue">
+                <input id="RoleNm" type="text" class="txt required" datacol="yes" err="部门名称" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">角色类别：</th>
+            <td class="formValue">
+                @*<select id="RoleCatg" class="txtselect required" datacol="yes" err="角色类别" checkexpession="NotNull"></select>*@
+                <select id="RoleCatg" name="FASRolesCategory" type="text" class="txt required" datacol="yes" err="角色类别" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                角色类型：
+            </th>
+            <td class="formValue">
+                <input id="RoleTyp" type="text" class="txt" datacol="yes" err="部门名称"  />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">显示顺序：</th>
+            <td class="formValue">
+                <input id="SortCode" type="text" onkeyup="IsNumber(this.id)" class="txt required" datacol="yes" err="显示顺序" checkexpession="Num" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">选项：</th>
+            <td class="formValue">
+                <span class="item">
+                    <input type="checkbox" name="checkbox" checked="checked" id="Enabled" />
+                    <label for="Enabled">有效</label>
+                </span>
+            </td>
+        </tr>
+    </table>
+</form>

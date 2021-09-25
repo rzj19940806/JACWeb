@@ -1,0 +1,47 @@
+@{
+    ViewBag.Title = "Base_ProductLine》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/ProductLine/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>ProductLineId：</th>
+            <td class='formValue'>
+                <label id="ProductLineId" />
+            </td>
+            <th class='formTitle'>FactoryId：</th>
+            <td class='formValue'>
+                <label id="FactoryId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ProductLineName：</th>
+            <td class='formValue'>
+                <label id="ProductLineName" />
+            </td>
+            <th class='formTitle'>ProdcutLineCode：</th>
+            <td class='formValue'>
+                <label id="ProdcutLineCode" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>Description：</th>
+            <td class='formValue'>
+                <label id="Description" />
+            </td>
+        </tr>
+    </table>
+</form>

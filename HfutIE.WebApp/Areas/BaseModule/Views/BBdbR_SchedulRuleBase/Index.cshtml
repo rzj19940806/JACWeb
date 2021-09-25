@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "调度规则基本信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        Show();
+        BindDropItem("#SchedulRuleGrade", "SchedulRuleGrade", "==全部==");
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_SchedulRuleBase/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '规则主键', name: 'SchedulRuleId', index: 'SchedulRuleId', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '规则编号', name: 'SchedulRuleCd', index: 'SchedulRuleCd', width: 0, align: 'center',sortable: true  },
+                { label: '规则名称', name: 'SchedulRuleNm', index: 'SchedulRuleNm', width: 0, align: 'center',sortable: true  },
+                { label: '规则内容', name: 'SchedulRuleContent', index: 'SchedulRuleContent', width: 0, align: 'center',sortable: true  },
+                {
+                    label: '规则等级', name: 'SchedulRuleGrade', index: 'SchedulRuleGrade', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return CellItem('SchedulRuleGrade', cellvalue);
+                }
+                },
+               {
+                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                   formatter: function (cellvalue, options, rowObject) {
+                       if (cellvalue == '0') { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                       else if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                    }
+                 },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true  },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true  },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //新增
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_SchedulRuleBase/Form"
+        openDialog(url, "Form", "新增调度规则基本信息表", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "SchedulRuleId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = KeyValue.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_SchedulRuleBase/Form?KeyValue=" + KeyValue ;
+                openDialog(url, "Form", "编辑调度规则信息", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "SchedulRuleId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_SchedulRuleBase/Delete?KeyValue=' + KeyValue, delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }
+    //明细
+    function btn_detail() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "SchedulRuleId");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_SchedulRuleBase/Detail?KeyValue=" + KeyValue;
+            Dialog(url, "Detail", "调度规则基本信息表明细", 820, 500, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        location = location;
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_SchedulRuleBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+    <!--按钮工具栏 -->
+    <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+        <div class="PartialButton">
+            <a id="Ir_replace" ids="repalce" onclick="windowload()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_add" ids="add" onclick="btn_add()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/add.png') 50% 4px no-repeat;">新增</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_edit" ids="edit" onclick="btn_edit()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/edit.gif') 50% 4px no-repeat;">编辑</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_delete" ids="delete" onclick="btn_delete()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/DeleteRed.png') 50% 4px no-repeat;">删除</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_back" ids="back" onclick="btn_back()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">离开</b></span></a>
+            <div class="tools_separator"></div>
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="SchedulRuleCd">调度规则编号</option>
+                    <option value="SchedulRuleNm">调度规则名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    @*表格区域*@
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable"></table>
+        <div id="gridPager"></div>
+    </div>

@@ -1,0 +1,74 @@
+@{
+    ViewBag.Title = "AVI站点组信息》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+      
+        InitControl();
+        
+    })
+    
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_AVIGroupConfig/SetForm", { KeyValue: KeyValue}, function (data) {
+                SetWebControls(data);
+                
+            });
+        }
+    }
+   
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_AVIGroupConfig/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！" || data.Message == "该名称已经存在！") {
+                tipCss("AVIGroupCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>AVI站点组编号：</th>
+            <td class='formValue'>
+                <input id="AVIGroupCd" maxlength=50 type="text" class="txt required" datacol="yes" err="AVI站点编号" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点组名称：</th>
+            <td class='formValue'>
+                <input id="AVIGroupNm" maxlength=50 type="text" class="txt required" datacol="yes" err="AVI站点名称" checkexpession="NotNull" />
+            </td>
+        </tr>
+        
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=300 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+
+
+    </table>
+</form>

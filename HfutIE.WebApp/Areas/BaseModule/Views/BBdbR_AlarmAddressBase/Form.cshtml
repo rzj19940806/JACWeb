@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Title = "设备报警地址管理表》表单页面";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        DvcList();
+        BindDropItem("#AlarmClass", "AlarmClass", "==全部==");
+        InitControl();
+    })
+
+    //加载设备列表
+    function DvcList() {
+        AjaxJson("/BaseModule/BBdbR_AlarmAddressBase/GetDvcNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#DvcId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["dvcnm"] + "</option>");
+            }
+        });
+        
+    }
+
+   
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_AlarmAddressBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    
+    //保存事件
+    function AcceptClick() {
+        var DvcNm = $("#DvcId").val();
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_AlarmAddressBase/SubmitForm?KeyValue=" + KeyValue + '&DvcNm=' + DvcNm, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>设备名称：</th>
+            <td class='formValue' colspan="3">
+                <select id="DvcId" maxlength=50 type="text" class="txt  checkdata" >
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>报警地址：</th>
+            <td class='formValue'>
+                <input id="AlarmAddress" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle' >报警位数：</th>
+            <td class='formValue'>
+                <select id="AlarmBit" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="报警位数" onclick="">
+                    <option value="">==请选择==</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>报警路径：</th>
+            <td class='formValue' colspan="3">
+                <input id="AlarmRoute" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>报警等级：</th>
+            <td class='formValue' colspan="3">
+                <select id="AlarmClass" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="报警等级" onclick="">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>报警描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="AlarmDsc" maxlength=23 type="text" class="txt" />
+            </td>
+        </tr>
+       
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>
+

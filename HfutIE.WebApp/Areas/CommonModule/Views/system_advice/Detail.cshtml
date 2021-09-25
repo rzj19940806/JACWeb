@@ -1,0 +1,114 @@
+@{
+    ViewBag.Title = "system_advice》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/system_advice/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>编号：</th>
+            <td class='formValue'>
+               <input id="advice_code" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>类型：</th>
+            <td class='formValue'>
+               <input id="advice_type" type="text" class="txt" readonly="readonly" />
+            </td>          
+        </tr>
+       
+       
+        <tr>
+             <th class='formTitle'>问题摘要：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="advice_name" type="text" class="txt" rows="" readonly="readonly" />*@
+                <textarea id="advice_name" class="txtArea" rows="3" readonly="readonly" ></textarea>
+            </td>
+        </tr>
+        <tr>           
+            <th class='formTitle'>问题描述：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="advice_description" type="text" class="txt" readonly="readonly" />*@
+                <textarea id="advice_description" class="txtArea" rows="3" readonly="readonly"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>优先级：</th>
+            <td class='formValue'>
+               <input id="priority" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>状态：</th>
+            <td class='formValue'>
+               <input id="state" type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>处理结果：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="deal_result" type="text" class="txt" readonly="readonly" />*@
+                <textarea id="deal_result" class="txtArea" rows="3" readonly="readonly"></textarea>
+            </td>          
+        </tr>
+        <tr>
+            <th class='formTitle'>申报人编号：</th>
+            <td class='formValue'>
+               <input id="reportor_code" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>申报人姓名：</th>
+            <td class='formValue'>
+               <input id="reportor_name" type="text" class="txt" readonly="readonly" />
+            </td>         
+        </tr>
+        <tr>
+            <th class='formTitle'>申报时间：</th>
+            <td class='formValue'>
+              <input id="report_time" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>处理者编号：</th>
+            <td class='formValue'>
+              <input id="processor_code" type="text" class="txt" readonly="readonly" />
+            </td>
+          
+        </tr>
+        <tr>
+            <th class='formTitle'>处理者姓名：</th>
+            <td class='formValue'>
+              <input id="processor_name" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>处理时长：</th>
+            <td class='formValue'>
+             <input id="process_time" type="text" class="txt" readonly="readonly" />
+            </td>                   
+        </tr>
+        <tr>
+            <th class='formTitle'>创建者姓名：</th>
+            <td class='formValue'>
+               <input id="creator_name" type="text" class="txt" readonly="readonly" />
+            </td>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+               <input id="create_time" type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="process_remark" type="text" class="txt" readonly="readonly" />*@
+                <textarea id="process_remark" class="txtArea" rows="3" readonly="readonly"></textarea>
+            </td>          
+        </tr>
+        <tr>            
+        </tr>
+    </table>
+</form>

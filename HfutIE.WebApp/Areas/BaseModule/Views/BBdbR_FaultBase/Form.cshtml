@@ -1,0 +1,112 @@
+@{
+    ViewBag.Title = "_FactoryBaseInformation》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#FaultCatg", "FaultCatg", "==全部==");
+        BindDropItem("#FaultType", "FaultType", "==全部==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_FaultBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("FaultCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_FaultBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("FaultCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">故障编号：</th>
+            <td class='formValue'>
+                <input id="FaultCd" maxlength=50 type="text" class="txt required" datacol="yes" err="故障编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">故障名称：</th>
+            <td class='formValue'>
+                <input id="FaultNm" maxlength=50 type="text" class="txt required" datacol="yes" err="故障名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">故障类别：</th>
+            <td class='formValue'>
+                <select id="FaultCatg" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="故障类别" onclick=""></select>
+                @*<input id="FaultCatg" maxlength=50 type="text" class="txt required" datacol="yes" err="故障类别" checkexpession="NotNull" checkdata="hasOne" />*@
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">故障类型：</th>
+            <td class='formValue'>
+                <select id="FaultType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="故障类型" onclick=""></select>
+                
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">故障代码：</th>
+            <td class='formValue'>
+                <input id="FaultCode" maxlength=50 type="text" class="txt required" datacol="yes" err="故障代码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle' style="height:30px">故障分析：</th>
+            <td class='formValue'>
+                <input id="FaultAnalys" maxlength=100 type="text" class="txt" datacol="yes" err="故障分析" onclick="" />
+            </td>
+        </tr>*@
+        @*<tr>
+            <th class='formTitle' style="height:30px">创建人：</th>
+            <td class='formValue'>
+                <input id="CreNm" maxlength=100 type="text" class="txt"  datacol="yes" err="创建人" onclick="" />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class='formValue'>
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,177 @@
+@{
+    ViewBag.Title = "IP_MANAGEMENT》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var p_line_key = GetQuery('p_line_key');//生产线主键
+    var wc_key = GetQuery('wc_key');//工位主键
+    var equip_key = GetQuery('equip_key');//设备主键
+    $(function () {
+        InitControl();
+        Bindp_line();
+        if (p_line_key != "") {
+            $("#p_line_key").val(p_line_key);
+            p_linechange();
+            if (wc_key != "") {
+                $("#wc_key").val(wc_key);
+                wcchange();
+                if (equip_key != "") {
+                    $("#equip_key").val(equip_key);
+                    equipchange();
+                }
+            }
+        }
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/IP_MANAGEMENT/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //生产线下拉框
+    function typechange(val) {
+        if (val == "生产设备") {
+            //$("#equip_key").attr("hidden", false);
+            //$("#equip_key").attr("datacol", "yes");
+            //$("#equip_key_input").attr("hidden", true);
+            //$("#equip_key_input").attr("datacol", "no");
+            $("#changepart").empty();
+            Bindp_line();
+            $("#wc_key").empty();
+            $("#changepart").append('<select id="equip_key" type="text" class="txtselect" onchange="equipchange()" datacol="yes" err="设备信息" checkexpession="NotNull" onblur="FieldExist(this.id,' + "'IP_MANAGEMENT'" + ',' + "'ip_management_key'" + ',' + "'设备信息'" + ')"></select><input id="equip_code" maxlength=50 type="text" class="txt" hidden="hidden" /><input id="equip_name" maxlength=50 type="text" class="txt" hidden="hidden" />');
+        }
+        else if (val == "非生产设备") {
+            //$("#equip_key").attr("hidden", true);
+            //$("#equip_key").attr("datacol", "no");
+            //$("#equip_key_input").attr("hidden", false);
+            //$("#equip_key_input").attr("datacol", "yes");
+            $("#changepart").empty();
+            Bindp_line();
+            $("#wc_key").empty();
+            $("#changepart").append('<input id="equip_key" maxlength=50 type="text" class="txt required"  datacol="no" err="设备信息" checkexpession="NotNull"  onblur="FieldExist(this.id,' + "'IP_MANAGEMENT'" + ',' + "'ip_management_key'" + ',' + "'设备信息'" + ')" />');
+        }
+    }
+    //生产线下拉框
+    function Bindp_line() {
+        $("#p_line_key").html("");
+        $("#p_line_key").append("<option value=''>==请选择==</option>");
+        AjaxJson("/FactoryModule/Calendar/ListJson", {}, function (DataJson) {
+            $.each(DataJson, function (i) {
+                //$("#p_line_key").append($("<option></option>").val(DataJson[i].p_line_key).html(DataJson[i].p_line_name));//此句可赋两个属性，value和text
+                $("#p_line_key").append("<option value='" + DataJson[i].p_line_key + "'" + "" + " p_line_code='" + DataJson[i].p_line_code + "'>" + DataJson[i].p_line_name + "</option>");
+            });
+        })
+    }
+    //选择生产线下拉框
+    function p_linechange() {
+        $("#p_line_name").val($("#p_line_key option:selected").text());//此句意为：获取p_line_key选择的值的text,再将它赋值给p_line_name。获取值也可写为$("#p_line_key").find("option:selected").text()
+        $("#p_line_code").val($("#p_line_key").find("option:selected").attr("p_line_code"));
+        BindWC($("#p_line_key option:selected").val());
+        BindEquip($("#p_line_key option:selected").val(),"productionline");
+    }
+    //加载工位
+    function BindWC(p_line_key) {
+        $("#wc_key").html("");
+        $("#wc_key").append("<option value=''>==请选择==</option>");
+        AjaxJson("/CommonModule/IP_MANAGEMENT/GetWC", { p_line_key: p_line_key }, function (DataJson) {
+            $.each(DataJson, function (i) {
+                $("#wc_key").append("<option value='" + DataJson[i].wc_key + "'" + "" + " wc_code='" + DataJson[i].wc_code + "'>" + DataJson[i].wc_code + "|" + DataJson[i].wc_name + "</option>");
+            });
+        })
+    }
+    //选择工位下拉框
+    function wcchange() {
+        $("#wc_name").val($("#wc_key option:selected").text());
+        $("#wc_code").val($("#wc_key").find("option:selected").attr("wc_code"));
+        BindEquip($("#wc_key option:selected").val(),"workcenter");
+    }
+    //加载设备
+    function BindEquip(parent_key, type) {
+        if ($("#equip_type").val() == "非生产设备") {
+            return;
+        }
+        $("#equip_key").html("");
+        $("#equip_key").append("<option value=''>==请选择==</option>");
+        AjaxJson("/CommonModule/IP_MANAGEMENT/GetEquip", { parent_key: parent_key, type: type }, function (DataJson) {
+            $.each(DataJson, function (i) {
+                $("#equip_key").append("<option value='" + DataJson[i].equip_key + "'" + "" + " equip_code='" + DataJson[i].equip_code + "'>" + DataJson[i].equip_code + "|" + DataJson[i].equip_name + "</option>");
+            });
+        })
+    }
+    //选择设备下拉框
+    function equipchange() {
+        $("#equip_name").val($("#equip_key option:selected").text());
+        $("#equip_code").val($("#equip_key").find("option:selected").attr("equip_code"));
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        postData.wc_name = postData.wc_name.split('|')[0];
+        postData.equip_name = postData.equip_name.split('|')[0];
+        AjaxJson("/CommonModule/IP_MANAGEMENT/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            //top.frames[tabiframeId()].contentWindow.windowload();
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>设备类型：</th>
+            <td class='formValue'>
+                <select id="equip_type" maxlength=50 type="text" class="txt" onchange="typechange(this.value)">
+                    <option>生产设备</option>
+                    <option>非生产设备</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>生产线信息：</th>
+            <td class='formValue'>
+                <select id="p_line_key" type="text" class="txtselect" datacol="yes" err="生产线信息" checkexpession="NotNull" onchange="p_linechange()"></select>
+                <input id="p_line_code" maxlength=50 type="text" class="txt" hidden="hidden"/>
+                <input id="p_line_name" maxlength=50 type="text" class="txt" hidden="hidden"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>工位信息：</th>
+            <td class='formValue'>
+                <select id="wc_key" type="text" class="txtselect" onchange="wcchange()"></select>
+                <input id="wc_code" maxlength=50 type="text" class="txt" hidden="hidden" />
+                <input id="wc_name" maxlength=50 type="text" class="txt" hidden="hidden" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备信息：</th>
+            <td class='formValue' id="changepart">
+                <select id="equip_key" type="text" class="txtselect" onchange="equipchange()" datacol="yes" err="设备信息" checkexpession="NotNull" onblur="FieldExist(this.id, 'IP_MANAGEMENT', 'ip_management_key', '设备信息')"></select>
+                @*<input id="equip_key_input" maxlength=50 type="text" class="txt required" hidden="hidden" datacol="no" err="设备信息" checkexpession="NotNull" url="/CommonModule/IP_MANAGEMENT" checkdata="hasOne" />*@
+                <input id="equip_code" maxlength=50 type="text" class="txt" hidden="hidden" />
+                <input id="equip_name" maxlength=50 type="text" class="txt" hidden="hidden" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>IP地址：</th>
+            <td class='formValue'>
+                <input id="IP_addr" maxlength=50 type="text" class="txt required" datacol="yes" err="IP地址" checkexpession="IsIP" onblur="FieldExist(this.id, 'IP_MANAGEMENT', 'ip_management_key', 'IP地址')"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="remark" maxlength=500 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

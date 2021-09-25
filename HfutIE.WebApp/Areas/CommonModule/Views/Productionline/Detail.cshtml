@@ -1,0 +1,137 @@
+@{
+    ViewBag.Title = "Productionline》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/Productionline/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>生产线ID：</th>
+            <td class='formValue'>
+                <label id="p_line_key" />
+            </td>
+            <th class='formTitle'>生产线编号：</th>
+            <td class='formValue'>
+                <label id="p_line_code" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>生产线名称：</th>
+            <td class='formValue'>
+                <label id="p_line_name" />
+            </td>
+            <th class='formTitle'>理论节拍：</th>
+            <td class='formValue'>
+                <label id="p_line_beat" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>生产线描述：</th>
+            <td class='formValue'>
+                <label id="p_line_description" />
+            </td>
+            <th class='formTitle'>生产线类型：</th>
+            <td class='formValue'>
+                <label id="p_line_type" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>关联图片ID：</th>
+            <td class='formValue'>
+                <label id="inst_list_key" />
+            </td>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreateDate" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人key：</th>
+            <td class='formValue'>
+                <label id="CreateUserId" />
+            </td>
+            <th class='formTitle'>创建人姓名：</th>
+            <td class='formValue'>
+                <label id="CreateUserName" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="ModifyDate" />
+            </td>
+            <th class='formTitle'>修改人key：</th>
+            <td class='formValue'>
+                <label id="ModifyUserId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人姓名：</th>
+            <td class='formValue'>
+                <label id="ModifyUserName" />
+            </td>
+            <th class='formTitle'>reserve01：</th>
+            <td class='formValue'>
+                <label id="reserve01" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve02：</th>
+            <td class='formValue'>
+                <label id="reserve02" />
+            </td>
+            <th class='formTitle'>reserve03：</th>
+            <td class='formValue'>
+                <label id="reserve03" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve04：</th>
+            <td class='formValue'>
+                <label id="reserve04" />
+            </td>
+            <th class='formTitle'>reserve05：</th>
+            <td class='formValue'>
+                <label id="reserve05" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve06：</th>
+            <td class='formValue'>
+                <label id="reserve06" />
+            </td>
+            <th class='formTitle'>reserve07：</th>
+            <td class='formValue'>
+                <label id="reserve07" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve08：</th>
+            <td class='formValue'>
+                <label id="reserve08" />
+            </td>
+            <th class='formTitle'>reserve09：</th>
+            <td class='formValue'>
+                <label id="reserve09" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve10：</th>
+            <td class='formValue'>
+                <label id="reserve10" />
+            </td>
+        </tr>
+    </table>
+</form>

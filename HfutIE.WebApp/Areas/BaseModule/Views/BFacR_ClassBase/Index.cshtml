@@ -1,0 +1,340 @@
+@{
+    ViewBag.Title = "班制基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+<style type="text/css">
+    .ZebraClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        GetGrid1();
+        BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
+        BindDropItem("#TeamTyp", "TeamTyp", "==全部==");
+    })
+
+    var subgrid_table_id = "";//子表名
+
+    //加载班制表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BFacR_ClassBase/GridPageJson")",
+        datatype: "json",
+        height: 288,
+        autowidth: true,
+        colModel: [
+                { label: '班制主键', name: 'ClassId', index: 'ClassId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '班制编号', name: 'ClassCd', index: 'ClassCd', width: 0, align: 'center',sortable: true  },
+                { label: '班制名称', name: 'ClassNm', index: 'ClassNm', width: 0, align: 'center',sortable: true  },
+                {
+                    label: '班制类型', name: 'ClassTyp', index: 'ClassTyp', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return CellItem('ClassTyp', cellvalue);
+                }},
+                { label: '班制开始时间', name: 'StartTm', index: 'StartTm', width: 0, align: 'center',sortable: true  },
+                { label: '班制总时长', name: 'TmSpan', index: 'TmSpan', width: 0, align: 'center',sortable: true  },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                {
+                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                   formatter: function (cellvalue, options, rowObject) {
+                       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                       else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                       }
+                 },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager",
+            sortname: 'ClassCd',
+            sortorder: 'asc',
+            rowNum: 30,
+            rowList: [30, 50, 100, 500, 1000],
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            multiselect: true,
+            multiboxonly: true,
+            subGrid: true,
+            subGridRowExpanded: function (subgrid_id, row_id) {
+                subgrid_table_id = subgrid_id + "_t";
+                var subgrid_pager_id;
+                subgrid_pager_id = subgrid_id + "_pgr";
+                $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + subgrid_pager_id + "' class='scroll'></div>");
+                var condition = "ClassId";
+                var KeyValue = GetJqGridValue("#gridTable", row_id, "ClassId");
+                $("#" + subgrid_table_id).jqGrid({
+                    url: "@Url.Content("~/BaseModule/BFacR_ClassBase/GridListJson_Down")?KeyValue=" + KeyValue, page: 1, datatype: 'json',
+                    datatype: "json",
+                    colModel: [
+                        { label: '主键', name: 'ShiftId', index: 'ShiftId', width: 0, align: 'center', sortable: true, hidden: true },
+                        { label: '班次编号', name: 'ShiftCd', index: 'ShiftCd', width: 0, align: 'center', sortable: true },
+                        { label: '班次名称', name: 'ShiftNm', index: 'ShiftNm', width: 0, align: 'center', sortable: true },
+                        {
+                            label: '时间类型', name: 'RestTm', index: 'RestTm', width: 0, align: 'center', sortable: true,
+                            formatter: function (cellvalue, options, rowObject) {
+                                return CellItem('RestTm', cellvalue);
+                            }
+                        },
+                        { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true },
+                        { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true },
+                        { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                        {
+                            label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                                else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                            }
+                        }
+                    ],
+                    forceFit: true,//表格大小固定在容器区域内
+                    scrollofset: true,//取消滚动条留白区域
+                    viewrecords: true,
+                    //height: "100%",
+                    rowNum: "all",
+                    altRows: true,
+                    altclass: 'ZebraClass',
+                    shrinkToFit: true,
+                    autowidth: true,
+                    multiselect: true,
+                    multiboxonly: true,
+                    onSelectRow: function (RowId) {
+                        var KeyValue = GetJqGridRowValue("#" + subgrid_table_id, "ShiftId");
+                        $("#gridTable_Bottom").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridListJson_Down")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                    },
+                });
+            }
+       });
+    }
+
+      //加载班制配置信息表格
+    function GetGrid1() {
+        $("#gridTable_Bottom").jqGrid({
+        datatype: "json",
+        height: 280,
+        autowidth: true,
+        colModel: [
+            { label: '班组主键', name: 'TeamId', index: 'TeamId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '班组编号', name: 'TeamCd', index: 'TeamCd', width: 0, align: 'center', sortable: true },
+            { label: '班组名称', name: 'TeamNm', index: 'TeamNm', width: 0, align: 'center', sortable: true },
+            {
+                label: '班组类型', name: 'TeamTyp', index: 'TeamTyp', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return CellItem('TeamTyp', cellvalue);
+                }
+            },
+            { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+            {
+                label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                }
+            },
+            { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+         ],
+         pager: "#gridPager_Bottom",
+         sortname: '',
+         sortorder: 'desc',
+         rownumbers: true,
+         shrinkToFit: false,
+         gridview: true,
+    });
+}
+      //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable_Bottom").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        //$("#gridTable_Bottom").trigger("reloadGrid"); //重新载入
+    }
+
+    //新增按钮
+    function btn_add() {
+        var url = "/BaseModule/BFacR_ClassBase/Form"
+        openDialog(url, "Form", "新增班制", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "ClassId");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BFacR_ClassBase/Form?KeyValue=" + KeyValue;
+        openDialog(url, "Form", "编辑班制", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "ClassId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BFacR_ClassBase/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();;
+        if (Condition == "ClassTyp") {
+            keywords = $("#ClassTyp").val();
+        }
+        else{
+            keywords = $("#keywords").val();
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BFacR_ClassBase/GridPageByCondition1")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+
+    //导入
+    function btn_import() {
+        openDialog("/BaseModule/BFacR_ClassBase/ExcelImportDialog", "ExcelImportDialog", "班制基本信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //导出Excel
+    function btn_derive() {
+        SetDeriveExcel("#gridTable", "班制基本信息");
+        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "班制基本信息导出", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+
+    //班次配置
+    function btn_Config() {
+        var ClassId = GetJqGridRowValue("#gridTable", "ClassId");
+        if (IsChecked(ClassId)) {
+            var url = "/BaseModule/BFacR_ClassBase/ShiftConfigForm?ClassId=" + ClassId;
+            openDialog(url, "TeamConfigForm", "配置班次", 650, 660, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+            $("#ClassTyp").hide();
+        }
+        else if (Condition == "ClassTyp") {
+            $("#ClassTyp").show();
+            $("#keywords").hide();
+        }
+        else {
+            $("#ClassTyp").hide();
+            $("#keywords").show();
+        }
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="ClassCd">班制编号</option>
+                    <option value="ClassNm">班制名称</option>
+                    <option value="ClassTyp">班制类型</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <select id="ClassTyp" style="display: none; width: 150px; height: 25px">
+                    <option>---请选择班制类型--</option>
+                </select>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    @*表格区域*@
+    @*<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable"></table>
+        <div id="gridPager"></div>
+    </div>*@
+    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:22px">
+                    班制清单 <span class="ModuleName"></span>
+                </div>
+            </div>
+            <div style="height: 49% ;width:auto; ">
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:22px;">
+                   班制配置信息 <span class="ModuleName"></span>
+                </div>
+            </div>
+            <div style="height: 40%; width:auto;">
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
+                    <div id="gridPager_Bottom"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

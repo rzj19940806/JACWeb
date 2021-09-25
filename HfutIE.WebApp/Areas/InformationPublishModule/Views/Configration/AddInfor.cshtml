@@ -1,0 +1,94 @@
+@{
+    ViewBag.Title = "推送信息基础表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script src="../../Content/Scripts/jquery.form.js"></script>
+<script type="text/javascript">
+    var InforTypID = GetQuery('InforTypID');
+    var InforTyp = GetQuery('Name');//推送信息
+    var RecId = GetQuery('RecId');//主键
+    $(function () {
+        BindCombobox1();
+        InitControl();
+
+    })
+
+    function BindCombobox1() {
+        //BindDropItem("#InforTypCd", "InformationCategory", "==请选择=");
+        BindDropItem("#PushRank", "PushInforRank", "==请选择=");
+        BindDropItem("#TmUnit", "Units", "==请选择=");
+    }
+
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('RecId')) {
+            AjaxJson("/InformationPublishModule/Configration/SetPushForm", { keyvalue: RecId }, function (data) {
+                //SetWebControls(data);
+                $("#PushRank").val(data.rows[0]["pushrank"]);
+                $("#IntvlTm").val(data.rows[0]["intvltm"]);
+                $("#TmUnit").val(data.rows[0]["tmunit"]);               
+            });
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        //var up = $("#PUSH_TYPE").val();
+        //var up = $("#PUSH_STATE").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/InformationPublishModule/Configration/SubmitPushInfor?RecId=" + escape(RecId) + "&InforTypID=" + escape(InforTypID) + "&InforTyp=" + escape(InforTyp) , postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            if (data.Code > 0) {
+                //Replace();
+                //windowload();
+            }
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+
+    //检查字段值是否存在
+    function ISExist(id, keyfield, Msg) {
+        var url = '/InformationPublishModule/Configration/FieldExist';
+        CheckExist(id, keyfield, Msg, url);
+    }
+</script>
+
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        @*<tr>
+            <th class='formTitle' style="width:150px">推送类型：</th>
+            <td class='formValue'>
+                <select id="InforTypCd" name="InformationCategory" type="text" class="txt required" datacol="yes" err="推送类型" checkexpession="NotNull" />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>推送等级：</th>
+            <td class='formValue'>               
+                <select id="PushRank" name="PushInforRank" type="text" class="txt required" datacol="yes" err="推送等级" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">间隔时长(分钟)：</th>
+            <td class="formValue">
+                <input id="IntvlTm" name="IntvlTm" type="number" class="txt required" datacol="yes" err="间隔时长" checkexpession="NotNull" />
+            </td>
+            @*<th class="formTitle">有效性：</th>
+            <td class="formValue">
+
+                <input id="ENABLED" type="hidden">
+            </td>*@
+        </tr>
+        <tr>
+            <th class='formTitle'>时长单位：</th>
+            <td class='formValue'>
+                <select id="TmUnit" name="Units" type="text" class="txt required" datacol="yes" err="时长单位" checkexpession="NotNull" />
+            </td>
+        </tr>
+    </table>
+</form>

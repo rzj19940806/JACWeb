@@ -1,0 +1,203 @@
+@{
+    ViewBag.Title = "人员基础信息表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/BBdbR_StfBase/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>人员主键：</th>
+            <td class='formValue'>
+                <label id="StfId" />
+            </td>
+            <th class='formTitle'>人员内码：</th>
+            <td class='formValue'>
+                <label id="StfInnerCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>部门编号：</th>
+            <td class='formValue'>
+                <label id="DeptCd" />
+            </td>
+            <th class='formTitle'>部门名称：</th>
+            <td class='formValue'>
+                <label id="DeptNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>内部员工：</th>
+            <td class='formValue'>
+                <label id="InnerUser" />
+            </td>
+            <th class='formTitle'>人员编号：</th>
+            <td class='formValue'>
+                <label id="StfCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>人员姓名：</th>
+            <td class='formValue'>
+                <label id="StfNm" />
+            </td>
+            <th class='formTitle'>性别：</th>
+            <td class='formValue'>
+                <label id="StfGndr" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>手机号：</th>
+            <td class='formValue'>
+                <label id="Phn" />
+            </td>
+            <th class='formTitle'>企业微信号：</th>
+            <td class='formValue'>
+                <label id="Wechat" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>邮箱：</th>
+            <td class='formValue'>
+                <label id="Email" />
+            </td>
+            <th class='formTitle'>人员类型：</th>
+            <td class='formValue'>
+                <label id="StfTyp" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>人员职位：</th>
+            <td class='formValue'>
+                <label id="StfPosn" />
+            </td>
+            <th class='formTitle'>人员职称：</th>
+            <td class='formValue'>
+                <label id="StfTitl" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>人员图片：</th>
+            <td class='formValue'>
+                <label id="StfImg" />
+            </td>
+            <th class='formTitle'>图片类型：</th>
+            <td class='formValue'>
+                <label id="ImgTyp" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>账号：</th>
+            <td class='formValue'>
+                <label id="Account" />
+            </td>
+            <th class='formTitle'>密码：</th>
+            <td class='formValue'>
+                <label id="Pssw" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>秘钥：</th>
+            <td class='formValue'>
+                <label id="Sctkey" />
+            </td>
+            <th class='formTitle'>修改密码时间：</th>
+            <td class='formValue'>
+                <label id="ChangePasswordDate" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>登录次数：</th>
+            <td class='formValue'>
+                <label id="LogOnCount" />
+            </td>
+            <th class='formTitle'>最后之前登录时间：</th>
+            <td class='formValue'>
+                <label id="PreviousVisit" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>最后登录时间：</th>
+            <td class='formValue'>
+                <label id="LastVisit" />
+            </td>
+            <th class='formTitle'>在线情况：</th>
+            <td class='formValue'>
+                <label id="Online" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>排序码：</th>
+            <td class='formValue'>
+                <label id="SortCode" />
+            </td>
+            <th class='formTitle'>删除标记：</th>
+            <td class='formValue'>
+                <label id="DeleteMark" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <label id="Enabled" />
+            </td>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <label id="CreCd" />
+            </td>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <label id="CreNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="MdfTm" />
+            </td>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <label id="MdfCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <label id="MdfNm" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

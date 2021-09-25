@@ -1,0 +1,73 @@
+@{
+    ViewBag.Title = "Base_Product";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetTree();
+        GetGrid();
+    })
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                ProductId = item.id;            //ID
+                ProductName = item.text;        //名称
+                $("#CenterTitle").html(" - " + ProductName);
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/Product/GridListJson")?ProductId=" + ProductId }).trigger('reloadGrid');
+    },
+    url: "@Url.Content("~/CommonModule/Product/TreeJson")"
+    };
+    $("#ItemsTree").treeview(itemtree);
+    }
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/CommonModule/Product/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: 'ProductId', name: 'ProductId', index: 'ProductId', width: 0, align: 'left',sortable: true  },
+                { label: 'ProductName', name: 'ProductName', index: 'ProductName', width: 0, align: 'left',sortable: true  },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+</script>
+<div id="layout" class="layout">
+    <!--左边-->
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                公司目录
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <!--中间-->
+    <div class="layoutPanel layout-center">
+        <div class="btnbartitle">
+            <div>
+                部门列表<span id="CenterTitle"></span>
+            </div>
+        </div>
+        <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <table id="gridTable"></table>
+    </div>
+</div>
+

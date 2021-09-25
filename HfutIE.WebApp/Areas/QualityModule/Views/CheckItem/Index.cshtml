@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "质量录入DTS检测项管理";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .ZebraClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        GetCondition();//加载搜索栏
+        //BindCombobox();
+        GetGrid();
+        GetGrid2();
+    })
+
+    //加载上表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/QualityModule/CheckItem/GetDTSItemListPage")?PropertyName="+"" + "&PropertyValue="+"",
+            datatype: "json",
+            height: 180,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'RecordId', index: 'RecordId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '编号', name: 'DTSItemID', index: 'DTSItemID', width: 100, align: 'left', sortable: true, hidden: false },
+                { label: '检测项', name: 'DTSItem', index: 'DTSItem', width: 280, align: 'left', sortable: true },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 100, align: 'left', sortable: true },
+               { label: '方位', name: 'Location', index: 'Location', width: 100, align: 'left', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 60, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 100, align: 'left', sortable: true },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 200,
+            rowList: [200, 300, 500, 1000],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'asc',
+            altRows: true,
+            altclass: 'ZebraClass',
+            rownumbers: true,
+            multiselect: true,
+            multiboxonly: true,
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            onSelectRow: function () {
+                //SelectRowIndx = GetJqGridRowIndx("#" + this.id);
+                var KeyValue;
+                var PropertyName = "ParId";
+                KeyValue = GetJqGridRowValue("#gridTable", "RecordId");//获取主键ID
+                if (KeyValue == undefined) {
+                    KeyValue = "";
+                }
+                $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("~/QualityModule/CheckItem/GetItemStaList")?PropertyName=" + PropertyName + "&PropertyValue=" + escape(KeyValue), page: 1, datatype: 'json' }).trigger('reloadGrid');
+            },
+        });
+    }
+    //加载下表格
+    function GetGrid2() {
+        $("#gridTable2").jqGrid({
+            url: "",
+            datatype: "json",//此属性可设为json/local,设为local是去掉url属性
+            autowidth: true,
+            height: $(window).height() - 412,
+            colModel: [
+                { label: '主键', name: 'RecordId', index: 'RecordId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '父级主键', name: 'ParId', index: 'ParId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '序号', name: 'SerialNumber', index: 'SerialNumber', width: 0, align: 'left', sortable: true },
+                { label: '基准值', name: 'BaseValue', index: 'BaseValue', width: 0, align: 'left', sortable: true },
+                { label: '公差值', name: 'TolValue', index: 'TolValue', width: 0, align: 'left', sortable: true },           
+                { label: 'TOL+', name: 'TOLUp', index: 'TOLUp', width: 0, align: 'left', sortable: true},
+                { label: 'TOL-', name: 'TOLDown', index: 'TOLDown', width: 0, align: 'left', sortable: true },
+                { label: '方向', name: 'Direction', index: 'Direction', width: 100, align: 'left', sortable: true },
+               //以下是公共字段
+               {
+                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 60, align: 'center', sortable: true, hidden: true,
+                   formatter: function (cellvalue, options, rowObject) {
+                       if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                   }
+               },
+               { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+               { label: '备注', name: 'Rem', index: 'Rem', width: 100, align: 'left', sortable: true },
+            ],
+            viewrecords: true,
+            rowNum: 50,
+            rowList: [50, 100, 300, 500],
+            pager: "#gridPager2",
+            sortname: '',
+            sortorder: 'asc',
+            altRows: true,
+            altclass: 'ZebraClass',
+            rownumbers: true,
+            shrinkToFit: true,
+            multiboxonly: true,
+            gridview: true,
+            multiselect: false,
+            loadonce: true,
+        });
+    }
+    //加载搜索栏
+    function GetCondition() {
+        var Condition = $("#Condition").val();
+        if (Condition == "") {
+            $("#tdsearch").hide();
+            $("#tdsearch2").hide();
+        }
+        else if (Condition == "CarType") {
+            $("#tdsearch").hide();
+            $("#tdsearch2").show();
+            BindDropItem("#keywords2", "CarNm", "");//质量录入采用了ES8\ES6类型，并非0800
+        }
+        else if (Condition == "Location") {      
+            $("#tdsearch").hide();
+            $("#tdsearch2").show();
+            $("#keywords2").html("");
+            $("#keywords2").append($("<option>左侧</option>"));
+            $("#keywords2").append($("<option>右侧</option>"));
+        }
+        else {
+            $("#tdsearch").show();
+            $("#tdsearch2").hide();
+        }
+    }
+    // 回车键事件
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            btn_search();
+        }
+    });
+    //新增
+    function btn_add() {
+        var url = "/QualityModule/CheckItem/Form"
+        openDialog(url, "Form", "新增DTS检测项", 650, 400, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RecordId");
+        var content = "";
+        if (IsChecked(KeyValue, content)) {
+            var url = "/QualityModule/CheckItem/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑DTS检测项", 650, 400, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RecordId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/QualityModule/CheckItem/DTSItemDelete', delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }
+    //搜索
+    function btn_search() {
+        var condition = $("#Condition").val();
+        var keywords = $("#keywords").val();
+        if (condition == "CarType" || condition == "Location") {
+            keywords = $("#keywords2").val();
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/CheckItem/GetDTSItemListPage")?PropertyName=" + escape(condition) + "&PropertyValue=" + escape(keywords), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <div class="tools_bar" style="margin-top: 0px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <div class="QueryArea">
+            <table border="0" class="form-find" style="height: 45px;">
+                <tr>
+                    <th>
+                        搜索条件：
+                    </th>
+                    <td>
+                        <select id="Condition" onchange="GetCondition()" class="txt" style="height: 28px;width: 150px">
+                            <option value="">全部</option>
+                            <option value="CarType">车型</option>
+                            <option value="Location">方位</option>
+                            <option value="DTSItem">检测项名称</option>
+                        </select>
+                    </td>
+                    <td id="tdsearch">
+                        <input id="keywords" type="text" style="height: 25px;width: 150px" />
+                    </td>
+                    <td id="tdsearch2">
+                        <select id="keywords2" type="text" class="txt" style="height: 28px;width: 150px"></select>
+                    </td>
+                    <td>
+                        <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_search()" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+
+            <div class="btnbartitle">
+                <div>
+                    <span id="BottomTitle" style="font-size:medium"></span> DTS检测项明细
+                </div>
+            </div>
+            <table id="gridTable2"></table>
+            <div id="gridPager2"></div>
+        </div>
+    </div>
+</div>

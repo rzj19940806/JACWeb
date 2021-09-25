@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = "点连接检测项管理";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .ZebraClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        GetCondition();//加载搜索栏
+        GetGrid();
+    })
+
+    //加载上表格
+    function GetGrid() {
+        var Propertyvalue2 = $("#Category").val();
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/QualityModule/CheckItem/GetJunItemList2")?PropertyName1=" + "" + "&PropertyValue1=" + "" + "&PropertyName2=" + "Category" + "&PropertyValue2=" + Propertyvalue2,
+            datatype: "json",
+            height: $(window).height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'RecordId', index: 'RecordId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '编号', name: 'Code', index: 'Code', width: 0, align: 'left', sortable: true, hidden: false },
+                { label: '检测项', name: 'ItemNm', index: 'ItemNm', width: 250, align: 'left', sortable: true },
+                { label: '类别', name: 'Category', index: 'Category', width: 80, align: 'left', sortable: true },
+                { label: '类型', name: 'Type', index: 'Type', width: 80, align: 'left', sortable: true, hidden: false },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 80, align: 'left', sortable: true },
+                { label: '生产工位', name: 'WcNm', index: 'WcNm', width: 80, align: 'left', sortable: true },
+                { label: '零件名称', name: 'PartNm', index: 'PartNm', width: 80, align: 'left', sortable: true },
+                { label: 'CC/SC', name: 'CCSC', index: 'CCSC', width: 80, align: 'left', sortable: true },
+                { label: '头高标准', name: 'HeadHeghitSta', index: 'HeadHeghitSta', width: 100, align: 'left', sortable: true },
+                { label: '头部间隙', name: 'HeadGapSta', index: 'HeadGapSta', width: 100, align: 'left', sortable: true },
+                { label: '长度标准', name: 'LengthSta', index: 'LengthSta', width: 100, align: 'left', sortable: true },
+                { label: '拧紧扭矩', name: 'TightenTOR', index: 'TightenTOR', width: 100, align: 'left', sortable: true },
+                { label: '焊点位置', name: 'SpotLocation', index: 'SpotLocation', width: 100, align: 'left', sortable: true },
+                { label: '焊核标准值', name: 'SpotStaValue', index: 'SpotStaValue', width: 100, align: 'left', sortable: true },
+                { label: '单位', name: 'Unit', index: 'Unit', width: 80, align: 'left', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,hidden: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 120, align: 'left', sortable: true }, 
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 200,
+            rowList: [200, 300, 500, 1000],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'asc',
+            altRows: true,
+            altclass: 'ZebraClass',
+            rownumbers: true,
+            multiselect: true,
+            multiboxonly: true,
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+        });
+    }
+
+    //加载搜索栏
+    function GetCondition() {
+        var Condition = $("#Condition").val();
+        if (Condition == "") {
+            $("#tdsearch").hide();
+            $("#tdsearch2").hide();
+        }
+        else if (Condition == "CarType") {
+            $("#tdsearch").hide();
+            $("#tdsearch2").show();
+            BindDropItem("#keywords2", "CarNm", "");//质量录入采用了ES8\ES6类型，并非0800
+        }
+        //else if (Condition == "Category") {
+        //    $("#tdsearch").hide();
+        //    $("#tdsearch2").show();
+        //    $("#keywords2").html("");
+        //    $("#keywords2").append($("<option>LW</option>"));
+        //    $("#keywords2").append($("<option>T5</option>"));
+        //    $("#keywords2").append($("<option>T6</option>"));
+        //    $("#keywords2").append($("<option>M8</option>"));
+        //    $("#keywords2").append($("<option>SPR</option>"));
+        //    $("#keywords2").append($("<option>FDS</option>"));
+        //    $("#keywords2").append($("<option>CMT</option>"));
+        //    $("#keywords2").append($("<option>SWD</option>"));        
+        //}
+        else {
+            $("#tdsearch").show();
+            $("#tdsearch2").hide();
+        }
+    }
+    // 回车键事件
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            btn_search();
+        }
+    });
+    //新增
+    function btn_add() {
+        var url = "/QualityModule/CheckItem/FormJunct"
+        openDialog(url, "Form", "新增点连接检测项", 650, 350, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RecordId");
+        var content = "";
+        if (IsChecked(KeyValue, content)) {
+            var url = "/QualityModule/CheckItem/FormJunct?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑点连接检测项", 650, 350, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "RecordId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/QualityModule/CheckItem/JunItemDelete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //导入
+    function btn_import() {
+        var Category = $("#Category").val();
+        openDialog("/QualityModule/CheckItem/ExcelImport?Category=" + Category, "ExcelImport", "点连接检测项信息导入—" + Category + "", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();//公共窗口-ExcelImportTor
+        });
+    }
+    //搜索
+    function btn_search() {
+        var condition = $("#Condition").val();
+        var property2 = "Category";
+        var value1 = $("#keywords").val();
+        var value2 = $("#Category").val();
+        if (condition == "CarType") {
+            value1 = $("#keywords2").val();
+        }
+        //jpgridrebuild();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/CheckItem/GetJunItemList2")?PropertyName1=" + escape(condition) + "&PropertyValue1=" + value1 + "&PropertyName2=" + escape(property2) + "&PropertyValue2=" + escape(value2), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');       
+    }
+    //根据录入类别加载jpGrid列
+    function jpgridrebuild() {
+        var len = $("#gridTable").getGridParam("width");
+        var category = $("#Category").val();
+        if (category == "LW") {
+            $("#gridTable").setGridParam().showCol("CCSC");
+            $("#gridTable").setGridParam().hideCol("WcNm");
+            $("#gridTable").setGridParam().hideCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().hideCol("HeadGapSta");
+            $("#gridTable").setGridParam().hideCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("TightenTOR");
+            $("#gridTable").setGridParam().hideCol("SpotLocation");
+            $("#gridTable").setGridParam().hideCol("SpotStaValue");
+        }
+        else if (category == "T5" || category == "T6" || category == "M8") {
+            $("#gridTable").setGridParam().showCol("TightenTOR");
+            $("#gridTable").setGridParam().hideCol("WcNm");
+            $("#gridTable").setGridParam().hideCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().hideCol("HeadGapSta");
+            $("#gridTable").setGridParam().hideCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("CCSC");
+            $("#gridTable").setGridParam().hideCol("SpotLocation");
+            $("#gridTable").setGridParam().hideCol("SpotStaValue");
+        }
+        else if (category == "SPR") {
+            $("#gridTable").setGridParam().showCol("CCSC");
+            $("#gridTable").setGridParam().showCol("WcNm");
+            $("#gridTable").setGridParam().hideCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().hideCol("HeadGapSta");
+            $("#gridTable").setGridParam().hideCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("TightenTOR");
+            $("#gridTable").setGridParam().hideCol("SpotLocation");
+            $("#gridTable").setGridParam().hideCol("SpotStaValue");
+        }
+        else if (category == "FDS") {
+            $("#gridTable").setGridParam().showCol("CCSC");
+            $("#gridTable").setGridParam().showCol("WcNm");
+            $("#gridTable").setGridParam().hideCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().showCol("HeadGapSta");
+            $("#gridTable").setGridParam().hideCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("TightenTOR");
+            $("#gridTable").setGridParam().hideCol("SpotLocation");
+            $("#gridTable").setGridParam().hideCol("SpotStaValue");
+        }
+        else if (category == "CMT") {
+            $("#gridTable").setGridParam().hideCol("CCSC");
+            $("#gridTable").setGridParam().hideCol("WcNm");
+            $("#gridTable").setGridParam().hideCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().hideCol("HeadGapSta");
+            $("#gridTable").setGridParam().showCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("TightenTOR");
+            $("#gridTable").setGridParam().hideCol("SpotLocation");
+            $("#gridTable").setGridParam().hideCol("SpotStaValue");
+        }
+        else if (category == "SWD") {
+            $("#gridTable").setGridParam().showCol("CCSC");
+            $("#gridTable").setGridParam().hideCol("WcNm");
+            $("#gridTable").setGridParam().showCol("PartNm");
+            $("#gridTable").setGridParam().hideCol("HeadHeghitSta");
+            $("#gridTable").setGridParam().hideCol("HeadGapSta");
+            $("#gridTable").setGridParam().hideCol("LengthSta");
+            $("#gridTable").setGridParam().hideCol("TightenTOR");
+            $("#gridTable").setGridParam().showCol("SpotLocation");
+            $("#gridTable").setGridParam().showCol("SpotStaValue");
+        }
+        else {
+            return;
+        }
+        $("#gridTable").setGridWidth(len);
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //导入后刷新
+    function importwindowload(Parameter) {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/CheckItem/GetJunItemList2")?PropertyName1=" + "" + "&PropertyValue1=" + "" + "&PropertyName2=" + "Category" + "&PropertyValue2=" + Parameter, page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <div class="tools_bar" style="margin-top: 0px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <div class="QueryArea">
+            <table border="0" class="form-find" style="height: 45px;">
+                <tr>
+                    <th>检测类别</th>
+                    <td>
+                        <select id="Category" class="txt" style="height: 28px;width: 100px">
+                            @*<option value="">==请选择=</option>*@
+                            <option value="LW">==LW=</option>
+                            <option value="T5">==T5=</option>
+                            <option value="T6">==T6=</option>
+                            <option value="M8">==M8=</option>
+                            <option value="SPR">==SPR=</option>
+                            <option value="FDS">==FDS=</option>
+                            <option value="CMT">==CMT=</option>
+                            @*<option value="SWD">==SWD=</option>*@
+                        </select>
+                    </td>
+                    <th>
+                        搜索条件：
+                    </th>
+                    <td>
+                        <select id="Condition" onchange="GetCondition()" class="txt" style="height: 28px;width: 150px">
+                            <option value="">全部</option>
+                            <option value="CarType">车型</option>                           
+                            <option value="ItemNm">检测项</option>
+                        </select>
+                    </td>
+                    <td id="tdsearch">
+                        <input id="keywords" type="text" style="height: 23px;width: 150px" />
+                    </td>
+                    <td id="tdsearch2">
+                        <select id="keywords2" type="text" class="txt" style="height: 28px;width: 150px"></select>
+                    </td>
+                    <td>
+                        <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_search()" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+@{
+    ViewBag.Title = "INTERFACE_FIELD》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/INTERFACE_FIELD/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>interface_field_key：</th>
+            <td class='formValue'>
+                <label id="interface_field_key" />
+            </td>
+            <th class='formTitle'>interface_key：</th>
+            <td class='formValue'>
+                <label id="interface_key" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>from_table_field：</th>
+            <td class='formValue'>
+                <label id="from_table_field" />
+            </td>
+            <th class='formTitle'>to_table_field：</th>
+            <td class='formValue'>
+                <label id="to_table_field" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve1：</th>
+            <td class='formValue'>
+                <label id="reserve1" />
+            </td>
+            <th class='formTitle'>reserve2：</th>
+            <td class='formValue'>
+                <label id="reserve2" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve3：</th>
+            <td class='formValue'>
+                <label id="reserve3" />
+            </td>
+            <th class='formTitle'>reserve4：</th>
+            <td class='formValue'>
+                <label id="reserve4" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve5：</th>
+            <td class='formValue'>
+                <label id="reserve5" />
+            </td>
+            <th class='formTitle'>reserve6：</th>
+            <td class='formValue'>
+                <label id="reserve6" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve7：</th>
+            <td class='formValue'>
+                <label id="reserve7" />
+            </td>
+            <th class='formTitle'>reserve8：</th>
+            <td class='formValue'>
+                <label id="reserve8" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>reserve9：</th>
+            <td class='formValue'>
+                <label id="reserve9" />
+            </td>
+            <th class='formTitle'>reserve10：</th>
+            <td class='formValue'>
+                <label id="reserve10" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateDate：</th>
+            <td class='formValue'>
+                <label id="CreateDate" />
+            </td>
+            <th class='formTitle'>CreateUserId：</th>
+            <td class='formValue'>
+                <label id="CreateUserId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CreateUserName：</th>
+            <td class='formValue'>
+                <label id="CreateUserName" />
+            </td>
+            <th class='formTitle'>ModifyDate：</th>
+            <td class='formValue'>
+                <label id="ModifyDate" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>ModifyUserId：</th>
+            <td class='formValue'>
+                <label id="ModifyUserId" />
+            </td>
+            <th class='formTitle'>ModifyUserName：</th>
+            <td class='formValue'>
+                <label id="ModifyUserName" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

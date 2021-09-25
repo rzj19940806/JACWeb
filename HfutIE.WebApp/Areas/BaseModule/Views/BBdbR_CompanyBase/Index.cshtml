@@ -1,0 +1,129 @@
+@{
+    ViewBag.Title = "公司基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_CompanyBase/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '公司主键', name: 'CompanyId', index: 'CompanyId', width: 0, align: 'left',sortable: true, hidden: true  },
+                { label: '公司编号', name: 'CompanyCd', index: 'CompanyCd', width: 80, align: 'left',sortable: true  },
+                { label: '公司名称', name: 'CompanyNm', index: 'CompanyNm', width: 0, align: 'left',sortable: true  },
+                { label: '法人', name: 'ArtificialPerson', index: 'ArtificialPerson', width: 100, align: 'left',sortable: true  },
+                { label: '联系电话', name: 'CompanyTelephone', index: 'CompanyTelephone', width: 0, align: 'left',sortable: true  },
+                { label: '传真', name: 'CompanyFax', index: 'CompanyFax', width: 0, align: 'left',sortable: true  },
+                { label: '邮箱', name: 'CompanyEmail', index: 'CompanyEmail', width: 0, align: 'left',sortable: true  },
+                { label: '公司地址', name: 'CompanyAddress', index: 'CompanyAddress', width: 0, align: 'left',sortable: true  },
+                { label: '公司描述', name: 'CompanyDescription', index: 'CompanyDescription', width: 0, align: 'left',sortable: true  },
+                { label: '备注', name: 'Remark', index: 'Remark', width: 0, align: 'left',sortable: true  },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 150, align: 'left', sortable: true, hidden: true   },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left', sortable: true  },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left', sortable: true  },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left', sortable: true  },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true  },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true  },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+    }
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "") {
+            $("#keywords").hide(); 
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords;
+            keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_CompanyBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
+    }).trigger('reloadGrid');        
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+    //新增按钮
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_CompanyBase/Form"
+        openDialog(url, "Form", "新增公司", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CompanyId");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BBdbR_CompanyBase/Form?KeyValue=" + KeyValue;
+        openDialog(url, "Form", "编辑公司信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CompanyId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_CompanyBase/DeleteRule', delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }  
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 40px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
+                    <option value="">==全部==</option>
+                    <option value="CompanyCd">公司编号</option>
+                    <option value="CompanyNm">公司名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px;display: none" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

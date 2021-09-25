@@ -1,0 +1,143 @@
+@{
+    ViewBag.Title = "E_EquipmentMaiPlan_Pro》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_EquipmentMaiPlan_Pro/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>MaiPlanId：</th>
+            <td class='formValue'>
+                <label id="MaiPlanId" />
+            </td>
+            <th class='formTitle'>MaiPlanCode：</th>
+            <td class='formValue'>
+                <label id="MaiPlanCode" />
+            </td>
+            <th class='formTitle'>MaiPlanName：</th>
+            <td class='formValue'>
+                <label id="MaiPlanName" />
+            </td>
+            <th class='formTitle'>DvcCd：</th>
+            <td class='formValue'>
+                <label id="DvcCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>DvcNm：</th>
+            <td class='formValue'>
+                <label id="DvcNm" />
+            </td>
+            <th class='formTitle'>CarPartId：</th>
+            <td class='formValue'>
+                <label id="CarPartId" />
+            </td>
+            <th class='formTitle'>MaiPlanCatg：</th>
+            <td class='formValue'>
+                <label id="MaiPlanCatg" />
+            </td>
+            <th class='formTitle'>MaiPlanType：</th>
+            <td class='formValue'>
+                <label id="MaiPlanType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>MaiPlanCon：</th>
+            <td class='formValue'>
+                <label id="MaiPlanCon" />
+            </td>
+            <th class='formTitle'>MaiPlanStandard：</th>
+            <td class='formValue'>
+                <label id="MaiPlanStandard" />
+            </td>
+            <th class='formTitle'>MaiPlanCycle：</th>
+            <td class='formValue'>
+                <label id="MaiPlanCycle" />
+            </td>
+            <th class='formTitle'>MaiPlanSta：</th>
+            <td class='formValue'>
+                <label id="MaiPlanSta" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>PlineId：</th>
+            <td class='formValue'>
+                <label id="PlineId" />
+            </td>
+            <th class='formTitle'>StfId：</th>
+            <td class='formValue'>
+                <label id="StfId" />
+            </td>
+            <th class='formTitle'>Frequency：</th>
+            <td class='formValue'>
+                <label id="Frequency" />
+            </td>
+            <th class='formTitle'>MaiPlanPer：</th>
+            <td class='formValue'>
+                <label id="MaiPlanPer" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>MaiPlanTime：</th>
+            <td class='formValue'>
+                <label id="MaiPlanTime" />
+            </td>
+            <th class='formTitle'>CreCd：</th>
+            <td class='formValue'>
+                <label id="CreCd" />
+            </td>
+            <th class='formTitle'>CreNm：</th>
+            <td class='formValue'>
+                <label id="CreNm" />
+            </td>
+            <th class='formTitle'>MdfTm：</th>
+            <td class='formValue'>
+                <label id="MdfTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>MdfCd：</th>
+            <td class='formValue'>
+                <label id="MdfCd" />
+            </td>
+            <th class='formTitle'>MdfNm：</th>
+            <td class='formValue'>
+                <label id="MdfNm" />
+            </td>
+            <th class='formTitle'>IsFile：</th>
+            <td class='formValue'>
+                <label id="IsFile" />
+            </td>
+            <th class='formTitle'>Enabled：</th>
+            <td class='formValue'>
+                <label id="Enabled" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>Rem：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+            <th class='formTitle'>RsvFld1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+            <th class='formTitle'>RsvFld2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+    </table>
+</form>

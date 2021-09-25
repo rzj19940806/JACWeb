@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "扭力检测项维护";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//单元函数主键
+    $(function () {
+        BindCombobox()
+        SetControl();
+    })
+    //初始化绑定下拉框
+    function BindCombobox() {
+        //角色分类
+        BindDropItem("#CarType", "CarNm", "");
+        BindDropItem("#Unit", "Unit", "");
+    }
+    //编辑的时候给对象赋值
+    function SetControl() {
+        if (!!KeyValue) {
+            AjaxJson("/QualityModule/CheckItem/GridTorItemJson", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);  //基本信息赋值
+            });                           
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            //postData["ConfigInfoJson"] = GetTableDataJson("#grid_Field");
+            AjaxJson("/QualityModule/CheckItem/SubmitFormTor?KeyValue=" + escape(KeyValue), postData, function (data) {
+                if (data.Message == "该编号已经存在！") {
+                    tipCss("TORItemID", data.Message);
+                    return;
+                }
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form" style="border-right: none;">
+        <tr>
+            <th class="formTitle" style="height: 30px">检测项：</th>
+            <td class="formValue" colspan="3">
+                <input id="RecordId" type="hidden" />
+                <input id="TORItem" maxlength="50" type="text" class="txt required" datacol="yes" err="检测项" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 30px">编号：</th>
+            <td class="formValue">
+                <input id="TORItemID" maxlength="50" type="text" class="txt required" datacol="yes" err="编号" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle" style="height: 30px">车型：</th>
+            <td class="formValue">
+                <select id="CarType" class="txtselect required" datacol="yes" err="车型" checkexpession="NotNull"></select>
+            </td>            
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 30px">静态扭力最小值：</th>
+            <td class="formValue">
+                <input id="TORMin" maxlength="50" type="text" class="txt required" datacol="yes" err="静态扭力最小值" checkexpession="Double" />
+            </td>
+            <th class="formTitle" style="height: 30px">静态扭力最大值：</th>
+            <td class="formValue">
+                <input id="TORMax" class="txt required" datacol="yes" err="静态扭力最大值" checkexpession="Double">
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="height: 30px">数据单位：</th>
+            <td class="formValue">
+                <span class="item">
+                    <select id="Unit" class="txtselect required" datacol="yes" err="单位" checkexpession="NotNull"></select>
+                </span>
+            </td>
+            <th class="formTitle" style="height: 30px">有效性：</th>
+            <td class="formValue">
+                <span class="item">
+                    <input id="Enabled" type="checkbox" name="checkbox" checked="checked" />
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">
+                备注：
+            </th>
+            <td class="formValue" colspan="3">
+                <textarea id="Rem" name="Rem" maxlength="200" class="txtArea" rows="2"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>
+

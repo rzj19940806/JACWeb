@@ -1,0 +1,190 @@
+﻿@{
+    ViewBag.Title = "质量检测数据导入-SWD";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .ZebraClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        BindCombobox();
+        GetGrid();
+        //jpgridrebuild()
+    })
+    //初始化绑定下拉框
+    function BindCombobox() {
+        BindDropItem("#CarType", "CarNm", "==请选择=");
+    }
+    var lastrow = "";//最后一次编辑的行id；
+    var lastcell = "";//最后一次编辑的列id；
+    //加载上表格
+    function GetGrid() {
+        //var bodyno = $("#BodyNo").val();
+        $("#gridTable").jqGrid({
+            //url: "@Url.Content("~/QualityModule/QualityEntry/GetJunDateSWDList")?PropertyName=" + "BodyNo" + "&PropertyValue=" + bodyno,
+            url:"",
+            datatype: "json",
+            height: $(window).height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'RecordId', index: 'RecordId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '编号', name: 'Code', index: 'Code', width: 0, align: 'left', sortable: true, hidden: false },
+                { label: '检测项', name: 'ItemNm', index: 'ItemNm', width: 250, align: 'left', sortable: true },
+                { label: '类别', name: 'Category', index: 'Category', width: 80, align: 'left', sortable: true, hidden: false },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 80, align: 'left', sortable: true, hidden: false },
+                { label: '零件名称', name: 'PartNm', index: 'PartNm', width: 80, align: 'left', sortable: true, hidden: true },
+                { label: 'CC/SC', name: 'CCSC', index: 'CCSC', width: 80, align: 'left', sortable: true, hidden: true },       
+                { label: '焊点位置', name: 'SpotLocation', index: 'SpotLocation', width: 100, align: 'left', sortable: true, hidden: false },
+                { label: '焊核标准值', name: 'SpotStaValue', index: 'SpotStaValue', width: 100, align: 'left', sortable: true, hidden: false },
+                { label: '单位', name: 'Unit', index: 'Unit', width: 80, align: 'left', sortable: true, hidden: true },
+                { label: '车身号', name: 'BodyNo', index: 'BodyNo', width: 100, align: 'left', sortable: true, hidden: false },
+                { label: '检测值', name: 'CheckValue', index: 'CheckValue', width: 100, align: 'center', sortable: true, cellattr: addCellAttr },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 120, align: 'left', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 200,
+            rowList: [200, 300, 500, 1000],
+            pager: "#gridPager",
+            sortname: '',
+            sortorder: 'asc',
+            altRows: true,
+            altclass: 'ZebraClass',
+            rownumbers: true,
+            multiselect: true,
+            multiboxonly: true,
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            cellsubmit: 'clientArray',            
+        });
+    }
+
+    //单元格背景色
+    function addCellAttr(rowId, val, rawObject, cm, rdata) {
+        var StaValue = rawObject.SpotStaValue;//标准值
+        var CheckValue = rawObject.CheckValue;//检测值
+        if (CheckValue == '0' || CheckValue == null || CheckValue == undefined) {
+            return "style='background-color:#FFFF00'";
+        }
+        if (StaValue > CheckValue) {
+            return "style='background-color:#FF6347'";
+        }
+    }
+
+    // 回车键事件
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            btn_query();
+        }
+    });
+
+    //导入
+    function btn_entry() {
+        var bodyno = $("#BodyNo").val().trim();
+        var cartype = $("#CarType").val();
+        var checktm = $("#CheckTm").val();      
+        if (cartype == "") {
+            tipDialog('请您选择【车型】后再操作。', 3, 'warning');
+            return;
+        }
+        if (bodyno == "" || bodyno.trim() == "") {
+            tipDialog('请正确输入【车身号】后再操作。', 3, 'warning');
+            return;
+        }
+        if (checktm == "" || checktm == undefined || checktm == 'null' || checktm == 'undefined') {
+            tipDialog('请正确选择【日期】后再操作。', 3, 'warning');
+            return;
+        }
+        AjaxJson("/QualityModule/QualityEntry/JudgeRepeat", { KeyValue: bodyno }, function (data) {
+            if (data.Code == 0) {//重复标识
+                confirmDialog("温馨提示", "该车身【" + bodyno + "】已存在记录，是否重新导入？", function (r) {
+                    if (r) {
+                        openDialog("/QualityModule/QualityEntry/DataImport?BodyNo=" + bodyno + "&CarType=" + cartype + "&CheckTm=" + checktm, "DataImport", "SWD检测结果数据导入", 750, 300, function (iframe) {
+                            top.frames[iframe].AcceptClick();
+                        });
+                    }
+                })
+            }
+            else if (data.Code < 0) {
+                tipDialog(data.Message, 3, data.Code);
+                return;
+            }
+            else {
+                openDialog("/QualityModule/QualityEntry/DataImport?BodyNo=" + bodyno + "&CarType=" + cartype + "&CheckTm=" + checktm, "DataImport", "SWD检测结果数据导入", 750, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick();
+                });
+            }
+        });       
+    }
+
+    //查询
+    function btn_query() {
+        var bodyno = $("#BodyNo").val().trim();
+        if (bodyno == "" || bodyno.trim() == "") {
+            tipDialog('请正确输入【车身号】后再操作。', 3, 'warning');
+            return;
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/QualityEntry/GetJunDateSWDList")?PropertyName=" + "BodyNo" + "&PropertyValue=" + bodyno, page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+    //模板获取
+    function btn_templateget() {
+        location.href = "/QualityModule/QualityEntry/GetExcelModule?ImportId=@ViewBag.ImportId";
+    }
+
+    //刷新
+    function windowload(bodyno) {
+        //$("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/QualityEntry/GetJunDateSWDList")?PropertyName=" + "BodyNo" + "&PropertyValue=" + bodyno, page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <div class="tools_bar" style="margin-top: 0px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <div class="QueryArea">
+            <table border="0" class="form-find" style="height: 45px;">
+                <tr>
+                    <th>车  型：</th>
+                    <td>
+                        <select id="CarType" type="text" class="txt" style="height: 25px;width: 100px"></select>
+                    </td>   
+                    <th>车身号：</th>
+                    <td>
+                        <input id="BodyNo" type="text" class="txt" style="height: 18px;width: 120px" />
+                    </td> 
+                    <th>日  期：</th>
+                    <td>                   
+                        <input id="CheckTm" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetToday()" onfocus="WdatePicker({ maxDate: '%y-%M-%d' })" />
+                    </td>                 
+                    <td>
+                        <input id="btnEntry" type="button" class="btnSearch" value="导 入" style="margin-left:2em" onclick="btn_entry()" />
+                    </td>
+                    <td>
+                        <input id="btnQuery" type="button" class="btnSearch" value="查 询" style="margin-left:2em" onclick="btn_query()" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

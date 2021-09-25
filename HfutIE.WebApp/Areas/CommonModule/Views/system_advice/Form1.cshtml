@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "system_advice》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var a = KeyValue + "/1"
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/system_advice/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                $("#state").val("已处理");
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/system_advice/SubmitForm?KeyValue=" + a, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>编号：</th>
+            <td class='formValue'>
+                <input id="state" maxlength=50 type="text" class="txt"style="display:none" />
+                <input id="advice_code" maxlength=50 type="text" class="txt" readonly="readonly"/>
+            </td>
+            <th class='formTitle'>问题类型：</th>
+            <td class='formValue'>
+                <input id="advice_type" maxlength=50 type="text" class="txt" readonly="readonly"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>内容摘要：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="advice_name" maxlength=100 type="text" class="txt" readonly="readonly" />*@
+                <textarea id="advice_name" class="txtArea" rows="3" readonly="readonly"></textarea>
+            </td>
+        </tr>     
+        @*<tr>
+            <th class='formTitle'>状态：</th>
+            <td class='formValue'>
+                <input id="state" maxlength=50 type="text" class="txt" readonly="readonly"/>
+            </td>
+            <th class='formTitle'>优先级：</th>
+            <td class='formValue'>
+                <input id="priority" maxlength=50 type="text" class="txt" readonly="readonly"/>
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>问题描述：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="" maxlength=500 type="text" class="txt" rows="3" readonly="readonly" />*@
+                <textarea id="advice_description" class="txtArea" rows="5" readonly="readonly"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>处理结果：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="deal_result" class="txtArea" rows="5"></textarea>  
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                @*<input id="" maxlength=500 type="text" class="txt" />*@
+                <textarea id="process_remark" class="txtArea" rows="5"></textarea>  
+            </td>
+        </tr>
+        @*<tr>
+                <th class='formTitle'>reserve1：</th>
+                <td class='formValue'>
+                    <input id="reserve1" maxlength=50 type="text" class="txt"   />
+                </td>
+            </tr>
+            <tr>
+                <th class='formTitle'>reserve2：</th>
+                <td class='formValue'>
+                    <input id="reserve2" maxlength=50 type="text" class="txt"   />
+                </td>
+            </tr>*@
+        <tr></tr>
+    </table>
+</form>

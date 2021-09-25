@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "工厂基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var CompanyId = GetQuery('areaId');//主键
+    var StfId = GetQuery('StfId');//负责人
+    $(function () {
+        StaffList();
+        BindDropItem("#FacTyp", "FactoryType", "==全部==");
+        InitControl();
+    })
+
+    //加载人员列表
+    function StaffList() {
+        AjaxJson("/BaseModule/BBdbR_FacBase/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["stfnm"] + "</option>");
+            }
+        });
+        RateGrade();
+    }
+    //加载人员信息
+    function RateGrade() {
+        let StfId = $("#StfId").val();
+        if (StfId != "") {
+            AjaxJson("/BaseModule/BBdbR_FacBase/GetPlineNm2?StfId=" + StfId, {}, function (data) {
+                $("#StfNm").val(data.rows[0]["stfnm"]);
+                $("#Phn").val(data.rows[0]["phn"]);
+                $("#FacEmail").val(data.rows[0]["email"]);
+            });
+        }           
+    }
+
+    //得到一个对象实体
+    function InitControl() {
+        $("#CompanyId").val(CompanyId);
+        $("#StfNm").val(StfNm);
+        $("#StfId").val(StfId);
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_FacBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("FacCd").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        let idvalue = $('#StfId option:selected').val();
+        qyID = $("#StfId").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_FacBase/SubmitForm?KeyValue=" + KeyValue + '&idvalue=' + idvalue + '&qyID=' + qyID, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("FactoryCode", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">工厂编号：</th>
+            <td class='formValue'>
+                <input id="FacCd" maxlength=50 type="text" class="txt required" datacol="yes" err="工厂编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">工厂类型：</th>
+            <td class='formValue'>
+                <select id="FacTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="工厂类型" onclick="">
+
+                </select>
+            </td>
+        </tr>
+        <tr style="display:none">
+            <th class='formTitle' style="height:30px">所属公司：</th>
+            <td class='formValue' colspan="3">
+                <input id="CompanyId" maxlength=50 type="text" class="txt required" datacol="yes" err="所属公司" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr style="display:none">
+            <th class='formTitle' style="height:30px">负责人姓名：</th>
+            <td class='formValue' colspan="3">
+                <input id="StfNm" maxlength=50 type="text" class="txt required" datacol="yes" err="负责人姓名" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">工厂名称：</th>
+            <td class='formValue' colspan="3">
+                <input id="FacNm" maxlength=50 type="text" class="txt required" datacol="yes" err="工厂名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">工厂地址：</th>
+            <td class='formValue' colspan="3">
+                <input id="Addr" maxlength=19 type="text" class="txt required" err="工厂地址" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">工厂描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="Dsc" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>联系电话：</th>
+            <td class='formValue' >
+                <input id="FacTelephone" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>传真：</th>
+            <td class='formValue' >
+                <input id="FacFax" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>负责人员：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata"  onchange="RateGrade()" >
+                    <option value="">--请选择负责人员--</option>
+                </select>
+            </td>
+            <th class='formTitle'>负责人员手机号：</th>
+            <td class='formValue' >
+                <input id="Phn" maxlength=50 type="text" class="txt" readonly/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>邮箱：</th>
+            <td class='formValue' >
+                <input id="FacEmail" maxlength=50 type="text" class="txt" readonly/>
+            </td>
+        </tr>
+        
+        <tr>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class='formValue' colspan="3">
+                <input id="Rem" maxlength=1 type="text" class="txt" rows="3" />
+            </td>
+        </tr>
+    </table>
+</form>

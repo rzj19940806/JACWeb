@@ -1,0 +1,88 @@
+@{
+    ViewBag.Title = "Base_Factory";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/CommonModule/Factory/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: 'FactoryId', name: 'FactoryId', index: 'FactoryId', width: 0, align: 'left',sortable: true  },
+                { label: 'FactoryCode', name: 'FactoryCode', index: 'FactoryCode', width: 0, align: 'left',sortable: true  },
+                { label: 'FactoryName', name: 'FactoryName', index: 'FactoryName', width: 0, align: 'left',sortable: true  },
+                { label: 'Description', name: 'Description', index: 'Description', width: 0, align: 'left',sortable: true  },
+                { label: 'ParentId', name: 'ParentId', index: 'ParentId', width: 0, align: 'left',sortable: true  },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //新增
+    function btn_add() {
+        var url = "/CommonModule/Factory/Form"
+        openDialog(url, "Form", "新增Base_Factory", 770, 395, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FactoryId");
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/Factory/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑Base_Factory", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FactoryId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/CommonModule/Factory/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+    //明细
+    function btn_detail() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FactoryId");
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/Factory/Detail?KeyValue=" + KeyValue;
+            Dialog(url, "Detail", "Base_Factory明细", 820, 500, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

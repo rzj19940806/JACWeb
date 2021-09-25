@@ -1,0 +1,133 @@
+@{
+    ViewBag.Title = "工厂日历信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var Tm = GetQuery('Tm');
+
+    $(function () {
+        RateGradeList();
+        addClassNm();
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BPdb_Dt/SetForm", { KeyValue: KeyValue }, function (data) {
+                $("#OrgRank").val(data.OrgRank);
+                $("#RsvFld1").val(data.OrgId);
+                $("#ClassNm").val(data.ClassId);
+                $("#DtTyp").val(data.DtTyp);
+                $("#Rem").val(data.Rem);
+                $("#Tm").val(Tm);
+            });
+        }
+    }
+    
+    //班制下拉框
+    function addClassNm() {
+        AjaxJson("/BaseModule/BPdb_Dt/GetClassNm?", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#ClassNm").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["classnm"] + "</option>");
+            }
+        }); 
+    }
+
+    //机构名称下拉框
+    function RateGradeList() {
+        OrgRank = $("#OrgRank").val();
+        if (OrgRank == '1') { //车间
+            document.getElementById("RsvFld1").options.length = 0;
+            AjaxJson("/BaseModule/BPdb_Dt/GetWsbNm", {}, function (data) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    $("#RsvFld1").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["workshopnm"] + "</option>");
+                }
+            });
+        }
+        else { // 产线
+            document.getElementById("RsvFld1").options.length = 0;
+            AjaxJson("/BaseModule/BPdb_Dt/GetPlineNm", {}, function (data) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    $("#RsvFld1").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["plinenm"] + "</option>");
+                }
+            });
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }   
+        var postData = GetWebControls("#form1");
+        let idvalue = $('#RsvFld1 option:selected').val();//机构id
+        let idtext = $('#RsvFld1 option:selected').text();//机构名称
+        let classid = $('#ClassNm option:selected').val();//班制id
+        let classname = $('#ClassNm option:selected').text();//班制名称
+        let OrgRank = $('#OrgRank').val(); //机构级别
+        console.log(idvalue, idtext, OrgRank, classid, classname)
+        AjaxJson("/BaseModule/BPdb_Dt/SubmitFormCal?KeyValue=" + KeyValue + '&idvalue=' + idvalue + '&OrgRank=' + OrgRank + '&idtext=' + idtext + '&classid=' + classid + '&classname=' + classname, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();            
+        });
+    }
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>机构级别：</th>
+            <td class='formValue' colspan="3">
+                <select id="OrgRank" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构级别" onchange="RateGradeList()">
+                    <option value="1">车间</option>
+                    <option value="2">产线</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="width:100px">机构名称：</th>
+            <td class='formValue' colspan="3">
+                <select id="RsvFld1" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onclick="" ></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' >日期：</th>
+            <td class="formValue" colspan="3">
+                <input id="Tm" type="date" class="txt  " datacol="yes" err="日期" checkexpession="NotNull"/>
+            </td>
+        </tr>   
+        <tr>
+            <th class='formTitle'>班制名称：</th>
+            <td class='formValue' colspan="3">
+                <select id="ClassNm" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="班制名称" onclick=""></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' >日期类型：</th>
+            <td class='formValue' colspan="3">
+                <select id="DtTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="日期类型" onclick="" autocomplete="off">
+                    <option value="1">工作</option>
+                    <option value="0">休息</option>
+                </select>
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle' >有效性：</th>
+            <td class='formValue' colspan="3">
+                <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle' >备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

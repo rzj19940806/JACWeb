@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "配置用户";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        GetSelectGrid();
+    })
+    var lastrow, lastcell = "";
+    var Tycd = GetQuery('selectTycd');
+    var Type = GetQuery('selectTy');
+    var Rank = GetQuery('selectRank');
+    var Time = GetQuery('selectTm');
+    var Unit = GetQuery('selectUnit');
+
+    //用户信息表
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridNoConList")?Tycd=" + Tycd,
+        datatype: "json",
+        width: 840,
+        height:230,
+        colModel: [
+            { label: '人员主键', name: 'stfid', index: 'stfid', width: 0, align: 'left', sortable: true, hidden: true },
+            { label: '用户编号', name: 'stfcd', index: 'stfcd', width: 0, align: 'left', sortable: true },
+            { label: '用户姓名', name: 'stfnm', index: 'stfnm', width: 0, align: 'left', sortable: true },
+            { label: '邮箱', name: 'email', index: 'email', width: 0, align: 'left', sortable: true },
+            { label: '企业微信号', name: 'Wechat', index: 'Wechat', width: 0, align: 'left', sortable: true },
+        ],
+        viewrecords: true,//显示总的记录条数
+        rowNum: 30,
+        rowList: [30, 50, 100, 500, 1000],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: true,
+        forceFit: true,
+        scrollofset: false,
+        loadonce: true,
+        gridview: true,
+            ondblClickRow: function (RowId) {//RowId表示选中行
+                var userid = GetJqGridRowValue("#gridTable", "stfid");
+              
+            var IDs = $("#gridSelectTable").jqGrid('getDataIDs');//获取selectgridtable的行数
+            var dvc = $("#gridTable").jqGrid('getRowData', RowId);//获取gridtable选中行的数据
+            if (IDs.length == 0) {
+                $("#gridSelectTable").jqGrid("addRowData", 1, dvc, "last");//将grid选中行数据复制给gridSelectTable中新增的行
+                $("#gridTable").jqGrid("delRowData", RowId);//删除grid选中行的数据
+                $("#gridSelectTable").jqGrid('setCell', 1, 6, userid);
+            }
+            else {
+                $("#gridSelectTable").jqGrid("addRowData", Math.max.apply(Math, IDs) + 1, dvc, "last");//将grid选中行数据复制给grid1中新增的行,从最后一行开始新增
+                $("#gridTable").jqGrid("delRowData", RowId);//删除grid选中行的数据
+                $("#gridSelectTable").jqGrid('setCell', Math.max.apply(Math, IDs) + 1, 6, userid);
+            }
+        }
+      });
+    }
+
+    //已配置表格
+    function GetSelectGrid() {
+        $("#gridSelectTable").jqGrid({
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridConUserList")?Tycd=" + Tycd + "&Rank=" + Rank,
+        datatype: "json",
+        width: 840,
+        height: 110,
+        colModel: [
+            { label: '视图主键', name: 'rec_id', index: 'rec_id', width: 0, align: 'left', sortable: true, hidden: true },
+            { label: '人员主键', name: 'stfid', index: 'stfid', width: 0, align: 'left', sortable: true, hidden: true },
+            { label: '用户编号', name: 'stfcd', index: 'stfcd', width: 0, align: 'left', sortable: true },
+            { label: '用户姓名', name: 'stfnm', index: 'stfnm', width: 0, align: 'left', sortable: true },
+            { label: '邮箱', name: 'email', index: 'email', width: 0, align: 'left', sortable: true },
+            { label: '企业微信号', name: 'Wechat', index: 'Wechat', width: 0, align: 'left', sortable: true },
+        ],
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: true,
+        forceFit: true,
+        gridview: true,
+        loadonce: true,
+        cellEdit: true,
+        cellsubmit: 'clientArray',
+            ondblClickRow: function (RowId) {
+
+            var IDs = $("#gridTable").jqGrid('getDataIDs');//获取gridselect的行数
+            var dvc = $("#gridSelectTable").jqGrid('getRowData', RowId);//获取gridselect选中行的数据
+            if (IDs.length == 0)
+            {
+                $("#gridTable").jqGrid("addRowData", 1, dvc, "last");//将gridselect选中行数据复制给grid中新增的行（上移）
+                $("#gridSelectTable").jqGrid("delRowData", RowId);//删除gridselect选中行的数据,
+            }
+            else {
+                $("#gridTable").jqGrid("addRowData", Math.max.apply(Math, IDs) + 1, dvc, "last");//将gridselect选中行数据复制给grid中新增的行（上移）
+                $("#gridSelectTable").jqGrid("delRowData", RowId);//删除gridselect选中行的数据
+            }
+        },
+        beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+            lastrow = iRow;//行号
+            lastcell = iCol;//列号
+        }
+    });
+    }
+    //保存
+    function AcceptClick() {
+        $("#gridSelectTable").jqGrid("saveCell", lastrow, lastcell);//先进行单元格数据保存
+        var ids = $("#gridSelectTable").jqGrid("getRowData"); //获取gridSelectTable表中多行数据  
+        if (ids != "" && ids != null) {
+            AjaxJson("/InformationPublishModule/Configration/SubmitUserCon?Tycd=" + escape(Tycd) + "&Type=" + escape(Type) + "&Rank=" + escape(Rank) + "&Time=" + escape(Time) + "&Unit=" + escape(Unit), { conuser: JSON.stringify(ids) }, function (data) {
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+            });
+            closeDialog();
+        }
+        
+    }
+    function setType() {
+        var searchtype = $("#Condition").val();
+        if (searchtype == "1") {//查询所有
+            $("#stfcd").hide();
+            $("#Code_s").hide();
+            $("#stfnm").hide();
+            $("#RealName_s").hide();
+            $("#stfcd").val("");
+            $("#stfnm").val("");
+        }
+        else if (searchtype == "stfcd") {//按用户编号查询
+            $("#stfcd").show();
+            $("#Code_s").show();
+            $("#stfnm").hide();
+            $("#RealName_s").hide();
+            $("#stfnm").val("");
+        }
+        else if (searchtype == "stfnm") {//按用户名称查询
+            $("#stfcd").hide();
+            $("#Code_s").hide();
+            $("#stfnm").show();
+            $("#RealName_s").show();
+            $("#stfcd").val("");
+        }
+    }
+     //搜索
+    function btn_Search() {
+        var condition = $("#Condition").val();
+        var keywords = "";
+        if ($("#stfcd").val() != "" && $("#stfcd").val() != null) {
+            keywords = $("#stfcd").val();
+        }
+        else if ($("#stfnm").val() != "" && $("#stfnm").val() != null) {
+            keywords = $("#stfnm").val();
+        }
+        else {
+            keywords = "";
+        }
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/InformationPublishModule/Configration/GridAllUserList")?condition=" + escape(condition) + "&keywords=" + escape(keywords) + "&Tycd=" + escape(Tycd), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+
+</script>
+<form id="form1">
+    <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+        <div class="note-prompt" style="margin: 1px;">
+            温馨提示：双击完成配置。
+        </div>
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>
+                    检索类型：
+                </th>
+                <td>
+                    <select id="Condition" class="select" style="width: 140px" onchange="setType()">                       
+                        <option value="1">所有</option>
+                        <option value="stfcd">用户编号</option>
+                        <option value="stfnm">用户名称</option>
+                    </select>
+                </td>
+                <th id="Code_s" style="display:none">用户编号：</th>
+                <td>
+                    <input id="stfcd" type="text" class="txt" style="width: 200px;display:none" />
+                </td>
+                <th id="RealName_s" style="display:none">用户名称：</th>
+                <td>
+                    <input id="stfnm" type="text" class="txt" style="width: 200px;display:none" />
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        <div class="border" style="width: 100%; height: 320px; overflow: auto;">
+            <div class="btnbartitle">
+                <div>
+                    用户信息
+                </div>
+            </div>
+            <table id="gridTable"></table>
+        </div>
+        <div class="border" style="width: 100%; height: 170px; overflow: auto;">
+            <div class="btnbartitle">
+                <div>
+                    已配置用户
+                </div>
+            </div>
+            <table id="gridSelectTable"></table>
+        </div>
+    </div>
+</form>
+

@@ -1,0 +1,86 @@
+@{
+    ViewBag.Title = "缺陷类别表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#DefectCatgLevel", "DefectCatgLevel");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityModule/BBdbR_DefectCatgBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        
+        if (!IsNullOrEmpty($("#DefectCatgCd").val())) {
+            tipDialog("缺陷编号不能为空", 1, 0);
+            return false;
+        }
+        if (!IsNullOrEmpty($("#DefectCatgNm").val())) {
+            tipDialog("缺陷编号不能为空", 1, 0);
+            return false;
+        }
+
+        var onlypost = { Fieldname: "DefectCatgCd", Fieldvalue: postData.DefectCatgCd, KeyValue: KeyValue };
+        AjaxJson("/QualityModule/BBdbR_DefectCatgBase/OnlyOneFAS", onlypost, function (data) {
+            if (data.hasdata == "yes") {
+                tipDialog("编号重复", 1, 0);
+                return false;
+            } else if (data.hasdata == "no"){
+                AjaxJson("/QualityModule/BBdbR_DefectCatgBase/SubmitFormFAS?KeyValue=" + KeyValue, postData, function (data) {
+                    tipDialog(data.Message, 3, data.Code);
+                    top.frames[tabiframeId()].windowload();
+                    closeDialog();
+                });
+            }
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>缺陷类型编号：</th>
+            <td class='formValue'>
+                <input id="DefectCatgCd" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷类型名称：</th>
+            <td class='formValue'>
+                <input id="DefectCatgNm" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷级别：</th>
+            <td class='formValue'>
+                <select id="DefectCatgLevel"class="txtselect"  ></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

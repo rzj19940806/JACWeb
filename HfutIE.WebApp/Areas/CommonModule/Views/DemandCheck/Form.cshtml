@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "模块管理》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');
+    var Role = GetQuery('Role');
+    $(function () {
+        InitControl();
+    })
+    
+    //得到一个对象实体
+    function InitControl() {
+        if (!!KeyValue) {
+            AjaxJson("/CommonModule/DemandCheck/SetAbnormalForm", { KeyValue: KeyValue, Role: Role }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            if (Role == "刀具管理员") {
+                AjaxJson("/CommonModule/DemandCheck/SubmitCutterForm?KeyValue=" + KeyValue, postData, function (data) {
+                    tipDialog(data.Message, 3, data.Code);
+                    top.frames[tabiframeId()].windowload();
+                    closeDialog();
+                }); 
+            } else {
+                AjaxJson("/CommonModule/DemandCheck/SubmitMateralForm?KeyValue=" + KeyValue, postData, function (data) {
+                    tipDialog(data.Message, 3, data.Code);
+                    top.frames[tabiframeId()].windowload();
+                    closeDialog();
+                });
+            }
+            
+        }, 200);
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class="formTitle" style="display:none">
+                主键：
+            </th>
+            <td class="formValue" style="display:none">
+                <input id="ID" type="hidden" value="0" />
+            </td>
+            <th class="formTitle">
+                备注：
+            </th>
+            <td class="formValue" colspan="3">
+                <textarea id="Remarks" name="Remarks" style="height:140px" maxlength="100" class="txtArea" rows="6"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

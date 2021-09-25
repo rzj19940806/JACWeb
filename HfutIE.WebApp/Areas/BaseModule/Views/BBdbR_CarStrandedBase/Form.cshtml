@@ -1,0 +1,206 @@
+@{
+    ViewBag.Title = "滞留区域管理基本信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        //RateGradeList();
+        //RateGradeList1();
+        BindDropItem("#StrandedGrand", "StrandedGrand", "==全部==");
+        BindDropItem("#StrandedRule", "StrandedRule", "==全部==");
+        WorkOrderList();
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_CarStrandedBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                $("#AreaCd").val(data.AreaCd);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_CarStrandedBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+    //加载起始AVI站点列表
+    function RateGradeList() {
+        var sel = document.getElementById("AviId");
+        document.getElementById("AviId").options.length = 1;
+        AjaxJson("/BaseModule/BBdbR_CarStrandedBase/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                var FaultCatg = data.rows[i]["AviNm"];
+                var FaultId = data.rows[i]["id"];
+                var opt = new Option(FaultCatg, FaultId);//第一个代表标签内的内容，第二个代表value
+                opt.setAttribute("id", "option" + i);
+                $("#option" + i).onclick = OptionClick();
+                sel.options.add(opt);
+            }
+        });
+    }
+    //加载结束AVI站点列表
+    function RateGradeList1() {
+        var sel = document.getElementById("AviId1");
+        document.getElementById("AviId1").options.length = 1;
+        AjaxJson("/BaseModule/BBdbR_CarStrandedBase/GetPlineNm1", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                var FaultCatg = data.rows[i]["AviNm"];
+                var FaultId = data.rows[i]["id"];
+                var opt = new Option(FaultCatg, FaultId);//第一个代表标签内的内容，第二个代表value
+                opt.setAttribute("id", "option" + i);
+                $("#option" + i).onclick = OptionClick1();
+                sel.options.add(opt);
+            }
+        });
+    }
+    //加载avi信息
+    //function RateGrade() {
+    //    let AviId = $("#AviId").val();
+    //    AjaxJson("/BaseModule/BBdbR_CarStrandedBase/GetPlineNm?AviId=" + AviId, {}, function (data) {
+    //        $("#AviId").val(data.rows[0]["AviNm"]);
+    //        $("#AviId1").val(data.rows[0]["AviNm"]);
+    //        });
+    //}
+    //option的点击事件
+    function OptionClick() {
+        var obj = document.getElementById('AviId');
+        var index = obj.selectedIndex;
+        if (index != -1) {
+            var AviNm = obj.options[index].value;
+            $('#AviId').val(AviNm);
+            //$('#AviId1').val(AviNm);
+        }
+    }
+    //工单下拉框
+    function WorkOrderList() {
+        AjaxJson("/BaseModule/BBdbR_CarStrandedBase/GetPlineNm", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#StaAVIId").append("<option value='" + data.rows[i]["aviid"] + "'>" + data.rows[i]["avinm"] + "</option>");
+                $("#EndAVIId").append("<option value='" + data.rows[i]["aviid"] + "'>" + data.rows[i]["avinm"] + "</option>");
+            }
+        });
+    }
+    function OptionClick1() {
+        var obj = document.getElementById('AviId1');
+        var index = obj.selectedIndex;
+        if (index != -1) {
+            varAviNm = obj.options[index].value;
+            $('#AviId1').val(AviNm);
+        }
+    }
+    //function OptionClick2() {
+    //    var obj = document.getElementById('AviId');
+    //    var index = obj.selectedIndex;
+    //    if (index != -1) {
+    //        var AviCd = obj.options[index].value;
+    //        $('#AviId').val(AviCd);
+    //    }
+    //}
+    //function OptionClick3() {
+    //    var obj = document.getElementById('AviId');
+    //    var index = obj.selectedIndex;
+    //    if (index != -1) {
+    //        var AviCd1 = obj.options[index].value;
+    //        $('#AviId1').val(AviCd1);
+    //    }
+    //}
+    //   var StrtRestTm = $("#StrtRestTm").val();
+    //   let EndRestTm = $("#EndRestTm").val();
+    //   var a = new Date(StrtRestTm).getTime();
+    //    if (DateTime(StrtRestTm) >= EndRestTm) {
+    //    tipDialog('开始时间大结束时间，请选择正确的时间。', 2, 'warning');
+    //    return;
+    //    }
+    //    else {
+
+    //    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style="display: none">
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <input id="RuleId" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>区域编号：</th>
+            <td class='formValue'>
+                <input id="AreaCd" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>区域名称：</th>
+            <td class='formValue'>
+                <input id="AreaNm" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>区域类别：</th>
+            <td class='formValue'>
+                <select id="AreaTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
+                    <option value="0">车间</option>
+                    <option value="1">区域</option>
+                    <option value="2">产线</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>起始AVI站点：</th>
+            <td class='formValue'>
+                <select id="StaAVIId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="起始AVI站点名称" onclick="RateGradeList">
+                    <option value="">--请先选择起始AVI站点--</option>
+                </select>
+            </td>
+        </tr>
+        
+        <tr>
+            <th class='formTitle'>结束AVI站点：</th>
+            <td class='formValue'>
+                <select id="EndAVIId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="结束AVI站点名称" onclick="">
+                    <option value="">--请先选择结束AVI站点--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>滞留等级：</th>
+            <td class='formValue'>
+                <select id="StrandedGrand" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="滞留等级">
+                    <option>---请选择滞留等级--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>滞留时间临界值：</th>
+            <td class='formValue'>
+                <input id="StrandedRuleTm" maxlength=23 type="number" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>滞留报警规则：</th>
+            <td class='formValue'>
+                <select id="StrandedRule" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="滞留报警规则">
+                    <option>---请选择滞留报警规则--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+
+    </table>
+</form>

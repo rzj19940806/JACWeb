@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "部门管理";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetTree();
+        GetRoleType();
+        //GetGrid("");
+    });
+    var CheckId, CheckName = "";
+    var Role = "";
+
+    function GetRoleType() {
+        AjaxJson("/CommonModule/DemandCheck/GetRoleType", {}, function (data) {
+            //console.log(data);
+            Role = data;
+            if (Role == "刀具管理员") {
+                $("#gridTable1").remove();
+                GetGrid2();
+            } else {
+                $("#gridTable2").remove();
+                GetGrid1();
+            }
+        });
+    }
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                CheckId = item.id;            //ID
+                CheckName = item.text;        //名称
+                $("#CenterTitle").html(" - " + CheckName);
+                if (Role == "刀具管理员") {
+                    //GetGrid2(CheckId);
+                    $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/DemandCheck/GridCutterList")?CheckId=" + CheckId + "&Role=" + escape(Role) }).trigger('reloadGrid');
+                } else {
+                    //GetGrid1(CheckId);
+                    $("#gridTable1").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/DemandCheck/GridMateralList")?CheckId=" + CheckId + "&Role=" + escape(Role) }).trigger('reloadGrid');
+                }
+                
+            },
+            url: "@Url.Content("~/CommonModule/DemandCheck/TreeJson")"
+        };
+        $("#ItemsTree").treeview(itemtree);
+    }
+    //加载物料程序齐套表格
+    function GetGrid1(CheckId) {
+        $("#gridTable1").jqGrid({
+            url: "@Url.Content("~/CommonModule/DemandCheck/GridMateralList")?CheckId=" + CheckId + "&Role=" + escape(Role),
+            datatype: "json",
+            height: $(window).height() - 105,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'ID', index: "ID", hidden: true },
+                { label: '项目主键', name: 'ProjectID', index: "ProjectID", hidden: true },
+                { label: '项目编号', name: 'ProjectCode', index: "ProjectCode", width: 80, align: 'center', sortable: true},
+                { label: '计划ID', name: 'PlanID', index: "PlanID", hidden: true },
+                { label: '计划编号', name: 'PlanCode', index: "PlanCode", width: 80, align: 'center', sortable: true},
+                {
+                    label: '齐套状态', name: 'Cstate', index: "Cstate", width: 130, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<span style='color:blue'>待确认（未到预警期）</span>";
+                        if (cellvalue == '2') return "<span style='color:red'>待确认（已到预警期）</span>";
+                        if (cellvalue == '3') return "<span style='color:green'>已确认</span>";
+                    }
+                },
+                { label: '预警提前期', name: 'ProLeadTime', index: "ProLeadTime", width: 130, align: "center", sortable: true},
+                {
+                    label: '类型', name: 'Type', index: "Type", width: 100, align: "center",
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "物料";
+                        if (cellvalue == '2') return "程序";
+                    }
+                },
+                {
+                    label: '创建时间', name: "CreateTime", width: 120, sortable: false, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                    }
+                },
+                { label: '创建人', name: "CreatorID", width: 90, sortable: false, align: 'center' },
+                {
+                    label: '上次修改时间', name: "LastModifiedTime", width: 120, sortable: false, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                    }
+                },
+                { label: "修改人", name: "ModifierID", index: "ModifierID", width: 90, align: 'center' },
+                {
+                    label: '有效性', name: 'IsAvailable', index: 'IsAvailable', width: 45, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '备注', name: 'Remarks', index: "Remarks", width: 180, align: 'center' }
+            ],
+            pager: false,
+            rowNum: 1000,
+            sortname: 'SortCode',
+            sortorder: 'asc',
+            multiselect: true,
+            rownumbers: true,
+            shrinkToFit: false,
+            gridview: true
+        });
+        columnModelData("#gridTable1");
+    }
+    //加载刀具齐套表格
+    function GetGrid2(CheckId) {
+        $("#gridTable2").jqGrid({
+            url: "@Url.Content("~/CommonModule/DemandCheck/GridCutterList")?CheckId=" + CheckId,
+            datatype: "json",
+            height: $(window).height() - 105,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'ID', index: "ID", hidden: true },
+                { label: '项目主键', name: 'ProjectID', index: "ProjectID", hidden: true },
+                { label: '项目编号', name: 'ProjectCode', index: "ProjectCode", width: 80, align: 'center', sortable: true},
+                { label: '计划ID', name: 'PlanID', index: "PlanID", hidden: true, align: 'center'},
+                { label: '计划编号', name: 'PlanCode', index: "PlanCode", width: 80, align: 'center', sortable: true},
+                { label: '刀具类型', name: 'CutterType', index: "CutterType", width: 80, align: 'center' },
+                { label: '刀具型号', name: 'Specification', index: "Specification", width: 80, align: 'center'},
+                { label: '刀具名称', name: 'CutterName', index: "CutterName", width: 80, align: 'center'},
+                { label: '需求数量', name: 'DemandNum', index: "DemandNum", width: 60, align: 'center' },
+                {
+                    label: '刀具齐套状态', name: 'Cstate', index: "Cstate", width: 130, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<span style='color:blue'>待确认（未到预警期）</span>";
+                        if (cellvalue == '2') return "<span style='color:red'>待确认（已到预警期）</span>";
+                        if (cellvalue == '3') return "<span style='color:green'>已确认</span>";
+                    }
+                },
+                { label: '预警提前期', name: 'ProLeadTime', index: "ProLeadTime", width: 130, align: 'center', sortable: true },
+                {
+                    label: '创建时间', name: "CreateTime", width: 130, sortable: false, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                    }
+                },
+                { label: '创建人', name: "CreatorID", width: 90, sortable: false, align: 'center' },
+                {
+                    label: '上次修改时间', name: "LastModifiedTime", width: 100, sortable: false, align: 'center', hidden: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                    }
+                },
+                { label: "修改人", name: "ModifierID", index: "ModifierID", width: 90, align: 'center', hidden: true },
+                {
+                    label: '有效性', name: 'IsAvailable', index: 'IsAvailable', width: 45, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '备注', name: 'Remarks', index: "Remarks", width: 150, align: 'center'}
+            ],
+            pager: false,
+            rowNum: 1000,
+            sortname: 'SortCode',
+            sortorder: 'asc',
+            rownumbers: true,
+            multiselect: true,
+            shrinkToFit: false,
+            gridview: true
+        });
+        columnModelData("#gridTable2");
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "departmentid");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/CommonModule/DemandCheck/DeleteDepartment', delparm, KeyValue.split(",").length);
+        }
+    }
+    //确认齐套
+    function btn_check() {
+        var KeyValue;
+        if (Role == "刀具管理员") {
+            KeyValue = GetJqGridRowValue("#gridTable2", "ID");
+        } else {
+            KeyValue = GetJqGridRowValue("#gridTable1", "ID");
+        }
+        var count = KeyValue.split(",").length;
+        confirmDialog("温馨提示", "注：确定" + count + " 笔齐套任务已经齐套？", function (r) {
+            if (r) {
+                Loading(true, "正在确认齐套中...");
+                window.setTimeout(function () {
+                    AjaxJson('/CommonModule/DemandCheck/ConfirmCheck', { Role: Role, KeyValue: KeyValue}, function (data) {
+                        tipDialog(data.Message, 3, data.Code);
+                        if (data.Code > 0) {
+                            windowload();
+                        }
+                    });
+                }, 200);
+            }
+        });
+    }
+    //齐套异常
+    function btn_abnormal() {
+        var KeyValue;
+        if (Role == "刀具管理员") {
+            KeyValue = GetJqGridRowValue("#gridTable2", "ID");
+        } else {
+            KeyValue = GetJqGridRowValue("#gridTable1", "ID");
+        }
+        if (IsChecked(KeyValue)) {
+            var url = "/CommonModule/DemandCheck/Form?KeyValue=" + KeyValue + "&Role=" + escape(Role);
+            openDialog(url, "OrderForm", "异常信息", 650, 50, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //搜索预警信息
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var Keyword = $("#keywordstxt").val();
+        //加载数据表格
+        if (Role == "刀具管理员") {
+            $("#gridTable2").jqGrid("clearGridData");
+            $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/DemandCheck/GetCutterList")?Condition=" + Condition + "&Keyword=" + Keyword }).trigger('reloadGrid');
+        } else {
+            $("#gridTable1").jqGrid("clearGridData");
+            $("#gridTable1").jqGrid('setGridParam', { url: "@Url.Content("~/CommonModule/DemandCheck/GetMateralList")?Condition=" + Condition + "&Keyword=" + Keyword + "&Role=" + escape(Role) }).trigger('reloadGrid');
+        }
+    }
+    //导出Excel
+    function btn_derive() {
+        SetDeriveExcel("#gridTable", "用户信息");
+        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "用户信息导出", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable1").trigger("reloadGrid"); //重新载入  
+        $("#gridTable2").trigger("reloadGrid"); //重新载入  
+    }
+</script>
+<div id="layout" class="layout">
+    <!--左边-->
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                结构树
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <!--中间-->
+    <div class="layoutPanel layout-center">
+        <div class="btnbartitle">
+            <div>
+                齐套信息<span id="CenterTitle"></span>
+            </div>
+        </div>
+        <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>检索条件：</th>
+                <td>
+                    <select id="Condition" style="width: 150px;height:25px">
+                        <option value="">全部</option>
+                        <option value="OrderCode">订单编号</option>
+                        <option value="ProjectCode">项目编号</option>
+                        <option value="Cstate">任务状态</option>
+                    </select>
+                </td>
+                <td id="keywords" >
+                    <input id="keywordstxt" type="text" class="txt" style="width: 200px" />
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="预警信息" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        <table id="gridTable1"></table>
+        <table id="gridTable2"></table>
+    </div>
+</div>

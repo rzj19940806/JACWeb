@@ -1,0 +1,101 @@
+@{
+    ViewBag.Title = "缺陷明细表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var ParentId = GetQuery('ParentId');//主键
+    $(function () {
+        InitControl();
+        Set();
+    })
+
+    var DefecLevel = null;
+
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityModule/BBdbR_DefectCatgDeTail/SetForm", { KeyValue: KeyValue }, function (data) {
+                DefecLevel = data.DefecLevel;
+                data.DefecLevel = CellItem("DefectCatgLevel", DefecLevel);
+                SetWebControls(data);
+            });
+        }
+    }
+    //根据树节点获取缺陷等级
+    function Set() {
+        if (KeyValue == "" || KeyValue == null) {
+            AjaxJson("/QualityModule/BBdbR_DefectCatgBase/SetForm", { KeyValue: ParentId }, function (data) {
+                DefecLevel = data.DefectCatgLevel
+                $("#DefecLevel").val(CellItem("DefectCatgLevel", DefecLevel));
+            });
+            $("#DefectCatgId").val(ParentId);
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        postData.DefecLevel = DefecLevel;
+        AjaxJson("/QualityModule/BBdbR_DefectCatgDeTail/SubmitFormFAS?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>缺陷编号：</th>
+            <td class='formValue'>
+                <input id="DefectCd" maxlength=50 type="text" class="txt" datacol="yes" err="缺陷编号" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷名称：</th>
+            <td class='formValue'>
+                <input id="DefectNm" maxlength=50 type="text" class="txt" datacol="yes" err="缺陷名称" checkexpession="NotNull"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷级别：</th>
+            <td class='formValue'>
+                <input id="DefecLevel" type="text" class="txt" datacol="yes" err="缺陷级别"  readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <td class='formValue' hidden="true">
+                <input id="DefectCatgId" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+    </table>
+</form>

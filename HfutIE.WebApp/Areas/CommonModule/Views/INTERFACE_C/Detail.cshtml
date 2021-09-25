@@ -1,0 +1,63 @@
+@{
+    ViewBag.Title = "INTERFACE_C》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/INTERFACE_C/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>interface_code：</th>
+            <td class='formValue'>
+                <label id="interface_code" />
+            </td>
+            <th class='formTitle'>interface_name：</th>
+            <td class='formValue'>
+                <label id="interface_name" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>interface_type：</th>
+            <td class='formValue'>
+                <label id="interface_type" />
+            </td>
+            <th class='formTitle'>interface_ip：</th>
+            <td class='formValue'>
+                <label id="interface_ip" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>database_name：</th>
+            <td class='formValue'>
+                <label id="database_name" />
+            </td>
+            <th class='formTitle'>user_name：</th>
+            <td class='formValue'>
+                <label id="user_name" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>password：</th>
+            <td class='formValue'>
+                <label id="password" />
+            </td>
+            <th class='formTitle'>remarks：</th>
+            <td class='formValue'>
+                <label id="remarks" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

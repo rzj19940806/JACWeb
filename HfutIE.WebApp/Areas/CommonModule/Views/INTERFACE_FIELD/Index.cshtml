@@ -1,0 +1,200 @@
+@{
+    ViewBag.Title = "INTERFACE_FIELD";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    var interface_key = GetQuery("interface_key");
+    var interface_code = GetQuery("interface_code");
+    var interface_name = GetQuery("interface_name");
+    $(function () {
+        GetGrid();
+        GetGrid1();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/CommonModule/INTERFACE_FIELD/GetUnconfigedField")?interface_key=" + interface_key,
+        datatype: "json",
+        height: 208,
+        autowidth: false,
+        width: 995,
+        colModel: [
+                { label: '字段名', name: 'to_table_field', index: 'to_table_field', width: 0, align: 'left', sortable: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: true,
+        gridview: true,
+        ondblClickRow: function (RowId) {
+            var IDs = $("#gridTable1").jqGrid('getDataIDs');//获取grid1的行数
+            var interface_field = $("#gridTable").jqGrid('getRowData', RowId);//获取grid1选中行的数据
+            if (IDs.length == 0) {
+                $("#gridTable1").jqGrid("addRowData", 1, interface_field, "last");//将grid选中行数据复制给grid1中新增的行
+                $("#gridTable1").jqGrid("setRowData", 1, { interface_key: interface_key, interface_code: interface_code, interface_name: interface_name, from_table_field: interface_field.to_table_field });//将grid选中行数据复制给grid1中新增的行
+                $("#gridTable").jqGrid("delRowData", RowId);//删除grid选中行的数据
+            }
+            else {
+                for (var k = 0; k < IDs.length; k++) {
+                    var configed_interface_field = $("#gridTable1").jqGrid('getRowData', IDs[k]);
+                    if (configed_interface_field.to_table_field == interface_field.to_table_field) {
+                        tipDialog("已配置该字段，请重试。", 3, "-1");
+                        return false;
+                    }
+                }
+                $("#gridTable1").jqGrid("addRowData", Math.max.apply(Math, IDs) + 1, interface_field, "last");//将grid选中行数据复制给grid1中新增的行
+                $("#gridTable1").jqGrid("setRowData", Math.max.apply(Math, IDs) + 1, { interface_key: interface_key, interface_code: interface_code, interface_name: interface_name, from_table_field: interface_field.to_table_field });//将grid选中行数据复制给grid1中新增的行
+                $("#gridTable").jqGrid("delRowData", RowId);//删除grid选中行的数据
+            }
+        },
+    });
+}
+    //加载表格
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+            url: "@Url.Content("~/CommonModule/INTERFACE_FIELD/GetConfigedField")?interface_key=" + interface_key,
+        datatype: "json",
+        height: 208,
+        autowidth: false,
+        width: 995,
+        colModel: [
+                { label: 'interface_field_key', name: 'interface_field_key', index: 'interface_field_key', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'interface_key', name: 'interface_key', index: 'interface_key', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '接口编号', name: 'interface_code', index: 'interface_code', width: 0, align: 'left', sortable: true },
+                { label: '接口名称', name: 'interface_name', index: 'interface_name', width: 0, align: 'left', sortable: true },
+                { label: '来源字段名称', name: 'from_table_field', index: 'from_table_field', width: 0, align: 'left', sortable: true, editable: true },
+                { label: '去向字段名称', name: 'to_table_field', index: 'to_table_field', width: 0, align: 'left',sortable: true  },
+                {
+                    label: '是否标志字段', name: 'is_identify_column', index: 'is_identify_column', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == "1") {
+                            $(this).val("1");
+                            return "<input type='checkbox' name='checkboxname' id='is_identify_column" + options.rowId + "' checked='true' onclick='change(this)' value='" + cellvalue + "'/>";
+                        }
+                        else {
+                            $(this).val("0");
+                            return "<input type='checkbox' name='checkboxname' id='is_identify_column" + options.rowId + "'onclick='change(this)'  value='0'/>";
+                        }
+                    }
+                },
+                { label: 'reserve4', name: 'reserve4', index: 'reserve4', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve5', name: 'reserve5', index: 'reserve5', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve6', name: 'reserve6', index: 'reserve6', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve7', name: 'reserve7', index: 'reserve7', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve8', name: 'reserve8', index: 'reserve8', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve9', name: 'reserve9', index: 'reserve9', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'reserve10', name: 'reserve10', index: 'reserve10', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'CreateDate', name: 'CreateDate', index: 'CreateDate', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'CreateUserId', name: 'CreateUserId', index: 'CreateUserId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'CreateUserName', name: 'CreateUserName', index: 'CreateUserName', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyDate', name: 'ModifyDate', index: 'ModifyDate', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyUserId', name: 'ModifyUserId', index: 'ModifyUserId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'ModifyUserName', name: 'ModifyUserName', index: 'ModifyUserName', width: 0, align: 'left', sortable: true, hidden: true },
+        ],
+        pager: "#gridPager1",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: true,
+        gridview: true,
+        cellEdit: true,//是否开启单元格的编辑功能
+        cellsubmit: 'clientArray',//or 'clientArray',remote代表每次编辑提交后进行服务器保存，clientArray只保存到数据表格不保存到服务器
+        @*cellurl: //cellsubmit要提交的后台路径*@
+        ondblClickRow: function (RowId) {
+            var IDs = $("#gridTable").jqGrid('getDataIDs');//获取grid1的行数
+            var interface_field = $("#gridTable1").jqGrid('getRowData', RowId);//获取grid选中行的数据
+            if (IDs.length == 0) {
+                $("#gridTable").jqGrid("addRowData", 1, interface_field, "last");//将grid1选中行数据复制给grid中新增的行（上移）
+                $("#gridTable1").jqGrid("delRowData", RowId);//删除grid选中行的数据
+            }
+            else {
+                $("#gridTable").jqGrid("addRowData", Math.max.apply(Math, IDs) + 1, interface_field, "last");//将grid1选中行数据复制给grid中新增的行（上移）
+                $("#gridTable1").jqGrid("delRowData", RowId);//删除grid选中行的数据
+            }
+        },
+    });
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+    //选择CheckBox的事件，改变CheckBox的值
+    function change(checkboxvalue) {
+        if ($(checkboxvalue).val() == "1") {
+            $(checkboxvalue).val("0");
+        }
+        else {
+            $(checkboxvalue).val("1");
+        }
+    }
+    //自己写的trim函数，用正则表达式写的
+    function trim(str) {
+        var regexp = /(^\s*)|(\s*$)/g;
+        return str.replace(regexp, "");
+    }
+    //提交
+    function btn_accept() {
+        var IDs = $("#gridTable1").jqGrid('getDataIDs');//获取grid1的行数
+        if (IDs.length > 0) {
+            $("#gridTable1").editCell(1, 1, false);//如果没有这一句，当编辑完某行的“数量”后，直接点击提交，最后编辑的单元格仍是可编辑型，获取改行数据是一个<input>框，而不是具体的值，所以需要先写本句，使最后编辑的单元格变为不可编辑状态。本句作用是使第一行第一列不可编辑（与最后编辑的单元格无关），同时会使最后编辑的单元格保存数据，不再是编辑状态，从而获取数据
+        }
+        for (var i = 0; i < IDs.length; i++) {
+            if (trim($("#gridTable1").jqGrid('getRowData', IDs[i]).from_table_field) == "") {
+                tipDialog("第" + (parseInt(i) + 1) + "行未配置来源字段，请重试。", 3, "-1");
+                return false;
+            }
+            for (var j = parseInt(i) + 1; j < IDs.length; j++) {
+                if ($("#gridTable1").jqGrid('getRowData', IDs[i]).from_table_field == $("#gridTable1").jqGrid('getRowData', IDs[j]).from_table_field) {
+                    tipDialog("重复配置来源字段，请重试。", 3, "-1");
+                    return false;
+                }
+            }
+        }
+        //var allinterface_field = $("#gridTable1").jqGrid('getRowData');
+        var allinterface_field = new Array();//提交的数据
+        var existing_identify_column = 0;
+        for (var j = 0; j < IDs.length; j++) {
+            var interface_field = $("#gridTable1").jqGrid('getRowData', IDs[j]);
+            interface_field.is_identify_column = $("#is_identify_column" + IDs[j]).val();
+            allinterface_field.push(interface_field);
+            if (interface_field.is_identify_column == "1") {
+                existing_identify_column = 1;
+            }
+        }
+        if (existing_identify_column != 1) {
+            tipDialog("至少需要配置一个标识字段。", 3, "-1");
+            return false;
+        }
+        AjaxJson('/CommonModule/INTERFACE_FIELD/Accept', { allinterface_field: allinterface_field, interface_key: interface_key }, function (data) {
+            tipDialog(data.Message, 4, data.Code);
+            if (data.Code > 0) {
+                windowload();
+            }
+        });
+    }
+</script>
+<div class="tools_bar leftline rightline" style="margin-bottom: 0px; margin: 1px;">
+    <div class="PartialButton">
+        <a id="lr-replace" ids="lr-replace" title="刷新当前" onclick="Replace()" class="tools_btn">
+            <span>
+                <b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b>
+            </span>
+        </a>
+        <div class="tools_separator"></div>
+        <a id="lr-accept" ids="lr-add" title="确认此项配置" onclick="btn_accept()" class="tools_btn">
+            <span>
+                <b style="background: url('../../Content/Images/Icon16/accept.png') 50% 4px no-repeat;">确认配置</b>
+            </span>
+        </a>
+    </div>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <div style="background-color:gainsboro ;color:palevioletred;font-size:medium">&nbsp去向表待配置字段（双击下移）</div>
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+    <div style="background-color:gainsboro ;color:palevioletred;font-size:medium">&nbsp已配置字段（双击上移）</div>
+    <table id="gridTable1"></table>
+    <div id="gridPager1"></div>
+</div>
