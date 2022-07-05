@@ -155,7 +155,7 @@
                 let theEvent = e || window.event;
                 let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
                 if (keyCode == 13) {
-                    let vin = $("#vin_input_left").val().trim();
+                    let vin = $("#vin_input_left").val().trim().toUpperCase();
                     manualCarStart(vin, true, "left");
                 }
             });
@@ -163,7 +163,7 @@
                 let theEvent = e || window.event;
                 let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
                 if (keyCode == 13) {
-                    let vin = $("#vin_input_right").val().trim();
+                    let vin = $("#vin_input_right").val().trim().toUpperCase();
                     manualCarStart(vin, true, "right");
                 }
             });
@@ -328,7 +328,7 @@
         }
         //4.2.1根据回车触发关重件校核
         function partBind(leftRight) {
-            let BarCode = $("#part_input_" + leftRight).val().trim();
+            let BarCode = $("#part_input_" + leftRight).val().trim().toUpperCase();
             $("#part_input_" + leftRight).val("");
             let matno;
             let carParts;

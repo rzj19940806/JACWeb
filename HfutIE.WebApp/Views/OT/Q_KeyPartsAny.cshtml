@@ -79,12 +79,12 @@
                 GetStaticInfo(true);    //加载静态信息
                 GetCurrentDate();   //实时时间刷新
                 bindKeyDown("vin_input", function () {
-                    let vin = $("#vin_input").val().trim();
+                    let vin = $("#vin_input").val().trim().toUpperCase();
                     $("#vin_input").val("");
                     manualCarStart(allStaticInfo, vin, true, "主线", gid);
                 });                 //为VIN输入框绑定回车事件
                 bindKeyDown("part_input", function () {
-                    var BarCode = $("#part_input").val().trim();
+                    var BarCode = $("#part_input").val().trim().toUpperCase();
                     $("#part_input").val("");
                     partBind(allStaticInfo, barcodeRule, parts, BarCode, "主线", stationCarState);
                 });                 //为条码输入框绑定回车事件

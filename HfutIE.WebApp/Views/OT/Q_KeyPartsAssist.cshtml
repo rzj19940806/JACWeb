@@ -53,7 +53,7 @@
                 GetCurrentDate();   //实时时间刷新
                 //bindKeyDown();      //为物料码输入框绑定键盘点击事件
                 bindKeyDown("vin_input", function () {
-                    let vin = $("#vin_input").val().trim();
+                    let vin = $("#vin_input").val().trim().toUpperCase();
                     $("#vin_input").val("");
                     if (vin.length < 18) {
                         manualCarStart(allStaticInfo, vin, true, "辅线");
@@ -62,7 +62,7 @@
                     }
                 });                 //为VIN输入框绑定回车事件
                 bindKeyDown("part_input", function () {
-                    var BarCode = $("#part_input").val().trim();
+                    var BarCode = $("#part_input").val().trim().toUpperCase();
                     $("#part_input").val("");
                     partBind(allStaticInfo, barcodeRule, parts, BarCode, "辅线");
                 });                 //为条码输入框绑定回车事件
