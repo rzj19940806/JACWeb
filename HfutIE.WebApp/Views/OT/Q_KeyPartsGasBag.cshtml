@@ -97,7 +97,7 @@
                         $("#in_main_box_right")[0].innerHTML = "";
                         if (carStart(allStaticInfo, data, "辅线")) {
                             if (del = true) {
-                                updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                                updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + data.vinInfo[0].vin + "】");
                                 RecordPass(data.vinInfo[0].vin);
                             }
                         }
