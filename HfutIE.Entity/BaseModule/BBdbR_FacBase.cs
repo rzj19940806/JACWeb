@@ -41,6 +41,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工厂名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string FacNm { get; set; }
         /// <summary>
         /// 公司主键
@@ -53,60 +54,70 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工厂类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string FacTyp { get; set; }
         /// <summary>
         /// 工厂地址
         /// </summary>
         /// <returns></returns>
         [DisplayName("工厂地址")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Addr { get; set; }
         /// <summary>
         /// 工厂描述
         /// </summary>
         /// <returns></returns>
         [DisplayName("工厂描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// 负责人员主键
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员主键")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfId { get; set; }
         /// <summary>
         /// 负责人员编号
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员编号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfCd { get; set; }
         /// <summary>
         /// 负责人员姓名
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员姓名")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfNm { get; set; }
         /// <summary>
         /// 负责手机号
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责手机号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Phn { get; set; }
         /// <summary>
         /// 联系电话
         /// </summary>
         /// <returns></returns>
         [DisplayName("联系电话")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string FacTelephone { get; set; }
         /// <summary>
         /// 传真
         /// </summary>
         /// <returns></returns>
         [DisplayName("传真")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string FacFax { get; set; }
         /// <summary>
         /// 邮箱
         /// </summary>
         /// <returns></returns>
         [DisplayName("邮箱")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string FacEmail { get; set; }
         /// <summary>
         /// 版本号
@@ -114,6 +125,13 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("版本号")]
         public string VersionNumber { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -125,7 +143,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -143,7 +161,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -161,6 +179,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1
@@ -185,7 +204,7 @@ namespace HfutIE.Entity
             this.FacId = CommonHelper.GetGuid;
             this.Enabled = "1";
             this.VersionNumber = "V1.0";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -196,7 +215,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.FacId = KeyValue;
-            this.MdfTm = DateTime.Now;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

@@ -1,0 +1,4665 @@
+——————————————09:16:00-————————————————
+设备登陆异常:【工位：合装线8工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:20:15-————————————————
+车身队列错误：【工位：合装线8工位】【VIN：LJ166A23XM2222329】【错误信息：车身队列信息未更新，请查看AVI是否异常。您可以选择在左侧输入VIN码手动入站。
+
+——————————————09:24:05-————————————————
+车身队列错误：【工位：合装线8工位】【VIN：LJ166A23XM2222329】【错误信息：车身队列信息未更新，请查看AVI是否异常。您可以选择在左侧输入VIN码手动入站。
+
+——————————————09:57:41-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:00:39-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:19:07-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:22:57-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:23:04-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:23:29-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:31:18-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————10:38:41-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:38:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:40:48-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:40:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:40:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:41:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:42:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:43:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:44:46-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:45:10-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:45:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:45:56-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:46:27-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:46:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:46:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:47:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:47:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:47:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:47:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:48:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:49:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:50:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading 'length')】
+
+——————————————10:51:34-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:51:57-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:52:15-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————11:18:01-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————15:37:37-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————15:43:44-————————————————
+设备连接错误:【工位：合装线9工位】【异常信息：设备连接失败！界面刷新】
+
+——————————————15:43:44-————————————————
+设备登陆异常:【工位：合装线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:39:31-————————————————
+设备连接断开:【工位：合装线2工位】【异常信息：设备连接失败！无法进行正常作业！！】
+
+——————————————14:29:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:29:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————14:30:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:37:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:38:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:39:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:40:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:41:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:42:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:43:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:44:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:45:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:46:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:47:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:48:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:29-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:49:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:40-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:50:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:04-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:22-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:34-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:44-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:48-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:53-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:51:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:02-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:15-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:24-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:52:57-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:53:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:09-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:30-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:45-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:54:59-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:03-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:07-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:17-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:51-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:55:56-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:11-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:16-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:21-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:26-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:31-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:36-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:41-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:56:50-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:10-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:18-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:35-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:43-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:49-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:57:55-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:01-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:08-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:14-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:20-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:27-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:33-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:39-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:46-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:52-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:58:58-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:05-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:12-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:23-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:28-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:42-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:47-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:59:54-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:00-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:06-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:13-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:19-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:25-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:00:32-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————21:08:38-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————23:52:37-————————————————
+车身入站异常：【工位：合装线9工位】【VIN：LJ166A337M2245856】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————20:10:18-————————————————
+车身入站异常：【工位：合装线1工位】【VIN：####】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————10:56:46-————————————————
+车身入站异常：【工位：合装线1工位】【VIN：####】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+

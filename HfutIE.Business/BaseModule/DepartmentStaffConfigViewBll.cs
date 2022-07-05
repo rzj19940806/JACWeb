@@ -68,7 +68,7 @@ namespace HfutIE.Business
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public List<DepartmentStaffConfigView> GetList(string areaId, string parentId, ref JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetList(string areaId, string parentId, ref JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
             if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
@@ -89,7 +89,7 @@ namespace HfutIE.Business
                     sql = "select * from  " + tableName + "  where DepartmentID='" + areaId + "'  and  Enabled=1  or ParentDepartmentID='" + areaId + "'";     //===复制时需要修改===             
                 }
             }        
-            return Repository().FindListBySql(sql);
+            return Repository().FindTableBySql(sql,false);
         }
         #endregion
 

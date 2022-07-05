@@ -58,6 +58,20 @@ namespace HfutIE.Business
                 return Repository().FindListBySql(sql);
             }
         }
+        public ClassConfigView GetByCondition(string keywords) //===复制时需要修改===
+        {
+            string sql = "";
+            if (keywords != "")
+            {
+                sql = @"select * from " + tableName + " where Enabled=1 and ClassId='" + keywords + "'";
+                return Repository().FindEntityBySql(sql);
+            }
+            else
+            {
+                sql = @"select * from " + tableName + " where Enabled=1";
+                return Repository().FindEntityBySql(sql);
+            }
+        }
         #endregion
     }
 }

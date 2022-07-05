@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "燃油标识信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<meta name="viewport" content="width=device-width" />
+<title>打印</title>
+<script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+<script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+<script src="~/Content/Scripts/jqprint/jquery.jqprint-0.3.js"></script>
+<script>
+    var JsonData = top.frames[tabiframeId()].PrintDataSource(); // 数据
+    var dataMode2 = JSON.parse(JsonData.dataMode2); //明细转换成 json型
+    var List = JsonData.List;
+    $(function () {
+        var pageCount = 28;
+        var pages = parseInt(dataMode2.length / pageCount);//页数
+        var leftCount = dataMode2.length % pageCount;//剩余数量
+        var currentIndex = 0;//当前index
+        var currentPage = 0;//当前index
+        if (leftCount != 0)
+            pages++;
+        for (var i = 0; i < pages; i++) {
+            currentIndex = pageCount * i;
+            currentPage = i + 1;
+            //获取启用日期
+            var str = List.OPENING_DATE;
+            var date = str.split("-");
+            console.log(date);
+            var year = date[0];
+            var mouth = date[1];
+            var day = date[2];
+            //计算综合工况燃料消耗量
+            var num = ((List.LIMIT - List.INTEGRATED_OPERATING_MODE) / List.LIMIT) * 100;
+            var fuelConsumption = num.toFixed(1);
+            //设置控制块宽度以改变三角标识的位置
+            var rate = (List.INTEGRATED_OPERATING_MODE - List.LEADVALUE) / (List.LIMIT - List.LEADVALUE);
+            var contronlBlock = document.getElementById("control-block");
+            contronlBlock.style.width = (500 * rate) + 'px';
+            //将记录字段插入标签
+            $('#production-enterprises').html(List.MANUFACTURER);
+            $('#vehicle-model').html(List.PRODUCT_VEHICLE_CODE);
+            $('#engine-model').html(List.ENGINE_MODEL);
+            $('#transmission-model').html(List.TRANSMISSION_TYPE);
+            $('#energy-type').html(List.FUEL_TYPE);
+            $('#curb-weight').html(List.ENTIRE_QUALITY);
+            $('#displacement').html(List.DISPLACEMENT);
+            $('#max-weight').html(List.DESIGN_QUALITY);
+            $('#max-power').html(List.MAX_POWERS);
+            $('#driving-type').html(List.DRIVE_TYPE);
+            $('#other-info').html(List.ADDTIONAL_INFORMATION);
+            $('#suburban-condition').html(List.SUBURBAN_OPERATING_MODE);
+            $('#urban-condition').html(List.URBAN_OPERATING_MODE);
+            $('#synthetic-condition').html(List.INTEGRATED_OPERATING_MODE);
+
+            $('#fuel-consumption').html(fuelConsumption);
+
+            $('#synthetic-value').html(List.INTEGRATED_OPERATING_MODE);
+
+            $('#actucal-value').html(List.INTEGRATED_OPERATING_MODE);
+            $('#lead-value').html(List.LEADVALUE);
+            $('#limit-value').html(List.LIMIT);
+
+            $('#record-number').html(List.RECORD_NUMBER);
+            $('#year').html(year);
+            $('#month').html(mouth);
+            $('#day').html(day);
+        }
+
+    });
+
+    //提交打印
+    function SubmitPrint() {
+        $("#my_area").jqprint();
+    }
+
+    window.onload = function SubmitPrint() {
+        var printStr = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body >";
+        var content = "";
+
+        var objName = document.getElementById("my_area").getElementsByTagName("div");//获取指定区域内div的个数
+
+        //var len = $("#my_area").find("div").length;
+
+        //var num = my_area.getElementsByTagName("div");//这样也可以得到也div对象集合
+        //var objName = num.length; //div个数
+
+        for (var i = 0; i < objName.length; i++) {
+            var str = document.getElementById('page' + i).innerHTML;     //获取需要打印的页面元素 ，page1元素设置样式page-break-after:always，意思是从下一行开始分割。
+            content = content + str;
+        }
+        printStr = printStr + content + "</body></html>";
+        var pwin = window.open("Print.htm", "print"); //如果是本地测试，需要先新建Print.htm，如果是在域中使用，则不需要
+        pwin.document.write(printStr);
+        pwin.document.close();                   //这句很重要，没有就无法实现
+        pwin.print();
+    }
+
+</script>
+<style type="text/css">
+    .car-info th {
+        text-align: left;
+    }
+
+    /*#triangle-mark {
+            height: 0;
+            width: 0;
+            border-style: solid;
+            border-width: 15px;
+            border-color: black transparent transparent transparent;
+        }*/
+</style>
+<div id="my_area">
+    @* 创建基本信息表格容器 *@
+    <div class="table-wrapper">
+        @* 创建基本信息表格 *@
+        <table class="car-info" style="margin:0 auto; width:600px">
+            <tr>
+                <th> 生产企业：</th>
+                <td id="production-enterprises" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>车辆型号：</th>
+                <td id="vehicle-model" style="text-align: left;"></td>
+                <th>发动机型号：</th>
+                <td id="engine-model" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>变速器型号：</th>
+                <td id="transmission-model" style="text-align: left;"></td>
+                <th>能源种类：</th>
+                <td id="energy-type" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>整车整备质量：</th>
+                <td id="curb-weight" style="text-align: left;"></td>
+                <th>排量：</th>
+                <td id="displacement" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>最大设计总质量：</th>
+                <td id="max-weight" style="text-align: left;"></td>
+                <th>最大净功率：</th>
+                <td id="max-power" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>驱动型式</th>
+                <td id="driving-type" style="text-align: left;"></td>
+            </tr>
+            <tr>
+                <th>其他信息</th>
+                <td id="other-info" style="text-align: left;"></td>
+            </tr>
+        </table>
+    </div>
+    @* 创建工况容器 *@
+    <div class="condition-wrapper" style="margin:100px auto ;">
+        @* 创建工况显示表格 *@
+        <table class="running-condition" style="margin:0 auto;width:75%;">
+            <tr>
+                <td id="suburban-condition" style="text-align:center;vertical-align:middle;"></td>
+                <td id="urban-condition" style="font-size:30px;text-align:center;vertical-align:middle;"></td>
+                <td id="synthetic-condition" style="text-align:center;vertical-align:middle;"></td>
+            </tr>
+        </table>
+    </div>
+    @* 创建综合工况燃料消耗量容器 *@
+    <div class="consumption-wrapper" style="margin-top:10px">
+        <span id="fuel-consumption" style="position:relative;left:450px;"></span>
+    </div>
+    @* 创建综合工况动态显示容器 *@
+    <div class="actucal-value-wapper">
+        @* 创建控制块改变三角标识位置 *@
+        <div id="control-block" style="display:inline-block;color:red"></div>
+        <div class="actucal-value-wapper" style="display:inline-block">
+            <span id="synthetic-value"></span>
+            <div id="triangle-mark" style=" height: 0;width: 0;border-style: solid;border-width: 15px;border-color: black transparent transparent transparent;"></div>
+        </div>
+    </div>
+    @* 创建领跑值、限值容器 *@
+    <div class="value-wrapper" style="margin:50px auto;">
+        <span id="lead-value" style="position:relative;left:200px;"></span>
+        <span id="limit-value" style="position:relative;left:700px;"></span>
+    </div>
+    @* 创建备案号、日期容器 *@
+    <div class="bottom-wrapper" style="margin-top:190px;">
+        <span id="record-number" style="position:relative;left:200px;"></span>
+        <span id="year" style="position:relative;left:520px;"></span>
+        <span id="month" style="position:relative;left:540px;"></span>
+        <span id="day" style="position:relative;left:570px;"></span>
+    </div>
+</div>
+

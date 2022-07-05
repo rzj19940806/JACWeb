@@ -1,0 +1,424 @@
+﻿@{
+    ViewBag.Title = "车身质量检查销项过程表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#CarType", "CarType", "==全部==");
+        GetGrid();
+        GetGrid2();
+        btn_Search();
+        //getQualityCheckPointNm();
+    })
+
+
+
+      //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        //url: "@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/GetResultPageListByCondition?TimeStart=")" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd),
+        datatype: "json",
+        height: ($(window).height() - 285)*0.5,
+        autowidth: true,
+            colModel: [
+                { label: '车身部位质检结果主键', name: 'CarQualityResultId', index: 'CarQualityResultId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '质控点组主键', name: 'QualityCheckPointGroupId', index: 'QualityCheckPointGroupId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '质控点组编号', name: 'QualityCheckPointGroupCd', index: 'QualityCheckPointGroupCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '工段', name: 'QualityCheckPointGroupNm', index: 'QualityCheckPointGroupNm', width: 0, align: 'center', sortable: true },
+                { label: '质控点', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 0, align: 'center', sortable: true },
+                { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+                { label: '质控点主键', name: 'QualityCheckPointId', index: 'QualityCheckPointId', width: 0, align: 'center', sortable: true, hidden: true  },
+                { label: '质控点编号', name: 'QualityCheckPointCd', index: 'QualityCheckPointCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '质控点名称', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '录入人员编号', name: 'StfCd', index: 'StfCd', width: 0, align: 'center', sortable: true },
+                { label: '录入人员姓名', name: 'StfNm', index: 'StfNm', width: 0, align: 'center', sortable: true },
+                { label: '质检录入时间', name: 'QualityInspectTm', index: 'QualityInspectTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '质检结果', name: 'QualityResult', index: 'QualityResult', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true, hidden: true },
+        ],
+            gridview: true,
+            rowNum: 100,
+            pager: "#gridPager",
+            sortname: 'QualityInspectTm',
+            sortorder: 'desc',
+            sortable: true,
+            multiselect: true,
+            multiboxonly: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            //表格行单击事件onClickRow
+            onSelectRow: function (RowId) {
+                var CarQualityResultId = GetJqGridRowValue("#gridTable", "CarQualityResultId");
+
+                var VIN = GetJqGridRowValue("#gridTable", "VIN");
+                var QualityCheckPointGroupNm = GetJqGridRowValue("#gridTable", "QualityCheckPointGroupNm");
+                var QualityCheckPointNm = GetJqGridRowValue("#gridTable", "QualityCheckPointNm");
+                var CarComponentNm = $("#CarComponentNm").val();
+                var DefectNm = $("#DefectNm").val();
+                var OutputResult = $("#OutputResult").val();
+                var ReinspectionNumber = $("#ReinspectionNumber").val();
+                $("#gridTable2").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/GetPageListByCondition")?VIN=" + VIN + "&QualityCheckPointGroupNm=" + escape(QualityCheckPointGroupNm)
+                        + "&QualityCheckPointNm=" + escape(QualityCheckPointNm) + "&CarComponentNm=" + escape(CarComponentNm) + "&DefectNm=" + escape(DefectNm) + "&OutputResult=" + escape(OutputResult) + "&ReinspectionNumber=" + escape(ReinspectionNumber), page: 1, datatype: 'json'
+                }).trigger('reloadGrid');
+            },
+
+    });
+}
+
+
+
+
+
+    //加载表格
+    function GetGrid2() {
+        $("#gridTable2").jqGrid({
+            datatype: "json",
+            height: ($(window).height() - 285) * 0.5,
+        autowidth: true,
+            colModel: [
+                { label: '工段', name: 'QualityCheckPointGroupNm', index: 'qualitycheckpointNm', width: 50, align: 'center', sortable: true },
+                { label: '车身质检销项主键', name: 'CarInspectionOutputId', index: 'CarInspectionOutputId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '车身部位质检主键', name: 'CarQualityInspectionId', index: 'CarQualityInspectionId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '质控点主键', name: 'QualityCheckPointId', index: 'QualityCheckPointId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '质控点编号', name: 'QualityCheckPointCd', index: 'QualityCheckPointCd', width: 0, align: 'left',sortable: true  },
+                { label: '质控点', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 75, align: 'center',sortable: true  },
+                { label: 'VIN', name: 'VIN', index: 'VIN', width: 150, align: 'center', sortable: true },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+                //{ label: '车身组件主键', name: 'CarComponentId', index: 'CarComponentId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '车身方位主键', name: 'CarPositionId', index: 'CarPositionId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '车身方位分组主键', name: 'CarPositionGroupId', index: 'CarPositionGroupId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '车身组件最终编码', name: 'CarComponentCd', index: 'CarComponentCd', width: 0, align: 'left',sortable: true  },
+                { label: '车身组件名称', name: 'CarComponentNm', index: 'CarComponentNm', width: 150, align: 'center',sortable: true  },
+                //{ label: '车身组件简码', name: 'CarComponentSimpleCd', index: 'CarComponentSimpleCd', width: 0, align: 'left',sortable: true  },
+                //{ label: '缺陷主键', name: 'DefectId', index: 'DefectId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '缺陷类型主键', name: 'DefectCatgId', index: 'DefectCatgId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '缺陷类型分组主键', name: 'DefectCatgGroupId', index: 'DefectCatgGroupId', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '缺陷编号', name: 'DefectCd', index: 'DefectCd', width: 0, align: 'left',sortable: true  },
+                { label: '缺陷名称', name: 'DefectNm', index: 'DefectNm', width: 150, align: 'center',sortable: true  },
+                { label: '备注', name: 'DefectAnalysis', index: 'DefectAnalysis', width: 200, align: 'center', sortable: true },
+                { label: '状态', name: 'OutputResult', index: 'OutputResult', width: 100, align: 'center', sortable: true },
+                { label: '复检次数', name: 'ReinspectionNumber', index: 'ReinspectionNumber', width: 50, align: 'center', sortable: true },
+                { label: '录入人员编号', name: 'StfCd', index: 'StfCd', width: 100, align: 'center',sortable: true  },
+                { label: '录入人员姓名', name: 'StfNm', index: 'StfNm', width: 100, align: 'center',sortable: true  },
+                { label: '录入时间', name: 'QualityInspectTm', index: 'QualityInspectTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '维修人员编号', name: 'WStfCd', index: 'WStfCd', width: 100, align: 'center',sortable: true  },
+                { label: '维修人员姓名', name: 'WStfNm', index: 'WStfNm', width: 100, align: 'center',sortable: true  },
+                { label: '维修时间', name: 'WxTm', index: 'WxTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+            //{ label: '销项检查项数据', name: 'OutputValue', index: 'OutputValue', width: 0, align: 'center',sortable: true  },
+                { label: '复检人员编号', name: 'XStfCd', index: 'XStfCd', width: 100, align: 'center',sortable: true  },
+                { label: '复检人员姓名', name: 'XStfNm', index: 'XStfNm', width: 100, align: 'center',sortable: true  },
+                { label: '复检时间', name: 'OutputTime', index: 'OutputTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+            //{ label: '历史主键', name: 'HistoryId', index: 'HistoryId', width: 0, align: 'center',sortable: true ,hidden: true },
+            //{ label: '是否转档', name: 'isFile', index: 'isFile', width: 0, align: 'center',sortable: true  },
+            //{ label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center',sortable: true  },
+            //{ label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: true, formatter: 'date', formatoptions: { newformat: 'Y-m-d H:i:s' }},
+            //    { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left',sortable: true  },
+            //    { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left',sortable: true  },
+                //{ label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left',sortable: true  },
+                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left',sortable: true  },
+                //{ label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left',sortable: true  },
+                //{ label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'left',sortable: true  },
+                //{ label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left',sortable: true ,hidden: true },
+                //{ label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager2",
+            sortname: 'qualityinspecttm',
+            sortorder: 'desc',
+            gridview: true,
+            rowNum: 200,
+            multiselect: true,
+            multiboxonly: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+    //导入
+    function btn_import() {
+        var CarPartId = GetJqGridRowValue("#gridTable2", "CarInspectionOutputId");
+        openDialog("/QualityModule/Q_CarQualityOutput_Pro/ExcelImportDialog", "ExcelImportDialog", "质量录入信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+
+     //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var TimeStart = $("#TimeStart").val();
+        var TimeEnd = $("#TimeEnd").val();
+        var QualityCheckPointGroupNm = $("#QualityCheckPointGroupNm").val();
+        var VIN = $("#VIN").val();
+        var CarType = $("#CarType").val();
+        var CarComponentNm = $("#CarComponentNm").val();
+        var DefectNm = $("#DefectNm").val();
+        var OutputResult = $("#OutputResult").val();
+        var ReinspectionNumber = $("#ReinspectionNumber").val();
+
+        var QualityCheckPointNm = "";
+
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarQualityResultId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            //未选择结果行
+        }
+        else {
+            var countResult = KeyValue.split(",").length;
+            if (countResult == 1) {
+                VIN = GetJqGridRowValue("#gridTable", "VIN");
+                QualityCheckPointGroupNm = GetJqGridRowValue("#gridTable", "QualityCheckPointGroupNm");
+                QualityCheckPointNm = GetJqGridRowValue("#gridTable", "QualityCheckPointNm");
+            }
+            else {
+                tipDialog("导出时结果信息最多只能选择一行！", 1.5, 0);
+                return;
+            }
+        }
+       
+
+        var count = $("#gridTable2").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/QualityModule/Q_CarQualityOutput_Pro/GetExcel_Data?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) +
+                    "&QualityCheckPointGroupNm=" + escape(QualityCheckPointGroupNm) + "&QualityCheckPointNm=" + escape(QualityCheckPointNm)+ "&CarComponentNm=" + escape(CarComponentNm) + "&DefectNm=" + escape(DefectNm)+ "&OutputResult=" + escape(OutputResult) + "&ReinspectionNumber=" + escape(ReinspectionNumber) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+     function btn_Search() {
+        var condition = {};
+        condition["TimeStart"] = $("#TimeStart").val();
+        condition["TimeEnd"] = $("#TimeEnd").val();
+
+        let time1 = new Date(condition.TimeStart).getTime();
+        let time2 = new Date(condition.TimeEnd).getTime();
+
+         if (time1 > time2 || TimeStart == '' || TimeEnd == '') {
+             tipDialog("时间不合法，请重新操作！", 1, 0);
+             return;
+         } else {
+             condition["QualityCheckPointGroupNm"] = $("#QualityCheckPointGroupNm").val();
+             condition["QualityCheckPointNm"] = "";
+             condition["VIN"] = $("#VIN").val();
+             condition["CarType"] = $("#CarType").val();
+            condition["CarComponentNm"] = $("#CarComponentNm").val();
+            condition["DefectNm"] = $("#DefectNm").val();
+            condition["OutputResult"] = $("#OutputResult").val();
+            condition["ReinspectionNumber"] = $("#ReinspectionNumber").val();
+
+            $("#gridTable").jqGrid('setGridParam', {
+                url: "@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/GetResultPageListByCondition")", postData: condition, page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+
+            $("#gridTable2").jqGrid('setGridParam', {
+                url: "@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/GetPageListByCondition")", postData: condition, page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+        }
+     }
+
+    function getQualityCheckPointNm() {
+        AjaxJson("@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/getQualityCheckPointNm")", {}, function (data) {
+            var s = data;
+        });
+        AjaxJson("@Url.Content("~/QualityModule/Q_CarQualityOutput_Pro/getQualityCheckPointNm")", {}, function (data) {
+            var s = data;
+            for (var i = 0; i < data.length; i++) {
+                $("#QualityCheckPointGroupNm").append("<option value='" + data[i]["wcnm"] + "' >" + data[i]["wcnm"] + "</option>");
+            }
+        });
+    }
+
+
+
+
+    //删除结果表数据
+    function btn_deleteResult() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarQualityResultId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog("请选择要删除的结果信息！", 1.5, 0);
+            return;
+        }
+        else {
+            if (IsDelData(KeyValue)) {
+                var delparm = 'KeyValue=' + KeyValue;
+                delConfig('/QualityModule/Q_CarQualityOutput_Pro/DeleteResult', delparm, KeyValue.split(",").length);
+            }
+        }
+
+    }
+
+
+    //删除缺陷表数据
+    function btn_deleteOutput() {
+        var KeyValue = GetJqGridRowValue("#gridTable2", "CarInspectionOutputId");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog("请选择要删除的缺陷信息！", 1.5, 0);
+            return;
+        }
+        else {
+            if (IsDelData(KeyValue)) {
+                var delparm = 'KeyValue=' + KeyValue;
+                delConfig('/QualityModule/Q_CarQualityOutput_Pro/DeleteOutput', delparm, KeyValue.split(",").length);
+            }
+        }
+    }
+
+
+
+    //自动更新DPU
+    function btn_DPUupdate() {
+        var url = "/QualityModule/Q_CarQualityOutput_Pro/Form";
+        openDialog(url, "Form", "更新DPU", 600, 360, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<!--工具栏-->
+@*按钮区域*@
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*搜索框区域*@
+<table border="0" class="form-find" style="height: 45px;">
+    <tr>
+        <th>
+            工段
+        </th>
+        <td>
+            <select id="QualityCheckPointGroupNm" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="A章">A章</option>
+                <option value="淋雨">淋雨</option>
+                <option value="底盘">底盘</option>
+                <option value="B章">B章</option>
+                <option value="C章">C章</option>
+                <option value="总装">总装</option>
+            </select>
+        </td>
+        <th>
+            VIN号
+        </th>
+        <td>
+            <input id="VIN" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>车型：</th>
+        <td>
+            <select id="CarType" class="txt" style="height: 28px;width: 150px"></select>
+        </td>
+        <th style="width: 50px">开始时间 </th>
+        <td>
+            <input id="TimeStart" type="text" class="txt Wdate" style="width: 125px" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'TimeEnd\')}'}); blur();" value="@DateTime.Now.AddDays(-DateTime.Now.Day + 1).ToString("yyyy-MM-dd")" readonly />
+        </td>
+        <th style="width: 50px">结束时间</th>
+        <td>
+            <input id="TimeEnd" type="text" class="txt Wdate" style="width: 125px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'TimeStart\')}'}); blur();" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" readonly />
+        </td>
+        <th>
+            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+        </th>
+    </tr>
+    <tr>
+        <th>
+            组件
+        </th>
+        <td>
+            <input id="CarComponentNm" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            缺陷
+        </th>
+        <td>
+            <input id="DefectNm" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            状态
+        </th>
+        <td>
+            <select id="OutputResult" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="不合格">不合格</option>
+                <option value="维修完成">维修完成</option>
+                <option value="已检查">已检查</option>
+            </select>
+        </td>
+        <th>
+            复检次数
+        </th>
+        <td>
+            <input id="ReinspectionNumber" type="text" class="txt" style="width: 125px" />
+        </td>
+
+    </tr>
+</table>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            结果信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            异常信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <table id="gridTable2"></table>
+    <div id="gridPager2"></div>
+</div>

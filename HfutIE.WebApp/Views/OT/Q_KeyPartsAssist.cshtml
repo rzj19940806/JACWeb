@@ -1,0 +1,207 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安驰FAS-辅线关重件录入界面</title>
+    <title>江淮安驰FAS系统</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <!--页面必备-->
+    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css">
+
+    <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
+
+    <script src="~/Content/Scripts/OT.js"></script>
+    <script src="~/Content/Scripts/jquery/jQuery.md5.js"></script>
+    <style>
+        fieldset {
+            display: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            Initialize();
+        });
+        //1.全局变量
+        //1.1初始加载静态信息
+        var allStaticInfo;
+        var barcodeRule;
+        var parts;
+
+        //2.初始化加载
+        function Initialize() {
+            try {
+                SetAllWH();         //加载界面的宽高
+                GetCurrentDate();   //实时时间刷新
+                //bindKeyDown();      //为物料码输入框绑定键盘点击事件
+                bindKeyDown("vin_input", function () {
+                    let vin = $("#vin_input").val().trim();
+                    $("#vin_input").val("");
+                    if (vin.length < 18) {
+                        manualCarStart(allStaticInfo, vin, true, "辅线");
+                    } else {
+                        partBind(allStaticInfo, barcodeRule, parts, vin, "辅线");
+                    }
+                });                 //为VIN输入框绑定回车事件
+                bindKeyDown("part_input", function () {
+                    var BarCode = $("#part_input").val().trim();
+                    $("#part_input").val("");
+                    partBind(allStaticInfo, barcodeRule, parts, BarCode, "辅线");
+                });                 //为条码输入框绑定回车事件
+                GetStaticInfo(false);    //加载静态信息
+                getCar(allStaticInfo)//加载车身信息
+                $("#part_input").focus();
+            } catch (e) {
+                uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
+            }
+        }
+
+        function byPass(obj) {
+            byPassFun(allStaticInfo, parts, obj, "辅线");
+        }
+    </script>
+</head>
+
+<body>
+    <div class="all" id="all" style="position:relative">
+        <div id="materro" style="width: 1000px; line-height: 150px; height: 150px; position: absolute; top: 300px; left: 500px; background-color: red; color: white; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料输入异常
+        </div>
+        <div id="matfinish" style="width: 1000px; line-height: 150px; height: 150px; position: absolute; top: 300px; left: 500px; background-color: yellow; color: black; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料完成绑定
+        </div>
+        <div class="up" id="up">
+            <div id="logo_img" class="logo_img">
+                <img id="refinelogo" src="~/Content/Images/LOGO/logoRefine.png" alt="refineLogo" align="middle" />
+            </div>
+            <div class="up_box baclground" id="up_localtime">
+                <div id="localtime" class="p_in_upbox" style="font-size: 15px;"></div>
+                <p id="localtime_dis" class="p_mark_in_upbox">时间</p>
+            </div>
+            <div class="up_box baclground" id="up_station">
+                <div id="station" class="p_in_upbox" style="font-size: 20px;">工位</div>
+                <p id="station_dis" class="p_mark_in_upbox">工位</p>
+            </div>
+            <div class="up_box baclground" id="up_people" title="人员等级">
+                <div id="people" class="p_in_upbox" style="font-size: 20px;">人员</div>
+                <p id="people_dis" class="p_mark_in_upbox">人员</p>
+            </div>
+            <div class="up_box baclground" id="up_button">
+                <div class="up_button" id="videoButton" onclick="getVideo()">
+                    <img src="../Content/Images/Icon32/file_manager.png" />
+                    <br />
+                    工艺指导文件
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="down" id="down">
+            <div class="left" id="left">
+                <div id="car_img" class="car_img">
+                    <img id='productpicture' src="~/Content/Images/LOGO/logoM5.jpg" alt="车身照片" onclick="imgShow(this)" />
+                </div>
+                <div class="left_box" id="vin_box">
+                    <div id="vin" class="in_left_box baclground">
+                        VIN码
+                    </div>
+                </div>
+                <div class="left_box" id="sequence_box">
+                    <div id="sequence" class="in_left_box baclground">
+                        流水号
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="color_box">
+                    <div id="color" class="in_left_box in_left_box_small baclground">
+                        颜色
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="cartype_box">
+                    <div id="cartype" class="in_left_box in_left_box_small baclground">
+                        车型
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="left_box" id="car_dis_box" style="height:15%">
+                    <div class="in_left_box baclground">
+                        <div id="car_dis" class="in_left_box baclground">
+                            车身描述
+                        </div>
+                    </div>
+                </div>
+                <div class="left_box" id="engintype_box">
+                    <div id="engintype" class="in_left_box" style="background-color:inherit">
+
+                    </div>
+                </div>
+                <div class="left_box" id="vin_input_box">
+                    <input id="vin_input" class="input_text" type="text" placeholder="请输入VIN码/物料码">
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="main" id="main">
+                <div class="main_box main_box_left" id="main_left">
+                    <div class="main_title" id="instruction_dis">
+                        装配指示
+                    </div>
+                    <div class="in_main_box_left" id="in_main_box_left">
+                    </div>
+                </div>
+                <div class="main_box main_box_right" id="main_right">
+                    <div class="main_title" id="instruction_dis">
+                        关重件扫码指示
+                    </div>
+                    <div class="in_main_box_right" id="in_main_box_right"></div>
+                    <div class="part_manual_box">
+                        <div class="part_input_box">
+                            <input id="part_input" class="part_input" type="text" placeholder="请输入物料码">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="clear"></div>
+            </div>
+
+            <div class="bottom" id="bottom">
+                <div id="bottem_dis">
+                    日志信息
+                </div>
+                <div id="bottom_text">
+
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+    </div>
+    <!-- 图片放大时使用 -->
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="max_img" style="border:5px solid #fff;" src="" />
+        </div>
+    </div>
+</body>
+
+</html>
+

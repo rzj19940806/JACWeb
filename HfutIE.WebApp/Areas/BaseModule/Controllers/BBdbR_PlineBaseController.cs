@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -91,22 +92,89 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GridListJson(string area_key, string parentId,string sort,JqGridParam jqgridparam)
+        public ActionResult GridListJson(string area_key, string parentId,string sort, string PlineCd, string PlineNm, string PlineTyp, JqGridParam jqgridparam)
         {
             try
             {
+                #region 查询原方法-不考虑搜索条件
+                //Stopwatch watch = CommonHelper.TimerStart();
+                ////获取点击节点对应的数据（列表）
+                //DataTable ListData = MyBll.GetList(area_key, parentId, sort,ref jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑搜索条件
                 Stopwatch watch = CommonHelper.TimerStart();
-                //获取点击节点对应的数据（列表）
-                DataTable ListData = MyBll.GetList(area_key, parentId, sort,ref jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append(@"select a.*,b.WorkSectionCd as WorkSectionCd,b.WorkSectionNm as WorkSectionNm from BBdbR_PlineBase a join BBdbR_WorkSectionBase b on a.WorkSectionId=b.WorkSectionId join BBdbR_WorkshopBase c on b.WorkshopId=c.WorkshopId join BBdbR_FacBase d on c.FacId=d.FacId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 ");
+                if (string.IsNullOrEmpty(area_key) && string.IsNullOrEmpty(parentId))
+                {
+                   
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        if (sort == "1")
+                        {
+                            strSql.Append(@" and c.WorkshopId= '" + area_key + "' ");
+                        }
+                        else
+                        {
+                            strSql.Append(@" and a.WorkSectionId='" + area_key + "'  ");
+                        }
+                    }
+                    else
+                    {
+                        strSql.Append(@" and d.FacId='" + area_key + "' ");
+                    }
+                }
+
+                //产线编号模糊搜索
+                if (PlineCd != "" && PlineCd != null)
+                {
+                    strSql.Append(" and PlineCd like @PlineCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineCd", "%" + PlineCd + "%"));
+                }
+                else { }
+                //产线名称模糊搜索
+                if (PlineNm != "" && PlineNm != null)
+                {
+                    strSql.Append(" and PlineNm like @PlineNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
+                }
+                else { }
+                //产线类型模糊搜索
+                if (PlineTyp != "" && PlineTyp != null)
+                {
+                    strSql.Append(" and PlineTyp like @PlineTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineTyp", "%" + PlineTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by a.sort asc");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                return Content(JsonData.ToJson());
+                #endregion
+
+
             }
             catch (Exception ex)
             {
@@ -130,7 +198,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //不管是新增还是编辑首先判断页面输入的编号是否已经存在
         //如果已经存在就直接返回“该编号已经存在！”的信息
         //不存在再进行下一步
-        public  ActionResult SubmitForm1(BBdbR_PlineBase entity, string KeyValue,string WorkSectionId)//===复制时需要修改===
+        public  ActionResult SubmitForm1(BBdbR_PlineBase entity, string KeyValue)//===复制时需要修改===
         {
             try
             {
@@ -139,11 +207,23 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 string Value = entity.PlineCd;  //页面中的编号字段值                 //===复制时需要修改===\
                 string Message = KeyValue == "" ? "新增成功。" : "编辑成功。";//keyValue=空吗？是，返回新增；否，返回编辑。
 
+                
+                if (entity.Dsc == null)
+                {
+                    entity.Dsc = "";
+                }
+                else { }
+                if (entity.Rem == null)
+                {
+                    entity.Rem = "";
+                }
+                else { }
+
                 if (!string.IsNullOrEmpty(KeyValue))//编辑操作
                 {
                     //===复制时需要修改===
                     BBdbR_PlineBase Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//获取没更新之前实体对象
-                    entity.PlineId = KeyValue;
+                    entity.Modify(KeyValue);
                     IsOk = MyBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//记录日志                 
                 }
@@ -223,27 +303,94 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string area_key, string parentId, string sort, string PlineCd, string PlineNm, string PlineTyp, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region 查询原方法-不考虑树节点
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑树节点
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append(@"select a.*,b.WorkSectionCd as WorkSectionCd,b.WorkSectionNm as WorkSectionNm from BBdbR_PlineBase a join BBdbR_WorkSectionBase b on a.WorkSectionId=b.WorkSectionId join BBdbR_WorkshopBase c on b.WorkshopId=c.WorkshopId join BBdbR_FacBase d on c.FacId=d.FacId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 ");
+                if (string.IsNullOrEmpty(area_key) && string.IsNullOrEmpty(parentId))
+                {
+
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        if (sort == "1")
+                        {
+                            strSql.Append(@" and c.WorkshopId= '" + area_key + "' ");
+                        }
+                        else
+                        {
+                            strSql.Append(@" and a.WorkSectionId='" + area_key + "'  ");
+                        }
+                    }
+                    else
+                    {
+                        strSql.Append(@" and d.FacId='" + area_key + "' ");
+                    }
+                }
+
+                //产线编号模糊搜索
+                if (PlineCd != "" && PlineCd != null)
+                {
+                    strSql.Append(" and PlineCd like @PlineCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineCd", "%" + PlineCd + "%"));
+                }
+                else { }
+                //产线名称模糊搜索
+                if (PlineNm != "" && PlineNm != null)
+                {
+                    strSql.Append(" and PlineNm like @PlineNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
+                }
+                else { }
+                //产线类型模糊搜索
+                if (PlineTyp != "" && PlineTyp != null)
+                {
+                    strSql.Append(" and PlineTyp like @PlineTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineTyp", "%" + PlineTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by a.sort asc");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "产线基础信息查询成功");
+                return Content(JsonData.ToJson());
+                #endregion
+
             }
             catch (Exception ex)
             {
                 //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "产线基础信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -305,13 +452,17 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
         #endregion
 
-        #region 8.人员下拉框
-        //8.人员下拉框
-        public ActionResult GetPlineNm()
+        #region 8.弹框负责人员信息
+        /// <summary>
+        /// 人员下拉框
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetPlineNm(string StfId)
         {
             try
             {
-                DataTable dataTable = MyBll.GetPlineNm();
+                BBdbR_StfBaseBll StfBll = new BBdbR_StfBaseBll();
+                DataTable dataTable = StfBll.GetPlineNm(StfId);
                 var JsonData = new
                 {
                     rows = dataTable,
@@ -323,26 +474,6 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 throw;
             }
         }
-        //8.人员信息
-        public ActionResult GetPlineNm2(string StfId)
-        {
-            try
-            {
-                DataTable dataTable = MyBll.GetPlineNm2(StfId);
-                var JsonData = new
-                {
-                    rows = dataTable,
-                };
-                return Content(JsonData.ToJson());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-
-
         #endregion
 
         #region 9.导入
@@ -730,8 +861,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                 entity.CacheLimit = cachelimit;//缓存下限
                                 entity.HighestQantity = highestquantity;//最高在制
                                 entity.LowestQantity = lowestquantity;//最低在制
-                                entity.PreAlarmPoint = prealarmpoint;//预警位
-                                entity.EndPoint = endpoint;//停止位
+                                //entity.PreAlarmPoint = prealarmpoint;//预警位
+                                //entity.EndPoint = endpoint;//停止位
                                 entity.RunningMode = runningmode;//运行模式
                                 entity.StationBegion = stationbegin;//开始
                                 entity.StationEnd = stationend;//结束
@@ -832,6 +963,86 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 return null;
             }
+        }
+        #endregion
+
+        #region 重构导出
+        public ActionResult GetExcel_Data(string area_key, string parentId, string sort, string PlineCd, string PlineNm, string PlineTyp, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 根据当前搜索条件查出数据并导出
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append(@"select a.PlineCd,a.PlineNm,b.WorkSectionCd as WorkSectionCd,b.WorkSectionNm as WorkSectionNm,a.Sort,a.PlineTyp,a.WcQuantity,a.WcLength,a.WcIntercept,a.Dsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_PlineBase a join BBdbR_WorkSectionBase b on a.WorkSectionId=b.WorkSectionId join BBdbR_WorkshopBase c on b.WorkshopId=c.WorkshopId join BBdbR_FacBase d on c.FacId=d.FacId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 ");
+                if (string.IsNullOrEmpty(area_key) && string.IsNullOrEmpty(parentId))
+                {
+
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        if (sort == "1")
+                        {
+                            strSql.Append(@" and c.WorkshopId= '" + area_key + "' ");
+                        }
+                        else
+                        {
+                            strSql.Append(@" and a.WorkSectionId='" + area_key + "'  ");
+                        }
+                    }
+                    else
+                    {
+                        strSql.Append(@" and d.FacId='" + area_key + "' ");
+                    }
+                }
+
+                //产线编号模糊搜索
+                if (PlineCd != "" && PlineCd != null)
+                {
+                    strSql.Append(" and PlineCd like @PlineCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineCd", "%" + PlineCd + "%"));
+                }
+                else { }
+                //产线名称模糊搜索
+                if (PlineNm != "" && PlineNm != null)
+                {
+                    strSql.Append(" and PlineNm like @PlineNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
+                }
+                else { }
+                //产线类型模糊搜索
+                if (PlineTyp != "" && PlineTyp != null)
+                {
+                    strSql.Append(" and PlineTyp like @PlineTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineTyp", "%" + PlineTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by a.sort asc");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+
+
+
+                string fileName = "产线基础信息";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_PlineBase(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "产线基础信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "产线基础信息导出操作失败：" + ex.Message);
+                return null;
+            }
+
         }
         #endregion
 

@@ -91,7 +91,7 @@
         sortname: '',
         sortorder: 'desc',
         rownumbers: true,
-        shrinkToFit: true,
+        shrinkToFit: false,
         multiselect: true,
         multiboxonly: true,
         gridview: true,
@@ -131,6 +131,8 @@
     //编辑按钮
     function btn_edit() {
         var KeyValue = GetJqGridRowValue("#gridTable", "GetItemId");
+        var WcCd = GetJqGridRowValue("#gridTable", "WcCd");
+        var WcNm = GetJqGridRowValue("#gridTable", "WcNm");
         if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
             tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
         }
@@ -140,7 +142,7 @@
                 tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
             }
             else {
-                var url = "/BaseModule/BBdbR_GetItemBase/Form?KeyValue=" + KeyValue;
+                var url = "/BaseModule/BBdbR_GetItemBase/Form?KeyValue=" + KeyValue + '&WcCd=' + escape(WcCd) + '&WcNm=' + escape(WcNm);
                 openDialog(url, "Form", "编辑采集项信息：", 450, 340, function (iframe) {
                     top.frames[iframe].AcceptClick()
                 });

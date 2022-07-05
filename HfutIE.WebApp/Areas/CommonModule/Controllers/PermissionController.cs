@@ -45,7 +45,13 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
         /// <returns></returns>
         public ActionResult ModuleTree(string ObjectId, string Category)
         {
+            if (Category == "5")//2021.11.29新增，针对用户配置权限时查找对象和用户包含的权限
+            {
+                ObjectId = base_objectuserrelationbll.GetObjectId(ObjectId);
+            }
+
             DataTable dt = base_modulepermissionbll.GetList(ObjectId, Category);
+            //DataTable dt = base_modulepermissionbll.GetModulePermission(ObjectId);
             List<TreeJsonEntity> TreeList = new List<TreeJsonEntity>();
             if (DataHelper.IsExistRows(dt))
             {
@@ -70,6 +76,11 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                     tree.parentId = item["parentid"].ToString();
                     tree.img = item["icon"].ToString() != null ? "/Content/Images/Icon16/" + item["icon"].ToString() : item["icon"].ToString();
                     TreeList.Add(tree);
+                    //if (item["enabled"].ToString() == "1")
+                    //{
+
+                    //}
+
                 }
             }
             return Content(TreeList.TreeToJson());
@@ -83,6 +94,10 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
         public ActionResult ButtoneList(string ObjectId, string Category)
         {
             StringBuilder sb = new StringBuilder();
+            if (Category == "5")//2021.11.29新增，针对用户配置权限时查找对象和用户包含的权限
+            {
+                ObjectId = base_objectuserrelationbll.GetObjectId(ObjectId);
+            }
             DataTable dt = base_buttonpermissionbll.GetList(ObjectId, Category);
             foreach (DataRow dr in dt.Rows)
             {
@@ -106,6 +121,11 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
         public ActionResult ViewList(string ObjectId, string Category)
         {
             StringBuilder sb = new StringBuilder();
+            if (Category == "5")//2021.11.29新增，针对用户配置权限时查找对象和用户包含的权限
+            {
+                ObjectId = base_objectuserrelationbll.GetObjectId(ObjectId);
+            }
+
             DataTable dt = base_viewpermissionbll.GetList(ObjectId, Category);
             foreach (DataRow dr in dt.Rows)
             {
@@ -208,11 +228,13 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                 }
                 #endregion
                 database.Commit();
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "角色配置权限成功");
                 return Content(new JsonMessage { Success = true, Code = "1", Message = "操作成功。" }.ToString());
             }
             catch (Exception ex)
             {
                 database.Rollback();
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "角色配置权限操作失败：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败，错误：" + ex.Message }.ToString());
             }
         }
@@ -286,10 +308,12 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             {
                 string[] array = UserId.Split(',');
                 int IsOk = base_objectuserrelationbll.BatchAddMember(array, ObjectId, Category);
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "用户权限配置成功");
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "操作成功。" }.ToString());
             }
             catch (Exception ex)
             {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "用户权限配置操作失败：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败，错误：" + ex.Message }.ToString());
             }
         }

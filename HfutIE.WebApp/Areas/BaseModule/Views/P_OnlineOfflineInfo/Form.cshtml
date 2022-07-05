@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "P_PlanFeedBack_Pro》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        //InitControl();
+    })
+    //得到一个对象实体
+    //function InitControl() {
+    //    if (!!GetQuery('KeyValue')) {
+    //        AjaxJson("/BaseModule/P_PlanFeedBack_Pro/SetFeedbackForm", { KeyValue: KeyValue }, function (data) {
+    //            //if (data.["FeedbackTime"] == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+    //                SetWebControls(data);
+    //            //}
+                
+    //        });
+    //    }
+    //}
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/P_PlanFeedBack_Pro/OneKeyRecord?KeyValue=" + KeyValue + "&Type=1", postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>过点反馈时间：</th>
+            <td class='formValue'>
+                <input id="FeedbackTime" maxlength=16 type="text" style="border:1px solid #ccc" class="txt Wdate "  onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd  HH:mm:ss' })" />
+                
+            </td>
+        </tr>
+       
+        <tr>
+        </tr>
+    </table>
+</form>

@@ -2,75 +2,202 @@
     ViewBag.Title = "物料基础信息表";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+<script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+<link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
 <script type="text/javascript">
     $(function () {
-        CellItem_MatType('MatType');//需在GetGrid()之前进行初始化赋值
+        //CellItem_MatType('MatType');//需在GetGrid()之前进行初始化赋值
         CellItem_MatCatg('MatCatg');
-        CellItem_MatSpec('MatSpec');
         CellItem_FileTy('FileTy');
         GetGrid();//加载物料基础信息
-        GetGrid2();//加载物料文档配置信息
-        Tabchange('check1');
-        Show();
-        BindDropItem("#MatTyp", "MatType", "==全部==");
-        BindDropItem("#MatCatg", "MatCatg", "==全部==");
-        BindDropItem("#MatSpec", "MatSpec", "==全部==");
+        //GetGrid2();//加载物料文档配置信息
+        GetGrid3();//加载组件物料配置信息
+        Tabchange('check2');
+        BindDropItem("#ConditionMatCatg", "MatCatg", "==全部==");
+        setUpPhotographChangeEvent();
     })
-    var MatTypeCellItem = "";
-    var MatSpecCellItem = "";
+
     var MatCatgCellItem = "";
     var FileTyCellItem = "";
 
-    //加载班组表格
+       function inputPictures() {
+        $("#Photograph").click();
+    }
+
+    function setUpPhotographChangeEvent() {
+        $("#Photograph").change(function () {
+            if (this.files.length == 0) {//未选择文件
+                $("#picture").attr("src", "");
+                return;
+            }
+            var result = "";
+            for (var i = 0; i < this.files.length; i++) {
+                var objUrl = getObjectURL(this.files[i]);//获取照片绝对路径，可以用来作为img标签的src属性
+                //alert(objUrl);
+                var size = this.files[i].size;//照片尺寸
+                var name = this.files[i].name;//照片名称
+                var type = name.substring(name.lastIndexOf('.')).toLocaleLowerCase();//照片文件类型
+                if (type != ".png" && type != ".jpg" && type != ".jpeg" /*&& type != undefined && type != "" && type != 'null'*/) {//文件类型选择错误
+                    tipDialog("存在非图片格式文件上传。", 3, -2);
+                    continue;
+                }
+                if (size >= 1024000 * 10) tipDialog("存在图片超过10M", 3, -2);
+                else {
+                    if (objUrl) {//如果存在路径
+                        var width_max = 2048;//最大像素
+                        var height_max = 1536;//最大像素
+                        var url = "/BaseModule/BBdbR_MatBase/SubmitPicture?KeyValue=" + escape(name.substring(0, name.lastIndexOf('.') ));
+
+                        var fd = new FormData();//FormData主要是用来存储键值对
+                        fd.append('file', this.files[i]);
+                        fd.append('width', width_max);
+                        fd.append('height', height_max);
+                        var responseText = JSON.parse(xhrupload(fd, url));//调用xmlhttprequest进行上传，返回值为验证结果，方法在下面
+                        result += name.substring(0, name.lastIndexOf('.')) + ":" + responseText.Message+"\n"
+                    }
+                }
+            }
+            swal({
+                title: "图片上传结果",
+                text: result,
+                type: "success",
+                timer: 5000,
+                showConfirmButton: true,
+            });
+        });
+    }
+    //获取input（file）的绝对路径
+    function getObjectURL(file) {
+        var url = null
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file)
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file)
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file)
+        }
+        return url;
+    }
+    //通过XMLHttpRequest提交数据，用来检测图片大小（ajax本质上也是XMLHttpRequest，只是经过jQuery的封装）
+    function xhrupload(fd, url) {
+        var xhr = new XMLHttpRequest();//XMLHttpRequest
+        xhr.open("post", url, false);//第三个参数表示同步或者异步方式
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                //0 － （未初始化）还没有调用send()方法 ；1 － （载入）已调用send()方法，正在发送请求 ；2 － （载入完成）send()方法执行完成，已经接收到全部响应内容 ；3 － （交互）正在解析响应内容 ；4 － （完成）响应内容解析完成，可以在客户端调用了
+                if (200 == xhr.status) {
+                    return xhr.responseText;//返回值为true和false，true：照片尺寸合理；false：照片尺寸不合理
+                    //tipDialog(xhr.responseText.Message, 3, xhr.responseText.Code);
+                }
+                else tipDialog('发生错误\nstatus:' + xhr.status + '\n返回内容:' + xhr.responseText, 3, -2);
+            }
+        }
+        xhr.send(fd);
+        return xhr.responseText;
+    }
+
+    //加载物料表格
     function GetGrid() {
         $("#gridTable").jqGrid({
-        url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageJson1")",
-        datatype: "json",
-        height:288,
+        url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageByCondition")",
+            datatype: "json",
+            height: $(window).height()*0.5 - 70,
         autowidth: true,
-        colModel: [
-                    { label: '物料ID', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 200, align: 'center', sortable: true },
-                    { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 300, align: 'center', sortable: true },
-                    {
-                        label: '物料类别', name: 'MatCatg', index: 'MatCatg', width: 200, align: 'center', sortable: true, hidden: false,
-                        formatter: "select", formatoptions: { value: MatCatgCellItem }
-                    },
-                    {
-                        label: '物料类型', name: 'MatTyp', index: 'MatTyp', width: 200, align: 'center', sortable: true,
-                        formatter: "select", formatoptions: { value: MatTypeCellItem }
-                    },
-                    {
-                        label: '规格型号', name: 'MatSpec', index: 'MatSpec', width: 250, align: 'center', sortable: true,
-                    },
-                    { label: '单位', name: 'Unit', index: 'Unit', width: 100, align: 'center', sortable: true, },
-                    { label: '提前期', name: 'LeadTm', index: 'LeadTm', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '良品率', name: 'YieldRate', index: 'YieldRate', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                    
-                    { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '备注', name: 'Rem', index: 'Rem', width: 500, align: 'center', sortable: true },
-                    { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
-                    { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
-                ],
-        pager: "#gridPager",
-        sortname: '',
-        sortorder: 'desc',
-        rownumbers: true,
-        shrinkToFit: true,
-        gridview: true,
-        loadonce: true,
-        multiselect: true,
-        multiboxonly: true,
+            colModel: [
+                { label: '物料ID', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 100, align: 'center', sortable: true },
+                { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 150, align: 'center', sortable: true },
+                { label: '关重件工位ID', name: 'WcId', index: 'WcId', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '关重件工位', name: 'WcCd', index: 'WcCd', width: 150, align: 'center', sortable: true },
+                { label: '关重件工位名称', name: 'WcNm', index: 'WcNm', width: 0, align: 'center', sortable: true, hidden: true },
+                {
+                    label: '关重件', name: 'IsScan', index: 'IsScan', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    } },
+                { label: '数量', name: 'MatNum', index: 'MatNum', width: 80, align: 'center', sortable: true },
+                {
+                    label: '打印', name: 'IsPrint', index: 'IsPrint', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    }
+                },
+                { label: '打印工位', name: 'RsvFld1', index: 'RsvFld1', width: 100, align: 'center', sortable: true },
+                {
+                    label: '图片', name: 'IfMatImg', index: 'IfMatImg', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 1) { return "有"; }
+                        else { return "无"; }
+                    }
+                },
+                {
+                    label: '下级件', name: 'IfPart', index: 'IfPart', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "是"; }
+                        else { return "否"; }
+                    }
+                },
+                {
+                    label: '安全件', name: 'RsvFld2', index: 'RsvFld2', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "是"; }
+                        else if (cellvalue == '0' || cellvalue == null || cellvalue == "") { return "否"; }
+                        else { return cellvalue; }
+                    }
+                },
+                { label: '简码', name: 'ShortCode', index: 'ShortCode', width: 0, align: 'center', sortable: true },
+                {
+                    label: '物料类别', name: 'MatCatg', index: 'MatCatg', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "产品"; }
+                        else if (cellvalue == '0') { return "零部件"; }
+                        else { return cellvalue; }
+                    }
+                },
+                {
+                    label: '条码重复', name: 'MatTyp', index: 'MatTyp', width: 100, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "禁止"; }
+                        else { return "允许"; }
+                    }
+                },
+                { label: '规格型号', name: 'MatSpec', index: 'MatSpec', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '单位', name: 'Unit', index: 'Unit', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '提前期', name: 'LeadTm', index: 'LeadTm', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: '良品率', name: 'YieldRate', index: 'YieldRate', width: 0, align: 'center', sortable: true , hidden: true},
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 100, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>";}
+                //        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                //    } },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                
+            ],
+            pager: "#gridPager",
+            sortable:true,
+            sortname: 'MatCd',
+            sortorder: 'asc',
+            rownumbers: true,//启用记录条数
+            rowList: [200, 300, 500, 1000,10000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
         //单击事件
         onSelectRow: function (RowId) {
             var KeyValue = GetJqGridRowValue("#gridTable", "MatId");
-            $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("/BaseModule/BBdbR_MatBase/GridPageJson2")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //$("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("/BaseModule/BBdbR_MatBase/GridPageJson2")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
+
+            $("#gridTable3").jqGrid('setGridParam', { url: "@Url.Content("/BaseModule/BBdbR_MatBase/GridPageJson3")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
             },
         //双击事件
         ondblClickRow: function (row) {
@@ -87,7 +214,6 @@
             test.style.height = "300px";
             repeat();
             }
-
        });
     }
 
@@ -104,7 +230,7 @@
     function GetGrid2() {
         $("#gridTable2").jqGrid({
             datatype: "json",
-            height: 280,
+            height: $(window).height() * 0.5 - 150,
             autowidth: true,
             colModel: [
                 { label: '主键', name: 'ConfigId', index: 'ConfigId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -116,10 +242,10 @@
                     formatter: "select", formatoptions: { value: FileTyCellItem }
                 },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
                 { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '备注', name: 'Rem', index: 'Rem', width: 500, align: 'center', sortable: true },
@@ -129,11 +255,14 @@
             pager: "#gridPager2",
             sortname: '',
             sortorder: 'desc',
-            rownumbers: true,
-            shrinkToFit: true,
             gridview: true,
             multiselect: true,
-            loadonce: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
             onSelectRow: function (RowId) {
                 var KeyValue = GetJqGridRowValue("#gridTable2", "ConfigId");
             },
@@ -155,12 +284,90 @@
         });
     }
 
-    
+    //加载组件物料配置表格
+    function GetGrid3() {
+        $("#gridTable3").jqGrid({
+            datatype: "json",
+            height: $(window).height() * 0.5 - 170,
+        autowidth: true,
+            colModel: [
+                { label: '配置主键', name: 'Id', index: 'Id', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '组件ID', name: 'PartId', index: 'PartId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '组件编号', name: 'PartCd', index: 'PartCd', width: 0, align: 'center', sortable: true },
+                { label: '组件名称', name: 'PartNm', index: 'PartNm', width: 0, align: 'center', sortable: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+                {
+                    label: '物料类别', name: 'MatCatg', index: 'MatCatg', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "产品"; }
+                        else { return "零部件"; }
+                    }
+                },
+                //{
+                //    label: '物料类型', name: 'MatTyp', index: 'MatTyp', width: 200, align: 'center', sortable: true,
+                //    formatter: "select", formatoptions: { value: MatTypeCellItem }
+                //},
+                { label: '规格型号', name: 'MatSpec', index: 'MatSpec', width: 250, align: 'center', sortable: true, hidden: true },
+                {
+                    label: '是否关重件', name: 'IsScan', index: 'IsScan', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    } },
+                { label: '物料数量', name: 'MatNum', index: 'MatNum', width: 0, align: 'center', sortable: true },
+                {
+                    label: '是否打印', name: 'IsPrint', index: 'IsPrint', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    }
+                },
+                { label: '打印工位', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true },
+                {
+                    label: '安全件', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "是"; }
+                        else if (cellvalue == '0' || cellvalue == null || cellvalue == "") { return "否"; }
+                        else { return cellvalue; }
+                    }
+                },
+                { label: '简码', name: 'ShortCode', index: 'ShortCode', width: 0, align: 'center', sortable: true },
 
+                { label: '单位', name: 'Unit', index: 'Unit', width: 100, align: 'center', sortable: true, hidden: true },
+
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true ,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>";}
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    } },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            ],
+            pager: "#gridPager3",
+            sortable:true,
+            sortname: 'PartCd',
+            sortorder: 'asc',
+            rowNum: 50,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+
+       });
+    }
     //刷新
     function windowload() {
         $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
         $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
+        $("#gridTable3").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
     }
 
     //新增按钮
@@ -184,11 +391,11 @@
             }
             else {
                 var url = "/BaseModule/BBdbR_MatBase/Form?KeyValue=" + KeyValue;
-                openDialog(url, "Form", "编辑物料信息", 500, 320, function (iframe) {
+                openDialog(url, "Form", "编辑物料信息", 500, 350, function (iframe) {
                     top.frames[iframe].AcceptClick()
                 });
             }
-        }                 
+        }
     }
 
     //删除
@@ -209,51 +416,26 @@
             windowload();
         }
     }
-
-    //加载搜索框
-    function Show() {
-        var Condition = $("#Condition").val();
-        if (Condition == "all") {
-            $("#MatCatg").hide();
-            $("#MatTyp").hide();
-            $("#MatSpec").hide();
-            $("#keywords").hide();
-        }
-        else if (Condition == "MatCatg") {
-            $("#MatCatg").show();
-            $("#MatTyp").hide();
-            $("#MatSpec").hide();
-            $("#keywords").hide();
-        }
-        else if (Condition == "MatTyp") {
-            $("#MatCatg").hide();
-            $("#MatTyp").show();
-            $("#MatSpec").hide();
-            $("#keywords").hide();
-        }
-        else {
-            $("#MatCatg").hide();
-            $("#MatTyp").hide();
-            $("#keywords").val("");
-            $("#keywords").show();
+    //删除物料配置信息
+    function btn_delete3() {
+        var KeyValue3 = GetJqGridRowValue("#gridTable3", "Id");
+        if (IsDelData(KeyValue3)) {
+            var delparm = 'KeyValue3=' + KeyValue3;
+            delConfig('/BaseModule/BBdbR_MatBase/DeleteMaterial3', delparm, KeyValue3.split(",").length);
+            windowload();
         }
     }
 
+
+
     //搜索
    function btn_Search() {
-        var Condition = $("#Condition").val();
-        var keywords;
-        if (Condition == "MatTyp") {
-            keywords = $("#MatTyp").val();
-        }
-        else if (Condition == "MatCatg") {
-            keywords = $("#MatCatg").val();
-        }
-        else {
-            keywords = $("#keywords").val();
-        }
+       var ConditionMatCd = $("#ConditionMatCd").val();
+       var ConditionMatNm = $("#ConditionMatNm").val();
+       var ConditionMatCatg = $("#ConditionMatCatg").val();
+       var ConditionMatTyp = $("#ConditionMatTyp").val();
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageByCondition")?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp), page: 1, datatype: 'json'
     }).trigger('reloadGrid');
     }
     $(document).keypress(function (e) {
@@ -284,59 +466,97 @@
         }
     }
 
+    //组件物料配置按钮-新增
+    function btn_PartMatConfig() {
+        var MatId = GetJqGridRowValue("#gridTable", "MatId");
+        var MatCd = GetJqGridRowValue("#gridTable", "MatCd");
+        var MatNm = GetJqGridRowValue("#gridTable", "MatNm");
+        if (MatId == undefined || MatId == "" || MatId == 'null' || MatId == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = MatId.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_MatBase/Form3?MatId=" + MatId + "&MatCd=" + escape(MatCd) + "&MatNm=" + escape(MatNm);
+                openDialog(url, "Form3", "组件物料配置", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+                windowload();
+            }
+        }
+    }
+    //组件物料配置按钮-编辑
+    function btn_PartMatConfigEdit() {
+        var Id = GetJqGridRowValue("#gridTable3", "Id");
+        if (Id == undefined || Id == "" || Id == 'null' || Id == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = Id.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_MatBase/Form3?Id=" + Id;
+                openDialog(url, "Form3", "组件物料配置", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
 
-    //导入
-    function btn_Import() {
+    
+
+
+    //关重件及打印信息导入
+    function btn_ImportKeyParts() {
         var OrderID = GetJqGridRowValue("#gridTable", "MatId");
-        openDialog("/BaseModule/BBdbR_MatBase/ExcelImportDialog", "ExcelImportDialog", "物料基本信息导入", 750, 300, function (iframe) {
+        openDialog("/BaseModule/BBdbR_MatBase/ExcelImportDialog", "ExcelImportDialog", "关重件导入", 750, 300, function (iframe) {
             top.frames[iframe].AcceptClick();
         });
     }
-    //导出Excel
-    function btn_Derive() {
-        SetDeriveExcel("#gridTable", "物料基本信息");
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "物料基本信息导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
-    }
-  
 
-    //根据数据字典显示物料类型
-    function CellItem_MatType(Code) {
-        var value = "";
-        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
-            var itemjson = eval("(" + data + ")");
-            var length = itemjson.length;
-            if (length == 1) {
-                MatTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
-            }
-            else if (length > 1) {
-                for (var a = 0; a < length - 1; a++) {
-                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
-                }
-                MatTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
-            }
-            //length=0不处理
-        })
+
+
+    //导出Excel
+    //function btn_Derive() {
+    //    SetDeriveExcel("#gridTable", "物料基本信息");
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "物料基本信息导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var ConditionMatCd = $("#ConditionMatCd").val();
+        var ConditionMatNm = $("#ConditionMatNm").val();
+        var ConditionMatCatg = $("#ConditionMatCatg").val();
+        var ConditionMatTyp = $("#ConditionMatTyp").val();
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_MatBase/GetExcel_Data?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp);
+                Loading(false);
+            }, 200);
+        }
     }
-     //根据数据字典显示规格型号
-    function CellItem_MatSpec(Code) {
-        var value = "";
-        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
-            var itemjson = eval("(" + data + ")");
-            var length = itemjson.length;
-            if (length == 1) {
-                MatSpecCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
-            }
-            else if (length > 1) {
-                for (var a = 0; a < length - 1; a++) {
-                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
-                }
-                MatSpecCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
-            }
-            //length=0不处理
-        })
-    }
+
+
+    
+ 
     //根据数据字典显示物料类别
     function CellItem_MatCatg(Code) {
         var value = "";
@@ -375,91 +595,81 @@
         })
     }
 </script>
-<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
-    @*按钮区域*@
-    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
-        <div class="PartialButton">
-            @Html.Partial("_PartialButton")
-        </div>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
     </div>
-    @*搜索框区域*@
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
     <table border="0" class="form-find" style="height: 45px;">
         <tr>
-            <th>关键字：</th>
+
+            <th>物料编号：</th>
             <td>
-                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
-                    <option value="all">==全部==</option>
-                    <option value="MatCd">物料编号</option>
-                    <option value="MatNm">物料名称</option>
-                    <option value="MatCatg">物料类别</option>
-                    <option value="MatTyp">物料类型</option>
-                    <option value="MatSpec">规格型号</option>
+                <input id="ConditionMatCd" type="text" class="txt" style="width: 200px" />
+            </td>
+            <th>物料名称：</th>
+            <td>
+                <input id="ConditionMatNm" type="text" class="txt" style="width: 200px" />
+            </td>
+            <th>物料类别：</th>
+            <td>
+                <select id="ConditionMatCatg" style="width: 150px;height:25px"></select>
+            </td>
+            <th>禁止重复：</th>
+            <td>
+                <select id="ConditionMatTyp" style="width: 150px;height:25px">
+                    <option value="">==全部==</option>
+                    <option value="0">允许</option>
+                    <option value="1">禁止</option>）
                 </select>
             </td>
             <td>
-                <input id="keywords" type="text" class="txt" style="width: 200px" />
-            </td>
-            <td>
-                <select id="MatTyp" style="width: 150px;height:25px"></select>
-            </td>
-            <td>
-                <select id="MatSpec" style="width: 150px;height:25px"></select>
-            </td>
-            <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                <input id="Photograph" type="file" class="upfile" multiple="multiple" hidden="hidden" />
             </td>
+
             <th style="text-align:right;width:100%;color:red;font-size:12px">
                 *注：双击其中一行可查看物料图片
             </th>
         </tr>
     </table>
-    @*表格区域*@
-    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    物料基础信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                    <div id="modal_volume" style="position: fixed; text-align: center;  top: 120px;left:300px; z-index: 9999; display: none;background-color:white;">
-                        <div id="showimg" style="width: 400px; position: relative">
-                            <img src="" id="picture" /> <a href="javascript:$('#modal_volume').fadeOut();" style="display: block; width: 50px; height: 50px; position: absolute; right: -5px; top: -8px; z-index: 2;font-size:30px ">x</a>
-                        </div>
-                    </div>
-                </div>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+    <div id="modal_volume" style="position: fixed; text-align: center;  top: 120px;left:300px; z-index: 9999; display: none;background-color:white;">
+        <div id="showimg" style="width: 400px; position: relative">
+            <img src="" id="picture" /> <a href="javascript:$('#modal_volume').fadeOut();" style="display: block; width: 50px; height: 50px; position: absolute; right: -5px; top: -8px; z-index: 2;font-size:30px ">x</a>
+        </div>
+    </div>
+</div>
+
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+    <div class="bd" style="border-bottom: none; margin: 1px;">
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="tab_list_top" style="position: absolute">
+                @*<div id="Tabcheck1" class="tab_list bd actived" onclick="Tabchange('check1')">物料文档配置</div>*@
+                <div id="Tabcheck2" class="tab_list bd actived " onclick="Tabchange('check2')">组件物料信息</div>
             </div>
         </div>
     </div>
-
-
-    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
-        <a id="button_Delete" title="删除" class="tools_btn" onclick="btn_delete2()"><span><b style="background: url(@Url.Content("~/Content/Images/Icon16/DeleteRed.png")) 50% 4px no-repeat;">删除</b></span></a>
-    </div>
-    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="bd" style="border-bottom: none; margin: 1px;">
-                <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
-                    <div class="tab_list_top" style="position: absolute">
-                        <div id="Tabcheck1" class="tab_list bd actived" onclick="Tabchange('check1')">物料文档配置</div>
+    <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+        <!--物料文档配置-->
+        @*<div id="check1" class="tabPanel">
+                <table id="gridTable2"></table>
+                <div id="gridPager2"></div>
+                <div id="modal_volume2" style="position: fixed; text-align: center;  top: 120px;left:300px; z-index: 9999; display: none;background-color:white;">
+                    <div id="showimg2" style="width: 400px; position: relative">
+                        <img src="" id="picture2" /> <a href="javascript:$('#modal_volume2').fadeOut();" style="display: block; width: 50px; height: 50px; position: absolute; right: -5px; top: -8px; z-index: 2;font-size:30px ">x</a>
                     </div>
                 </div>
-            </div>
-            <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
-                <!--物料文档配置-->
-                <div id="check1" class="tabPanel">
-                    <table id="gridTable2"></table>
-                    <div id="gridPager2"></div>
-                    <div id="modal_volume2" style="position: fixed; text-align: center;  top: 120px;left:300px; z-index: 9999; display: none;background-color:white;">
-                        <div id="showimg2" style="width: 400px; position: relative">
-                            <img src="" id="picture2" /> <a href="javascript:$('#modal_volume2').fadeOut();" style="display: block; width: 50px; height: 50px; position: absolute; right: -5px; top: -8px; z-index: 2;font-size:30px ">x</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div>*@
+        <!--配置组件物料信息-->
+        <div id="check2" class="tabPanel">
+            <table id="gridTable3" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager3"></div>
         </div>
     </div>
 </div>

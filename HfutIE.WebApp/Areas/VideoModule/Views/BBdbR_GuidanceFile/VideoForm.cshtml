@@ -1,0 +1,55 @@
+@{
+    ViewBag.Title = "指导文件》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键   
+
+    //创建XMLHttpRequest对象
+    var xhr = new XMLHttpRequest();
+    //配置请求方式、请求地址以及是否同步
+    xhr.open('POST', "/VideoModule/BBdbR_GuidanceFile/GetVideo?GuidanceFileID=" + KeyValue, true);
+    //设置请求结果类型为blob
+    xhr.responseType = 'blob';
+    //请求成功回调函数
+    xhr.onload = function (e) {
+        if (this.status == 200) {//请求成功
+            //获取blob对象
+            var blob = this.response;
+            var video = document.getElementById('videoBox');
+            //获取blob对象地址，并把值赋给容器
+            var obj_url = window.URL.createObjectURL(blob);
+            video.src = obj_url;
+            //video.play();
+            //setTimeout("revokeUrl('" + obj_url + "')", "2000");  //这里是在2秒后停止了播放
+        }
+    };
+    xhr.send();
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        revokeUrl("/VideoModule/BBdbR_GuidanceFile/GetVideo?GuidanceFileID=" + KeyValue);
+        //AjaxJson("/VideoModule/BBdbR_GuidanceFile/GetVideo?GuidanceFileID=" + KeyValue, {}, function (data) {
+        //    $("#videoBox").attr("type", data.type);
+        //    $("#videoBox").attr("src", data.file);
+        //});
+        ////let type = KeyValue.substring(KeyValue.lastIndexOf('.'), KeyValue.length);
+        ////$("#videoBox").attr("type", "video/mp4");
+        ////$("#videoBox").attr("src", KeyValue);
+    }
+
+
+
+
+
+    function revokeUrl(url) {
+        window.URL.revokeObjectURL(url);
+    }
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <video id="videoBox" src="" width="800" height="600" controls="controls" @*controlsList="nodownload" type="video/mp4"*@></video>
+</form>

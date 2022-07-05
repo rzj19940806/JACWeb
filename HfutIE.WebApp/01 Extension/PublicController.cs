@@ -356,5 +356,145 @@ namespace HfutIE.WebApp
             Base_SysLogBll.Instance.WriteLog<TEntity>(array, IsOk.ToString(), Message);
         }
         #endregion
+
+        #region ANCHI工厂
+        //ps目前使用enabled进行软删除，个人感觉是不太好的，希望可以加入deletemark进行软删除
+        /// <summary>
+        /// 排除软删除的数据
+        /// </summary>
+        /// <param name="ParameterJson">筛选数据codition的List</param>
+        /// <param name="jqgridparam">jqgrid的参数</param>
+        /// <returns></returns>
+        public virtual JsonResult GridPageJsonNew(string ParameterJson, JqGridParam jqgridparam)
+        {
+            try
+            {
+                Condition condition = new Condition();
+                condition.ParamName = "Enabled";
+                condition.Operation = ConditionOperate.Equal;
+                condition.ParamValue = "1";
+                condition.Logic = "AND";
+                Stopwatch watch = CommonHelper.TimerStart();
+                List<Condition> conditions = new List<Condition>();
+                conditions.Add(condition);
+                List<DbParameter> parameter = new List<DbParameter>();
+
+                if (!string.IsNullOrEmpty(ParameterJson))
+                {
+                    conditions.AddRange(ParameterJson.JonsToList<Condition>());
+                }
+                string WhereSql = ConditionBuilder.GetWhereSql(conditions, out parameter);
+                var dataList = repositoryfactory.Repository().FindListPage(WhereSql, parameter.ToArray(), ref jqgridparam);
+                var JsonData = new
+                {
+                    total = jqgridparam.total,
+                    page = jqgridparam.page,
+                    records = jqgridparam.records,
+                    costtime = CommonHelper.TimerEnd(watch),
+                    rows = dataList,
+                };
+                return Json(JsonData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message + "\r\n条件：" + ParameterJson);
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// 验证数据唯一性，排除软删除数据
+        /// </summary>
+        /// <param name="Fieldname">对象属性</param>
+        /// <param name="Fieldvalue">对象值</param>
+        /// <param name="KeyValue">对象主键值，非空为编辑验证，空为新增验证</param>
+        /// <returns></returns>
+        public ActionResult OnlyOneNew(string Fieldname, string Fieldvalue, string KeyValue)
+        {
+            string hasdata = "no";
+            if (KeyValue == "")//则为添加一个新的实体
+            {
+                if (repositoryfactory.Repository().FindCount("AND Enabled='1' AND " + Fieldname + "='" + Fieldvalue + "'") > 0)
+                {
+                    hasdata = "yes";
+                }
+            }
+            else//编辑
+            {
+                TEntity a = repositoryfactory.Repository().FindEntity(KeyValue);
+                Type type = a.GetType();
+                PropertyInfo[] props = type.GetProperties();
+                foreach (PropertyInfo prop in props)
+                {
+                    if (prop.Name == Fieldname)
+                    {
+                        if (prop.GetValue(a).ToString() != Fieldvalue)//就说明编辑过此字段
+                        {
+                            if (repositoryfactory.Repository().FindCount("AND Enabled='1' AND " + Fieldname + "='" + Fieldvalue + "'") > 0)
+                            {
+                                hasdata = "yes";
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            return Content(new { hasdata = hasdata }.ToJson());
+        }
+
+
+        /// <summary>
+        /// 远有软删除是deltemark=1，修改为enabled=0
+        /// </summary>
+        /// <param name="KeyValue">对象主键</param>
+        /// <param name="ParentId">父ID，判断该ID是否有子，有则无法删除</param>
+        /// <param name="DeleteMark">非空表示软删除</param>
+        /// <returns></returns>
+        public ActionResult DeleteNew(string KeyValue, string ParentId, string DeleteMark)
+        {
+            string[] array = KeyValue.Split(',');
+            try
+            {
+                var Message = "删除失败。";
+                int IsOk = 0;
+                if (!string.IsNullOrEmpty(ParentId))
+                {
+                    if (repositoryfactory.Repository().FindCount("ParentId", ParentId) > 0)
+                    {
+                        throw new Exception("当前所选有子节点数据，不能删除。");
+                    }
+                }
+                //直接删除
+                if (string.IsNullOrEmpty(DeleteMark))
+                {
+                    IsOk = repositoryfactory.Repository().Delete(array);
+                    if (IsOk > 0)
+                    {
+                        Message = "删除成功。";
+                    }
+                }
+                else //软删除
+                {
+                    string KeyField = DatabaseCommon.GetKeyField<TEntity>().ToString();
+                    TEntity entity = new TEntity();
+                    Type type = entity.GetType();
+                    Hashtable ht_DeleteMark = new Hashtable();
+                    ht_DeleteMark[KeyField] = KeyValue;
+                    ht_DeleteMark["Enabled"] = 0;
+                    IsOk = repositoryfactory.Repository().Update(type.Name, ht_DeleteMark, KeyField);
+                    Message = "软删除成功。";
+                }
+                WriteLog(IsOk, array, Message);
+                return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = Message }.ToString());
+            }
+            catch (Exception ex)
+            {
+                WriteLog(-1, array, "操作失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
+
+        #endregion
     }
 }

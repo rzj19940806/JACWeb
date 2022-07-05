@@ -1,0 +1,273 @@
+@{
+    ViewBag.Title = "_组件物料配置》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var Id = GetQuery('Id');//配置表主键
+    var PridId = GetQuery('PridId');//打印主键
+    var PrintCd = GetQuery('PrintCd');//打印编号
+    var PrintType = GetQuery('PrintType');//打印类型
+    $(function () {
+        BindDropItem("#Type", "PrintConfigType", "==请选择==");
+        BindDropItem("#PrintType", "PrintType", "==请选择==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('Id')) {
+            document.getElementById("PrintConfigCd").setAttribute("readOnly", true);
+            AjaxJson("/BaseModule/BBdbR_Print/SetPrintConfigForm", { KeyValue: Id }, function (data) {
+                SetWebControls(data.rows[0]);//自动给控件赋值
+                $("#PrintCd").val(data.rows[0]["PrintCd"]);
+                TypeChange();
+
+                ////int16进制转换为字符
+                //AjaxJson("/BaseModule/BBdbR_Print/IntTo16?ARGB=" + escape(data.rows[0]["ARGB"]), {}, function (data) {
+                //    $("#ARGB").val(data);
+                //});
+            });
+        }
+        else {
+            $("#PrintCd").val(PrintCd);
+            $("#PrintType").val(PrintType) ;
+        }
+    }   
+
+     //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        //类型判断
+        if ($("#Type").val() == "4") {
+            postData.X = "0";
+            postData.Y = "0";
+            postData.Width = "0";
+            postData.Height = "0";
+        }
+        else { }
+        
+        AjaxJson("/BaseModule/BBdbR_Print/SubmitForm2?KeyValue=" + escape(Id) + "&PridId=" + escape(PridId), postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+
+       
+    }
+
+
+    //类型改变
+    function TypeChange() {
+        if ($("#Type").val() == "3") {
+            //函数公式
+            $('#X').hide();
+            $('#Y').hide();
+            $('#Width').hide();
+            $('#Height').hide();
+            $('#MX').show();
+            $('#MY').show();
+            $('#MWidth').show();
+            $('#MHeight').show();
+        }
+        else {
+            $('#MX').hide();
+            $('#MY').hide();
+            $('#MWidth').hide();
+            $('#MHeight').hide();
+            $('#X').show();
+            $('#Y').show();
+            $('#Width').show();
+            $('#Height').show();
+        }
+
+        if ($("#Type").val() == "1") {
+            //表格
+            $('#RowNum_ColNum').show();
+            $('#RowHeight_ColWidth').show();
+        }
+        else {
+            $('#RowNum_ColNum').hide();
+            $('#RowHeight_ColWidth').hide();
+        }
+
+        if ($("#Type").val() == "2") {
+            //条码codedsc
+            $('#codedsc').show();
+        }
+        else {
+            $('#codedsc').hide();
+        }
+
+
+    }
+   
+
+
+   
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">打印编号：</th>
+            <td class='formValue'>
+                <input id="PrintCd" maxlength=50 type="text" class="txt required" datacol="yes" err="打印编号" checkexpession="NotNull" readonly />
+            </td>
+            <th class='formTitle' style="height:30px">打印类型：</th>
+            <td class='formValue'>
+                @*<input id="PrintType" maxlength=50 type="text" class="txt required" datacol="yes" err="打印类型" checkexpession="NotNull" readonly />*@
+                <select id="PrintType" maxlength=30 type="text" class="txt" datacol="yes" err="打印类型" checkexpession="NotNull" checkdata="hasOne" onchange="TypeChange()" disabled="disabled">
+                   
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td class='formValue' hidden="hidden">
+                <input id="Id" maxlength=50 type="text" class="txt required" />
+            </td>
+            <th class='formTitle' style="height:30px">打印配置编号：</th>
+            <td class='formValue'>
+                <input id="PrintConfigCd" maxlength=50 type="text" class="txt required" datacol="yes" err="打印配置编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">打印配置类型：</th>
+            <td class='formValue'>
+                <select id="Type" maxlength=30 type="text" class="txt" datacol="yes" err="打印配置类型" checkexpession="NotNull" checkdata="hasOne" onchange="TypeChange()">
+                    @*<option value=''>--待选--</option>
+                    <option value='0'>普通</option>
+                    <option value='1'>表格</option>
+                    <option value='3'>燃油标识三角标识</option>
+                    <option value='4'>函数公式</option>*@
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">左侧距离：</th>
+            <td class='formValue'>
+                <input id="X" maxlength=50 type="number" class="txt required" datacol="yes" err="左侧距离" checkexpession="NotNull" />
+                <input id="MX" maxlength=50 type="text" class="txt " style="display:none;" />
+            </td>
+            <th class='formTitle' style="height:30px">顶部距离：</th>
+            <td class='formValue'>
+                <input id="Y" maxlength=50 type="number" class="txt required" datacol="yes" err="顶部距离" checkexpession="NotNull" />
+                <input id="MY" maxlength=50 type="text" class="txt "  style="display:none;" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">宽度：</th>
+            <td class='formValue'>
+                <input id="Width" maxlength=50 type="number" class="txt required" datacol="yes" err="宽度" checkexpession="NotNull" />
+                <input id="MWidth" maxlength=50 type="text" class="txt " style="display:none;" />
+            </td>
+            <th class='formTitle' style="height:30px">高度：</th>
+            <td class='formValue'>
+                <input id="Height" maxlength=50 type="number" class="txt required" datacol="yes" err="高度" checkexpession="NotNull" />
+                <input id="MHeight" maxlength=50 type="text" class="txt " style="display:none;" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">边框粗细：</th>
+            <td class='formValue'>
+                <input id="Board" maxlength=50 type="number" class="txt required" datacol="yes" err="边框粗细" checkexpession="NotNull" />
+            </td>
+            <th class='formTitle' style="height:30px">自定义内容：</th>
+            <td class='formValue'>
+                <input id="Context" maxlength=50 type="text" class="txt "  />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">字号：</th>
+            <td class='formValue'>
+                <input id="FontSize" maxlength=50 type="number" class="txt required" datacol="yes" err="字号" checkexpession="NotNull" />
+            </td>
+            <th class='formTitle' style="height:30px">字体：</th>
+            <td class='formValue'>
+                <input id="FontFamily" maxlength=50 type="text" class="txt required" datacol="yes" err="字体" checkexpession="NotNull" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">字形：</th>
+            <td class='formValue'>
+                <select id="FontStyle" maxlength=30 type="text" class="txt" datacol="yes" err="字形" checkexpession="NotNull" checkdata="hasOne">
+                    <option value='0'>普通</option>
+                    <option value='1'>加粗</option>
+                    <option value='2'>倾斜</option>
+                    <option value='4'>下划线</option>
+                    <option value='5'>删除线</option>
+                </select>
+            </td>
+
+            <th class='formTitle' style="height:30px">颜色（ARGB）：</th>
+            <td class='formValue'>
+                <input id="ARGB" maxlength=50 type="color" class="txt required" datacol="yes" err="颜色" checkexpession="NotNull" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">水平对齐：</th>
+            <td class='formValue'>
+                <select id="Alignment" maxlength=30 type="text" class="txt" datacol="yes" err="水平对齐" checkexpession="NotNull" checkdata="hasOne">
+                    <option value='0'>居左</option>
+                    <option value='1'>居中</option>
+                    <option value='2'>居右</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">垂直对齐：</th>
+            <td class='formValue'>
+                <select id="LineAlignment" maxlength=30 type="text" class="txt" datacol="yes" err="垂直对齐" checkexpession="NotNull" checkdata="hasOne">
+                    <option value='0'>居上</option>
+                    <option value='1'>居中</option>
+                    <option value='2'>居下</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr id="codedsc" >
+            <th class='formTitle' style="height:30px">条码高度：</th>
+            <td class='formValue'>
+                <input id="CodeHeight" maxlength=50 type="number" class="txt "  />
+            </td>
+            <th class='formTitle' style="height:30px">条码宽度：</th>
+            <td class='formValue'>
+                <input id="CodeWidth" maxlength=50 type="number" class="txt "  />
+            </td>
+        </tr>
+
+        <tr id="RowNum_ColNum">
+            <th class='formTitle' style="height:30px">行数：</th>
+            <td class='formValue'>
+                <input id="RowNum" maxlength=50 type="number" class="txt "  />
+            </td>
+            <th class='formTitle' style="height:30px">列数：</th>
+            <td class='formValue'>
+                <input id="ColNum" maxlength=50 type="number" class="txt "  />
+            </td>
+        </tr>
+
+        <tr id="RowHeight_ColWidth">
+            <th class='formTitle' style="height:30px">行间隔：</th>
+            <td class='formValue'>
+                <input id="RowHeight" maxlength=50 type="number" class="txt "  />
+            </td>
+            <th class='formTitle' style="height:30px">列间隔：</th>
+            <td class='formValue'>
+                <input id="ColWidth" maxlength=50 type="number" class="txt " />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea"></textarea>
+            </td>
+        </tr>
+
+    </table>
+</form>

@@ -1,0 +1,165 @@
+@{
+    ViewBag.Title = "_FactoryBaseInformation》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#PrintType", "PrintType", "==请选择==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            //$("#PrintCd :input").attr("disabled", true);//只读
+            document.getElementById("PrintCd").setAttribute("readOnly", true);
+            AjaxJson("/BaseModule/BBdbR_Print/SetPrintForm", { KeyValue: KeyValue }, function (data) {
+                //SetWebControls(data);
+                $("#PrintCd").val(data.rows[0]["PrintCd"]);         //编号
+                $("#PrintType").val(data.rows[0]["PrintType"]);     //类型
+                $("#LeftMargin").val(data.rows[0]["LeftMargin"]);   //左边距
+                $("#RightMargin").val(data.rows[0]["RightMargin"]); //右边距
+                $("#UpMargin").val(data.rows[0]["UpMargin"]);       //上边距
+                $("#DownMargin").val(data.rows[0]["DownMargin"]);   //下边距
+                $("#Width").val(data.rows[0]["Width"]);             //边框宽度
+                $("#Height").val(data.rows[0]["Height"]);           //边框高度
+                $("#Board").val(data.rows[0]["Board"]);             //边框粗细
+                $("#Orientation").val(data.rows[0]["Orientation"]); //打印方向
+                $("#Enabled").val(data.rows[0]["Enabled"]);         //有效性
+                $("#Rem").val(data.rows[0]["Rem"]);                 //备注
+                
+            });
+        }
+        else {
+            //如果是新增
+        }
+    }   
+
+    //保存事件
+    function AcceptClick() {
+
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        //var PrintCd = document.getElementById("PrintCd").value;         //编号
+        //var PrintType = document.getElementById("PrintType").value;     //类型
+        //var LeftMargin = document.getElementById("LeftMargin").value;   //左边距
+        //var RightMargin = document.getElementById("RightMargin").value; //右边距
+        //var UpMargin = document.getElementById("UpMargin").value;       //上边距
+        //var DownMargin = document.getElementById("DownMargin").value;   //下边距
+        //var Width = $('#Width').val();                                  //边框宽度
+        //var Height = $('#Height').val();                                //边框高度
+        //var Board = $('#Board').val();                                  //边框粗细
+        //var Orientation = $('#Orientation').val();                      //打印方向
+        //var Enabled = $('#Enabled').val();                              //有效性
+        //var Rem = $('#Rem').val();                                      //备注
+
+        AjaxJson("/BaseModule/BBdbR_Print/SubmitForm1?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("PlineCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+        
+    }
+    
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">编号：</th>
+            <td class='formValue'>
+                <input id="PrintCd" maxlength=50 type="text" class="txt required" datacol="yes" err="编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">类型：</th>
+            <td class='formValue'>
+                <select id="PrintType" maxlength=30 type="text" class="txt" datacol="yes" err="类型" checkexpession="NotNull" checkdata="hasOne">
+                    @*<option value=''>--待选--</option>
+                    <option value='1'>配置单</option>
+                    <option value='2'>扫码单</option>
+                    <option value='3'>燃油车</option>
+                    <option value='4'>电动车</option>*@
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">左边距：</th>
+            <td class='formValue'>
+                <input id="LeftMargin" maxlength=50 type="number" class="txt  required" datacol="yes" err="左边距" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+            <th class='formTitle' style="height:30px">右边距：</th>
+            <td class='formValue'>
+                <input id="RightMargin" maxlength=50 type="number" class="txt required " datacol="yes" err="右边距" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">上边距：</th>
+            <td class='formValue'>
+                <input id="UpMargin" maxlength=50 type="number" class="txt required " datacol="yes" err="上边距" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+            <th class='formTitle' style="height:30px">下边距：</th>
+            <td class='formValue'>
+                <input id="DownMargin" maxlength=50 type="number" class="txt required " datacol="yes" err="下边距" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">边框宽度：</th>
+            <td class='formValue'>
+                <input id="Width" maxlength=50 type="number" class="txt required " datacol="yes" err="边框宽度" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+            <th class='formTitle' style="height:30px">边框高度：</th>
+            <td class='formValue'>
+                <input id="Height" maxlength=50 type="number" class="txt required " datacol="yes" err="边框高度" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">边框粗细：</th>
+            <td class='formValue'>
+                <input id="Board" maxlength=50 type="number" class="txt required " datacol="yes" err="边框粗细" checkexpession="Num" checkdata="hasOne" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+            <th class='formTitle' style="height:30px">打印方向：</th>
+            <td class='formValue'>
+                <select id="Orientation" maxlength=30 type="text" class="txt required" datacol="yes" err="打印方向" checkexpession="NotNull" checkdata="hasOne">
+                    <option value='1'>横向</option>
+                    <option value='2'>纵向</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" maxlength=30 type="text" class="txt required" datacol="yes" err="有效性" checkexpession="NotNull" checkdata="hasOne">
+                    <option value='1'>启用</option>
+                    <option value='2'>停用</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea"></textarea>
+            </td>
+        </tr>
+
+
+    </table>
+</form>

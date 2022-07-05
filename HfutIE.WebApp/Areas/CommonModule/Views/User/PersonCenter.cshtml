@@ -5,6 +5,7 @@
 <script src="~/Content/Scripts/jquery/jQuery.md5.js"></script>
 <script>
     var KeyValue = '@HfutIE.Utilities.ManageProvider.Provider.Current().UserId';
+    var ObjectId = '@HfutIE.Utilities.ManageProvider.Provider.Current().ObjectId';
     /*基本信息begin=====================================*/
     $(function () {
         InitControl();
@@ -12,18 +13,21 @@
     //初始化个人信息
     function InitControl() {
         //工作性质
-        BindDropItem("#WorkingProperty", "WorkingProperty", "--");
+        //BindDropItem("#WorkingProperty", "WorkingProperty", "--");
         //职务
-        BindDropItem("#Duty", "Duty", "--");
+        //BindDropItem("#Duty", "Duty", "--");
         //学历
-        BindDropItem("#Education", "Education", "--");
+        //BindDropItem("#Education", "Education", "--");
         //最高学位
-        BindDropItem("#Degree", "Degree", "--");
+        //BindDropItem("#Degree", "Degree", "--");
         //职业资格
-        BindDropItem("#Competency", "Professional", "--");
+        //BindDropItem("#Competency", "Professional", "--");
         AjaxJson("/CommonModule/User/SetUserForm", { KeyValue: KeyValue }, function (data) {
             SetWebControls(data);
-            //BindDepartment(); $("#DepartmentId").val(data.DepartmentId);
+            //BindCompany();
+            BindDepartment();
+            //$("#CompanyId").val(data.CompanyId);
+            $("#DepartmentId").val(data.DepartmentId);
         });
         $("#tb_basic tr").each(function () {
             $(this).find('td').find('input,select,textarea').each(function () {
@@ -52,14 +56,29 @@
             })
         });
     }
+    //公司下拉框
+    //function BindCompany() {
+    //    $("#CompanyId").html("");
+    //    $("#CompanyId").append("<option value=''>==请选择==</option>");
+    //    AjaxJson("/SystemManaModule/UserMana/CompanyList", {}, function (DataJson) {
+    //        $.each(DataJson, function (i) {
+    //            $("#CompanyId").append($("<option></option>").val(DataJson[i].CompanyId).html(DataJson[i].CompanyNm));
+    //        });
+    //    })
+
+    //}
     //部门下拉框
     function BindDepartment() {
         $("#DepartmentId").html("");
-        AjaxJson("/CommonModule/Department/ListJson", { CompanyId: $("#CompanyId").val() }, function (DataJson) {
+        $("#DepartmentId").append("<option value=''>==请选择==</option>");
+        AjaxJson("/SystemManaModule/UserMana/DepartmentList", {}, function (DataJson) {
             $.each(DataJson, function (i) {
-                $("#DepartmentId").append($("<option></option>").val(DataJson[i].departmentid).html(DataJson[i].fullname));
+                $("#DepartmentId").append($("<option></option>").val(DataJson[i].DepartmentID).html(DataJson[i].DepartmentName));
+                
             });
+            $("#CompanyNm").val(DataJson[0].CompanyNm);
         })
+        
     }
     /*基本信息end=====================================*/
 
@@ -72,21 +91,21 @@
     //模块权限
     function ModulePermissionTree() {
         var itemtree = {
-            url: "@Url.Content("~/CommonModule/Permission/LookModulePermission")"
+            url: "@Url.Content("~/CommonModule/Permission/LookModulePermission")?ObjectId=" + ObjectId
         };
         $("#ModulePermission").treeview(itemtree);
     }
     //按钮权限
     function ButtonePermissionTree() {
         var itemtree = {
-            url: "@Url.Content("~/CommonModule/Permission/LookButtonePermission")"
+            url: "@Url.Content("~/CommonModule/Permission/LookButtonePermission")?ObjectId=" + ObjectId
         };
         $("#ButtonePermission").treeview(itemtree);
     }
     //视图权限
     function ViewPermissionTree() {
         var itemtree = {
-            url: "@Url.Content("~/CommonModule/Permission/LookViewPermission")"
+            url: "@Url.Content("~/CommonModule/Permission/LookViewPermission")?ObjectId=" + ObjectId
         };
         $("#ViewPermission").treeview(itemtree);
     }
@@ -94,6 +113,8 @@
 
     /*修改密码begin================================*/
     var chePassword = true;
+    var cheNewPassword = true;
+    var recheNewPassword = true;
     $(function () {
         $("#OldPassword").blur(function () {
             $("#OldPassword").parent().next().html("");
@@ -115,11 +136,17 @@
             if ($(this).val() == "") {
                 return false;
             }
-            AjaxJson("/CommonModule/User/ValidationOldPassword", { OldPassword: $(this).val() }, function (data) {
-                if (data.Code > 0) {
-                    $("#NewPassword").parent().next().html("<div class=\"form-error-text\">新密码不能与旧密码相同</div>")
-                } else {
-                    $("#NewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>")
+            var newpwd = $(this).val();
+            AjaxJson("/CommonModule/User/ValidationNewPassword", { NewPassword: $(this).val() }, function (data) {
+                if (data.Code == 1) {
+                    $("#NewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>");
+                    cheNewPassword = true;
+                } else if (data.Code == 0) {
+                    $("#NewPassword").parent().next().html("<div class=\"form-error-text\">" + data.Message + "</div>");
+                    cheNewPassword = false;
+                }else {
+                    $("#NewPassword").parent().next().html("<div class=\"form-error-text\">新密码不能与旧密码相同</div>");
+                    cheNewPassword = false;
                 }
             });
         });
@@ -129,9 +156,11 @@
                 return false;
             }
             if ($(this).val() != $("#NewPassword").val()) {
-                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">您两次输入的密码不一致！</div>")
+                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">您两次输入的密码不一致！</div>");
+                recheNewPassword = false;
             } else {
-                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>")
+                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>");
+                recheNewPassword = true;
             }
         });
     })
@@ -149,10 +178,18 @@
             return false;
         }
         if (ConfirmNewPassword == "") {
-            $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">请在输入一遍密码</div>");
+            $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">请再输入一遍密码</div>");
             return false;
         }
         if (!chePassword) {
+            return false;
+        }
+        if (!cheNewPassword) {
+            $("#NewPassword").parent().next().html("<div class=\"form-error-text\">请重新输入新密码</div>");
+            return false;
+        }
+        if (!recheNewPassword) {
+            $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">请再输入一遍密码</div>");
             return false;
         }
         if (confirm('注：请牢记当前设置密码，您确认要修改密码？')) {
@@ -202,24 +239,30 @@
                 <th class="formTitle">联系手机：</th>
                 <td class="formValue">
                     <input id="Mobile" type="text" class="txt" /></td>
-                <th class="formTitle">联系电话：</th>
+                @*<th class="formTitle">联系电话：</th>
                 <td class="formValue">
-                    <input id="Telephone" type="text" class="txt" /></td>
-            </tr>
-            <tr>
+                    <input id="Telephone" type="text" class="txt" />
+                </td>*@
                 <th class="formTitle">电子邮箱：</th>
                 <td class="formValue">
                     <input id="Email" type="text" class="txt" />
                 </td>
-                <th class="formTitle">QQ号码：</th>
+            </tr>
+            <tr>
+                @*<th class="formTitle">电子邮箱：</th>
+                <td class="formValue">
+                    <input id="Email" type="text" class="txt" />
+                </td>*@
+                @*<th class="formTitle">QQ号码：</th>
                 <td class="formValue">
                     <input id="OICQ" type="text" class="txt" />
-                </td>
+                </td>*@
             </tr>
             <tr>
                 <th class="formTitle">所在公司：</th>
                 <td class="formValue">
-                    <input id="CompanyName" type="text" class="txt" />
+                    <input id="CompanyNm" type="text" class="txt" />
+                    @*<select id="CompanyId" class="txtselect"></select>*@
                 </td>
                 <th class="formTitle">所在部门：</th>
                 <td class="formValue">
@@ -227,7 +270,7 @@
                     </select>
                 </td>
             </tr>
-            <tr>
+            @*<tr>
                 <th class="formTitle">工作性质：</th>
                 <td class="formValue">
                     <select id="WorkingProperty" class="txtselect">
@@ -291,7 +334,7 @@
                 <th class="formTitle">在职：</th>
                 <td class="formValue">
                     <input id="IsDimission" type="text" class="txt" /></td>
-            </tr>
+            </tr>*@
             <tr>
                 <th class="formTitle">说明：
                 </th>
@@ -303,7 +346,7 @@
     </div>
     <!--拥有权限-->
     <div id="PermissionTree" class="tabPanel" style="display: none;">
-        <div class="border" style="float: left; width: 246px; margin-right: 1px; height: 318px;">
+        <div class="border" style="float: left; width: 244px; margin-right: 1px; height: 318px;">
             <div class="btnbartitle">
                 <div>
                     模块权限
@@ -311,7 +354,7 @@
             </div>
             <div id="ModulePermission" style="height: 290px; overflow: auto"></div>
         </div>
-        <div class="border" style="float: left; width: 247px; margin-right: 1px; height: 318px;">
+        <div class="border" style="float: left; width: 244px; margin-right: 1px; height: 318px;">
             <div class="btnbartitle">
                 <div>
                     按钮权限
@@ -319,7 +362,7 @@
             </div>
             <div id="ButtonePermission" style="height: 290px; overflow: auto"></div>
         </div>
-        <div class="border" style="float: left; width: 247px; height: 318px;">
+        <div class="border" style="float: left; width: 244px; height: 318px;">
             <div class="btnbartitle">
                 <div>
                     视图权限
@@ -332,7 +375,7 @@
     <div id="EditPassword" class="tabPanel" style="display: none; margin: 20px;margin-top:10px;">
         <table style="width: 100%">
             <tr>
-                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">登陆密码：</td>
+                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">原密码：</td>
                 <td class="bottomdashed" style="width: 200px;">
                     <input id="OldPassword" type="password" class="keyword" style="width: 200px;" />
                 </td>
@@ -346,7 +389,7 @@
                 <td class="bottomdashed"></td>
             </tr>
             <tr>
-                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">确认密码：</td>
+                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">确认新密码：</td>
                 <td class="bottomdashed" style="width: 200px;">
                     <input id="ConfirmNewPassword" type="password" class="keyword" style="width: 200px;" />
                 </td>

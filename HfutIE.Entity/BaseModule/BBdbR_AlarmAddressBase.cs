@@ -34,14 +34,14 @@ namespace HfutIE.Entity
         /// 机构级别
         /// </summary>
         /// <returns></returns>
-        [DisplayName("机构级别")]
-        public string Class { get; set; }
+        [DisplayName("产线主键")]
+        public string PlineId { get; set; }
         /// <summary>
         /// 机构ID
         /// </summary>
         /// <returns></returns>
-        [DisplayName("机构ID")]
-        public string ClassId { get; set; }
+        [DisplayName("工位主键")]
+        public string WcId { get; set; }
         /// <summary>
         /// 设备主键
         /// </summary>
@@ -95,7 +95,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public string CreTm { get; set; }
+        public DateTime? CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -113,7 +113,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public string MdfTm { get; set; }
+        public DateTime? MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -153,11 +153,9 @@ namespace HfutIE.Entity
         public override void Create()
         {
             this.RuleId = CommonHelper.GetGuid;
-            this.AlarmRoute = "TL1++Zone01+190GPB01-SB01";
-            this.VersionNumber = "V1.0";
-            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            //ToString("yyyy-MM-dd HH:mm:ss");
             this.Enabled = "1";
+            this.VersionNumber = "V1.0";
+            this.CreTm = DateTime.Now;
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -168,10 +166,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.RuleId = KeyValue;
-            this.AlarmRoute = "TL1++Zone01+190GPB01-SB01";
-            this.VersionNumber = "V1.0";
-            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            //ToString("yyyy-MM-dd HH:mm:ss");
+            this.MdfTm = DateTime.Now;
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

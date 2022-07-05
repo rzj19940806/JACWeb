@@ -28,13 +28,13 @@ namespace HfutIE.Entity
         /// 主键
         /// </summary>
         /// <returns></returns>
-        [DisplayName("主键")]
+        [DisplayName("AVI站点行为配置主键")]
         public string AviActionConfigId { get; set; }
         /// <summary>
         /// AVI编号
         /// </summary>
         /// <returns></returns>
-        [DisplayName("AVI编号")]
+        [DisplayName("AVI站点编号")]
         public string AviCd { get; set; }
         /// <summary>
         /// AVI站点类别

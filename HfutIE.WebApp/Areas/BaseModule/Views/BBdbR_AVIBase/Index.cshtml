@@ -7,94 +7,125 @@
         BindDropItem("#AviCatg", "AviCatg", "==全部==");
         BindDropItem("#AviType", "AviType", "==全部==");
         BindDropItem("#AviAction", "AviAction", "==全部==");
-        Show()
+        Tabchange('check1');
         GetGrid();
         GetGrid1();//
-        GetGrid2();//
-        GetGrid3();//站点行为配置信息表
+        //GetGrid2();//
+        //GetGrid3();//站点行为配置信息表
     })
+
+    //全局传参变量
+    var postData = {
+        AviCd: "",
+        AviNm: "",
+        AviType: ""
+    }
+
+
     //加载表格
     function GetGrid() {
+        postData.AviCd = $("#AviCd").val();
+        postData.AviNm = $("#AviNm").val();
+        postData.AviType = $("#AviType").val();
         $("#gridTable").jqGrid({
-        url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageJson1")",
+        url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageByCondition")",
+        postData: postData,
         datatype: "json",
-        height: $(window).height() * 0.35,
+        height: $(window).height() * 0.5-70,
         autowidth: true,
         colModel: [
-                { label: 'AVI站点主键', name: 'AviId', index: 'AviId', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: 'AVI站点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center',sortable: true  },
-                { label: 'AVI站点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center',sortable: true  },
-            
+            { label: 'AVI站点主键', name: 'AviId', index: 'AviId', width: 0, align: 'center',sortable: true ,hidden: true },
+            { label: 'AVI站点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center',sortable: true  },
+            { label: 'AVI站点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center',sortable: true  },
             {
                 label: 'AVI站点类型', name: 'AviType', index: 'AviType', width: 0, align: 'center', sortable: true,
                 formatter: function (cellvalue, options, rowObject) {
                     return CellItem('AviType', cellvalue);
                 }
             },
-                { label: 'AVI描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center',sortable: true  },
-            {
-                label: '是否需要关键视频监控', name: 'IsMonitor', index: 'IsMonitor', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == '1') return "是";
-                    if (cellvalue == '0') return "否";
-                }
-            },
-            {
-                label: '是否允许重复过点', name: 'IsRePeated', index: 'IsRePeated', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == '1') return "是";
-                    if (cellvalue == '0') return "否";
-                }
-            },
-            {
-                label: 'AVI站点是否独立', name: 'IsIndependence', index: 'IsIndependence', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == '1') return "是";
-                    if (cellvalue == '0') return "否";
-                }
-            },
+            { label: '工序编号', name: 'OP_CODE', index: 'OP_CODE', width: 0, align: 'center', sortable: true },
+            { label: '工序名称', name: 'OP_NAME', index: 'OP_NAME', width: 0, align: 'center', sortable: true },
+            //{
+            //    label: '是否需要关键视频监控', name: 'IsMonitor', index: 'IsMonitor', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '1') return "是";
+            //        else if (cellvalue == '0') return "否";
+            //        else return "";
+            //    }
+            //},
+            //{
+            //    label: '是否允许重复过点', name: 'IsRePeated', index: 'IsRePeated', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '1') return "是";
+            //        if (cellvalue == '0') return "否";
+            //        else return "";
+            //    }
+            //},
+            //{
+            //    label: 'AVI站点是否独立', name: 'IsIndependence', index: 'IsIndependence', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '1') return "是";
+            //        if (cellvalue == '0') return "否";
+            //        else return "";
+            //    }
+            //},
             { label: '产线Id', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '依附产线', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true },
+            { label: '依附产线', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true, hidden: true },
             { label: 'AVI站点顺序', name: 'AVISequence', index: 'AVISequence', width: 0, align: 'center', sortable: true },
             {
                 label: '是否报工', name: 'IsReport', index: 'IsReport', width: 0, align: 'center', sortable: true,
                 formatter: function (cellvalue, options, rowObject) {
                     if (cellvalue == '1') return "是";
                     if (cellvalue == '0') return "否";
+                    else return "";
                 }
             },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true ,hidden: true },
-            {
-                label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                    if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                }
-            },
-            { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true  },
-            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true  },
-            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true  },
-            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true  },
-            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true  },
+            //{
+            //    label: '是否滞留管理', name: 'IsStranded', index: 'IsStranded', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '1') return "是";
+            //        else if (cellvalue == '0') return "否";
+            //        else return "";
+            //    }
+            //},
+            //{ label: '滞留管理类别', name: 'StrandedCategory', index: 'StrandedCategory', width: 0, align: 'center', sortable: true },
+            //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true ,hidden: true },
+            //{
+            //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+            //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+            //    }
+            //},
+            { label: 'AVI描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
+            { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 300, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }  },
+            //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }  },
+            //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true  },
             { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true  },
             { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
-            { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
-            { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+            //{ label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+            //{ label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
         ],
         pager: "#gridPager",
-        sortname: '',
-        sortorder: 'desc',
-        rownumbers: true,
-        shrinkToFit: false,
+            sortname: 'AVISequence',
+            sortorder: '',
+            sortbale: true,
             gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
             //表格行单击事件onClickRow
-
             onSelectRow: function (RowId) {
                 var KeyValue = GetJqGridRowValue("#gridTable", "AviId");
                 var AviCd = GetJqGridRowValue("#gridTable", "AviCd");
                 $("#gridTable_Bottom").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageListJson_Down")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
-                $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageListJson_Down2")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
-                $("#gridTableAction").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageListJson_AviAction")?AviCd=" + AviCd, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //$("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageListJson_Down2")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //$("#gridTableAction").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageListJson_AviAction")?AviCd=" + AviCd, page: 1, datatype: 'json' }).trigger('reloadGrid');
         },
     });
     }
@@ -103,7 +134,7 @@
    function GetGrid1() {
        $("#gridTable_Bottom").jqGrid({
         datatype: "json",
-           height: 280,
+           height: $(window).height() * 0.5 - 172,
         autowidth: true,
         colModel: [
                 { label: '主键', name: 'AVIWhereId', index: 'AVIWhereId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -114,26 +145,27 @@
             { label: '去向AVI站点编号', name: 'ToAVICd', index: 'ToAVICd', width: 0, align: 'center', sortable: true },
             { label: '去向AVI站点名称', name: 'ToAVINm', index: 'ToAVINm', width: 0, align: 'center', sortable: true },
             {
-                label: 'AVI站点是否独立', name: 'IsIndependence', index: 'IsIndependence', width: 0, align: 'center', sortable: true,
+                label: '去向AVI站点是否独立', name: 'IsIndependence', index: 'IsIndependence', width: 0, align: 'center', sortable: true,
                 formatter: function (cellvalue, options, rowObject) {
                     if (cellvalue == '1') return "是";
                     if (cellvalue == '0') return "否";
+                    else return "";
                 } },
                 { label: '去向AVI站点顺序', name: 'ToAVISequence', index: 'ToAVISequence', width: 0, align: 'center', sortable: true },
                 { label: '去向产线主键', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '去向产线编号', name: 'PlineCd', index: 'PlineCd', width: 0, align: 'center', sortable: true },
-                { label: '去向产线名称', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true },
+            { label: '去向产线编号', name: 'PlineCd', index: 'ToPlineCd', width: 0, align: 'center', sortable: true },
+            { label: '去向产线名称', name: 'PlineNm', index: 'ToPlineNm', width: 0, align: 'center', sortable: true },
                 {
-                label: '去向产线标识', name: 'PlineMark', index: 'PlineMark', width: 0, align: 'center', sortable: true,
+                    label: '去向产线标识', name: 'PlineMark', index: 'PlineMark', width: 0, align: 'center', sortable: true,
                 formatter: function (cellvalue, options, rowObject) {
                     if (cellvalue == null) return "";
                     else return cellvalue;
                     }
-                 },
-                { label: '队列差', name: 'Queue', index: 'Queue', width: 0, align: 'center', sortable: true },
+            },
+            { label: '队列差', name: 'Queue', index: 'Queue', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
                 {
-                      label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,hidden: true,
                       formatter: function (cellvalue, options, rowObject) {
                           if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
                           if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
@@ -145,17 +177,20 @@
                 { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem0', index: 'Rem0', width: 0, align: 'center', sortable: true },
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
             ],
            pager: "#gridPager_Bottom",
            sortname: '',
            sortorder: 'desc',
-           rownumbers: true,
-           shrinkToFit: false,
            gridview: true,
-
+           rownumbers: true,//启用记录条数
+           rowList: [200, 100, 500, 1000],//记录条数列表
+           viewrecords: true,//显示总的记录条数
+           rownumWidth: 45,//序号列宽
+           shrinkToFit: true,//列宽自适应
+           loadonce: true,//排序
     });
     }
 
@@ -163,7 +198,7 @@
     function GetGrid2() {
         $("#gridTable2").jqGrid({
             datatype: "json",
-            height: 280,
+            height: $(window).height() * 0.5 - 172,
             autowidth: true,
             colModel: [
                 { label: '规则主键', name: 'SchedulRuleId', index: 'SchedulRuleId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -183,23 +218,27 @@
                         else if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
                     }
                 },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true},
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true},
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true},
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
             ],
             pager: "#gridPager2",
             sortname: '',
             sortorder: 'desc',
-            rownumbers: true,
-            shrinkToFit: false,
             gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
         });
     }
     //加载AVI站点行为配置信息表
@@ -223,8 +262,8 @@
                         return CellItem('AviAction', cellvalue);
                     }
                 },
-                { label: '行为地址', name: 'AviAddr', index: 'AviAddr', width: 0, align: 'center', sortable: true },
-                
+                { label: '行为地址', name: 'AviAddr', index: 'AviAddr', width:500, align: 'center', sortable: true },
+
                 {
                     label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
                     formatter: function (cellvalue, options, rowObject) {
@@ -232,13 +271,13 @@
                         else if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
                     }
                 },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true},
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true},
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true},
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true},
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
                 { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
@@ -246,9 +285,13 @@
             pager: "#gridPager3",
             sortname: '',
             sortorder: 'desc',
-            rownumbers: true,
-            shrinkToFit: false,
             gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
         });
     }
 
@@ -313,7 +356,7 @@
         var AVIWhereId = GetJqGridRowValue("#gridTable_Bottom", "AVIWhereId");
         if (IsChecked(AVIWhereId)) {
             var url = "/BaseModule/BBdbR_AVIBase/AVIMarkForm?KeyValue=" + AVIWhereId;
-            openDialog(url, "Form", "AVI站点去向标识配置", 500, 300, function (iframe) {
+            openDialog(url, "Form", "产线去向标识配置", 500, 300, function (iframe) {
                 top.frames[iframe].AcceptClick();
             });
         }
@@ -333,14 +376,58 @@
     function btn_ActionConfig() {
         var AviId = GetJqGridRowValue("#gridTable", "AviId");
         var AviCd = GetJqGridRowValue("#gridTable", "AviCd");
-        var AviActionConfigId = GetJqGridRowValue("#gridTableAction", "AviActionConfigId"); 
-        
+        var AviActionConfigId = GetJqGridRowValue("#gridTableAction", "AviActionConfigId");
+
         if (IsChecked(AviId)) {
             var url = "/BaseModule/BBdbR_AVIBase/AVIActionForm?KeyValue=" + AviId + "&AviCd=" + AviCd + "&AviActionConfigId=" + AviActionConfigId;
             openDialog(url, "Form", "AVI站点行为配置", 500, 300, function (iframe) {
                 top.frames[iframe].AcceptClick();
             });
         }
+    }
+
+    //导入
+    function btn_import() {
+        openDialog("/BaseModule/BBdbR_AVIBase/ExcelImportDialog", "ExcelImportDialog", "设备信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //导出
+    //function btn_derive() {
+    //    count = $("#gridTable").getGridParam("records");
+    //    if (count == 0) {
+    //        tipDialog("没有要导出的信息！", 1.5, 0);
+    //        return;
+    //    } else {
+    //        SetDeriveExcel("#gridTable", "AVI基本信息" + formatDate(CurrentTime(), 'yyyyMMdd'));
+    //        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "AVI信息导出", 600, 300, function (iframe) {
+    //            top.frames[iframe].AcceptClick();
+    //        });
+    //    }
+    //}
+
+     //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var AviCd = $("#AviCd").val();
+        var AviNm = $("#AviNm").val();
+        var AviType = $("#AviType").val();
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_AVIBase/GetExcel_Data?AviCd=" + escape(AviCd) + "&AviNm=" + escape(AviNm) + "&AviType=" + escape(AviType);
+                Loading(false);
+            }, 200);
+        }
+       
     }
 
     //加载搜索框
@@ -350,7 +437,7 @@
             $("#AviType").hide();
             $("#keywords").hide();
         }
-        
+
         else if (Condition == "AviType") {
             $("#AviType").show();
             $("#keywords").hide();
@@ -360,19 +447,17 @@
             $("#keywords").show();
         }
     }
+
+
+
+
     //搜索
     function btn_Search() {
-        var Condition = $("#Condition").val();
-        var keywords;
-        
-        if (Condition == "AviType") {
-            keywords = $("#AviType").val();
-        }
-        else{
-            keywords = $("#keywords").val();
-        }
+        postData.AviCd = $("#AviCd").val();
+        postData.AviNm = $("#AviNm").val();
+        postData.AviType = $("#AviType").val();
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_AVIBase/GridPageByCondition")", postData: postData, datatype: 'json'
     }).trigger('reloadGrid');
     }
     $(document).keypress(function (e) {
@@ -383,8 +468,13 @@
     });
     //刷新
     function windowload() {
-        //$("#gridTable").trigger("reloadGrid"); //重新载入
-        location = location;
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable_Bottom").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTableAction").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        //$("#gridTable_Bottom").trigger("reloadGrid"); //重新载入gridTable
+        //$("#gridTable2").trigger("reloadGrid"); //重新载入
+        //$("#gridTableAction").trigger("reloadGrid"); //重新载入
     }
 
     //根据数据字典显示内容
@@ -401,89 +491,16 @@
         return value;
     }
 </script>
-<!--工具栏-->
-@*<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
-    <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
-        <div class="PartialButton">
-            @Html.Partial("_PartialButton")
-        </div>
-    </div>*@
-
-    @*搜索框区域*@
-    @*<table border="0" class="form-find" style="height: 45px;">
-        <tr>
-            <th>关键字：</th>
-            <td>
-                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
-                    <option value="all">==全部==</option>
-                    <option value="AviCd">AVI站点编号</option>
-                    <option value="AviNm">AVI站点名称</option>
-                    <option value="AviCatg">AVI站点类别</option>
-                    <option value="AviType">AVI站点类型</option>
-                </select>
-            </td>
-            <td>
-                <input id="keywords" type="text" class="txt" style="width: 150px" />
-            </td>
-            <td>
-                <select id="AviCatg" style="width: 150px;height:25px" onclick="btn_Search()"></select>
-
-            </td>
-            <td>
-                <select id="AviType" style="width: 150px;height:25px" onclick="btn_Search()"></select>
-
-            </td>
-            <td>
-                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
-            </td>
-        </tr>
-    </table>*@
-
-    @*上表格区域*@
-    @*<div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    AVI站点信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                </div>
-            </div>
-        </div>
+    <!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
     </div>
-
-    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px;">
-                    AVI去向配置信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 40%; width:auto;">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager_Bottom"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-
+</div>
 <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
-    @*按钮区域*@
-    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
-        <div class="PartialButton">
-            @Html.Partial("_PartialButton")
-        </div>
-    </div>
-    @*搜索框区域*@
-    <table border="0" class="form-find" style="height: 40px;">
+    <table border="0" class="form-find" style="height: 45px;">
         <tr>
-            <th>关键字：</th>
+            @*<th>关键字：</th>
             <td>
                 <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
                     <option value="all">==全部==</option>
@@ -494,65 +511,56 @@
             </td>
             <td>
                 <input id="keywords" type="text" class="txt" style="width: 150px" />
-            </td>
+            </td>*@
+
+            <th>AVI站点编号：</th>
             <td>
-                <select id="AviCatg" style="width: 150px;height:25px" onclick="btn_Search()"></select>
+                <input id="AviCd" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>AVI站点名称：</th>
+            <td>
+                <input id="AviNm" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>AVI站点类型：</th>
+            <td>
+                <select id="AviType" style="width: 150px;height:25px"></select>
 
             </td>
-            <td>
-                <select id="AviType" style="width: 150px;height:25px" onclick="btn_Search()"></select>
 
-            </td>
             <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
             </td>
         </tr>
     </table>
-    @*表格区域*@
-    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    AVI站点信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="bd" style="border-bottom: none; margin: 1px;">
-                <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
-                    <div class="tab_list_top" style="position: absolute">
-                        <div id="Tabcheck1" class="tab_list bd actived" onclick="Tabchange('check1')"> AVI去向配置信息 </div>
-                        <div id="Tabcheck2" class="tab_list bd " onclick="Tabchange('check2')">AVI车身调度规则配置信息</div>
-                        <div id="Tabcheck3" class="tab_list bd " onclick="Tabchange('check3')">AVI站点行为配置信息</div>
-                    </div>
-                </div>
-            </div>
-            <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
-                <!--配置班组信息-->
-                <div id="check1" class="tabPanel">
-                    <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager_Bottom"></div>
-                </div>
-                <!--配置人员信息-->
-                <div id="check2" class="tabPanel">
-                    <table id="gridTable2" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager2"></div>
-                </div>
-                <!--配置站点行为-->
-                <div id="check3" class="tabPanel">
-                    <table id="gridTableAction" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager3"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+    <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+        <div class="btnbartitle">
+            <div style="float: left;margin-left:22px">
+                AVI去向配置信息 <span class="ModuleName"></span>
+            </div>
+        </div>
+        <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+            <!--配置班组信息-->
+            <div id="check1" class="tabPanel">
+                <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
+                <div id="gridPager_Bottom"></div>
+            </div>
+            <!--配置人员信息-->
+            <!--<div id="check2" class="tabPanel">
+                <table id="gridTable2" class="ui-jqgrid tr.jqgrow td"></table>
+                <div id="gridPager2"></div>
+            </div>-->
+            <!--配置站点行为-->
+            <!--<div id="check3" class="tabPanel">
+                <table id="gridTableAction" class="ui-jqgrid tr.jqgrow td"></table>
+                <div id="gridPager3"></div>
+            </div>-->
+        </div>
+    </div>
 

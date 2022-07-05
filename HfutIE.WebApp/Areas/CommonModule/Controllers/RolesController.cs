@@ -73,7 +73,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                 else
                 {
                     entity.Create();
-                    entity.CompanyId = "b54a89ff-090f-4c9a-96d3-b7545f11265a";
+                    //entity.CompanyId = "b54a89ff-090f-4c9a-96d3-b7545f11265a";
                     database.Insert(entity, isOpenTrans);
                     Base_DataScopePermissionBll.Instance.AddScopeDefault(ModuleId, ManageProvider.Provider.Current().UserId, entity.RoleId, "2", isOpenTrans);
                 }

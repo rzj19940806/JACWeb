@@ -5,6 +5,7 @@
 <script type="text/javascript">
     $(function () {
         GetGrid();
+        Show();
     })
     //¼ÓÔØ±í¸ñ
     function GetGrid() {
@@ -99,10 +100,9 @@
     //ËÑË÷
     function btn_Search() {
         var Condition = $("#Condition").val();
-        var keywords;
-            keywords = $("#keywords").val();
+        var keywords = $("#keywords").val();            
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_CntlAddrConf/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
+            url: "@Url.Content("~/BaseModule/BBdbR_CntlAddrConf/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
     }).trigger('reloadGrid');
     }
 

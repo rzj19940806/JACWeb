@@ -41,7 +41,7 @@ namespace HfutIE.Business
                             UNION
                             SELECT WcCd AS ID, WcNm AS name,WcCd AS code, c.PlineId AS parentid, '1' AS sort
                             FROM BBdbR_WcBase a, BBdbR_PlineBase c
-                            WHERE a.PlineId = c.PlineId");
+                            WHERE a.PlineId = c.PlineId and a.Enabled ='1' and c.Enabled = '1'");
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion
@@ -95,7 +95,7 @@ namespace HfutIE.Business
         /// <returns>返回的是搜索的表中包含该字段值的记录条数</returns>
         public int CheckCount(string KeyName, string KeyValue)
         {
-            string sql = @"select * from " + tableName + " where Enabled = '1' and'" + KeyName + "' = '" + KeyValue + "'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' and " + KeyName + " = '" + KeyValue + "'";
             DataTable count = Repository().FindTableBySql(sql);
             int a = count.Rows.Count;
             return a;

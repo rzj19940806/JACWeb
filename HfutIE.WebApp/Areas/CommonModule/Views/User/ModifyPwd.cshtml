@@ -1,0 +1,156 @@
+﻿@{
+    ViewBag.Title = "登录时修改密码";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script src="~/Content/Scripts/jquery/jQuery.md5.js"></script>
+<script>
+    var KeyValue = '@HfutIE.Utilities.ManageProvider.Provider.Current().UserId';
+    var ObjectId = '@HfutIE.Utilities.ManageProvider.Provider.Current().ObjectId';
+    /*基本信息begin=====================================*/
+    $(function () {
+        Tabchange('EditPassword');
+    })
+    
+    /*修改密码begin================================*/
+    var chePassword = true;
+    var cheNewPassword = true;
+    var recheNewPassword = true;
+    $(function () {
+        $("#OldPassword").blur(function () {
+            $("#OldPassword").parent().next().html("");
+            if ($(this).val() == "") {
+                return false;
+            }
+            AjaxJson("/CommonModule/User/ValidationOldPassword", { OldPassword: $(this).val() }, function (data) {
+                if (data.Code > 0) {
+                    $("#OldPassword").parent().next().html("<div class=\"form-succeed-text\">" + data.Message + "</div>");
+                    chePassword = true;
+                } else {
+                    $("#OldPassword").parent().next().html("<div class=\"form-error-text\">" + data.Message + "</div>");
+                    chePassword = false;
+                }
+            });
+        });
+        $("#NewPassword").blur(function () {
+            $("#NewPassword").parent().next().html("");
+            if ($(this).val() == "") {
+                return false;
+            }
+            var newpwd = $(this).val();
+            AjaxJson("/CommonModule/User/ValidationNewPassword", { NewPassword: $(this).val() }, function (data) {
+                if (data.Code == 1) {
+                    $("#NewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>");
+                    cheNewPassword = true;
+                } else if (data.Code == 0) {
+                    $("#NewPassword").parent().next().html("<div class=\"form-error-text\">" + data.Message + "</div>");
+                    cheNewPassword = false;
+                } else {
+                    $("#NewPassword").parent().next().html("<div class=\"form-error-text\">新密码不能与旧密码相同</div>");
+                    cheNewPassword = false;
+                }
+            });
+        });
+        $("#ConfirmNewPassword").blur(function () {
+            $("#ConfirmNewPassword").parent().next().html("")
+            if ($(this).val() == "") {
+                return false;
+            }
+            if ($(this).val() != $("#NewPassword").val()) {
+                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">您两次输入的密码不一致！</div>");
+                recheNewPassword = false;
+            } else {
+                $("#ConfirmNewPassword").parent().next().html("<div class=\"form-succeed-text\"></div>");
+                recheNewPassword = true;
+            }
+        });
+    })
+    //修改密码
+    function EditPassword() {
+        var OldPassword = $("#OldPassword").val();
+        var NewPassword = $("#NewPassword").val();
+        var ConfirmNewPassword = $("#ConfirmNewPassword").val();
+        if (OldPassword == "") {
+            $("#OldPassword").parent().next().html("<div class=\"form-error-text\">请输入您的登陆密码</div>");
+            return false;
+        }
+        if (NewPassword == "") {
+            $("#NewPassword").parent().next().html("<div class=\"form-error-text\">请输入新密码</div>");
+            return false;
+        }
+        if (ConfirmNewPassword == "") {
+            $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">请再输入一遍密码</div>");
+            return false;
+        }
+        if (!chePassword) {
+            return false;
+        }
+        if (!cheNewPassword) {
+            $("#NewPassword").parent().next().html("<div class=\"form-error-text\">请重新输入新密码</div>");
+            return false;
+        }
+        if (!recheNewPassword) {
+            $("#ConfirmNewPassword").parent().next().html("<div class=\"form-error-text\">请再输入一遍密码</div>");
+            return false;
+        }
+        if (confirm('注：请牢记当前设置密码，您确认要修改密码？')) {
+            Loading(true, "正在提交数据...");
+            window.setTimeout(function () {
+                var postData = {
+                    KeyValue: KeyValue,
+                    Password: $.md5($("#NewPassword").val())
+                }
+                AjaxJson("/CommonModule/User/ResetPasswordSubmit", postData, function (data) {
+                    alert(data.Message)
+                    window.top.location.href = "/Login/Index";
+                });
+            }, 200);
+        }
+    }
+    /*修改密码end================================*/
+</script>
+
+<div class="bd" style="border-bottom: none; margin: 1px;">
+    <div id="tips_form" class="note-prompt" style="margin: 1px;">
+        温馨提示：如密码为初始密码或密码长时间未修改，为保证账号安全请修改密码
+    </div>
+    <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+        <div class="tab_list_top" style="position: absolute">
+            <div id="TabEditPassword" class="tab_list bd " onclick="Tabchange('EditPassword')">修改密码</div>
+        </div>
+    </div>
+</div>
+@* id是tab的id，onclick方法是下面的div的id的切换 *@
+<div class="ScrollBar" style="margin: 1px">
+    <!--修改密码-->
+    <div id="EditPassword" class="tabPanel" style="display: none; margin: 20px;margin-top:10px;">
+        <table style="width: 680px">
+            <tr>
+                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">原密码：</td>
+                <td class="bottomdashed" style="width: 200px;">
+                    <input id="OldPassword" type="password" class="keyword" style="width: 200px;" />
+                </td>
+                <td class="bottomdashed"></td>
+            </tr>
+            <tr>
+                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">新密码：</td>
+                <td class="bottomdashed" style="width: 200px;">
+                    <input id="NewPassword" type="password" class="keyword" style="width: 200px;" />
+                </td>
+                <td class="bottomdashed"></td>
+            </tr>
+            <tr>
+                <td class="bottomdashed" style="width: 13%; text-align: right; line-height: 35px;">确认新密码：</td>
+                <td class="bottomdashed" style="width: 200px;">
+                    <input id="ConfirmNewPassword" type="password" class="keyword" style="width: 200px;" />
+                </td>
+                <td class="bottomdashed"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="line-height: 35px; text-align: center;">
+                    <input id="btnSearch" type="button" class="btnSearch" value="确认修改" onclick="EditPassword()" />
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>

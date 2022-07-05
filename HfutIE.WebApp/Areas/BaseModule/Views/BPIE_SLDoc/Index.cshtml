@@ -1,0 +1,284 @@
+@{
+    ViewBag.Title = "停线日志表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        //BindDropItem("#AviType", "AviType", "==全部==");
+        GetGrid();
+        Show();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        @*url: "@Url.Content("~/BaseModule/BPIE_SLDoc/GridPageJson1")",*@
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '记录主键', name: 'RecId', index: 'RecId', width: 0, align: 'center',sortable: true ,hidden: true },
+            { label: '产线主键', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true,hidden: true },
+                { label: '产线名称', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center',sortable: true  },
+                
+                { label: '停线状态', name: 'State', index: 'State', width: 0, align: 'center',sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') return "恢复";
+                        if (cellvalue == '1') return "停线";
+                }  },
+                { label: '停线来源', name: 'SLSource', index: 'SLSource', width: 0, align: 'center',sortable: true,hidden: true  },
+                
+                { label: '停线开始时间', name: 'SLStrtTm', index: 'SLStrtTm', width: 0, align: 'center',sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd');
+                }
+            },
+                { label: '停线结束时间', name: 'SLCmplTm', index: 'SLCmplTm', width: 0, align: 'center',sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd');
+                }
+            },
+            { label: '持续时间', name: 'SLContTm', index: 'SLContTm', width: 0, align: 'center', sortable: true },
+            
+           
+                 {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 60, align: 'center', 
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+            },
+                 
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'asc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+        loadonce: true,
+        rowNum: 200,
+        rowList: [200, 500, 1000, 2000],
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+    //天数差
+    function daysBetween(DateOne, DateTwo) {
+        let OneMonth = DateOne.substring(5, DateOne.lastIndexOf('-'));
+        let OneDay = DateOne.substring(DateOne.length, DateOne.lastIndexOf('-') + 1);
+        let OneYear = DateOne.substring(0, DateOne.indexOf('-'));
+
+        let TwoMonth = DateTwo.substring(5, DateTwo.lastIndexOf('-'));
+        let TwoDay = DateTwo.substring(DateTwo.length, DateTwo.lastIndexOf('-') + 1);
+        let TwoYear = DateTwo.substring(0, DateTwo.indexOf('-'));
+
+        let cha = ((Date.parse(OneMonth + '/' + OneDay + '/' + OneYear) - Date.parse(TwoMonth + '/' + TwoDay + '/' + TwoYear)) / 86400000);
+        //return Math.abs(cha);
+        return cha
+    }
+//搜索
+    function btn_Search() {
+        let time0 = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
+        let TimeStart = $('#TimeStart').val();
+        let TimeEnd = $('#TimeEnd').val();
+
+        let tStart = TimeStart.slice(0, 10);
+        let tEnd = TimeEnd.slice(0, 10);
+
+        let time1 = new Date(TimeStart).getTime();
+        let time2 = new Date(TimeEnd).getTime();
+
+        let t1 = daysBetween(tEnd, tStart);
+        let t2 = daysBetween(tStart, time0);
+        let t3 = daysBetween(tEnd, time0);
+
+        let keywords = $('#keywords').val();
+        let Condition = $('#Condition').val();
+
+        if (time1 > time2 || TimeStart == '' || TimeEnd == '') {
+            tipDialog("时间不合法，请重新操作！", 1, 0);
+            return;
+        } else if (Condition == 'AviCd' && keywords == '') {
+            tipDialog("请输入AVI站点编号！", 1.5, 0);
+            return;
+        } else if (Condition == 'AviNm' && keywords == '') {
+            tipDialog("请输入AVI站点名称！", 1.5, 0);
+            return;
+        } else if (Condition == 'BodyNo' && keywords == '') {
+            tipDialog("请输入车身号！", 1.5, 0);
+        }
+        else
+        {
+          $("#gridTable").jqGrid('setGridParam', {
+           url: "@Url.Content("~/BaseModule/BPIE_SLDoc/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition) + "&TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd), page: 1, datatype: 'json'
+          }).trigger('reloadGrid');
+        }
+    }                    
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //加载搜索框
+    function Show() {
+        let Condition = $('#Condition').val();
+        if (Condition == 'all') {
+            $('#keywords').hide();
+        } else {
+            $('#keywords').show();
+        }
+    }
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+
+         var SearchInfoJson = {};//存储条件集合
+
+    //高级检索
+    function doSearch(d, a) {
+        for (var key in SearchInfoJson) {//清空全局变量
+            delete SearchInfoJson[key];
+        }
+        var max =parseInt(ge("txt_i").value)//最大条件数
+        for(var i=1;i<=max;i++){//遍历所有条件
+            var id = "txt" + "_" + i;//id
+            var RowJson = {};//存储单条件
+            var c = ge(id);
+            if (c) {
+                if (c.style.display != "none") {//该条件当前正在使用
+                    var mykeyword = ge(id + "_value1").value.trim();
+                    if (mykeyword == undefined || mykeyword == "" || mykeyword == 'null' || mykeyword == 'undefined') {
+                        tipDialog("查询的所有条件必须输入关键字！", 2, -3);
+                        return
+                    }
+                    else{
+                        RowJson["Condition"] = ge(id + "_sel").value;
+                        if (i == 1) {
+                            RowJson["AndOr"] = "And";//第一个条件为And
+                        }
+                        else {
+                            RowJson["AndOr"] = ge(id + "_logical").value;
+                        }
+                        RowJson["Keywords"] = mykeyword;
+                        RowJson["ExpressExtension"] = ge(id + "_special1").value;
+                        SearchInfoJson[i] = RowJson;//通过循环将条件拼接成json
+                    }
+                }
+            }
+        }
+        var StartTime = $("#start_date").val();
+        var EndTime = $("#end_date").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BPIE_SLDoc/GridListJson2")?keyvalue=" + JSON.stringify(SearchInfoJson) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        $("#CenterTitle").html("");
+    }
+
+    //根据搜索条件改变样式
+    function GetCondition(id) {
+        var Condition = $("#" + id).val();
+        var reg = eval("/_sel/g");
+        var newid = id.replace(reg, '_value1');
+        $("#" + newid).remove();
+        if (Condition == "State") {
+            $("#" + id).after("<select id=" + newid + " style='height:27px;width:174px;margin-left:6px;'></select>");
+            /*     $("#" + newid).append($("<option></option>").val("MES调整出库").html("MES调整出库"));*/
+            //AjaxJson("/BaseModule/BPIE_SLDoc/GetDeviceNm", {}, function (data) {
+                //for (var i = 0; i < data.rows.length; i++) {
+            $("#" + newid).append("<option value='0' >恢复</option>");
+            $("#" + newid).append("<option value='1' >停线</option>");
+            //    }
+            //});
+        }
+        else {
+            $("#" + id).after("<input id=" + newid + " type='text' style='width:170px;border:1px,solid #ccc;height:24px;margin-left:6px;'/>");
+        }
+    }
+
+</script>
+<div class="searchCol">
+    <dl id="searchdiv">
+        <dd class="divsearch" id="ddSubmit" name="ddSubmit" style="width:1600px;">
+            <b class="c7">输入检索条件：</b>
+            <table id="txt">
+                <input id="txt_i" value="1" type="hidden" name="txt_i" />
+                @*当前最大的条件数目*@
+                <input id="txt_c" value="4" type="hidden" name="txt_c" />
+                @*最多添加的条件数目*@
+                <tr id="hidden_logical_txt" style="display:none">
+                    @*条件之间的关联逻辑*@
+                    <td>
+                        <select id="{key}_logical" name="{key}_logical" style="height: 28px;width: 150px">
+                            <option value="And" selected="">并且</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="txt_1">
+                    <td>
+                        <a class="aomBtn" href="javascript:AddRowEx('txt', 'txt_i', 'txt_c');">
+                            @*条件的添加和移除*@
+                            <img src="~/Content/Images/add.png" border="0" />
+                        </a>
+                        <a class="aomBtn" href="javascript:DeleteRowSaveID('txt', 'txt_i');" style="margin-left:110px">
+                            <img src="~/Content/Images/remove.png" border="0" />
+                        </a>
+                    </td>
+                    <td style="font-size:18px">
+                        (
+                        <select id="txt_1_sel" name="txt_1_sel" style="height: 28px;width: 150px" onchange="GetCondition(this.id)">
+                            <option value="PlineNm">产线名称</option>
+                            <option value="State">停线状态</option>
+                        </select>
+                        <input value="" id="txt_1_value1" name="txt_1_value1" style="width: 170px;height: 24px;" />
+                        <select id="txt_1_special1" name="txt_1_special1" style="height: 28px;width: 150px">
+                            <option value='=' selected=''>精确</option>
+                            <option value='like'>模糊</option>
+                        </select>
+                        )
+                    </td>
+                </tr>
+            @*<tr>
+                <td id="timetd">
+                <label>开始时间：</label>
+                <input id="TimeStart" type="text" class="txt" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="@DateTime.Now.Date.ToString("yyyy-MM-dd  HH:mm:ss")" readonly />
+                <label>结束时间：</label>
+                <input id="TimeEnd" type="text" class="txt" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="@DateTime.Now.Date.AddHours(24).ToString("yyyy-MM-dd  HH:mm:ss")" readonly />
+            </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>*@
+            </table>
+            <a class="c6">开始时间：</a>
+            <input id="start_date" maxlength=16 type="text" style="border:1px solid #ccc" class="txt Wdate" value="@DateTime.Now.ToShortDateString()" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" />
+            <a class="c6" style="margin-left:225px">结束时间：</a>
+            <input id="end_date" maxlength=16 type="text" style="border:1px solid #ccc" class="txt Wdate" value="@DateTime.Now.ToShortDateString()" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" />
+            <div>
+                <input type="button" id="btnSearch" class="btnSearch" style="margin-left:720px" value="检 索" onclick="doSearch()" />          
+            </div>
+        </dd>
+    </dl>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

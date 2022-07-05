@@ -19,8 +19,8 @@
         autowidth: true,
         colModel: [
                 { label: '主键ID', name: 'FaultId', index: 'FaultId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '故障编号', name: 'FaultCd', index: 'FaultCd', width: 200, align: 'center', sortable: true },
-                { label: '故障名称', name: 'FaultNm', index: 'FaultNm', width: 0, align: 'center', sortable: true },
+                { label: '故障编号', name: 'FaultCd', index: 'FaultCd', width: 150, align: 'center', sortable: true },
+                { label: '故障名称', name: 'FaultNm', index: 'FaultNm', width: 200, align: 'center', sortable: true },
                 { label: '故障类别', name: 'FaultCatg', index: 'FaultCatg', width: 0, align: 'center', sortable: true,
                     formatter: function (cellvalue, options, rowObject) {
                         return CellItem('FaultCatg', cellvalue);
@@ -34,19 +34,19 @@
                 { label: '故障代码', name: 'FaultCode', index: 'FaultCode', width: 0, align: 'center', sortable: true },
                 { label: '描述', name: 'Dsc', index: 'Dsc', width: 280, align: 'center', sortable: true },
                 {
-                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 150, align: 'center', sortable: true,
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 150, align: 'center', sortable: true, hidden: true ,
                        formatter: function (cellvalue, options, rowObject) {
                            if (cellvalue == '1') return "有效";
                            if (cellvalue == '0') return "无效";
                        }
                 },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true},
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
                 { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true},
                 { label: '备注', name: 'Rem', index: 'Rem', width: 150, align: 'center', sortable: true },
         ],
         viewrecords: true,//显示总的记录条数

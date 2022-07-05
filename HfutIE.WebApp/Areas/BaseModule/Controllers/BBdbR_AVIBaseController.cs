@@ -1,12 +1,16 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,6 +18,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 {
     public class BBdbR_AVIBaseController : PublicController<BBdbR_AVIBase>
     {
+        #region 全局变量定义区
+        //定义本页面主要操作的表的表名，称为主表
+        string tableName = "BBdbR_AVIBase";
+        public static DataTable AviList = new DataTable();
+        #endregion
+
         #region 创建数据库操作对象区域
         //创建数据库访问对象，用以访问其中操作数据库的方法
         BBdbR_AVIBaseBll MyBll = new BBdbR_AVIBaseBll(); //===复制时需要修改===
@@ -48,28 +58,28 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #region 方法区  
 
         #region 1.加载表格数据
-        /// <summary>
-        /// 加载列表
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult GridPageJson1()
-        {
-            try
-            {
-                DataTable ListData = MyBll.GetPlanList();
-                var JsonData = new
-                {
-                    rows = ListData,
-                };
-                string a = JsonData.ToJson();
+        ///// <summary>
+        ///// 加载列表
+        ///// </summary>
+        ///// <returns></returns>
+        //public ActionResult GridPageJson1()
+        //{
+        //    try
+        //    {
+        //        DataTable ListData = MyBll.GetPlanList();
+        //        var JsonData = new
+        //        {
+        //            rows = ListData,
+        //        };
+        //        string a = JsonData.ToJson();
                 
-                return Content(JsonData.ToJson());
-            }
-            catch (Exception ex)
-            {
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
-            }
-        }
+        //        return Content(JsonData.ToJson());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+        //    }
+        //}
 
         #endregion
 
@@ -170,13 +180,9 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 var Message = "删除失败。";//定义返回信息，该信息将返回到界面上，给用户观看
                 int IsOk = 0;//判断删除方法是否成，0表示不成功，大于0表示成功                  
-                //IsOk = MyBll.Delete(array);//执行删除操作
-
-                //直接删除
                 if (array != null && array.Length > 0)
                 {
-                    IsOk=MyBll.Delete(array);
-                   
+                    IsOk=MyBll.Delete(array);            
                 }
                 if (IsOk > 0)//表示删除成
                 {
@@ -199,27 +205,81 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string AviCd, string AviNm,string AviType, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region 原方法
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                ////DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //AviList = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = AviList,
+                //};
+                //return Content(AviList.ToJson());
+                #endregion
+
+                #region 修改后查询
                 Stopwatch watch = CommonHelper.TimerStart();
-                List<BBdbR_AVIBase> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select a.*,b.PlineNm from BBdbR_AVIBase a left join BBdbR_PlineBase b on a.PlineId=b.PlineId  where a.Enabled = '1' ");
+                #region 判断输入框内容添加检索条件
+                List<DbParameter> parameter = new List<DbParameter>();
+                //是否加AviCd模糊搜索
+                if (AviCd != "" && AviCd != null)
+                {
+                    //strSql.Append(" and AviCd like '%" + AviCd + "%'");
+                    strSql.Append(" and AviCd like @AviCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviCd", "%" + AviCd + "%"));
+                }
+                else { }
+
+                //是否加AviNm模糊搜索
+                if (AviNm != "" && AviNm != null)
+                {
+                    //strSql.Append(" and AviNm like '%" + AviNm + "%'");
+                    strSql.Append(" and AviNm like @AviNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviNm", "%" + AviNm + "%"));
+                }
+                else { }
+
+                //是否加计划状态搜索
+                if (AviType != "" && AviType != null)
+                {
+                    //strSql.Append(" and AviType = '" + AviType + "'");
+                    strSql.Append(" and AviType = @AviType ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviType", AviType));
+                }
+                else { }
+                #endregion
+
+                //按照AVI编号排序
+                strSql.Append(" order by AVISequence ");
+                
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "AVI基础信息查询成功");
+                return Content(JsonData.ToJson());
+
+
+                #endregion
             }
             catch (Exception ex)
             {
-                //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "AVI基础信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -294,8 +354,6 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     //===复制时需要修改===                  
                     entity.Modify(KeyValue);
-                    entity.RsvFld1 = "";
-                    entity.RsvFld2 = "";
                     IsOk = AVIWhereaboutsConfigBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     if (IsOk > 0)
                     {
@@ -752,6 +810,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
             }
         }
+
         #endregion
 
         #endregion
@@ -800,6 +859,413 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
 
         #endregion
+
+
+        #region 13.导入
+        /// <summary>
+        /// 导入Excel弹出框页面
+        /// </summary>
+        /// <returns></returns>
+        [ManagerPermission(PermissionMode.Enforce)]
+        public ActionResult ExcelImportDialog()
+        {
+            string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
+            //模板主表
+            Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
+            if (base_excellimport.ModuleId != null)
+            {
+                ViewBag.ModuleId = moduleId;
+                ViewBag.ImportFileName = base_excellimport.ImportFileName;
+                ViewBag.ImportName = base_excellimport.ImportName;
+                ViewBag.ImportId = base_excellimport.ImportId;
+            }
+            else
+            {
+                ViewBag.ModuleId = "0";
+            }
+            return View();
+        }
+        /// <summary>
+        /// 导入Excell数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ImportExel()
+        {
+            int IsOk = 0;//导入状态
+            int IsCheck = 1;//用作检验重复地址的标识
+            DataTable Result = new DataTable();//导入错误记录表
+            IDatabase database = DataFactory.Database();
+            List<BBdbR_AVIBase> BFacRShiftBaseList = new List<BBdbR_AVIBase>();
+
+            //构造导入返回结果表
+            DataTable Newdt = new DataTable("Result");
+            Newdt.Columns.Add("rowid", typeof(System.String));                 //行号
+            Newdt.Columns.Add("locate", typeof(System.String));                 //位置
+            Newdt.Columns.Add("reason", typeof(System.String));                 //原因
+            int errorNum = 1;
+            try
+            {
+                string moduleId = Request["moduleId"]; //表名
+                StringBuilder sb_table = new StringBuilder();
+                HttpFileCollectionBase files = Request.Files;
+                HttpPostedFileBase file = files["filePath"];//获取上传的文件
+                if (file != null)
+                {
+                    string fullname = file.FileName;
+                    string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtension获得文件的扩展名
+                    if (!IsXls.EndsWith(".xls") && !IsXls.EndsWith(".xlsx"))
+                    {
+                        IsOk = 0;
+                    }
+                    else
+                    {
+
+                        string filename = Guid.NewGuid().ToString() + ".xls";
+                        if (fullname.EndsWith(".xlsx"))
+                        {
+                            filename = Guid.NewGuid().ToString() + ".xlsx";
+                        }
+                        if (file != null && file.FileName != "")
+                        {
+                            string msg = UploadHelper.FileUpload(file, Server.MapPath("~/Resource/UploadFile/ImportExcel/"), filename);
+                        }
+
+                        DataTable dt = ImportExcel.ExcelToDataTable(Server.MapPath("~/Resource/UploadFile/ImportExcel/") + filename);
+
+                        RemoveEmpty(dt);//清除空行。???=>20210712注：方法是否真的有用？void返回对dt未生效
+                        dt.Columns.Add("rowid", typeof(System.String));//用来标识excell行ID
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            dt.Rows[i]["rowid"] = i + 1;
+                        }
+                        #region AVI站点基本信息导入
+                        //校验
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+
+                            IsCheck = 1;//重置标识
+                            DataRow dr = Newdt.NewRow();
+                            string IsMonitor = "";  //是否需要关键视频监控
+                            string IsRePeated = ""; //是否允许重复过点
+                            string IsIndependence = ""; //AVI站点是否独立
+                            string IsStranded = ""; //是否滞留管理
+                            string StrandedCategory = ""; //滞留管理类别
+                            switch (dt.Rows[i]["是否需要关键视频监控"].ToString())
+                            {
+                                case "是":
+                                    IsMonitor = "1"; break;
+                                case "否":
+                                    IsMonitor = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否需要关键视频监控]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+                            switch (dt.Rows[i]["是否允许重复过点"].ToString())
+                            {
+                                case "是":
+                                    IsRePeated = "1"; break;
+                                case "否":
+                                    IsRePeated = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否允许重复过点]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+
+                            string a = dt.Rows[i]["AVI站点是否独立"].ToString().Trim();
+                            switch (a)
+                            {
+                                case "是":
+                                    IsIndependence = "1"; break;
+                                case "否":
+                                    IsIndependence = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[AVI站点是否独立]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+                            switch (dt.Rows[i]["是否滞留管理"].ToString())
+                            {
+                                case "是":
+                                    IsStranded = "1"; break;
+                                case "否":
+                                    IsStranded = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否滞留管理]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+                            if(IsStranded == "1")
+                            {
+                                switch (dt.Rows[i]["滞留管理类别"].ToString())
+                                {
+                                    case "滞留管理终止AVI站点":
+                                        StrandedCategory = "1"; break;
+                                    case "滞留管理起始AVI站点":
+                                        StrandedCategory = "0"; break;
+                                    default:
+                                        dr = Newdt.NewRow();
+                                        dr[0] = errorNum;
+                                        dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[滞留管理类别]";
+                                        dr[2] = "数字格式不正确请重新输入";
+                                        Newdt.Rows.Add(dr);
+                                        errorNum++;
+                                        IsCheck = 0;
+                                        break;
+                                }
+                            }else if(IsStranded == "0")
+                            {
+                                StrandedCategory = "";
+                            }
+
+
+                            if (dt.Rows[i]["AVI站点名称"].ToString().Trim() != "" && dt.Rows[i]["AVI站点编号"].ToString().Trim() != "")
+                            {
+
+
+
+                                BBdbR_AVIBase Entity = new BBdbR_AVIBase();
+                                Entity.AviId = System.Guid.NewGuid().ToString();
+                                Entity.AviCd = dt.Rows[i]["AVI站点编号"].ToString().Trim();
+                                Entity.AviNm = dt.Rows[i]["AVI站点名称"].ToString().Trim();
+                                Entity.AviType = dt.Rows[i]["AVI站点类型"].ToString().Trim();
+                                Entity.Dsc = dt.Rows[i]["AVI描述"].ToString().Trim();
+                                Entity.IsMonitor =IsMonitor;  //是否需要关键视频监控
+                                Entity.IsRePeated = IsRePeated;//是否允许重复过点
+                                Entity.IsIndependence = IsIndependence;//AVI站点是否独立
+                                Entity.IsStranded = Convert.ToInt32(IsStranded);//是否滞留管理
+                                Entity.StrandedCategory = StrandedCategory;//滞留管理类别
+                                Entity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                Entity.VersionNumber = "V1.0";
+                                Entity.Enabled = "1";
+                                Entity.CreTm = DateTime.Now.ToString();
+                                Entity.CreCd = ManageProvider.Provider.Current().UserId;
+                                Entity.CreNm = ManageProvider.Provider.Current().UserName;
+                                BFacRShiftBaseList.Add(Entity);
+                                int b = database.Insert(BFacRShiftBaseList);
+                                if (b > 0)
+                                {
+                                    IsOk = IsOk + b;
+                                    BFacRShiftBaseList.Clear();
+                                }
+                                else
+                                {
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                    dr[2] = "AVI站点信息插入失败";
+                                    Newdt.Rows.Add(dr);
+                                    IsCheck = 0;
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                dr = Newdt.NewRow();
+                                dr[0] = errorNum;
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                dr[2] = "AVI站点编号不能为空";
+                                Newdt.Rows.Add(dr);
+                                errorNum++;
+                                IsCheck = 0;
+                                continue;
+                            }
+                        }
+                        if (IsCheck == 0)
+                        {
+                            IsOk = 0;
+                        }
+                        #endregion
+
+                    }
+                    Result = Newdt;
+                    Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "AVI信息导入成功");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "操作失败：" + ex.Message);
+                IsOk = 0;
+            }
+            if (Result.Rows.Count > 0)
+            {
+                IsOk = 0;
+            }
+            var JsonData = new
+            {
+                Status = IsOk > 0 ? "true" : "false",
+                ResultData = Result
+            };
+            return Content(JsonData.ToJson());
+        }
+        #endregion
+
+        #region 14.导出模板
+        /// <summary>
+        /// 下载Excell模板
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExcellTemperature(string ImportId)
+        {
+            if (!string.IsNullOrEmpty(ImportId))
+            {
+                DataSet ds = new DataSet();
+                DataTable data = new DataTable(); string DataColumn = ""; string fileName;
+                MyBll.GetExcellTemperature(ImportId, out data, out DataColumn, out fileName);
+                ds.Tables.Add(data);
+                MemoryStream ms = DeriveExcel.ExportToExcel(ds, "xls", DataColumn.Split('|'));
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// 清除Datatable空行
+        /// </summary>
+        /// <param name="dt"></param>
+        public void RemoveEmpty(DataTable dt)
+        {
+            List<DataRow> removelist = new List<DataRow>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                bool rowdataisnull = true;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
+                    {
+
+                        rowdataisnull = false;
+                    }
+                }
+                if (rowdataisnull)
+                {
+                    removelist.Add(dt.Rows[i]);
+                }
+
+            }
+            for (int i = 0; i < removelist.Count; i++)
+            {
+                dt.Rows.Remove(removelist[i]);
+            }
+        }
+
+        #endregion
+
+        #region 重构导出方法-原版
+
+        //public ActionResult GetExcel_Data(string type, JqGridParam jqgridparam)
+        //{
+        //    string ExportField = "AviCd,AviNm,AviType,IsMonitor,IsRePeated,IsIndependence,PlineNm,AVISequence,IsReport,IsStranded,StrandedCategory,Dsc,CreTm,CreCd,CreNm";
+        //    string JsonColumn = GZipHelper.Uncompress(CookieHelper.GetCookie("JsonColumn_DeriveExcel"));
+        //    string JsonData = GZipHelper.Uncompress(CookieHelper.GetCookie("JsonData_DeriveExcel"));
+        //    string JsonFooter = GZipHelper.Uncompress(CookieHelper.GetCookie("JsonFooter_DeriveExcel"));
+        //    string fileName = GZipHelper.Uncompress(CookieHelper.GetCookie("FileName_DeriveExcel"));
+        //    fileName = "AVI站点信息表";
+        //    DeriveExcel.JqGridToExcel(JsonColumn, JsonData, ExportField, fileName);
+
+        //    return null;
+
+        //}
+        #endregion
+
+        #region 重构导出
+        public ActionResult GetExcel_Data(string AviCd, string AviNm, string AviType, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 根据当前搜索条件查出数据并导出
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select a.AviCd,a.AviNm,a.AviType,a.OP_CODE,a.OP_NAME,a.AVISequence,a.IsReport,a.Dsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_AVIBase a left join BBdbR_PlineBase b on a.PlineId=b.PlineId  where a.Enabled = '1' ");
+                
+                #region 判断输入框内容添加检索条件
+                List<DbParameter> parameter = new List<DbParameter>();
+                //是否加AviCd模糊搜索
+                if (AviCd != "" && AviCd != null)
+                {
+                    //strSql.Append(" and AviCd like '%" + AviCd + "%'");
+                    strSql.Append(" and AviCd like @AviCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviCd", "%" + AviCd + "%"));
+                }
+                else { }
+
+                //是否加AviNm模糊搜索
+                if (AviNm != "" && AviNm != null)
+                {
+                    //strSql.Append(" and AviNm like '%" + AviNm + "%'");
+                    strSql.Append(" and AviNm like @AviNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviNm", "%" + AviNm + "%"));
+                }
+                else { }
+
+                //是否加计划状态搜索
+                if (AviType != "" && AviType != null)
+                {
+                    //strSql.Append(" and AviType = '" + AviType + "'");
+                    strSql.Append(" and AviType = @AviType ");
+                    parameter.Add(DbFactory.CreateDbParameter("@AviType", AviType));
+                }
+                else { }
+                #endregion
+
+                //按照AVI编号排序
+                strSql.Append(" order by AVISequence ");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+
+
+
+                string fileName = "AVI站点基础信息表";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_AVI(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "AVI信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "操作失败：" + ex.Message);
+                return null;
+            }
+
+        }
+        #endregion
+
+
+
 
         #endregion
 

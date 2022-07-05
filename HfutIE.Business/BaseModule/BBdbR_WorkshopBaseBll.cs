@@ -71,19 +71,19 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
             {
-                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
                 //点击公司
                 if (parentId=="0")
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId join BBdbR_CompanyBase c on b.CompanyId=c.CompanyId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.CompanyId='"+ areaId+"'";     //===复制时需要修改===
+                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId join BBdbR_CompanyBase c on b.CompanyId=c.CompanyId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.CompanyId='"+ areaId+ "' order by a.sort asc";     //===复制时需要修改===
                 }
                 //点击工厂
                 else
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and a.FacId='"+ areaId + "'";     //===复制时需要修改===
+                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and a.FacId='"+ areaId + "' order by a.sort asc";     //===复制时需要修改===
                 }     
             }
             return Repository().FindTableBySql(sql.ToString(), false);
@@ -183,18 +183,18 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (Condition == "all")
             {
-                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
                 if (keywords == "all")
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
                 }
                 //点击工厂
                 else
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and " + Condition + " like  '%" + keywords + "%'";     //===复制时需要修改===
+                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and " + Condition + " like  '%" + keywords + "%' order by a.sort asc";     //===复制时需要修改===
                 }
             }
             return Repository().FindTableBySql(sql.ToString(), false);
@@ -213,7 +213,7 @@ namespace HfutIE.Business
             List<BBdbR_WorkshopBase> dt = Repository().FindListBySql(strSql.ToString());
             for (int i = 0; i < dt.Count; i++)
             {
-                string sql1 = "select * from BBdbR_FacBase where FacId='" + dt[i].FacId + "'and Enabled = 1";
+                string sql1 = "select * from BBdbR_FacBase where FacId='" + dt[i].FacId + "'and Enabled = 1 order by sort asc";
                 DataTable dt1 = Repository().FindTableBySql(sql1.ToString());
                 if (dt1.Rows.Count > 0)
                 {
@@ -261,7 +261,7 @@ namespace HfutIE.Business
         public BBdbR_WorkshopBase GetPlanList(string KeyValue)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT  * FROM  BBdbR_WorkshopBase where  WorkshopId='" + KeyValue + "'");
+            strSql.Append(@"SELECT  * FROM  BBdbR_WorkshopBase where  WorkshopId='" + KeyValue + "' order by sort asc");
             List<BBdbR_WorkshopBase> dt = Repository().FindListBySql(strSql.ToString());
             BBdbR_WorkshopBase Dvcentity = new BBdbR_WorkshopBase();
             Dvcentity = dt[0];
@@ -270,7 +270,7 @@ namespace HfutIE.Business
         //11.获取所有人员
         public DataTable GetPlineNm()
         {
-            string sql = @"select * from BBdbR_StfBase where Enabled='1'";
+            string sql = @"select StfId as id, stfnm from BBdbR_StfBase where Enabled='1' and StfPosn='车间负责人'";
             return Repository().FindTableBySql(sql);
         }
         //获取人员信息

@@ -35,96 +35,112 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("机构级别")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Class { get; set; }
         /// <summary>
         /// 机构ID
         /// </summary>
         /// <returns></returns>
         [DisplayName("机构ID")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string ClassId { get; set; }
         /// <summary>
         /// 设备位置
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备位置")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcLocatn { get; set; }
         /// <summary>
         /// 设备编号
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备编号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcCd { get; set; }
         /// <summary>
         /// 设备名称
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcNm { get; set; }
         /// <summary>
         /// 设备类别
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备类别")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcCatg { get; set; }
         /// <summary>
         /// 设备类型
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcTyp { get; set; }
         /// <summary>
         /// IP地址
         /// </summary>
         /// <returns></returns>
         [DisplayName("IP地址")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string IPAddr { get; set; }
         /// <summary>
         /// 端口
         /// </summary>
         /// <returns></returns>
         [DisplayName("端口")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Port { get; set; }
         /// <summary>
         /// 设备型号
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备型号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcMdl { get; set; }
         /// <summary>
         /// 设备产商
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备产商")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcMaker { get; set; }
         /// <summary>
         /// 设备寿命
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备寿命")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcLife { get; set; }
         /// <summary>
         /// 设备制造日期
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备制造日期")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DvcMDt { get; set; }
         /// <summary>
         /// 维保周期(天)
         /// </summary>
         /// <returns></returns>
         [DisplayName("维保周期(天)")]
-        public int? MaintCycle { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string MaintCycle { get; set; }
         /// <summary>
         /// 提前期（天）
         /// </summary>
         /// <returns></returns>
         [DisplayName("提前期（天）")]
-        public int? LeadTm { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string LeadTm { get; set; }
         /// <summary>
         /// 设备描述
         /// </summary>
         /// <returns></returns>
         [DisplayName("设备描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// 版本号
@@ -143,7 +159,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -161,7 +177,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -179,6 +195,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1
@@ -203,7 +220,7 @@ namespace HfutIE.Entity
             this.DvcId = CommonHelper.GetGuid;
             this.VersionNumber = "V1.0";
             this.Enabled = "1";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString();
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -214,7 +231,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.DvcId = KeyValue;
-            this.MdfTm = DateTime.Now;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

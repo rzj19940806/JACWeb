@@ -138,7 +138,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     //===复制时需要修改===
                     BBdbR_GetItemBase Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//获取没更新之前实体对象
-                    entity.GetItemId = KeyValue;
+                    entity.Modify(KeyValue);
                     IsOk = MyBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//记录日志
                 }
@@ -150,7 +150,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         Message = "该编号已经存在！";
                         return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
                     }
-                    entity.GetItemId = System.Guid.NewGuid().ToString();
+                    entity.Create();
                     IsOk = MyBll.Insert(entity);//将实体插入数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志
                 }
@@ -301,7 +301,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// </summary>
         /// <returns></returns>
         [ManagerPermission(PermissionMode.Enforce)]
-        public ActionResult ExcelImportDialog()
+        public ActionResult ExcelImportDialog(string area_key, string area_name)
         {
             string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
             //模板主表
@@ -312,10 +312,15 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 ViewBag.ImportFileName = base_excellimport.ImportFileName;
                 ViewBag.ImportName = base_excellimport.ImportName;
                 ViewBag.ImportId = base_excellimport.ImportId;
+                ViewBag.area_key = area_key;
+                ViewBag.area_name = area_name;
             }
             else
             {
                 ViewBag.ModuleId = "0";
+                ViewBag.area_key = area_key;
+                ViewBag.area_name = area_name;
+                ;
             }
             return View();
         }
@@ -381,7 +386,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// 导入Excell数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult ImportExel(string AlarmId)
+        public ActionResult ImportExel(string area_key, string area_name)
         {
             int IsOk = 0;//导入状态
             int IsCheck = 1;//用作检验重复地址的标识
@@ -435,64 +440,42 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
                         IsCheck = 1;//重置标识
                         DataRow dr = Newdt.NewRow();
-                        string Enabled = "";
-                        string GetItemType = "";
-                        string GetItemTy = "";
-                        
-                        switch (dt.Rows[i]["有效性"].ToString())
+
+                        string GetItemType = ""; //采集项类别
+                        string GetItemTy = "";  //采集方式
+                        switch (dt.Rows[i]["采集项类别"].ToString())
                         {
-                            case "有效":
-                                Enabled = "1"; break;
-                            case "无效":
-                                Enabled = "0"; break;
+                            case "定量":
+                                GetItemType = "1"; break;
+                            case "定性":
+                                GetItemType = "0"; break;
                             default:
                                 dr = Newdt.NewRow();
                                 dr[0] = errorNum;
-                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否启用]";
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[采集项类别]";
                                 dr[2] = "数字格式不正确请重新输入";
                                 Newdt.Rows.Add(dr);
                                 errorNum++;
                                 IsCheck = 0;
                                 break;
                         }
-                        if (dt.Rows[i]["采集项类别"].ToString() != "")
+                        switch (dt.Rows[i]["采集方式"].ToString())
                         {
-                            switch (dt.Rows[i]["采集项类别"].ToString())
-                            {
-                                case "定量":
-                                    GetItemType = "1"; break;
-                                case "定性":
-                                    GetItemType = "0"; break;
-                                default:
-                                    dr = Newdt.NewRow();
-                                    dr[0] = errorNum;
-                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否启用]";
-                                    dr[2] = "数字格式不正确请重新输入";
-                                    Newdt.Rows.Add(dr);
-                                    errorNum++;
-                                    IsCheck = 0;
-                                    break;
-                            }
+                            case "手动采集":
+                                GetItemTy = "1"; break;
+                            case "自动采集":
+                                GetItemTy = "0"; break;
+                            default:
+                                dr = Newdt.NewRow();
+                                dr[0] = errorNum;
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[采集方式]";
+                                dr[2] = "数字格式不正确请重新输入";
+                                Newdt.Rows.Add(dr);
+                                errorNum++;
+                                IsCheck = 0;
+                                break;
                         }
-                        if (dt.Rows[i]["采集方式"].ToString() != "")
-                        {
-                            switch (dt.Rows[i]["采集方式"].ToString())
-                            {
-                                case "手动采集":
-                                    GetItemTy = "1"; break;
-                                case "自动采集":
-                                    GetItemTy = "0"; break;
-                                default:
-                                    dr = Newdt.NewRow();
-                                    dr[0] = errorNum;
-                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否启用]";
-                                    dr[2] = "数字格式不正确请重新输入";
-                                    Newdt.Rows.Add(dr);
-                                    errorNum++;
-                                    IsCheck = 0;
-                                    break;
-                            }
-                        }
+
                         if (dt.Rows[i]["采集项编号"].ToString().Trim() != "")
                         {
                             int DeviceCount = MyBll.CheckCount("GetItemCd", dt.Rows[i]["采集项编号"].ToString());//是否有相同的采集项编号
@@ -510,18 +493,31 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                             else
                             {
                                 BBdbR_GetItemBase pushGetItem = new BBdbR_GetItemBase();
-                                pushGetItem.GetItemId = System.Guid.NewGuid().ToString();
+
+                                pushGetItem.GetItemId = Guid.NewGuid().ToString(); //主键
+                                pushGetItem.WcCd = area_key; //工位编号
+                                pushGetItem.WcNm = area_name; //工位名称
                                 pushGetItem.GetItemCd = dt.Rows[i]["采集项编号"].ToString().Trim();
                                 pushGetItem.GetItemNm = dt.Rows[i]["采集项名称"].ToString().Trim();
-                                pushGetItem.WcCd = dt.Rows[i]["工位编号"].ToString().Trim();
-                                pushGetItem.WcNm = dt.Rows[i]["工位名称"].ToString().Trim();
-                                pushGetItem.GetItemType = GetItemType;
-                                pushGetItem.GetItemTy = GetItemTy;
+                                pushGetItem.GetItemType = GetItemType; //采集项类别
+                                pushGetItem.GetItemUpLimit = Convert.ToDecimal(dt.Rows[i]["采集项上限"].ToString().Trim());
+                                pushGetItem.GetItemLowLimit = Convert.ToDecimal(dt.Rows[i]["采集项下限"].ToString().Trim());
+                                pushGetItem.GetItemValue = Convert.ToDecimal(dt.Rows[i]["采集项标准值"].ToString().Trim());
+                                pushGetItem.GetItemUnit = dt.Rows[i]["采集项参数单位"].ToString().Trim();
+                                pushGetItem.GetItemExplain = dt.Rows[i]["采集项说明"].ToString().Trim();
+                                pushGetItem.GetItemTy = GetItemTy; //采集方式
                                 pushGetItem.GetItemFq = dt.Rows[i]["采集频次"].ToString().Trim();
-                                pushGetItem.Enabled = Enabled;
+
+                                pushGetItem.VersionNumber = "V1.0.0";
+                                pushGetItem.Enabled = "1";
                                 pushGetItem.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                pushGetItem.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                pushGetItem.CreCd = ManageProvider.Provider.Current().UserId;
+                                pushGetItem.CreNm = ManageProvider.Provider.Current().UserName;
+
 
                                 CntlAddrList.Add(pushGetItem);
+
                                 int b = database.Insert(CntlAddrList);
                                 if (b > 0)
                                 {
@@ -533,7 +529,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                     dr = Newdt.NewRow();
                                     dr[0] = errorNum;
                                     dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
-                                    dr[2] = "采集项信息插入失败";
+                                    dr[2] = "采集项信息导入失败";
                                     Newdt.Rows.Add(dr);
                                     IsCheck = 0;
                                     continue;
@@ -577,6 +573,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             };
             return Content(JsonData.ToJson());
         }
+
         #endregion
 
         #endregion

@@ -41,6 +41,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("部门主键")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DepartmentId { get; set; }
         /// <summary>
         /// 内部用户
@@ -53,18 +54,21 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("用户编码")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Code { get; set; }
         /// <summary>
         /// 登录账户
         /// </summary>
         /// <returns></returns>
         [DisplayName("登录账户")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Account { get; set; }
         /// <summary>
         /// 登录密码
         /// </summary>
         /// <returns></returns>
         [DisplayName("登录密码")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Password { get; set; }
         /// <summary>
         /// 密码秘钥
@@ -73,10 +77,18 @@ namespace HfutIE.Entity
         [DisplayName("密码秘钥")]
         public string Secretkey { get; set; }
         /// <summary>
+        /// 密码策略等级
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("密码策略等级")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string PwdRank { get; set; }
+        /// <summary>
         /// 姓名
         /// </summary>
         /// <returns></returns>
         [DisplayName("姓名")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string RealName { get; set; }
         /// <summary>
         /// 姓名拼音
@@ -89,12 +101,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("性别")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Gender { get; set; }
         /// <summary>
         /// 出生日期
         /// </summary>
         /// <returns></returns>
         [DisplayName("出生日期")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public DateTime? Birthday { get; set; }
         /// <summary>
         /// 手机
@@ -107,6 +121,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("电话")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Telephone { get; set; }
         /// <summary>
         /// OICQ
@@ -119,6 +134,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("电子邮件")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Email { get; set; }
         /// <summary>
         /// 最后修改密码日期
@@ -191,13 +207,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Remark { get; set; }
         /// <summary>
         /// 有效
         /// </summary>
         /// <returns></returns>
         [DisplayName("有效")]
-        public int? Enabled { get; set; }
+        public string Enabled { get; set; }
         /// <summary>
         /// 排序码
         /// </summary>
@@ -246,6 +263,18 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("修改用户")]
         public string ModifyUserName { get; set; }
+        /// <summary>
+        /// 上一次修改密码时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("上一次修改密码时间")]
+        public DateTime? LastPwdModfyTm { get; set; }
+        /// <summary>
+        /// IP地址
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("IP地址")]
+        public string IPAddress { get; set; }
         #endregion
 
         #region 扩展操作

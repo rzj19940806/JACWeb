@@ -1,0 +1,63 @@
+@{
+    ViewBag.Title = "缺陷类别基本信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityModule/BBdbR_DefectCatgBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+            $("#DefectCatgCd").attr("readonly", "readonly");
+            $("#DefectCatgNm").attr("readonly", "readonly");
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/QualityModule/BBdbR_DefectCatgBase/SubmitForm1?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>缺陷类型编号：</th>
+            <td class='formValue'>
+                <input id="DefectCatgCd" maxlength=50 type="text" class="txt required" datacol="yes" err="缺陷类型编号" checkexpession="NotNull" checkdata="hasOne"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷类型名称：</th>
+            <td class='formValue'>
+                <input id="DefectCatgNm" maxlength=50 type="text" class="txt required" datacol="yes" err="缺陷类型名称" checkexpession="NotNull" checkdata="hasOne"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

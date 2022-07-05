@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "P_PublishPlan_Pro》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/PlanModule/PublishPlan/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                //document.getElementById("IsCheck").readOnly = true;
+                document.getElementById("VIN").readOnly = true;
+                document.getElementById("MatCd").readOnly = true;
+                document.getElementById("CarType").readOnly = true;
+                document.getElementById("CarColor1").readOnly = true;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/PlanModule/PublishPlan/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            var vin = postData.VIN;
+            var ischeck = postData.IsCheck;
+            var isprint = postData.Nameplate;
+            top.frames[tabiframeId()].windowload();
+            if (ischeck != "0") {
+                top.frames[tabiframeId()].sendAlarm(vin, ischeck, isprint);
+            }
+            closeDialog();
+            
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>序列是否校核：</th>
+            <td class='formValue'>
+                <select id="IsCheck" class="txt">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                    <option value="2">冻结</option>
+                </select>
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>铭牌打印顺序：</th>
+            <td class='formValue'>
+                <input id="PrintNo" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>铭牌是否打印：</th>
+            <td class='formValue'>
+                <select id="Nameplate" class="txt">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>物料编号：</th>
+            <td class='formValue'>
+                <input id="MatCd" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>颜色：</th>
+            <td class='formValue'>
+                <input id="CarColor1" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <select id="Enabled" class="txt">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <textarea id="Rem" maxlength=200 class="txt"></textarea>
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>

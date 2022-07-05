@@ -5,7 +5,7 @@
 <script type="text/javascript">
     var KeyValue = GetQuery('KeyValue');//Ö÷¼ü
     $(function () {
-        Show()
+        Show();
         DvcList();
         InitControl();
     })
@@ -14,6 +14,7 @@
         if (!!GetQuery('KeyValue')) {
             AjaxJson("/BaseModule/BBdbR_CntlAddrConf/SetForm", { KeyValue: KeyValue }, function (data) {
                 SetWebControls(data);
+                Show();
             });
         }
     }
@@ -113,7 +114,7 @@
         <tr id="Rate" style=" display :none">
             <th class='formTitle'>¼à¿ØÆµÂÊ£º</th>
             <td class='formValue' colspan="3">
-                <input id="MonitorRate" maxlength=10 type="text" class="txt"   />
+                <input id="MonitorRate" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
         </tr>
         <tr>

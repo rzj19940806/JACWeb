@@ -13,10 +13,10 @@ using System.Text;
 namespace HfutIE.Entity
 {
     /// <summary>
-    /// AVI站点基础信息表
+    /// 数采地址信息表
     /// <author>
     ///		<name>she</name>
-    ///		<date>2021.03.26 10:57</date>
+    ///		<date>2021.10.03 20:47</date>
     /// </author>
     /// </summary>
     [Description("数采地址信息表")]
@@ -30,7 +30,6 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("主键")]
         public string RecId { get; set; }
-       
         /// <summary>
         /// 工位Id
         /// </summary>
@@ -43,7 +42,6 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("设备Id")]
         public string DvcId { get; set; }
-       
         /// <summary>
         /// 数采类型
         /// </summary>
@@ -92,7 +90,6 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("监控频率")]
         public int? MonitorRate { get; set; }
-        
         /// <summary>
         /// 有效性
         /// </summary>
@@ -153,6 +150,12 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("预留字段2")]
         public string RsvFld2 { get; set; }
+        /// <summary>
+        /// CntlGroup
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("CntlGroup")]
+        public string CntlGroup { get; set; }
         #endregion
 
         #region 扩展操作
@@ -162,11 +165,10 @@ namespace HfutIE.Entity
         public override void Create()
         {
             this.RecId = CommonHelper.GetGuid;
-            //this.VersionNumber = "V1.0";
             this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            this.Enabled = "1";
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
+            this.Enabled = "1";
         }
         /// <summary>
         /// 编辑调用
@@ -175,12 +177,11 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.RecId = KeyValue;
-            //this.VersionNumber = "V1.0";
             this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
+            this.Enabled = "1";
         }
         #endregion
-       
     }
 }

@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "发布序列过程表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var id = GetQuery('id');//主键
+    var Quene = GetQuery('Quene');//顺序号
+    var operation = GetQuery('operation');//调整状态
+    $(function () {
+        
+    })
+    
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        let num = $("#num").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/PlanModule/PublishPlan/UpdateQuene?id=" + id + "&num=" + num + "&operation=" + operation + "&Quene=" + Quene,postData,function(data){
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>调整量：</th>
+            <td class='formValue'>
+                <input id="num" maxlength=50 type="number" class="txt"   />
+            </td>
+        </tr>
+        
+    </table>
+</form>

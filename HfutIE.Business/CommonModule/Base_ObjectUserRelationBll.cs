@@ -7,6 +7,7 @@ using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -63,12 +64,55 @@ namespace HfutIE.Business
             }
             parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
             parameter.Add(DbFactory.CreateDbParameter("@Category", Category));
-            if (!ManageProvider.Provider.Current().IsSystem)
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
+            strSql.Append(" ORDER BY ObjectId DESC,SortCode ASC");
+            return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
+        }
+        /// <summary>
+        /// 成员列表——20211128修正
+        /// </summary>
+        /// <param name="CompanyId">公司ID</param>
+        /// <param name="DepartmentId">部门ID</param>
+        /// <param name="ObjectId">对象主键</param>
+        /// <param name="Category">对象分类:1-部门2-角色3-岗位4-群组</param>
+        /// <returns></returns>
+        public DataTable GetList_new(string ObjectId, string Category,string DepartmentId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            List<DbParameter> parameter = new List<DbParameter>();
+            strSql.Append(@"SELECT  *
+                            FROM    ( SELECT    u.UserId ,				
+                                                u.Account ,				
+                                                u.RealName ,			
+                                                u.Code ,				
+                                                u.Gender ,				
+                                                u.CompanyId ,			
+                                                u.DepartmentId ,		
+                                                u.SortCode ,
+                                                u.Enabled,
+                                                ou.ObjectId				
+                                      FROM      Base_User u
+                                                LEFT JOIN Base_ObjectUserRelation ou ON ou.UserId = u.UserId
+                                                                                        AND ou.ObjectId = @ObjectId
+                                                                                        AND ou.Category = @Category
+                                    ) T WHERE  Enabled = '1'");
+            if (DepartmentId!="")
             {
-                strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
+                strSql.Append(@" and DepartmentId = '" + DepartmentId + "'");
             }
+            parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
+            parameter.Add(DbFactory.CreateDbParameter("@Category", Category));
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
             strSql.Append(" ORDER BY ObjectId DESC,SortCode ASC");
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
@@ -90,11 +134,7 @@ namespace HfutIE.Business
                 parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
                 parameter.Add(DbFactory.CreateDbParameter("@Category", Category));
                 database.ExecuteBySql(sbDelete, parameter.ToArray(), isOpenTrans);
-                //20210623加_处理Base_StfRoleConf表
-                StringBuilder sbDelete2 = new StringBuilder("DELETE FROM Base_StfRoleConf WHERE RoleId = @ObjectId");
-                List<DbParameter> parameter2 = new List<DbParameter>();
-                parameter2.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
-                database.ExecuteBySql(sbDelete2, parameter2.ToArray(), isOpenTrans);
+                
                 int index = 1;
                 foreach (string item in arrayUserId)
                 {
@@ -109,14 +149,7 @@ namespace HfutIE.Business
                         entity.SortCode = index;
                         entity.Create();                      
                         database.Insert(entity, isOpenTrans);
-                        //20210623加_处理Base_StfRoleConf表
-                        Base_StfRoleConf stfroleconf = new Base_StfRoleConf();
-                        stfroleconf.RecId = guid;
-                        stfroleconf.StfId = item;
-                        stfroleconf.RoleId = ObjectId;
-                        stfroleconf.SortCode = index;
-                        stfroleconf.Enabled = "1";
-                        database.Insert(stfroleconf, isOpenTrans);
+                        
                         index++;
                     }
                 }
@@ -147,11 +180,7 @@ namespace HfutIE.Business
                 parameter.Add(DbFactory.CreateDbParameter("@UserId", UserId));
                 parameter.Add(DbFactory.CreateDbParameter("@Category", Category));
                 database.ExecuteBySql(sbDelete, parameter.ToArray(), isOpenTrans);
-                //20210623加_处理Base_StfRoleConf表
-                StringBuilder sbDelete2 = new StringBuilder("DELETE FROM Base_StfRoleConf WHERE StfId = @UserId");
-                List<DbParameter> parameter2 = new List<DbParameter>();
-                parameter2.Add(DbFactory.CreateDbParameter("@UserId", UserId));
-                database.ExecuteBySql(sbDelete2, parameter2.ToArray(), isOpenTrans);
+                
                 int index = 1;
                 foreach (string item in arrayObjectId)
                 {
@@ -164,16 +193,9 @@ namespace HfutIE.Business
                         entity.ObjectId = item;
                         entity.Category = Category;
                         entity.SortCode = index;
-                        entity.Create();                     
+                        entity.Create();
                         database.Insert(entity, isOpenTrans);
-                        //20210623加_处理Base_StfRoleConf表
-                        Base_StfRoleConf stfroleconf = new Base_StfRoleConf();
-                        stfroleconf.RecId = guid;
-                        stfroleconf.StfId = UserId;
-                        stfroleconf.RoleId = item;
-                        stfroleconf.SortCode = index;
-                        stfroleconf.Enabled = "1";
-                        database.Insert(stfroleconf, isOpenTrans);
+                        
                         index++;
                     }
                 }
@@ -186,6 +208,7 @@ namespace HfutIE.Business
                 return -1;
             }
         }
+
         /// <summary>
         /// 根据用户ID查询对象列表
         /// </summary>
@@ -241,5 +264,7 @@ namespace HfutIE.Business
             parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
             return DataFactory.Database().FindListBySql<Base_User>(strSql.ToString(), parameter.ToArray());
         }
+
+        
     }
 }

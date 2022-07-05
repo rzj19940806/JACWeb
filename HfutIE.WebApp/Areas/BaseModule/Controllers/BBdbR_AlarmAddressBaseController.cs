@@ -21,6 +21,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
     /// </summary>
     public class BBdbR_AlarmAddressBaseController : PublicController<BBdbR_AlarmAddressBase>
     {
+        #region 全局变量定义区
+        //定义本页面主要操作的表的表名，称为主表
+        string tableName = "BBdbR_AlarmAddressBase";
+        public static DataTable AlarmAddressList = new DataTable();
+        #endregion
+
         #region 创建数据库操作对象区域
         //创建数据库访问对象，用以访问其中操作数据库的方法
         BBdbR_AlarmAddressBaseBll MyBll = new BBdbR_AlarmAddressBaseBll(); //===复制时需要修改===MyBll.GetPlanList("");
@@ -48,10 +54,10 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         {
             try
             {
-                DataTable ListData = MyBll.GetPlanList();
+                AlarmAddressList = MyBll.GetPlanList();
                 var JsonData = new
                 {
-                    rows = ListData,
+                    rows = AlarmAddressList,
                 };
                 string a = JsonData.ToJson();
                 return Content(JsonData.ToJson());
@@ -83,9 +89,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             try
             {
                 int IsOk = 0;//用于判断
-                //string Name1 = "DvcId";        //页面中的编号字段名，如：公司编号   //===复制时需要修改===
                 string Value1 = entity.DvcId;  //页面中的编号字段值                 //===复制时需要修改===\
-                //string Name2 = "AlarmClass";
+                
                 string Value2 = entity.AlarmClass;
                 
                 string Message = KeyValue == "" ? "新增成功。" : "编辑成功。";
@@ -101,9 +106,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 }
                 else//新增操作
                 {
-                    
                     entity.Create();
-                    //entity.RuleId = System.Guid.NewGuid().ToString();
                     IsOk = MyBll.Insert(entity);//将实体插入数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志
                 }
@@ -173,16 +176,16 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 string keyword = keywords.Trim();
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                AlarmAddressList = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
                 var JsonData = new
                 {
                     total = jqgridparam.total,
                     page = jqgridparam.page,
                     records = jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = AlarmAddressList,
                 };
-                return Content(ListData.ToJson());
+                return Content(AlarmAddressList.ToJson());
             }
             catch (Exception ex)
             {
@@ -211,7 +214,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
         #endregion
-        
+
         #region 6.导入
         /// <summary>
         /// 导入Excel弹出框页面
@@ -297,20 +300,30 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                             IsCheck = 1;//重置标识
                             DataRow dr = Newdt.NewRow();
 
-                            if (dt.Rows[i]["报警地址"].ToString().Trim() != "" && dt.Rows[i]["报警路径"].ToString().Trim() != "" && dt.Rows[i]["报警位数"].ToString().Trim() != "" && dt.Rows[i]["报警等级"].ToString().Trim() != "")
+                            if (dt.Rows[i]["报警地址"].ToString().Trim() != "" && dt.Rows[i]["报警路径"].ToString().Trim() != "" && dt.Rows[i]["报警等级"].ToString().Trim() != "")
                             {
                                 BBdbR_AlarmAddressBase AlarmAddressBaseEntity = new BBdbR_AlarmAddressBase();
-                                AlarmAddressBaseEntity.RuleId = System.Guid.NewGuid().ToString();
+
+                                AlarmAddressBaseEntity.RuleId = Guid.NewGuid().ToString();
                                 AlarmAddressBaseEntity.AlarmAddress = dt.Rows[i]["报警地址"].ToString().Trim();
-                                AlarmAddressBaseEntity.AlarmBit = dt.Rows[i]["报警位数"].ToString().Trim();
                                 AlarmAddressBaseEntity.AlarmRoute = dt.Rows[i]["报警路径"].ToString().Trim();
                                 AlarmAddressBaseEntity.AlarmClass = dt.Rows[i]["报警等级"].ToString().Trim();
                                 AlarmAddressBaseEntity.AlarmDsc = dt.Rows[i]["报警描述"].ToString().Trim();
+                                AlarmAddressBaseEntity.AlarmBit = dt.Rows[i]["报警位数"].ToString();
+                                AlarmAddressBaseEntity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+
+
                                 AlarmAddressBaseEntity.VersionNumber = "V1.0";
                                 AlarmAddressBaseEntity.Enabled = "1";
-                                //AlarmAddressBaseEntity.CreTm = DateTime.Now;
+                                AlarmAddressBaseEntity.CreTm = DateTime.Now;
                                 AlarmAddressBaseEntity.CreCd = ManageProvider.Provider.Current().UserId;
                                 AlarmAddressBaseEntity.CreNm = ManageProvider.Provider.Current().UserName;
+
+                                string DvcCd = dt.Rows[i]["设备编号"].ToString();
+                                DataTable dataTable = MyBll.searchID(DvcCd);
+                                AlarmAddressBaseEntity.DvcId = Convert.ToString(dataTable.Rows[0]["id"]);
+
+
                                 BBdbRAlarmAddressBaseList.Add(AlarmAddressBaseEntity);
                                 int b = database.Insert(BBdbRAlarmAddressBaseList);
                                 if (b > 0)
@@ -323,7 +336,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                     dr = Newdt.NewRow();
                                     dr[0] = errorNum;
                                     dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
-                                    dr[2] = "设备信息插入失败";
+                                    dr[2] = "设备报警地址信息插入失败";
                                     Newdt.Rows.Add(dr);
                                     IsCheck = 0;
                                     continue;
@@ -449,8 +462,38 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
 
-        
-       
+
+
+        #endregion
+
+        #region 10.重构导出方法
+        /// <summary>
+        /// 1.如果是按照条件查询后再进行
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public ActionResult GetExcel_Data(string type, JqGridParam jqgridparam)
+        {
+            Stopwatch watch = CommonHelper.TimerStart();
+            DataTable ListData = new DataTable();
+
+            ListData = AlarmAddressList.DefaultView.ToTable("设备报警地址管理表", true, "DvcNm", "AlarmAddress", "AlarmBit", "AlarmRoute", "AlarmClass", "AlarmDsc", "CreTm", "CreCd", "CreNm");//获取AVI中特定列
+
+            if (ListData.Rows.Count > 0)
+            {
+                string fileName = "设备报警地址管理表";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_AlarmAddress(ListData, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+                return null;
+        }
         #endregion
         #endregion
     }

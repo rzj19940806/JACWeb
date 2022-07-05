@@ -1,0 +1,279 @@
+@{
+    ViewBag.Title = "ANDON补录数据展示";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style>
+    .form-find th {
+        background-color: #fff;
+        height: 25px;
+        line-height: 25px;
+        white-space: nowrap;
+        font-weight: normal;
+        text-align: right;
+        padding-right: 2px;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#ExceptionType", "ExceptionType", "全部");
+        GetPlineList();
+        GetGrid();
+        btn_Search();
+    })
+
+    //产线名称下拉框
+    function GetPlineList() {
+        AjaxJson("/BaseModule/BBdbR_DataAcqPro/GetPlineList", {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#PlineNm").append("<option value='" + data.rows[i]["PlineNm"] + "'>" + data.rows[i]["PlineNm"] + "</option>");
+            }
+        });
+        $("#PlineNm").val("");
+    }
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        @*url: "@Url.Content("~/BaseModule/BBdbR_DataAcqPro/GridPageJson1")",*@
+        datatype: "json",
+            height: $(window).height() - 168,
+            width: $(window).width()*0.99,
+        //autowidth: true,
+        colModel: [
+                { label: '产线名称', name: 'PlineNm', index: 'PlineNm', width: 75, align: 'center',sortable: true  },
+                { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 100, align: 'center',sortable: true  },
+                { label: '信号来源', name: 'SignalSource', index: 'SignalSource', width:75, align: 'center',sortable: true},
+                { label: '信号详情', name: 'SignalDetail', index: 'SignalDetail', width: 150, align: 'center', sortable: true },
+            { label: '补录状态', name: 'CurValue', index: 'CurValue', width: 75, align: 'center', sortable: true },
+            {
+                label: '处理状态', name: 'HandleSts', index: 'HandleSts', width: 75, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == '1') return "已恢复";
+                    if (cellvalue == '0') return "异常中";
+                }
+            },
+
+            {
+                label: '开始时间', name: 'AcqTm', index: 'AcqTm', width: 150, align: 'center', sortable: true,
+                formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+            {
+                label: '结束时间', name: 'EndTm', index: 'EndTm', width: 150, align: 'center', sortable: true,
+                formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+            { label: '停线时长', name: 'HandleTm2', index: 'HandleTm2', width: 75, align: 'center',sortable: true},
+            { label: '处理人编号', name: 'HandlerCode', index: 'HandlerCode', width: 100, align: 'center', sortable: true },
+            { label: '处理人姓名', name: 'HandlerName', index: 'HandlerName', width: 75, align: 'center', sortable: true },
+            { label: '异常类型', name: 'ExceptionType', index: 'ExceptionType', width: 75, align: 'center', sortable: true },
+            { label: '异常描述', name: 'ExceptionDes', index: 'ExceptionDes', width: 200, align: 'center', sortable: true },
+            { label: '处理结果', name: 'HandleResult', index: 'HandleResult', width: 100, align: 'center', sortable: true },
+            {
+                label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true,
+                formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+                 //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 75, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'center',sortable: true  },
+        ],
+            pager: "#gridPager",
+                sortname: 'AcqTm',
+            sortorder: 'desc',
+            gridview: true,
+            rowNum: 200,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+
+
+    function btn_Search() {
+        var condition = {};
+        condition["TimeStart"] = $("#TimeStart").val();
+        condition["TimeEnd"] = $("#TimeEnd").val();
+
+        let time1 = new Date(condition.TimeStart).getTime();
+        let time2 = new Date(condition.TimeEnd).getTime();
+
+        if (time1 > time2 || TimeStart == '' || TimeEnd == '') {
+            tipDialog("时间不合法，请重新操作！", 1, 0);
+            return;
+        } else
+        {
+            condition["PlineNm"] = $("#PlineNm").val();
+            condition["WcNm"] = $("#WcNm").val();
+            condition["SignalSource"]  = $("#SignalSource").val();
+            condition["SignalDetail"]  = $("#SignalDetail").val();
+            condition["CurValue"]  = $("#CurValue").val();
+            condition["HandleSts"]  = $("#HandleSts").val();
+            condition["HandlerCode"]  = $("#HandlerCode").val();
+            condition["ExceptionType"]  = $("#ExceptionType").val();
+            $("#gridTable").jqGrid('setGridParam', {
+                url: "@Url.Content("~/BaseModule/BBdbR_DataAcqPro/GetPageListByCondition")", postData: condition, page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+        }
+    }
+
+
+    //修改后导出
+    function btn_derive() {
+        var TimeStart = $("#TimeStart").val();
+        var TimeEnd = $("#TimeEnd").val();
+        var PlineNm = $("#PlineNm").val();
+        var WcNm = $("#WcNm").val();
+        var SignalSource = $("#SignalSource").val();
+        var SignalDetail = $("#SignalDetail").val();
+        var CurValue = $("#CurValue").val();
+        var HandleSts = $("#HandleSts").val();
+        var HandlerCode = $("#HandlerCode").val();
+        var ExceptionType = $("#ExceptionType").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_DataAcqPro/GetExcel_Data?PlineNm=" + escape(PlineNm) + "&WcNm=" + escape(WcNm) + "&SignalSource=" + escape(SignalSource) + "&SignalDetail=" + escape(SignalDetail) + "&CurValue=" + escape(CurValue) + "&HandleSts=" + escape(HandleSts)
+                    + "&HandlerCode=" + escape(HandlerCode) + "&ExceptionType=" + escape(ExceptionType) + "&TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+</script>
+<!--工具栏-->
+@*按钮区域*@
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*搜索框区域*@
+<table border="0" class="form-find" style="height: 45px;">
+    <tr>
+        <th>
+            产线
+        </th>
+        <td>
+            @*<input id="PlineNm" type="text" class="txt" style="width: 125px" />*@
+            <select id="PlineNm" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="OK线">OK线</option>
+            </select>
+        </td>
+        <th>
+            工位
+        </th>
+        <td>
+            <input id="WcNm" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            信号来源
+        </th>
+        <td>
+            <select id="SignalSource" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="Andon">Andon</option>
+                <option value="FAS">FAS</option>
+                <option value="设备">设备</option>
+            </select>
+        </td>
+        <th>
+            信号详情
+        </th>
+        <td>
+            <input id="SignalDetail" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            补录状态
+        </th>
+        <td>
+            <select id="CurValue" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="未补录">未补录</option>
+                <option value="已补录">已补录</option>
+            </select>
+        </td>
+        <th>
+            处理状态
+        </th>
+        <td>
+            <select id="HandleSts" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="1">已恢复</option>
+                <option value="0">异常中</option>
+            </select>
+        </td>
+        <th>
+            处理人编号
+        </th>
+        <td>
+            <input id="HandlerCode" type="text" class="txt" style="width: 125px" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            异常类型
+        </th>
+        <td>
+            <select id="ExceptionType" style="width: 125px; height: 25px"></select>
+        </td>
+        <th>
+            开始时间
+        </th>
+        <td>
+            <input id="TimeStart" type="text" class="txt Wdate" style="width: 125px" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'TimeEnd\')}'}); blur();" value="@DateTime.Now.AddDays(-DateTime.Now.Day + 1).ToString("yyyy-MM-dd")"  readonly/>
+        </td>
+        <th>
+            结束时间
+        </th>
+        <td>
+            <input id="TimeEnd" type="text" class="txt Wdate" style="width: 125px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'TimeStart\')}'}); blur();" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" readonly />
+        </td>
+        <th>
+            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+        </th>
+    </tr>
+</table>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

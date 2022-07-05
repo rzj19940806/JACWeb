@@ -8,15 +8,15 @@
     var WorkshopId = GetQuery('areaId');//主键
     $(function () {
         BindDropItem("#WorkSectionTy", "WorkSectionTy", "==全部==");
-        StaffList();
+        //StaffList();
         InitControl();
     })
 
     //加载人员列表
     function StaffList() {
-        AjaxJson("/BaseModule/BBdbR_WorkSectionBase/GetWorkSectionNm", {}, function (data) {
+        AjaxJson("/BaseModule/BBdbR_WorkSectionBase/GetPlineNm", {}, function (data) {
             for (var i = 0; i < data.rows.length; i++) {
-                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["stfnm"] + "</option>");
+                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["StfNm"] + "</option>");
             }
         });
         RateGrade();
@@ -25,40 +25,19 @@
     function RateGrade() {
         let StfId = $("#StfId").val();
         if (StfId != "") {
-            AjaxJson("/BaseModule/BBdbR_WorkSectionBase/GetWorkSectionNm2?StfId=" + StfId, {}, function (data) {
-                $("#StfNm").val(data.rows[0]["stfnm"]);
-                $("#Phn").val(data.rows[0]["phn"]);
-                //$("#FacEmail").val(data.rows[0]["email"]);
+            AjaxJson("/BaseModule/BBdbR_WorkshopBase/GetPlineNm?StfId=" + StfId, {}, function (data) {
+                $("#StfNm").val(data.rows[0]["StfNm"]);
+                if (data.rows[0]["Phn"] == "&nbsp;") {
+                    data.rows[0]["Phn"] = "";
+                }
+                $("#Phn").val(data.rows[0]["Phn"]);
             });
         }
+        else {
+            $("#StfNm").val("");
+            $("#Phn").val("");
+        }
     }
-    //加载人员列表
-    //function RateGradeList() {
-    //    var sel = document.getElementById("StfId");
-    //        document.getElementById("StfId").options.length = 1;
-    //    AjaxJson("/BaseModule/BBdbR_WorkSectionBase/GetWorkSectionNm?", {}, function (data) {
-    //            for (var i = 0; i < data.rows.length; i++) {
-    //                var FaultCatg = data.rows[i]["stfnm"];
-    //                var FaultId = data.rows[i]["id"];
-    //                var opt = new Option(FaultCatg, FaultId);//第一个代表标签内的内容，第二个代表value
-    //                opt.setAttribute("id", "option" + i);
-    //                $("#option" + i).onclick = OptionClick();
-    //                sel.options.add(opt);
-    //            }
-    //    });      
-    //}
-   
-    // //option的点击事件
-    //function OptionClick() {
-    //    var obj = document.getElementById('StfId');
-    //    var index = obj.selectedIndex;
-    //    if (index != -1) {
-    //        var WorkSectionNm = obj.options[index].value;
-    //        $('#StfId').val(WorkSectionNm);
-           
-    //    }
-    //}
-
     //得到一个对象实体
     function InitControl() {
         $("#WorkshopId").val(WorkshopId);
@@ -72,10 +51,21 @@
 
     //保存事件
     function AcceptClick() {
-      
         if (!CheckDataValid('#form1')) {
             return false;
         }
+        //var CacheQantity = $("#CacheQantity").val();//缓存上限必须要大于缓存下限
+        //var CacheLimit = $("#CacheLimit").val();
+        //if (CacheQantity < CacheLimit) {
+        //    alert("缓存上限必须要大于缓存下限！");
+        //    return;
+        //}
+        //var HighestQantity = $("#HighestQantity").val();//最高在制必须要大于最低在制
+        //var LowestQantity = $("#LowestQantity").val();
+        //if (HighestQantity < LowestQantity) {
+        //    alert("最高在制必须要大于最低在制！");
+        //    return;
+        //}
         var postData = GetWebControls("#form1");
         AjaxJson("/BaseModule/BBdbR_WorkSectionBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
             if (data.Message == "该编号已经存在！") {
@@ -115,58 +105,62 @@
                 <input id="WorkshopId" maxlength=50 type="text" class="txt required" datacol="yes" err="所属车间" checkexpession="NotNull" checkdata="hasOne" />
             </td>
         </tr>
-        <tr>
+        @*<tr>
             <th class='formTitle'>JPH：</th>
-            <td class='formValue'>
-                <input id="WspJPH" maxlength=10 type="text" class="txt" />
+            <td class='formValue' colspan="3">
+                <input id="WspJPH" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>缓存上限：</th>
             <td class='formValue'>
-                <input id="CacheQantity" maxlength=10 type="text" class="txt" />
+                <input id="CacheQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>缓存下限：</th>
             <td class='formValue'>
-                <input id="CacheLimit" maxlength=10 type="text" class="txt" />
+                <input id="CacheLimit" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>最高在制：</th>
             <td class='formValue'>
-                <input id="HighestQantity" maxlength=10 type="text" class="txt" />
+                <input id="HighestQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>最低在制：</th>
             <td class='formValue'>
-                <input id="LowestQantity" maxlength=10 type="text" class="txt" />
+                <input id="LowestQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
-
+        <tr style="display:none">
+            <th class='formTitle' style="height:30px">负责人姓名：</th>
+            <td class='formValue' colspan="3">
+                <input id="StfNm" maxlength=50 type="text" class="txt required" datacol="yes" err="公司名称" checkdata="hasOne" />
+            </td>
+        </tr>
         <tr>
-            <th class='formTitle'>负责人员姓名：</th>
+            <th class='formTitle'>负责人员：</th>
             <td class='formValue'>
-                <select id="StfId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="负责人员姓名" onchange="RateGrade()">
-                    <option value="StfNm">--请选择负责人--</option>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata" onchange="RateGrade()">
+                    <option value="">
+                        请选择负责人
+                    </option>
                 </select>
             </td>
             <th class='formTitle'>负责人员手机号：</th>
             <td class='formValue'>
                 <input id="Phn" maxlength=50 type="text" class="txt" readonly />
             </td>
-        </tr>
+        </tr>*@
         <tr>
-            <th class='formTitle' style="height:30px">有效性：</th>
+            <th class='formTitle'>顺序号：</th>
             <td class='formValue' colspan="3">
-                <select id="Enable" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
-                    <option value="1">有效</option>
-                    <option value="0">无效</option>
-                </select>
+                <input id="sort" maxlength=200 type="text" class="txt"  onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle' style="height:30px">工段描述：</th>
             <td class='formValue' colspan="3">
-                <input id="Dsc" maxlength=50 type="text" class="txt" />
+                <input id="WorkSecDsc" maxlength=50 type="text" class="txt" />
             </td>
         </tr>
         <tr>

@@ -126,6 +126,7 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("Ô¤Áô×Ö¶Î2")]
         public string RsvFld2 { get; set; }
+        //public decimal TmSpan { get; set; }
         #endregion
 
         #region À©Õ¹²Ù×÷

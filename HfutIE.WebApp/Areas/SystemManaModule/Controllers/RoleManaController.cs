@@ -19,13 +19,12 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
     /// <summary>
     /// 角色管理控制器
     /// </summary>
-    public class RoleManaController : PublicController<Base_Roles3>
+    public class RoleManaController : PublicController<Base_Roles>
     {
-        #region
-        #endregion
+        
 
         #region 全局变量
-        public readonly RepositoryFactory<Base_Roles3> repositoryfactory_Base_Roles = new RepositoryFactory<Base_Roles3>();
+        public readonly RepositoryFactory<Base_Roles> repositoryfactory_Base_Roles = new RepositoryFactory<Base_Roles>();
         #endregion
 
         #region 视图
@@ -41,20 +40,22 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
 
         #region 数据库操作表格区域
         Base_Roles3Bll MyBll = new Base_Roles3Bll();
-        BBdbR_StfBaseBll StfBaseBll = new BBdbR_StfBaseBll();
-        Base_StfRoleConfBll StfRoleConfBll = new Base_StfRoleConfBll();
+        //BBdbR_StfBaseBll StfBaseBll = new BBdbR_StfBaseBll();
+        //Base_StfRoleConfBll StfRoleConfBll = new Base_StfRoleConfBll();
+        Base_ObjectUserRelationBll base_objectuserrelationbll = new Base_ObjectUserRelationBll();
+        Base_UserBll UserBll = new Base_UserBll();
         #endregion
 
         #region 方法区
 
-        #region 树
+        #region 左侧树
         /// <summary>
         /// 返回树JONS
         /// </summary>
         /// <returns></returns>
         public ActionResult TreeJson()
         {
-            DataTable dt = MyBll.GetList();
+            DataTable dt = MyBll.GetRoles();
             List<TreeJsonEntity> TreeList = new List<TreeJsonEntity>();
             if (DataHelper.IsExistRows(dt))
             {
@@ -90,7 +91,7 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetRoleList( jqgridparam);
+                DataTable ListData = MyBll.GetRoleList(ref jqgridparam);
                 var JsonData = new
                 {
                     total = jqgridparam.total,
@@ -145,12 +146,10 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         {
             try
             {
-                DataTable ListData = MyBll.SetPushinfor(RoleId);
-                var JsonData = new
-                {
-                    rows = ListData,
-                };
-                return Content(JsonData.ToJson());
+                Base_Roles dt = MyBll.SetPushinfor(RoleId);
+                //DataTable ListData = MyBll.SetPushinfor(RoleId);
+                
+                return Content(dt.ToJson());
             }
             catch (Exception ex)
             {
@@ -161,22 +160,24 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         #endregion
 
         #region 5.保存角色信息
-        public ActionResult SubmitRoleInfor(string RoleId, Base_Roles3 entity)
+        public ActionResult SubmitRoleInfor(string RoleId, Base_Roles entity)
         {
             try
             {
                 string Message = RoleId == "" ? "新增成功。" : "编辑成功。";
                 if (!string.IsNullOrEmpty(RoleId))
                 {
-                    entity.MdfTm = DateTime.Now;
-                    repositoryfactory_Base_Roles.Repository().Update(entity);
+                    Base_Roles Oldentity = repositoryfactory.Repository().FindEntity(RoleId);//获取没更新之前实体对象
+                    entity.Modify(RoleId);
+                    int IsOk = repositoryfactory_Base_Roles.Repository().Update(entity);
+                    this.WriteLog(IsOk, entity, Oldentity, RoleId, Message);//记录日志
                 }
                 else
                 {
-                    entity.RoleId = Guid.NewGuid().ToString();
-                    entity.Enabled = "1";
-                    entity.CreTm = DateTime.Now;
-                    repositoryfactory_Base_Roles.Repository().Insert(entity);
+                    //entity.RoleId = Guid.NewGuid().ToString();
+                    entity.Create();
+                    int  IsOk = repositoryfactory_Base_Roles.Repository().Insert(entity);
+                    this.WriteLog(IsOk, entity, null, RoleId, Message);//记录日志
                 }
                 return Content(new JsonMessage { Success = true, Code = "1", Message = Message }.ToString());
             }
@@ -200,6 +201,7 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
             try
             {
                 var Message = "删除失败。";
+                int IsOk = 0;//判断删除方法是否成，0表示不成功，大于0表示成功      
                 //直接删除
                 if (array != null && array.Length > 0)
                 {
@@ -208,11 +210,14 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
                         repositoryfactory_Base_Roles.Repository().Delete(array[i]);
                     }
                     Message = "删除成功。";
+                    IsOk = 1;
                 }
+                WriteLog(IsOk, array, Message);
                 return Content(new JsonMessage { Success = true, Code = "1", Message = Message }.ToString());
             }
             catch (Exception ex)
             {
+                WriteLog(-1, array, "操作失败：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
             }
         }
@@ -225,9 +230,9 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         /// <param name="Category">对象分类</param>
         /// </summary>
         /// <returns></returns>
-        public ActionResult ScopeRoleList(string RoleId, string Category)
+        public ActionResult ScopeRoleList()
         {
-            DataTable dt = MyBll.GetList();
+            DataTable dt = MyBll.GetRoles();
             List<TreeJsonEntity> TreeList = new List<TreeJsonEntity>();
             if (DataHelper.IsExistRows(dt))
             {
@@ -255,32 +260,73 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
             }
             return Content(TreeList.TreeToJson());
         }
+        public ActionResult ScopeRoleList_new()
+        {
+
+            DataTable dt = UserBll.GetTree();//获取树所需数据
+            List<TreeJsonEntity> TreeList = new List<TreeJsonEntity>();
+            if (DataHelper.IsExistRows(dt))
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    string area_key = row["keys"].ToString();
+                    bool hasChildren = false;
+                    DataTable childnode = DataHelper.GetNewDataTable(dt, "parentid='" + area_key + "'");
+                    if (childnode.Rows.Count > 0)
+                    {
+                        hasChildren = true;
+                    }
+                    TreeJsonEntity tree = new TreeJsonEntity();
+                    tree.id = area_key;
+                    tree.text = row["name"].ToString();
+                    tree.value = row["code"].ToString();
+                    tree.parentId = row["parentId"].ToString();
+                    tree.Attribute = "Type";
+                    tree.AttributeValue = row["sort"].ToString();
+                    tree.isexpand = true;
+                    tree.complete = true;
+                    tree.hasChildren = hasChildren;
+                    if (row["parentid"].ToString() == "0")
+                    {
+
+                        tree.img = "/Content/Images/Icon16/house.png";
+                    }
+                    else if (row["parentid"].ToString() != "0")
+                    {
+                        tree.img = "/Content/Images/Icon16/factory.png";
+                    }
+                    TreeList.Add(tree);
+                }
+            }
+            return Content(TreeList.TreeToJson());
+        }
         #endregion
 
         #region 加载角色用户
-        public ActionResult MemberList( string RoleId, string Category)
+        public ActionResult MemberList( string RoleId,string Category,string DepartmentId)
         {
             StringBuilder sb = new StringBuilder();
-            DataTable ListData = StfBaseBll.GetRoleUserList(RoleId);//加载用户           
+            //DataTable ListData = StfBaseBll.GetRoleUserList(RoleId);//加载用户         
+            DataTable ListData = base_objectuserrelationbll.GetList_new(RoleId, Category, DepartmentId);
             if (ListData != null && ListData.Rows.Count != 0)
             {
                 foreach (DataRow item in ListData.Rows)
                 {
                     string Genderimg = "user_female.png";
-                    if (item["StfGndr"].ToString() == "1")
+                    if (item["Gender"].ToString() == "1")
                     {
                         Genderimg = "user_green.png";
                     }
                     string strchecked = "";
-                    if (!string.IsNullOrEmpty(item["RoleId"].ToString()))//判断是否选中
+                    if (!string.IsNullOrEmpty(item["objectid"].ToString()))//判断是否选中
                     {
                         strchecked = "selected";
                     }
-                    sb.Append("<li class=\"" + item["DeptCd"] + " " + strchecked + "\">");
-                    sb.Append("<a class=\"a_" + strchecked + "\" id=\"" + item["StfId"] + "\" title='人员编号：" + item["StfCd"] + "\r\n账户：" + item["Account"] + "'><img src=\"/Content/Images/Icon16/" + Genderimg + "\">" + item["StfNm"] + "</a><i></i>");
+                    sb.Append("<li class=\"" + strchecked + "\">");
+                    sb.Append("<a class=\"a_" + strchecked + "\" id=\"" + item["UserId"] + "\" title='人员编号：" + item["Code"] + "\r\n账户：" + item["Account"] + "'><img src=\"/Content/Images/Icon16/" + Genderimg + "\">" + item["RealName"] + "</a><i></i>");
                     sb.Append("</li>");
                 }
-            }           
+            }
             return Content(sb.ToString());
         }
         #endregion
@@ -291,16 +337,19 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
             try
             {
                 string[] array = UserId.Split(',');
-                int IsOk = StfRoleConfBll.BatchAddMember(array, RoleId, Category);
+                int IsOk = base_objectuserrelationbll.BatchAddMember(array, RoleId, Category);
                 if (IsOk>0)
                 {
+                    Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "角色用户配置成功");
                     return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "操作成功。" }.ToString());
+                    
                 }
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "操作失败。" }.ToString());
             }
             catch (Exception ex)
             {
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败，错误：" + ex.Message }.ToString());
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "操作失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "角色用户配置操作失败，错误：" + ex.Message }.ToString());
             }
         }
         #endregion

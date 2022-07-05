@@ -35,13 +35,10 @@ namespace HfutIE.Business
         public DataTable GetPlanList()
         {
             StringBuilder strSql = new StringBuilder();
-            DataTable dt;
             strSql.Append(@"SELECT a.*,b.AviNm as StaAVINm,c.AviNm as EndAVINm FROM  " + tableName + " a join BBdbR_AVIBase b on a.StaAVIId=b.AviId join BBdbR_AVIBase c on a.EndAVIId=c.AviId where a.Enabled=1 ");
-            dt = Repository().FindTableBySql(strSql.ToString(), false);
-            return dt;
+            return Repository().FindTableBySql(strSql.ToString(), false);
         }
-        #endregion
-        
+        #endregion      
         #region 3.编辑方法
         //将修改后的实体跟新到数据库中
         //返回值为1，或者0
@@ -60,7 +57,7 @@ namespace HfutIE.Business
         /// <returns>返回的是搜索的表中包含该字段值的记录条数</returns>
         public int CheckCount(string KeyName, string KeyValue)
         {
-            string sql = @"select * from " + tableName + " where Enabled = '1' and'" + KeyName + "' = '" + KeyValue + "'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' and " + KeyName + " = '" + KeyValue + "'";
             DataTable count = Repository().FindTableBySql(sql);
             int a = count.Rows.Count;
             return a;
@@ -116,29 +113,24 @@ namespace HfutIE.Business
         /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns>查询的数据（列表）</returns>
-        public List<BBdbR_CarStrandedBase> GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
-            List<BBdbR_CarStrandedBase> dt;
             if (Condition == "all")
             {
-                sql = @"select * from " + tableName + " where Enabled = '1'";
-                dt = Repository().FindListBySql(sql.ToString());
+                sql = @"select a.*,b.AviNm as StaAVINm,c.AviNm as EndAVINm from " + tableName + " a join BBdbR_AVIBase b on a.StaAVIId=b.AviId join BBdbR_AVIBase c on a.EndAVIId=c.AviId where a.Enabled=1";
             }
             else
             {
                 //根据条件查询
-                sql = @"select * from " + tableName + " where Enabled = '1' and " + Condition + " like  '%" + keywords + "%'";
-                dt = Repository().FindListBySql(sql.ToString());
+                //sql = @"select * from " + tableName + " where Enabled = '1' and " + Condition + " like  '%" + keywords + "%'";
+                sql = @"SELECT a.*,b.AviNm as StaAVINm,c.AviNm as EndAVINm FROM  " + tableName + " a join BBdbR_AVIBase b on a.StaAVIId=b.AviId join BBdbR_AVIBase c on a.EndAVIId=c.AviId where a.Enabled=1 and a." + Condition + " like  '%" + keywords + "%'";
             }
-            return dt;
+            return Repository().FindTableBySql(sql.ToString(), false);
         }
+      
         #endregion
-        //public DataTable GetPlineNm()
-        //{
-        //    string sql = @"select Expr2 as id, Expr3 from dbo.View1 where Enabled='1'";
-        //    return Repository().FindTableBySql(sql);
-        //}
+
         public DataTable GetPlineNm()
         {
             string sql = @"select AviId , AviNm from BBdbR_AVIBase where Enabled='1'";

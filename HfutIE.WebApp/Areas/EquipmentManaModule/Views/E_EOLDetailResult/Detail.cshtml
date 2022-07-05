@@ -1,0 +1,59 @@
+@{
+    ViewBag.Title = "E_EOLDetailResult》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_EOLDetailResult/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <label id="EDRID" />
+            </td>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <label id="VIN" />
+            </td>
+            <th class='formTitle'>测试次数：</th>
+            <td class='formValue'>
+                <label id="TestNum" />
+            </td>
+            <th class='formTitle'>站点：</th>
+            <td class='formValue'>
+                <label id="Station" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>模块：</th>
+            <td class='formValue'>
+                <label id="ModuleNm" />
+            </td>
+            <th class='formTitle'>检查项：</th>
+            <td class='formValue'>
+                <label id="CheckNm" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="CheckContent" />
+            </td>
+            <th class='formTitle'>检查结果：</th>
+            <td class='formValue'>
+                <label id="CheckResult" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

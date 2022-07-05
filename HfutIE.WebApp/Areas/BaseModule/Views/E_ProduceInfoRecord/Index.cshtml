@@ -1,0 +1,68 @@
+@{
+    ViewBag.Title = "生产信息类采集记录表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/CommonModule/E_ProduceInfoRecord/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '主键', name: 'RecId', index: 'RecId', width: 0, align: 'left',sortable: true  },
+                { label: '机构级别', name: 'Class', index: 'Class', width: 0, align: 'left',sortable: true  },
+                { label: '设备编号', name: 'DvcCd', index: 'DvcCd', width: 0, align: 'left',sortable: true  },
+                { label: '设备名称', name: 'DvcNm', index: 'DvcNm', width: 0, align: 'left',sortable: true  },
+                { label: '车身号', name: 'BodyNo', index: 'BodyNo', width: 0, align: 'left',sortable: true  },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'left',sortable: true  },
+                { label: '车身物料号', name: 'MatCd', index: 'MatCd', width: 0, align: 'left',sortable: true  },
+                { label: '车身面漆颜色', name: 'CarColor1', index: 'CarColor1', width: 0, align: 'left',sortable: true  },
+                { label: '车身罩光颜色', name: 'CarColor2', index: 'CarColor2', width: 0, align: 'left',sortable: true  },
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'left',sortable: true  },
+                { label: '流水号', name: 'SequenceNo', index: 'SequenceNo', width: 0, align: 'left',sortable: true  },
+                { label: '生产计数', name: 'Count', index: 'Count', width: 0, align: 'left',sortable: true  },
+                { label: '下线时间', name: 'OfflineTime', index: 'OfflineTime', width: 0, align: 'left',sortable: true  },
+                { label: '采集状态', name: 'CollectionStatus', index: 'CollectionStatus', width: 0, align: 'left',sortable: true  },
+                { label: '采集日期', name: 'CollectionDate', index: 'CollectionDate', width: 0, align: 'left',sortable: true  },
+                { label: '采集时间', name: 'CollectionTime', index: 'CollectionTime', width: 0, align: 'left',sortable: true  },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left',sortable: true  },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'left',sortable: true  },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left',sortable: true  },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left',sortable: true  },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

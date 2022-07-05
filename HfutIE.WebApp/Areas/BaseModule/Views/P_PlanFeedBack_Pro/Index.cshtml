@@ -1,0 +1,347 @@
+﻿@{
+    ViewBag.Title = "报工反馈记录表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        //GetOpCode();
+        bindAVINm();
+        GetGrid();
+        GetGrid1();
+    })
+    //加载表格-未反馈
+    function GetGrid() {
+        var AviCd = $("#AviCd").val();
+        var VIN = $("#VIN").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/P_PlanFeedBack_Pro/GridPageByCondition1")?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd),
+        datatype: "json",
+        //height: $(window).height() - 180,
+        height: ($(window).height() - 262) * 0.5,
+        autowidth: true,
+        colModel: [
+            { label: '主键', name: 'PlanFeedBackProId', index: 'PlanFeedBackProId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '工单号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 0, align: 'center', sortable: true },
+            { label: '底盘号', name: 'ChassisCd', index: 'ChassisCd', width: 0, align: 'center', sortable: true },
+            { label: '工序编码', name: 'OP_CODE', index: 'OP_CODE', width: 0, align: 'center', sortable: true },
+            { label: '工序名称', name: 'OP_NAME', index: 'OP_NAME', width: 0, align: 'center', sortable: true },
+            { label: 'AVI点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center', sortable: true },
+            { label: 'AVI点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center', sortable: true },
+            { label: '订单编号', name: 'OrderCd', index: 'OrderCd', width: 0, align: 'center', sortable: true },
+            { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+            { label: '车型名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+            {
+                label: '过点反馈时间', name: 'FeedbackTime', index: 'FeedbackTime', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                }
+            },
+            {
+                label: '反馈状态', name: 'FeedBackState', index: 'FeedBackState', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == '0') return "未反馈";
+                    else if (cellvalue == '1') return "已反馈";
+                    else return "";
+                }
+            },
+            //{ label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+            {
+                label: '修改时间', name: 'MODIFY_Time', index: 'MODIFY_Time', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                } },
+            { label: '修改人', name: 'MODIFY_ID', index: 'MODIFY_ID', width: 0, align: 'center', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            //{ label: '序列号', name: 'SequenceNo', index: 'SequenceNo', width: 0, align: 'center', sortable: true },
+                
+                
+            //{ label: 'OrderStatus', name: 'OrderStatus', index: 'OrderStatus', width: 0, align: 'center', sortable: true },
+            //{ label: 'PlanStatus', name: 'PlanStatus', index: 'PlanStatus', width: 0, align: 'center', sortable: true },
+            //{ label: 'PlanDsc', name: 'PlanDsc', index: 'PlanDsc', width: 0, align: 'center', sortable: true },
+
+                //{ label: 'AVI站点主键', name: 'AviId', index: 'AviId', width: 0, align: 'center',sortable: true,hidden: true  },
+                //{ label: 'AVI站点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center',sortable: true  },
+            //{ label: 'AVI站点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center', sortable: true },
+                 //{ label: '车身去向产线主键', name: 'PlineId', index: 'PlineId', width: 0, align: 'center',sortable: true,hidden: true  },
+                //{ label: '车身去向产线编号', name: 'PlineCd', index: 'PlineCd', width: 0, align: 'center',sortable: true  },
+            //{ label: '车身去向产线名称', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true },
+                //{ label: '工位主键', name: 'WcId', index: 'WcId', width: 0, align: 'center',sortable: true,hidden: true  },
+                //{ label: '工位编号', name: 'WcCd', index: 'WcCd', width: 0, align: 'center',sortable: true  },
+                //{ label: '工位名称', name: 'WcNm', index: 'WcNm', width: 0, align: 'center',sortable: true  },
+                 //{ label: 'IsFile', name: 'IsFile', index: 'IsFile', width: 0, align: 'center',sortable: true,
+                 //   formatter: function (cellvalue, options, rowObject) {
+                 //       if (cellvalue == '0') return "否";
+                 //       else if (cellvalue == '1') return "是";
+                 //       else return "";
+                 //   }  },
+                //{ label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center',sortable: true  },
+                
+                //{ label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
+                //{ label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'asc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+        multiselect: true,
+        multiboxonly: true,//永远只有一行被选中
+        loadonce: true,
+        rowNum: 50,
+        rowList: [50,100,200, 500, 1000, 2000],
+        viewrecords: true,//显示总的记录条数
+    });
+    }
+    //加载表格-已反馈
+    function GetGrid1() {
+        var AviCd = $("#AviCd").val();
+        var VIN = $("#VIN").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        $("#gridTable1").jqGrid({
+         url: "@Url.Content("~/BaseModule/P_PlanFeedBack_Pro/GridPageByCondition2")?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd),
+        datatype: "json",
+            height: ($(window).height()-262)*0.5,
+        //height: 280,
+       // width: $(window).width() * 0.99,
+        autowidth: true,
+        colModel: [
+            { label: '主键', name: 'PlanFeedBackProId', index: 'PlanFeedBackProId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '工单号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 0, align: 'center', sortable: true },
+            { label: '底盘号', name: 'ChassisCd', index: 'ChassisCd', width: 0, align: 'center', sortable: true },
+            { label: '工序编码', name: 'OP_CODE', index: 'OP_CODE', width: 0, align: 'center', sortable: true },
+            { label: '工序名称', name: 'OP_NAME', index: 'OP_NAME', width: 0, align: 'center', sortable: true },
+            { label: 'AVI点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center', sortable: true },
+            { label: 'AVI点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center', sortable: true },
+            {
+                label: '过点反馈时间', name: 'FeedbackTime', index: 'FeedbackTime', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                }
+            },
+            { label: '订单编号', name: 'OrderCd', index: 'OrderCd', width: 0, align: 'center', sortable: true },
+            { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+            { label: '车型名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+            {
+                label: '反馈状态', name: 'FeedBackState', index: 'FeedBackState', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == '0') return "未反馈";
+                    else if (cellvalue == '1') return "已反馈";
+                    else return "";
+                }
+            },
+            //{ label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+            {
+                label: '修改时间', name: 'MODIFY_Time', index: 'MODIFY_Time', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                }},
+            { label: '修改人', name: 'MODIFY_ID', index: 'MODIFY_ID', width: 0, align: 'center', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            
+        ],
+        pager: "#gridPager1",
+        sortname: 'FeedbackTime',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+        multiselect: true,
+        multiboxonly: true,//永远只有一行被选中
+        loadonce: true,
+        rowNum: 50,
+        rowList: [50,100,200, 500, 1000, 2000],
+        viewrecords: true,//显示总的记录条数
+    });
+    }
+    
+    //加载工序编号下拉框
+    //function GetOpCode() {
+    //    $("#OP_CODE").append("<option value='' selected='selected'>==全部==</option>");
+    //    AjaxJson("/BaseModule/P_PlanFeedBack_Pro/GetOp_CodeList", {}, function (data) {
+    //        for (var i = 0; i < data.length; i++) {
+    //            $("#OP_CODE").append("<option value='" + data[i]["OP_CODE"] + "'>" + data[i]["OP_NAME"] + "</option>");
+    //        }
+    //    });
+    //}
+    //绑定AVI名称下拉框
+    function bindAVINm() {
+        $("#AviCd").html("");
+        $("#AviCd").append("<option value=''>全部</option>");
+        AjaxJson("/BaseModule/P_PlanFeedBack_Pro/getAllAviNm", {}, function (DataJson) {
+            $.each(DataJson, function (i) {
+                $("#AviCd").append($("<option></option>").val(DataJson[i].AviCd).html(DataJson[i].AviNm));
+            });
+        });
+    }
+    //搜索
+    function btn_Search() {
+        var AviCd = $("#AviCd").val();
+        var VIN = $("#VIN").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/P_PlanFeedBack_Pro/GridPageByCondition1")?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        $("#gridTable1").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/P_PlanFeedBack_Pro/GridPageByCondition2")?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+   
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+         $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+         $("#gridTable1").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+    //待补录数据(目前和检索条件无关)
+    @*function btn_addrecord() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/P_PlanFeedBack_Pro/GridPageAddRecord?keywords=''&Condition=''")", datatype: "json"
+        }).trigger('reloadGrid');
+    }*@
+
+     //编辑补录
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PlanFeedBackProId");
+        
+        if (IsDelData(KeyValue)) {
+            var count = KeyValue.split(",").length;
+            if (count == undefined) {
+                count = 1;
+            }
+            if (count > 100) {
+                tipDialog("一次性报工最多选择100条", 3, -2);
+            } else {
+                AjaxJson('/BaseModule/P_PlanFeedBack_Pro/SetWorkId', { KeyValue: KeyValue }, function (data) {
+
+                });
+                var url = "/BaseModule/P_PlanFeedBack_Pro/Form?KeyValue=''";
+                openDialog(url, "Form", "编辑报工反馈信息", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+            
+        }
+    }
+    //一键补录为当前时间
+    function btn_onekey() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PlanFeedBackProId");
+        
+        if (IsDelData(KeyValue)) {
+            //var delparm = 'KeyValue=' + KeyValue;
+            var count = KeyValue.split(",").length;
+            if (count == undefined) {
+                count = 1;
+            }
+            if (count > 100) {
+                tipDialog("一次性报工最多选择100条", 3, -2);
+            } else {
+                confirmDialog("温馨提示", "注：您确定要同时补录 " + count + " 笔记录为当前时间？", function (r) {
+                    if (r) {
+                        Loading(true, "正在补录数据...");
+                        window.setTimeout(function () {
+                            AjaxJson('/BaseModule/P_PlanFeedBack_Pro/OneKeyRecord', { KeyValue: KeyValue, Type: 0 }, function (data) {
+                                tipDialog(data.Message, 3, data.Code);
+                                if (data.Code > 0) {
+                                    windowload();
+                                }
+                            });
+                        }, 200);
+                    }
+                });
+            }
+            
+        }
+    }
+    
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>
+                经过AVI点名称
+            </th>
+            <td>
+                <select id="AviCd" style="width: 150px;height:25px"></select>
+            </td>
+            <th>
+                VIN码
+            </th>
+            <td>
+                <input id="VIN" type="text" class="txt" style="width: 150px" />
+            </td>
+            <th>
+                车型编码
+            </th>
+            <td>
+                <input id="MatCd" type="text" class="txt" style="width: 150px" />
+            </td>
+            <th>
+                工单号
+            </th>
+            <td>
+                <input id="ProducePlanCd" type="text" class="txt" style="width: 150px" />
+            </td>
+            <td id="timetd">
+                <label>采集开始时间：</label>
+                <input id="ColletionTimeStart" type="text" class="txt Wdate" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'ColletionTimeEnd\')}'}); blur();" value="@DateTime.Now.AddDays(-DateTime.Now.Day + 1).ToString("yyyy-MM-dd")" readonly/>
+                <label>采集结束时间：</label>
+                <input id="ColletionTimeEnd" type="text" class="txt Wdate" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'ColletionTimeStart\')}'}); blur();" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" readonly/>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    @*表格区域*@
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            未反馈报工反馈信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            已采集报工信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable1"></table>
+            <div id="gridPager1"></div>
+        </div>
+    </div>
+    
+</div>

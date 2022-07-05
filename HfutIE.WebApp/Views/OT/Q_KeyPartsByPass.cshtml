@@ -1,0 +1,418 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安驰FAS-关重件补录界面</title>
+    <title>江淮安驰FAS系统</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <!--页面必备-->
+    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css">
+    <!--jqgrid表格组件-->
+    <script src="~/Content/Scripts/jqgrid/jquery-ui-custom.min.js"></script>
+    <script src="~/Content/Scripts/jqgrid/grid.locale-cn.js"></script>
+    <link href="~/Content/Scripts/jqgrid/css/jqgrid.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jqgrid/jqGrid.js"></script>
+
+    <!--sweetalert弹窗-->
+    <link href="~/Content/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            Initialize();
+        });
+        //1.全局变量
+        //1.1初始加载静态信息
+        let VIN = "";
+        //2.初始化加载
+        function Initialize() {
+            try {
+                $("#all").width($(window).width());
+                $("#all").height($(window).height());
+                $("#vin_input").focus();
+               // SetDefaultFocus();  //默认输入位置至于物料码输入框
+                bindKeyDown();      //为物料码输入框绑定键盘点击事件
+                GetCurrentDate();   //实时时间刷新
+                GetGrid();
+            } catch (e) {
+                uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
+            }
+        }
+
+        //2.4为物料码输入框和VIN码绑定键盘点击事件--回车
+        function bindKeyDown() {
+            $("#part_input").bind("keydown", function (e) {
+                //兼容浏览器的事件
+                let theEvent = e || window.event;
+                //兼容各浏览器的键盘事件+
+                let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (keyCode == 13) {
+                    partBind();
+                }
+            });
+            $("#vin_input").bind("keydown", function (e) {
+                let theEvent = e || window.event;
+                let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (keyCode == 13) {
+                    let vin = $("#vin_input").val().trim();
+                    manualCarStart(vin);
+                }
+            });
+        }
+
+        //2.5实时时间刷新
+        function GetCurrentDate() {
+            var myDate = new Date();
+            var year = myDate.getFullYear();        //获取当前年
+            var month = myDate.getMonth() + 1;   //获取当前月
+            var date = myDate.getDate();            //获取当前日
+            var h = myDate.getHours();              //获取当前小时数(0-23)
+            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+            var s = myDate.getSeconds();
+            var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+            jQuery("#localtime").html(now);
+            setTimeout(GetCurrentDate, 1000);
+        }
+
+        //3.1自动清除输入框中文字
+        function InputOnFocus(obj) {
+            var val = obj.value.trim();
+            if (val == "请输入VIN码" || val == "请输入物料码") {
+                obj.value = "";
+            }
+        }
+        //3.2光标离开时恢复输入框提示
+        function InputOnBlur(obj) {
+            if (obj.value.trim() == "") {
+                if (obj.id == "vin_input") {
+                    obj.value = "请输入VIN码";
+                } else if (obj.id == "part_input") {
+                    obj.value = "请输入物料码";
+                }
+            }
+        }
+        //3.3显示大图
+        function imgShow( _this) {
+            outerdiv = $("#outerdiv");
+            innerdiv = $("#innerdiv");
+            max_img = $("#max_img");
+            var src = _this.src;//获取当前点击的min_img元素中的src属性
+            $("#max_img").attr("src", src);//设置#max_img元素的src属性
+
+            /*获取当前点击图片的真实大小，并显示弹出层及大图*/
+            $("<img/>").attr("src", src).load(function () {
+                var windowW = $(window).width();//获取当前窗口宽度
+                var windowH = $(window).height();//获取当前窗口高度
+                var realWidth = this.width;//获取图片真实宽度
+                var realHeight = this.height;//获取图片真实高度
+                var imgWidth, imgHeight;
+                var scale = 0.8;//缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放
+
+                if (realHeight > windowH * scale) {//判断图片高度
+                    imgHeight = windowH * scale;//如大于窗口高度，图片高度进行缩放
+                    imgWidth = imgHeight / realHeight * realWidth;//等比例缩放宽度
+                    if (imgWidth > windowW * scale) {//如宽度扔大于窗口宽度
+                        imgWidth = windowW * scale;//再对宽度进行缩放
+                    }
+                } else if (realWidth > windowW * scale) {//如图片高度合适，判断图片宽度
+                    imgWidth = windowW * scale;//如大于窗口宽度，图片宽度进行缩放
+                    imgHeight = imgWidth / realWidth * realHeight;//等比例缩放高度
+                } else {//如果图片真实高度和宽度都符合要求，高宽不变
+                    imgWidth = realWidth;
+                    imgHeight = realHeight;
+                }
+                $("#max_img").css("width", imgWidth);//以最终的宽度对图片缩放
+                var w = (windowW - imgWidth) / 2;//计算图片与窗口左边距
+                var h = (windowH - imgHeight) / 2;//计算图片与窗口上边距
+                $(innerdiv).css({ "top": h, "left": w });//设置#innerdiv的top和left属性
+                $(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg
+            });
+            $(outerdiv).click(function () {//再次点击淡出消失弹出层
+                $(this).fadeOut("fast");
+            });
+        }
+        //4.1.3VIN码入站
+        function manualCarStart(vin) {
+            try {
+                VIN = vin;
+                $("#gridTable").jqGrid('setGridParam', {
+                    postData: { VIN: VIN },
+                    datatype: 'json'
+                }).trigger('reloadGrid');
+                AjaxJson('@Url.Content("~/OT/GetByPassVinInfo")', { VIN: vin}, function (data) {
+                    if (carStart(data)) {
+                        $("#vin_input").val("");
+                        updateLog("车身加载成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                    }
+                });
+                $("#part_input").focus();
+            } catch (e) {
+
+            }
+        }
+
+        //4.1.4入站处理
+        function carStart(data) {
+            try {
+                //左侧加载图片
+                $("#productpicture").attr("src", "/Content/Images/LOGO/logoM5.jpg")
+                $("#vin").html(data.VIN );//Vin码
+                $("#sequence").html(data.SequenceNo);//顺序号
+                $("#color").html(data.CarColor1);//颜色
+                $("#cartype").html(data.CarType);//车型
+                $("#car_dis").html(data.MatNm);//车身描述
+                return true;
+            } catch (e) {
+                uperrorLog("车身加载错误：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
+                return false;
+            }
+        }
+        //加载表格
+        function GetGrid() {
+            $("#gridTable").jqGrid({
+                url: '@Url.Content("~/OT/GetByPassParts")',
+                datatype: "json",
+                height: 350,
+                colModel: [
+                    { label: '主键', name: 'KeyByPassProId', index: 'KeyByPassProId', width: 0, align: 'center', sortable: true, hidden: true },
+                    { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true, hidden: true },
+                    { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 100, align: 'center', sortable: true },
+                    { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 100, align: 'center', sortable: true },
+                    { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 150, align: 'center', sortable: true },
+                    { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 170, align: 'center', sortable: true },
+                    { label: '录入人员', name: 'StfCd', index: 'StfCd', width: 100, align: 'center', sortable: true },
+                    { label: '录入人员', name: 'StfNm', index: 'StfNm', width: 150, align: 'center', sortable: true },
+                    { label: '录入时间', name: 'Datetime', index: 'Datetime', width: 215, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat:'Y-m-d H:i:s'} },
+                    { label: '备注', name: 'Rem', index: 'Rem', width: 150, align: 'center',sortable: true  },
+                ],
+                pager: "#gridPager",
+                sortname: 'Datetime',
+                rownumbers: true,
+                shrinkToFit: false,
+                gridview: true,
+                loadComplete: function () {
+                    let count = $('#gridTable').getGridParam("reccount");
+                    //alert(count);
+                    if (count != 0) {
+                        $("#tableTitle").css("background-color", "red");
+                        $("#tableTitle").html("该车存在" + count + "条ByPass记录");
+                    }
+                }
+            });
+        }
+        //4.2.1根据回车触发关重件绑定
+        function partBind() {
+            let BarCode = $("#part_input").val().trim();
+            $("#part_input").val("");
+            if (BarCode.length < 14) {
+                tipDialog("条码长度异常",3,-2);
+                return false;
+            }
+            AjaxJson('@Url.Content("~/OT/PassBindBind")', { VIN: VIN, BarCode: BarCode, StfCd: null }, function (data) {
+                if (data.code == 1) {
+                    $("#gridTable").jqGrid('setGridParam', {
+                        postData: { VIN: VIN },
+                        datatype: 'json'
+                    }).trigger('reloadGrid');
+                    updateLog("物料绑定提醒:【VIN：" + VIN + "】【关重件条码：" + BarCode + "】");
+                }
+                else if (data.code == 0) {
+                    uperrorLog("物料解析异常:【VIN：" + VIN + "】【关重件条码：" + BarCode + "】【异常信息：未解析到条码对应物料】");
+                } else {
+                    uperrorLog("物料绑定错误:【VIN：" + VIN + "】【关重件条码：" + BarCode + "】【异常信息：" + data.msg + "】");
+                }
+            });
+        }
+        //4.2.3强制绑定
+        function mustBind() {
+            try {
+                var KeyValue = GetJqGridRowValue("#gridTable", "KeyByPassProId");
+                if (IsChecked(KeyValue)) {
+                    swal({
+                        title: "强制绑定",
+                        text: "不进行物料解析，直接将条码与物料进行绑定，无供应商信息",
+                        type: "input",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "请输入物料条码"
+                    },
+                        function (input) {
+                            if (input == false) {
+                                return false;
+                            }
+                            input = $.trim(input);
+                            if (input.length < 14) {
+                                swal.showInputError("条码长度过短，判断为错误输入！");
+                                return false;
+                            } else {mustBindFun(KeyValue, input, null);
+                                if (result == true) {
+                                    swal("已强制绑定！", "成功", "success");
+                                }
+                                else {
+                                    swal.showInputError(result);
+                                }
+                            }
+                        }
+                    );
+                }
+            } catch (e) {
+                uperrorLog("界面异常：【错误信息：" + e + "】");
+                return false;
+            }
+        }
+
+        let result = "";
+        function mustBindFun(KeyByPassProId, BarCode,StfCd) {
+            AjaxJson('@Url.Content("~/OT/MustBind")', { KeyByPassProId: KeyByPassProId, BarCode: BarCode, StfCd: StfCd}, function (data) {
+                if (data.code == 1) {
+                    $("#gridTable").jqGrid('setGridParam', {
+                        postData: { VIN: VIN },
+                        datatype: 'json'
+                    }).trigger('reloadGrid');
+                    updateLog("物料绑定提醒:【VIN：" + VIN + "】【关重件条码：" + BarCode + "】");
+                    result = true;
+                }
+                else {
+                    uperrorLog("物料绑定错误:【VIN：" + VIN + "】【关重件条码：" + BarCode + "】【异常信息：" + data.msg + "】");
+                    result = data.msg;
+                }
+            });
+        }
+        //更新日志信息
+        function updateLog(data) {
+            let html = $("#bottom_text")[0].innerHTML;
+            $("#bottom_text")[0].innerHTML = `<p style='color:green;font-size:22px;float:left;margin-left:20px;text-align: left;' >${data}-【时间：${$("#localtime").html()}】</p><br/>` + html;
+            AjaxJson("/OT/WriteLog", { PlineCd: "", text: data }, function (data) {
+                return true;
+            })
+        }
+        //更新异常日志信息
+        function uperrorLog(data) {
+            let html = $("#bottom_text")[0].innerHTML;
+            $("#bottom_text")[0].innerHTML = `<p style='color:red;font-size:22px;float:left;margin-left:20px;text-align: left;' >${data}-【时间：${$("#localtime").html()}】</p><br/>` + html;
+            AjaxJson("/OT/WriteLog", { PlineCd: "Error", text: data }, function (data) { return false;})
+        }
+    </script>
+</head>
+
+<body>
+    <div class="all" id="all">
+        <div class="up" id="up">
+            <div id="logo_img" class="logo_img">
+                <img id="refinelogo" src="~/Content/Images/LOGO/logoRefine.png" alt="refineLogo" align="middle" />
+            </div>
+            <div class="up_box baclground" id="up_localtime">
+                <div id="localtime" class="p_in_upbox" style="font-size: 15px;"></div>
+                <p id="localtime_dis" class="p_mark_in_upbox">时间</p>
+            </div>
+            @*<div class="up_box baclground" id="up_station">
+                <div id="station" class="p_in_upbox" style="font-size: 20px;">工位</div>
+                <p id="station_dis" class="p_mark_in_upbox">工位</p>
+            </div>
+            <div class="up_box baclground" id="up_people" title="人员等级">
+                <div id="people" class="p_in_upbox" style="font-size: 20px;">人员</div>
+                <p id="people_dis" class="p_mark_in_upbox">人员</p>
+            </div>*@
+            <div class="up_box baclground" id="up_button">
+                <div class="up_button" id="videoButton" onclick="mustBind()">
+                    <img src="../Content/Images/Icon32/file_manager.png"  />
+                    <br />
+                    <p id="mustBind" class="p_mark_in_upbox">强制绑定</p>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="down" id="down">
+            <div class="left" id="left">
+                <div id="car_img" class="car_img">
+                    <img id='productpicture' src="~/Content/Images/LOGO/logoM5.jpg" alt="车身照片" onclick="imgShow(this)" />
+                </div>
+                <div class="left_box" id="vin_box">
+                    <div id="vin" class="in_left_box baclground">
+                        VIN码
+                    </div>
+                </div>
+                <div class="left_box" id="sequence_box">
+                    <div id="sequence" class="in_left_box baclground">
+                        流水号
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="color_box">
+                    <div id="color" class="in_left_box in_left_box_small baclground">
+                        颜色
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="cartype_box">
+                    <div id="cartype" class="in_left_box in_left_box_small baclground">
+                        车型
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="left_box" id="car_dis_box" style="height:15%">
+                    <div class="in_left_box baclground">
+                        <div id="car_dis" class="in_left_box baclground">
+                            车身描述
+                        </div>
+                    </div>
+                </div>
+                <div class="left_box" id="vin_input_box">
+                    <input id="vin_input" class="input_text" type="text" value="请输入VIN码" onfocus="InputOnFocus(this)" onblur="InputOnBlur(this)">
+                </div>
+                <div class="left_box" id="part_input_box">
+                    <input id="part_input" class="part_input" type="text" value="请输入物料码" onfocus="InputOnFocus(this)" onblur="InputOnBlur(this)" style="width:75%;height:50%;">
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="main" id="main">
+                <div id="tableTitle" style="background-color: green; height: 10%; width: 100%; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center;">
+                    该车物料已全部完成绑定
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable" style="font-size:20pt"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+
+            <div class="bottom" id="bottom">
+                <div id="bottem_dis">
+                    日志信息
+                </div>
+                <div id="bottom_text">
+
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+
+    </div>
+    <!-- 图片放大时使用 -->
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="max_img" style="border:5px solid #fff;" src="" />
+        </div>
+    </div>
+</body>
+
+</html>
+

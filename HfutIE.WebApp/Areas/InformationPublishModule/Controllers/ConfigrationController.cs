@@ -28,7 +28,7 @@ namespace HfutIE.WebApp.Areas.InformationPublishModule.Controllers
         public readonly RepositoryFactory<BBdbR_PushInfor> repositoryfactory_pushinfor = new RepositoryFactory<BBdbR_PushInfor>();
         public readonly RepositoryFactory<BBdbR_StfBase> repositoryfactory_StfBase = new RepositoryFactory<BBdbR_StfBase>();
         public readonly RepositoryFactory<BBdbR_PushObjectConf> repositoryfactory_PushObConf = new RepositoryFactory<BBdbR_PushObjectConf>();
-        public readonly RepositoryFactory<Base_Roles3> repositoryfactory_RoleObConf = new RepositoryFactory<Base_Roles3>();
+        public readonly RepositoryFactory<Base_Roles> repositoryfactory_RoleObConf = new RepositoryFactory<Base_Roles>();
         public readonly RepositoryFactory<BBdbR_GroupChat> repositoryfactory_GroupObConf = new RepositoryFactory<BBdbR_GroupChat>();
         #endregion
 

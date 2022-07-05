@@ -41,7 +41,7 @@ namespace HfutIE.Business
         public List<BBdbR_SupplierBase> GetPageList(JqGridParam jqgridparam) //===复制时需要修改===
 
         {
-            string sql = @"select * from " + tableName + " where Enabled = '1'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' ";
             return Repository().FindListPageBySql(sql, ref jqgridparam);
         }
         #endregion

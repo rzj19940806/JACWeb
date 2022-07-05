@@ -6,6 +6,7 @@
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -36,33 +37,44 @@ namespace HfutIE.Business
         public DataTable GetTree()
         {
             StringBuilder strSql = new StringBuilder();
-            //===复制时需要修改===（三级树）
+            //===复制时需要修改===（三级数）
+            //车间节点
+            strSql.Append(@"select c.WorkshopId As keys,
+                                   c.WorkshopCd As code,
+                                   c.WorkshopNm As name,
+                                   c.Enabled As IsAvailable,
+                                   '0' as parentId,
+                                   '0' as sort             
+                                   from BBdbR_WorkshopBase c where c.Enabled = '1'");
             //工段节点
-            strSql.Append(@"select a.WorkSectionId AS keys,
-                                    a.WorkSectionCd AS code, 
-                                    a.WorkSectionNm AS name, 
-                                    a.Enabled As IsAvailable,
-                                    '0' as parentId,
-                                    '0' as sort 
-                                    from BBdbR_WorkSectionBase a where a.Enabled= '1'");
+            strSql.Append(@"union select 
+                                    b.WorkSectionId AS keys,
+                                    b.WorkSectionCd AS code, 
+                                    b.WorkSectionNm AS name, 
+                                    b.Enabled As IsAvailable,
+                                    b.WorkshopId as parentId,
+                                    '1' as sort 
+                                    from BBdbR_WorkSectionBase b,BBdbR_WorkshopBase c where b.WorkshopId = c.WorkshopId and b.Enabled= '1'  ");
             //产线节点
-            strSql.Append(@"union select  PlineId AS keys,     
-                            b.PlineCd AS code,
-                            b.PlineNm AS name,
-                            b.Enabled As IsAvailable,
-                            b.WorkSectionId as parentId,  
-                            '1' as sort    
-                        from BBdbR_PlineBase b ,BBdbR_WorkSectionBase c where  b.Enabled= '1' and  c.Enabled= '1' and b.WorkSectionId = c.WorkSectionId");
-            //工位节点
             strSql.Append(@" union select    
-                                    d.WcId AS keys,
-                                    d.WcCd AS code,
-                                    d.WcNm AS name,
-                                    d.Enabled As IsAvailable,
-                                    d.PlineId AS parentId,
+                                    a.PlineId AS keys,
+                                    a.PlineCd AS code,
+                                    a.PlineNm AS name,
+                                    a.Enabled As IsAvailable,
+                                    a.WorkSectionId AS parentId,
                                     '2' as sort 
-                             from BBdbR_WcBase d,BBdbR_PlineBase e
-                             where  d.PlineId=e.PlineId and d.Enabled = '1' and e.Enabled = '1' order by code asc");
+                             from  BBdbR_PlineBase a,BBdbR_WorkSectionBase b 
+                             where a.WorkSectionId=b.WorkSectionId and a.Enabled = '1' and a.Enabled = '1' order by code asc");
+            ////工位节点
+            //strSql.Append(@" union select    
+            //                        d.WcId AS keys,
+            //                        d.WcCd AS code,
+            //                        d.WcNm AS name,
+            //                        d.Enabled As IsAvailable,
+            //                        d.PlineId AS parentId,
+            //                        '3' as sort 
+            //                 from BBdbR_WcBase d,BBdbR_PlineBase a
+            //                 where  d.PlineId=a.PlineId and d.Enabled = '1' and a.Enabled = '1' order by code asc");
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion
@@ -129,7 +141,7 @@ namespace HfutIE.Business
         /// <returns>返回的是搜索的表中包含该字段值的记录条数</returns>
         public int CheckCount(string KeyName, string KeyValue)
         {
-            string sql = @"select * from " + tableName + " where  " + KeyName + " = '" + KeyValue + "'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' and " + KeyName + " = '" + KeyValue + "'";
             DataTable count = Repository().FindTableBySql(sql);
             int a = count.Rows.Count;
             return a;
@@ -273,6 +285,63 @@ namespace HfutIE.Business
             BBdbR_PostBase Dvcentity = new BBdbR_PostBase();
             Dvcentity = dt[0];
             return Dvcentity;
+        }
+        #endregion
+
+        #region 8.获得导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
         }
         #endregion
 

@@ -100,17 +100,6 @@ namespace HfutIE.Business
         //1表示操作成功，0表示操作失败
         public int Insert(BBdbR_AlarmAddressBase entity) //===复制时需要修改===
         {
-            
-            string sql = @"select Class,ClassId from BBdbR_DvcBase where DvcId="+entity.DvcId+"";
-            DataTable dt= Repository().FindTableBySql(sql);
-            entity.Class = dt.Rows[0]["Class"].ToString();
-            entity.ClassId = dt.Rows[0]["ClassId"].ToString();
-            //if (dt.Rows[0]["Class"] == "产线")
-            //{
-            //    string sql1 = @"select PlineNm from BBdbR_PlineBase where PlineId=" + dt.Rows[0]["ClassId"] + "";
-            //    DataTable dt1 = Repository().FindTableBySql(sql);
-            //}
-            //return a;
             return Repository().Insert(entity);
         }
         #endregion
@@ -231,6 +220,7 @@ namespace HfutIE.Business
             return dt;
         }
         #endregion
+    
         #region 10.导出模板
         public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
         {
@@ -288,208 +278,20 @@ namespace HfutIE.Business
         }
         #endregion
 
-        #region 7.导入
-        /// <summary>
-        /// 导入数据
-        /// </summary>
-        /// <param name="dt">Excel数据</param>
-        /// <returns></returns>
-        public int ImportExcel(string moduleId, DataTable dt, out DataTable Result)
+       
+        #region 导出得到设备ID
+        public DataTable searchID(string DvcCd)
         {
-            //构造导入返回结果表
-            DataTable Newdt = new DataTable("Result");
-            Newdt.Columns.Add("rowid", typeof(System.String));                 //行号
-            Newdt.Columns.Add("locate", typeof(System.String));                 //位置
-            Newdt.Columns.Add("reason", typeof(System.String));                 //原因
-            int IsOk = 0;
-            //获得导入模板
-            //模板主表
-            Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
-            if (base_excellimport.ImportId == null)
+            try
             {
-                IsOk = 0;
+                string sql = @"select DvcId as id from BBdbR_DvcBase where DvcCd = '" + DvcCd + "' and Enabled = 1";
+                DataTable dtID = Repository().FindTableBySql(sql.ToString(), false);
+                return dtID != null ? dtID : null;
             }
-            else
+            catch (Exception ex)
             {
-                //string pkName = new Base_DataBaseBll().GetPrimaryKey(base_excellimport.ImportTable);//主键列名
-                //模板明细表
-                List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", base_excellimport.ImportId);
-                //取出要插入的表名
-                string tableName = base_excellimport.ImportTable;
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    bool isExit = false;
-                    IDatabase database = DataFactory.Database();
-                    DbTransaction isOpenTrans = database.BeginTrans();
-                    try
-                    {
-                        #region 遍历Excel数据行
-                        int rowNum = 1;
-                        int errorNum = 1;
-                        foreach (DataRow item in dt.Rows)
-                        {
-                            Hashtable entity = new Hashtable();//最终要插入数据库的hashtable
-                            StringBuilder sb = new StringBuilder();
-                            StringBuilder rowSb = new StringBuilder();//累加每一个单元格的值，一行全空就停止插入
-                            #region 遍历模板，为每一行中每个字段找到模板列并赋值
-                            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
-                            {
-                                string value = "";
-                                value = item[excelImportDetail.ColumnName].ToString();
-                                rowSb.Append(value);//累加每一个单元格的值，一行全空就停止插入
-                                DateTime dateTime = DateTime.Now;
-                                decimal num = 0;
-                                #region 单个字段赋值
-                                switch (excelImportDetail.DataType)
-                                {
-                                    //字符串
-                                    case "0":
-
-                                        entity[excelImportDetail.FieldName] = value;
-                                        break;
-                                    //数字
-                                    case "1":
-                                        if (decimal.TryParse(value, out num))
-                                        {
-                                            entity[excelImportDetail.FieldName] = value;
-                                        }
-                                        else
-                                        {
-                                            if (base_excellimport.ErrorHanding == "0")
-                                            {
-                                                isExit = true;
-                                            }
-                                            DataRow dr = Newdt.NewRow();
-                                            dr = Newdt.NewRow();
-                                            dr[0] = errorNum;
-                                            dr[1] = "第[" + rowNum.ToString() + "]行[" + excelImportDetail.ColumnName + "]";
-                                            dr[2] = "数字格式不正确";
-                                            Newdt.Rows.Add(dr);
-                                            errorNum++;
-                                            continue;
-                                        }
-                                        break;
-                                    //日期
-                                    case "2":
-                                        if (DateTime.TryParse(value, out dateTime))
-                                        {
-                                            entity[excelImportDetail.FieldName] = value;
-                                        }
-                                        else
-                                        {
-                                            if (base_excellimport.ErrorHanding == "0")
-                                            {
-                                                isExit = true;
-                                            }
-                                            DataRow dr = Newdt.NewRow();
-                                            dr = Newdt.NewRow();
-                                            dr[0] = errorNum;
-                                            dr[1] = "第[" + rowNum.ToString() + "]行[" + excelImportDetail.ColumnName + "]";
-                                            dr[2] = "日期格式不正确";
-                                            Newdt.Rows.Add(dr);
-                                            errorNum++;
-                                            continue;
-                                        }
-                                        break;
-                                    //外键
-                                    case "3":
-                                        sb.Clear();
-                                        sb.Append(" and ");
-                                        sb.Append(excelImportDetail.CompareField);
-                                        sb.Append("='");
-                                        sb.Append(value);
-                                        sb.Append("' ");
-                                        Hashtable htf = new Hashtable();
-                                        //字段值非空才去找外键
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            htf = database.FindHashtable(excelImportDetail.ForeignTable, sb);
-                                        }
-
-
-                                        if (htf.Count > 0)
-                                        {
-                                            entity[excelImportDetail.FieldName] = htf[excelImportDetail.BackField.ToLower()];
-                                        }
-                                        else
-                                        {
-                                            if (base_excellimport.ErrorHanding == "0")
-                                            {
-                                                isExit = true;
-                                            }
-                                            DataRow dr = Newdt.NewRow();
-                                            dr = Newdt.NewRow();
-                                            dr[0] = errorNum;
-                                            dr[1] = "第[" + rowNum.ToString() + "]行[" + excelImportDetail.ColumnName + "]";
-                                            dr[2] = excelImportDetail.ColumnName + "在系统中不存在";
-                                            Newdt.Rows.Add(dr);
-                                            errorNum++;
-                                            continue;
-                                        }
-                                        break;
-                                    //唯一识别
-                                    case "4":
-                                        //判断该值是否在表中已存在
-                                        sb.Clear();
-                                        sb.Append(" and ");
-                                        sb.Append(excelImportDetail.FieldName);
-                                        sb.Append("='");
-                                        sb.Append(value);
-                                        sb.Append("' ");
-                                        Hashtable htm = database.FindHashtable(base_excellimport.ImportTable, sb);
-                                        if (htm.Count > 0)
-                                        {
-                                            if (base_excellimport.ErrorHanding == "0")
-                                            {
-                                                isExit = true;
-                                            }
-                                            DataRow dr = Newdt.NewRow();
-                                            dr = Newdt.NewRow();
-                                            dr[0] = errorNum;
-                                            dr[1] = "第[" + rowNum.ToString() + "]行[" + excelImportDetail.ColumnName + "]";
-                                            dr[2] = excelImportDetail.ColumnName + "在系统中已存在不能重复插入";
-                                            Newdt.Rows.Add(dr);
-                                            errorNum++;
-                                            continue;
-                                        }
-                                        entity[excelImportDetail.FieldName] = value;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                #endregion 单字段赋值结束
-                            }
-                            #endregion 遍历模板结束
-                            //如果遇到空行，说明从Excel导入后续的行都是空的，不再导入，清除掉最后一个错误
-                            if (string.IsNullOrEmpty(rowSb.ToString()))
-                            {
-                                Newdt.Rows.RemoveAt(Newdt.Rows.Count - 1);
-                                break;
-                            }
-                            if (isExit)
-                            {
-                                break;
-                            }
-
-                            database.Insert(base_excellimport.ImportTable, entity, isOpenTrans);
-                            rowNum++;
-                        }
-                        #endregion 遍历Excel数据行结束
-                        database.Commit();
-                        IsOk = 1;
-                    }
-                    catch (System.Exception ex)
-                    {
-                        database.Rollback();
-#pragma warning disable CS0436 // 类型与导入类型冲突
-                        Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "异常错误：" + ex.Message);
-#pragma warning restore CS0436 // 类型与导入类型冲突
-                        IsOk = -1;
-                    }
-                }
+                return null;
             }
-            Result = Newdt;
-            return IsOk;
         }
         #endregion
     }

@@ -14,9 +14,16 @@
             onnodeclick: function (item) {
                 ModuleId = item.id;            //ID
                 ModuleName = item.text;        //名称
+
+                var LogType = $("#LogType").val();//操作类型
+                var CreateUserName = $("#CreateUserName").val();//操作用户
+                var IPAddress = $("#IPAddress").val();//IP地址
+                var StartTime = $("#StartTime").val();
+                var EndTime = $("#EndTime").val();
+
                 $("#titleinfo").text(ModuleName);
                 $("#gridTable").jqGrid('setGridParam', {
-                    url: "@Url.Content("~/CommonModule/SysLog/GridPageListJson")?ModuleId=" + ModuleId, page: 1
+                    url: "@Url.Content("~/CommonModule/SysLog/GridPageListJson")?ModuleId=" + ModuleId + '&LogType=' + LogType + '&CreateUserName=' + CreateUserName + '&IPAddress=' + IPAddress + '&StartTime=' + StartTime + '&EndTime=' + EndTime, page: 1
                 }).trigger('reloadGrid');
             },
             url: "@Url.Content("~/CommonModule/Module/TreeJson")"
@@ -25,25 +32,31 @@
     }
     //加载表格
     function GetGrid(ParameterJson) {
+        var LogType = $("#LogType").val();//操作类型
+        var CreateUserName = $("#CreateUserName").val();//操作用户
+        var IPAddress = $("#IPAddress").val();//IP地址
+        var StartTime = $("#StartTime").val();
+        var EndTime = $("#EndTime").val();
         $("#gridTable").jqGrid({
-            url: "@Url.Content("~/CommonModule/SysLog/GridPageListJson")",
+            url: "@Url.Content("~/CommonModule/SysLog/GridPageListJson")?ModuleId=" + escape(ModuleId) + "&LogType=" + escape(LogType) + "&CreateUserName=" + escape(CreateUserName) + "&IPAddress=" + escape(IPAddress) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime),
             datatype: "json",
-            height: $(window).height() - 132,
+            height: $(window).height() - 180,
             autowidth: true,
             colModel: [
                 { label: "主键", name: "syslogid", index: "syslogid", hidden: true },
                 {
-                    label: "操作时间", name: "createdate", index: "createdate", width: 120,
+                    label: "操作时间", name: "createdate", index: "createdate", width: 0, align: "center",
                     formatter: function (value, options, rowObject) {
                         return formatDate(value, 'yyyy-MM-dd hh:mm:ss');
                     }
                 },
-                { label: "操作模块", name: "modulename", index: "modulename", width: 100 },
-                { label: "操作类型", name: "logtype", index: "logtype", width: 100, hidden: true },
+                { label: "操作模块", name: "moduleid", index: "moduleid", width: 0, hidden: true },
+                { label: "操作模块", name: "modulename", index: "moduleid", align: "center", width: 100 },
+                { label: "操作类型", name: "logtype", index: "logtype", width: 0, align: "center", hidden: true },
                 {
-                    label: "操作类型", name: "logtypename", width: 65, align: "center",
+                    label: "操作类型", name: "logtypename", width: 0, align: "center",
                     formatter: function (value, options, rowObject) {
-                        if (rowObject.logtype == '0') { return "登陆"; }
+                        if (rowObject.logtype == '0') { return "登录"; }
                         if (rowObject.logtype == '1') { return "新增"; }
                         if (rowObject.logtype == '2') { return "修改"; }
                         if (rowObject.logtype == '3') { return "删除"; }
@@ -54,25 +67,31 @@
                         if (rowObject.logtype == '8') { return "安全退出"; }
                     }
                 },
-                { label: "ip地址", name: "ipaddress", index: "ipaddress", width: 100 },
-                { label: "操作用户", name: "createusername", index: "createusername", width: 80 },
-                { label: "操作公司", name: "companyid", index: "companyid", width: 120 },
-                { label: "操作部门", name: "departmentid", index: "departmentid", width: 80 },
+                { label: "ip地址", name: "ipaddress", index: "ipaddress", width: 100, align: "center" },
+                { label: "操作用户", name: "createusername", index: "createusername", width: 0, align: "center" },
+                //{ label: "操作公司", name: "companyid", index: "companyid", width: 120 },
+                //{ label: "操作部门", name: "departmentid", index: "departmentid", width: 80 },
                 {
-                    label: "操作状态", name: "status", index: "status", width: 50, align: "center",
+                    label: "操作状态", name: "status", index: "status", width: 0, align: "center",
                     formatter: function (value, options, rowObject) {
                         if (value == '1') {
-                            return "<span style='color:blue'>成功</span>";
+                            //return "<span style='color:green'>成功</span>";
+                            return "成功";
                         } else {
-                            return "<span style='color:red'>失败</span>";
+                            //return "<span style='color:red'>失败</span>";
+                            return "失败";
                         }
                     }
                 },
-                { label: "对象值", name: "objectid", index: "objectid", width: 260 },
-                { label: "操作描述", name: "remark", index: "remark", width: 1000 },
+                { label: "对象值", name: "objectid", index: "objectid", width: 260, align: "center", hidden: true },
+                { label: "操作描述", name: "remark", index: "remark", width: 400, align: "center" },
+                { label: "字段", name: "propertyfield", index: "propertyfield", width: 0, align: "center" },
+                { label: "字段中文名称", name: "propertyname", index: "propertyname", width: 0, align: "center" },
+                { label: "修改后", name: "newvalue", index: "newvalue", width: 0, align: "center" },
+                { label: "修改前", name: "oldvalue", index: "oldvalue", width: 0, align: "center" },
             ],
             viewrecords: true,
-           rowNum: 200,
+            rowNum: 200,
             rowList: [200, 500, 1000,10000],
             pager: "#gridPager",
             sortname: 'CreateDate',
@@ -84,7 +103,20 @@
         columnModelData("#gridTable");
     }
     //查询
-    var QueryParamJson = "";
+    function btn_Search() {
+        var LogType = $("#LogType").val();//操作类型
+        var CreateUserName = $("#CreateUserName").val();//操作用户
+        var IPAddress = $("#IPAddress").val();//IP地址
+        
+        var StartTime = $("#StartTime").val();
+        var EndTime = $("#EndTime").val();       
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/CommonModule/SysLog/GridPageListJson")?ModuleId=" + ModuleId + '&LogType=' + LogType + '&CreateUserName=' + CreateUserName + '&IPAddress=' + IPAddress +'&StartTime=' + StartTime + '&EndTime=' + EndTime, page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+
+    @*var QueryParamJson = "";
     function btn_query() {
         QueryDialog("/Utility/QueryPage", "QueryPage", "查询过滤", 770, 395, function (iframe) {
             top.frames[iframe].QueryClick(function (JsonData) {
@@ -94,17 +126,8 @@
                 }).trigger('reloadGrid');
             });
         });
-    }
-    //明细
-    function btn_detail() {
-        var SysLogId = GetJqGridRowValue("#gridTable", "syslogid");
-        var LogType = GetJqGridRowValue("#gridTable", "logtype");
-        var LogTypeName = GetJqGridRowValue("#gridTable", "logtypename");
-        if (IsChecked(SysLogId)) {
-            var url = "/CommonModule/SysLog/Detail?SysLogId=" + SysLogId + '&LogType=' + LogType;
-            Dialog(url, "Detail", '日志详细信息-【' + LogTypeName + '】', 850, 450);
-        }
-    }
+    }*@
+
     //清空数据
     function btn_broom() {
         var url = "/CommonModule/SysLog/RemoveLog";
@@ -112,17 +135,47 @@
             top.frames[iframe].AcceptClick();
         });
     }
-    //导出Excel
-    function btn_derive() {
-        SetDeriveExcel("#gridTable", "系统日志-" + formatDate(CurrentTime(), 'yyyyMMdd'));
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "系统日志导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
-    }
+    
+    
     //刷新表格
     function windowload() {
         $("#gridTable").trigger("reloadGrid"); //重新载入  
     }
+
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var LogType = $("#LogType").val();//操作类型
+        var CreateUserName = $("#CreateUserName").val();//操作用户
+        var IPAddress = $("#IPAddress").val();//IP地址
+        var StartTime = $("#StartTime").val();
+        var EndTime = $("#EndTime").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/CommonModule/SysLog/GetExcel_Data?ModuleId=" + ModuleId + '&LogType=' + LogType + '&CreateUserName=' + CreateUserName + '&IPAddress=' + IPAddress + '&StartTime=' + StartTime + '&EndTime=' + EndTime;
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+
+
+
+
+
 </script>
 <div id="layout" class="layout">
     <!--左边-->
@@ -146,7 +199,51 @@
                 @Html.Partial("_PartialButton")
             </div>
         </div>
-        <table id="gridTable"></table>
-        <div id="gridPager"></div>
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+            <table border="0" class="form-find" style="height: 45px;">
+                <tr>
+                    <th id="LogType_s">操作类型：</th>
+                    <td>
+                        @*<select id="LogType" name="FASLogType" type="text" class="txt" style="height:auto" />*@
+                        <select id="LogType" class="txt" style="height: auto;width: 100px">
+                            <option value="">全部</option>
+                            <option value="1">新增</option>
+                            <option value="2">修改</option>
+                            <option value="3">删除</option>
+                            <option value="4">其他</option>
+                            <option value="5">访问</option>
+                            <option value="6">离开</option>
+                            <option value="7">查询</option>
+                            <option value="8">安全退出</option>
+                        </select>
+                    </td>
+                    <th id="LogType_s">操作用户：</th>
+                    <td>
+                        <input id="CreateUserName" type="text" class="txt" style="width: 150px" />
+                    </td>
+                    <th>IP地址：</th>
+                    <td>
+                        <input id="IPAddress" type="text" class="txt" style="width: 150px" />
+                    </td>
+                    <th id="STime_s">开始时间：</th>
+                    <td>
+                        <input id="StartTime" type="text" class="txt Wdate" value="@DateTime.Today.AddDays(-7).AddHours(00).AddMinutes(00).AddSeconds(00).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'EndTime\')||\'%y-%M-%d\'}'}); blur();" readonly style="width: 150px"  />
+                    </td>
+                    <th id="ETime_s">结束时间：</th>
+                    <td>
+                        <input id="EndTime" type="text" class="txt Wdate" value="@DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'StartTime\')}'}); blur();"  readonly  style="width: 150px;" />
+                    </td>
+
+                    <td>
+                        <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+            
     </div>
 </div>

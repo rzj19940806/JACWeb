@@ -8,7 +8,6 @@
         CellItem_DvcTyp('DvcTyp');//需在GetGrid()之前进行初始化赋值
         BindDropItem("#DvcCatg", "DvcCatg", "==全部==");
         BindDropItem("#DvcTyp", "DvcTyp", "==全部==");
-        Show();
         GetGrid();
     })
 
@@ -17,7 +16,7 @@
     //加载表格
     function GetGrid() {
         $("#gridTable").jqGrid({
-        url: "@Url.Content("~/BaseModule/BBdbR_DvcBase/GridPageByCondition?keywords=''&&Condition=''")",
+            url: "@Url.Content("~/BaseModule/BBdbR_DvcBase/GridPageByCondition")",
         datatype: "json",
         height: $(window).height() - 150,
         autowidth: true,
@@ -29,6 +28,8 @@
                 { label: '机构Id', name: 'ClassId', index: 'ClassId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '机构名称', name: 'ClassNm', index: 'ClassNm', width: 0, align: 'center', sortable: true },
                 { label: '设备位置', name: 'DvcLocatn', index: 'DvcLocatn', width: 0, align: 'center', sortable: true },
+                { label: 'IP地址', name: 'IPAddr', index: 'IPAddr', width: 0, align: 'center', sortable: true },
+                //{ label: '端口', name: 'Port', index: 'Port', width: 0, align: 'center', sortable: true },
                 {
                     label: '设备类别', name: 'DvcCatg', index: 'DvcCatg', width: 0, align: 'center', sortable: true,
                     formatter: "select", formatoptions: { value: DvcCatgCellItem }
@@ -37,64 +38,75 @@
                     label: '设备类型', name: 'DvcTyp', index: 'DvcTyp', width: 0, align: 'center', sortable: true,
                     formatter: "select", formatoptions: { value: DvcTypCellItem }
                 },
-                { label: '设备型号', name: 'DvcMdl', index: 'DvcMdl', width: 0, align: 'center', sortable: true },
-                { label: '设备产商', name: 'DvcMaker', index: 'DvcMaker', width: 0, align: 'center', sortable: true },
-                { label: '设备寿命', name: 'DvcLife', index: 'DvcLife', width: 0, align: 'center', sortable: true },
-                { label: '设备制造日期', name: 'DvcMDt', index: 'DvcMDt', width: 0, align: 'center', sortable: true },
-                { label: 'IP地址', name: 'IPAddr', index: 'IPAddr', width: 0, align: 'center', sortable: true },
-                { label: '端口', name: 'Port', index: 'Port', width: 0, align: 'center', sortable: true },
-                { label: '维保周期(天)', name: 'MaintCycle', index: 'MaintCycle', width: 0, align: 'center', sortable: true },
-                { label: '提前期（天）', name: 'LeadTm', index: 'LeadTm', width: 0, align: 'center', sortable: true },
-                { label: '设备描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true  },
+                //{ label: '设备型号', name: 'DvcMdl', index: 'DvcMdl', width: 0, align: 'center', sortable: true },
+                //{ label: '设备产商', name: 'DvcMaker', index: 'DvcMaker', width: 0, align: 'center', sortable: true },
+                //{ label: '设备寿命', name: 'DvcLife', index: 'DvcLife', width: 0, align: 'center', sortable: true },
+                //{ label: '设备制造日期', name: 'DvcMDt', index: 'DvcMDt', width: 0, align: 'center', sortable: true },
+                //{ label: '维保周期(天)', name: 'MaintCycle', index: 'MaintCycle', width: 0, align: 'center', sortable: true },
+                //{ label: '提前期（天）', name: 'LeadTm', index: 'LeadTm', width: 0, align: 'center', sortable: true },
+                //{ label: '设备描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true },
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 250, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }
+                },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true  },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true  },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true  },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true  },
+                {
+                    label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 250, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }
+                },
                 { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true  },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true  },
-                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true  },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'center', sortable: true },
             ],
-        pager: "#gridPager",
-        sortname: '',
-        sortorder: 'desc',
-        rownumbers: true,
-        multiselect: true,
-        multiboxonly: true,
-        shrinkToFit: false,
-        gridview: true,
-            loadonce: true,
-            
+            pager: "#gridPager",
+            sortname: 'DvcCd',
+            sortorder: 'asc',
+            multiselect: true,
+            multiboxonly: true,
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
      });
     }
 
     //加载搜索框
-    function Show() {
-        var Condition = $("#Condition").val();
-        if (Condition == "all") {
-            $("#DvcCatg").hide();
-            $("#DvcTyp").hide();
-            $("#keywords").hide();
-        }
-        else if (Condition == "DvcCatg") {
-            $("#DvcCatg").show();
-            $("#DvcTyp").hide();
-            $("#keywords").hide();
-        }
-        else if (Condition == "DvcTyp") {
-            $("#DvcTyp").show();
-            $("#DvcCatg").hide();
-            $("#keywords").hide();
-        }
-        else {
-            $("#DvcTyp").hide();
-            $("#DvcCatg").hide();
-            $("#keywords").show();
-        }
-    }
+    //function Show() {
+    //    var Condition = $("#Condition").val();
+    //    if (Condition == "all") {
+    //        $("#DvcCatg").hide();
+    //        $("#DvcTyp").hide();
+    //        $("#keywords").hide();
+    //    }
+    //    else if (Condition == "DvcCatg") {
+    //        $("#DvcCatg").show();
+    //        $("#DvcTyp").hide();
+    //        $("#keywords").hide();
+    //    }
+    //    else if (Condition == "DvcTyp") {
+    //        $("#DvcTyp").show();
+    //        $("#DvcCatg").hide();
+    //        $("#keywords").hide();
+    //    }
+    //    else {
+    //        $("#DvcTyp").hide();
+    //        $("#DvcCatg").hide();
+    //        $("#keywords").show();
+    //    }
+    //}
 
     //刷新
     function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
         $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
     }
 
@@ -103,7 +115,7 @@
         var url = "/BaseModule/BBdbR_DvcBase/Form"
         openDialog(url, "Form", "新增设备信息", 500, 300, function (iframe) {
             top.frames[iframe].AcceptClick()
-       });
+        });
     }
 
     //编辑按钮
@@ -121,10 +133,11 @@
             else {
                 var url = "/BaseModule/BBdbR_DvcBase/Form?KeyValue=" + KeyValue + "&ClassId=" + ClassId;
                 openDialog(url, "tForm", "编辑设备信息", 500, 300, function (iframe) {
-                    top.frames[iframe].AcceptClick()
+                    top.frames[iframe].AcceptClick();
                 });
             }
         }
+
     }
     //删除
     function btn_delete() {
@@ -132,8 +145,9 @@
         if (IsDelData(KeyValue)) {
             var delparm = 'KeyValue=' + KeyValue;
             delConfig('/BaseModule/BBdbR_DvcBase/Delete', delparm, KeyValue.split(",").length);
-            //windowload();
+           // windowload();
         }
+
     }
     //导入
     function btn_import() {
@@ -142,27 +156,48 @@
                 top.frames[iframe].AcceptClick();
             });
     }
-    //导出Excel
+    
+    
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
-        SetDeriveExcel("#gridTable", "设备基本信息-" + formatDate(CurrentTime(), 'yyyyMMdd'));
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "设备基本信息导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
-    }
-    //搜索
-    function btn_Search() {
-        var Condition = $("#Condition").val();
-        if (Condition == "DvcCatg") {
-            var keywords = $("#DvcCatg").val();
+        var DvcCd = $("#DvcCd").val();
+        var DvcNm = $("#DvcNm").val();
+        var DvcCatg = $("#DvcCatg").val();
+        var DvcTyp = $("#DvcTyp").val();
+        var DvcLocatn = $("#DvcLocatn").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
         }
-        else if (Condition == "DvcTyp") {
-            var keywords = $("#DvcTyp").val();
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
         }
         else {
-            var keywords = $("#keywords").val();
+            btn_Search();
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_DvcBase/GetExcel_Data?DvcCd=" + escape(DvcCd) + "&DvcNm=" + escape(DvcNm) + "&DvcCatg=" + escape(DvcCatg) + "&DvcTyp=" + escape(DvcTyp) + "&DvcLocatn=" + escape(DvcLocatn) ;
+                Loading(false);
+            }, 200);
         }
+    }
+
+
+
+    //搜索
+    function btn_Search() {
+        var DvcCd = $("#DvcCd").val();
+        var DvcNm = $("#DvcNm").val();
+        var DvcCatg = $("#DvcCatg").val();
+        var DvcTyp = $("#DvcTyp").val();
+        var DvcLocatn = $("#DvcLocatn").val();
+        
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_DvcBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition) , page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_DvcBase/GridPageByCondition")?DvcCd=" + escape(DvcCd) + "&DvcNm=" + escape(DvcNm) + "&DvcCatg=" + escape(DvcCatg) + "&DvcTyp=" + escape(DvcTyp) + "&DvcLocatn=" + escape(DvcLocatn) , page: 1, datatype: 'json'
     }).trigger('reloadGrid');
     }
     $(document).keypress(function (e) {
@@ -207,57 +242,47 @@
     }
 
 </script>
-<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
-    @*按钮区域*@
-    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
-        <div class="PartialButton">
-            @Html.Partial("_PartialButton")
-        </div>
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
     </div>
-    @*搜索框区域*@
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
     <table border="0" class="form-find" style="height: 45px;">
         <tr>
-            <th>关键字：</th>
+            <th>设备编号：</th>
             <td>
-                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
-                    <option value="all">==全部==</option>
-                    <option value="DvcCd">设备编号</option>
-                    <option value="DvcNm">设备名称</option>
-                    <option value="DvcCatg">设备类别</option>
-                    <option value="DvcTyp">设备类型</option>
-                    <option value="DvcLocatn">设备位置</option>
-                </select>
+                <input id="DvcCd" type="text" class="txt" style="width: 120px" />
             </td>
+
+            <th>设备名称：</th>
+            <td>
+                <input id="DvcNm" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>设备类别：</th>
             <td>
                 <select id="DvcCatg" style="width: 150px;height:25px ;"></select>
             </td>
+
+            <th>设备类型：</th>
             <td>
                 <select id="DvcTyp" style="width: 150px;height:25px"></select>
             </td>
+
+            <th>设备位置：</th>
             <td>
-                <input id="keywords" type="text" class="txt" style="width: 200px" />
+                <input id="DvcLocatn" type="text" class="txt" style="width: 120px" />
             </td>
+
             <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
             </td>
         </tr>
     </table>
-    @*表格区域*@
-    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    设备信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
 </div>
 

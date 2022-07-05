@@ -1,0 +1,153 @@
+@{
+    ViewBag.Title = "铭牌信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/MBB_BD_PRODU/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/MBB_BD_PRODU/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("CODE", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style="display:none">
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <input id="GID" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="width:100px">产品编号：</th>
+            <td class='formValue'>
+                <input id="CODE" maxlength=50 type="text" class="txt required" datacol="yes" err="产品编号" checkexpession="NotNull" />
+            </td>
+            <th class='formTitle'  style="width:100px">产品名称：</th>
+            <td class='formValue'>
+                <input id="NAME" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>产品名称：</th>
+            <td class='formValue'>
+                <input id="NAME" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>整车型号：</th>
+            <td class='formValue'>
+                <input id="UDA19" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>发动机排量：</th>
+            <td class='formValue'>
+                <input id="UDA2" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>发动机排量：</th>
+            <td class='formValue'>
+                <input id="UDA2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>发动机型号：</th>
+            <td class='formValue'>
+                <input id="UDA1" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>发动机最大净功率：</th>
+            <td class='formValue'>
+                <input id="UDA3" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle' >发动机最大净功率：</th>
+            <td class='formValue' >
+                <input id="UDA3" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>最大净功率转速：</th>
+            <td class='formValue'>
+                <input id="MAX_POWER_SPEED" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>最大允许总质量：</th>
+            <td class='formValue'>
+                <input id="TOTAL_WEIGHT" maxlength=18 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>最大允许总质量：</th>
+            <td class='formValue'>
+                <input id="TOTAL_WEIGHT" maxlength=18 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>整车整备型号：</th>
+            <td class='formValue'>
+                <input id="UDA4" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>容量：</th>
+            <td class='formValue'>
+                <input id="CAPACITY" maxlength=9 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>容量：</th>
+            <td class='formValue'>
+                <input id="CAPACITY" maxlength=9 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>变速器型号：</th>
+            <td class='formValue'>
+                <input id="UDA16" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>后桥型号：</th>
+            <td class='formValue'>
+                <input id="UDA21" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>后桥型号：</th>
+            <td class='formValue'>
+                <input id="UDA21" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>特殊车辆名称：</th>
+            <td class='formValue'colspan="3" >
+                <input id="UDA9" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>用途：</th>
+            <td class='formValue' colspan="3">
+                <input id="UDA10" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+    </table>
+</form>

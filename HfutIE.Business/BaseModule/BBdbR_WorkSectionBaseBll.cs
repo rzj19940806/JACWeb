@@ -68,21 +68,21 @@ namespace HfutIE.Business
             string sql = "";
             DataTable dt = new DataTable();
             //展示页面表格
-            if (areaId == "" && parentId == "")
+            if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
             {
-                sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
                 //车间
                 if (parentId != "0")
                 {
-                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 and a.WorkshopId ='" + areaId + "' ";     //===复制时需要修改===
+                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 and a.WorkshopId ='" + areaId + "' order by a.sort asc ";     //===复制时需要修改===
                 }
                 //工厂
                 else
                 {
-                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and c.Enabled=1 and c.FacId='" + areaId + "'";     //===复制时需要修改===                    
+                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and c.Enabled=1 and c.FacId='" + areaId + "' order by a.sort asc";     //===复制时需要修改===                    
                 }
             }
             dt = Repository().FindTableBySql(sql.ToString(), false);
@@ -109,17 +109,17 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (Condition == "all")
             {
-                sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
                 if (keywords == "all")
                 {
-                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
                 }
                 else
                 {
-                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and  " + Condition + " like  '%" + keywords + "%'";  //===复制时需要修改===
+                    sql = "select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm from " + tableName + " a join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId where a.Enabled=1 and b.Enabled=1 and  " + Condition + " like  '%" + keywords + "%' order by a.sort asc";  //===复制时需要修改===
                 }
             }
             return Repository().FindTableBySql(sql.ToString(), false);
@@ -197,7 +197,7 @@ namespace HfutIE.Business
         public BBdbR_WorkSectionBase GetPlanList1(string KeyValue)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT  * FROM  BBdbR_WorkSectionBase where  WorkSectionId='" + KeyValue + "'");
+            strSql.Append(@"SELECT  * FROM  BBdbR_WorkSectionBase where  WorkSectionId='" + KeyValue + "' order by sort asc");
             List<BBdbR_WorkSectionBase> dt = Repository().FindListBySql(strSql.ToString());
             BBdbR_WorkSectionBase Dvcentity = new BBdbR_WorkSectionBase();
             Dvcentity = dt[0];
@@ -238,7 +238,7 @@ namespace HfutIE.Business
         //10.获取所有人员
         public DataTable GetWorkSectionNm()
         {
-            string sql = @"select StfId as id, StfNm as stfnm from BBdbR_StfBase where Enabled='1'";
+            string sql = @"select StfId as id, StfNm from BBdbR_StfBase where Enabled='1' and StfPosn='" + "工艺段负责人" + "'";
             return Repository().FindTableBySql(sql);
         }
         //获取人员信息

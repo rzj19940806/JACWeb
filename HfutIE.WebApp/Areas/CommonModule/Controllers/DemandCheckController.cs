@@ -114,7 +114,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             Base_User users = DataFactory.Database().FindEntity<Base_User>("Code", userID);
             Base_ObjectUserRelation entity = DataFactory.Database().FindEntity<Base_ObjectUserRelation>("UserID", users.UserId);
             Base_Roles roleentity = DataFactory.Database().FindEntity<Base_Roles>("ID", entity.ObjectId);
-            var role = roleentity.FullName;//1.物料管理员2.程序管理员3.刀具管理员
+            var role = roleentity.RoleNm;//1.物料管理员2.程序管理员3.刀具管理员
             return Content("\"" + role + "\"");
         }
         /// <summary>

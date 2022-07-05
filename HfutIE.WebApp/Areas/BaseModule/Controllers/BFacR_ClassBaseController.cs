@@ -62,11 +62,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     costtime = CommonHelper.TimerEnd(watch),
                     rows = ListData,
                 };
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "班制管理信息查询成功");
                 return Content(ListData.ToJson());
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "班制管理信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -167,7 +168,184 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
         #endregion
 
-        #region 4.导入
+        #region 4.班制班次配置
+        /// <summary>
+        /// 加载配置弹框中上半个表格
+        /// 加载的数据是已有班次信息但无配置
+        /// </summary>
+        /// <param name="KeyValue"></param>
+        /// <returns></returns>
+        public ActionResult GridListJson_Up(string KeyValue, JqGridParam jqgridparam)
+        {
+            try
+            {
+                BFacR_ShiftBaseBll ShiftBaseBll = new BFacR_ShiftBaseBll();
+                if (KeyValue!="")
+                {
+                    string keyvalue = KeyValue.Trim();//删除字符串头和尾的空白字符
+                    Stopwatch watch = CommonHelper.TimerStart();//测量时间
+                    List<BFacR_ShiftBase> ListData = ShiftBaseBll.GetReConfigList(keyvalue, jqgridparam);//===复制时需要修改===
+                    var JsonData = new
+                    {
+                        total = jqgridparam.total,
+                        page = jqgridparam.page,
+                        records = jqgridparam.records,
+                        costtime = CommonHelper.TimerEnd(watch),
+                        rows = ListData,
+                    };
+                    return Content(ListData.ToJson());
+                }
+                else
+                {
+                    return Content(new JsonMessage { Success = false, Code = "-1", Message = "请确保选中班制信息" }.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(-1, KeyValue, "操作失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 加载配置弹框中下半个表格
+        /// 加载的数据是已有班次信息也有配置
+        /// </summary>
+        /// <param name="KeyValue"></param>
+        /// <returns></returns>
+        public ActionResult GridListJson_Down(string KeyValue,string Type, JqGridParam jqgridparam)
+        {
+            try
+            {
+                BFacR_ShiftBaseBll ShiftBaseBll = new BFacR_ShiftBaseBll();
+                if (KeyValue != "")
+                {
+                    string keyvalue = KeyValue.Trim();//删除字符串头和尾的空白字符
+                    Stopwatch watch = CommonHelper.TimerStart();//测量时间
+                    List<BFacR_ShiftBase> ListData = ShiftBaseBll.GetConfigList(keyvalue, Type, jqgridparam);//===复制时需要修改===
+                    var JsonData = new
+                    {
+                        total = jqgridparam.total,
+                        page = jqgridparam.page,
+                        records = jqgridparam.records,
+                        costtime = CommonHelper.TimerEnd(watch),
+                        rows = ListData,
+                    };
+                    return Content(ListData.ToJson());
+                }
+                else
+                {
+                    return Content(new JsonMessage { Success = false, Code = "-1", Message = "请确保选中班制信息" }.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(-1, KeyValue, "操作失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
+
+        
+
+
+        /// <summary>
+        /// 提交班制班次配置信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SubmitStaffConfig(List<BFacR_ShiftBase> listdto, string ClassId)
+        {
+            try
+            {
+                BFacR_ClassBaseBll mybll = new BFacR_ClassBaseBll();
+                BFacR_ClassConfigBll ClassBll = new BFacR_ClassConfigBll();
+                var Message = "配置失败。";//定义返回信息，该信息将返回到界面上，给用户观看
+                int IsOk = 0;//用于判断
+                int count = 0;
+                if (ClassId != "")//先把对应ClassId中所有班组均删除，然后插入已配置班组
+                {
+                    List<BFacR_ClassConfig> ListData1 = ClassBll.GetClassList(ClassId,"");
+                    if (ListData1.Count > 0)
+                    {
+                        ClassBll.Delete(ListData1);//执行删除操作
+                    }
+                    BFacR_ClassBase classentity = mybll.GetEntityByCondition(ClassId);
+                    switch (classentity.ClassTyp)                    
+                    {
+                        case ("一班制"): count=1; break;
+                        case ("两班制"): count = 2; break;
+                        case ("三班制"): count = 3; break;
+                        case ("四班制"): count = 4; break;
+                        default: count = 0; break;
+                    }
+                }
+                if (listdto !=null)
+                {
+                    if (listdto.Count!= count)
+                    {
+                        Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "配置失败,请确认班制对应班次数量");
+                        return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "请确认班制对应班次数量!" }.ToString());
+                    }
+                    else
+                    {
+                        for (int i = 0; i < listdto.Count; i++)
+                        {
+                            string a = listdto[i].ShiftId.ToString();
+                            List<BFacR_ClassConfig> ListData = ClassBll.GetClassList(ClassId, listdto[i].ShiftId.ToString());
+                            if (ListData.Count == 0)
+                            {
+                                IsOk = ClassBll.InsertClassConfig(ClassId, listdto[i]);//将实体插入数据库，插入成功返回1，失败返回0；
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                    }
+            
+                }
+                IsOk = 1;
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "配置成功");
+                return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "配置成功!" }.ToString());
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "配置失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
+        #endregion
+
+        #region 5.班制配置信息搜索
+        //从视图中搜索
+        //本查询采用近似查询（like）
+
+        public ActionResult ClassGridPageJson(string ClassId, JqGridParam jqgridparam)
+        {
+            try
+            {
+                ClassConfigViewBll ClassBll = new ClassConfigViewBll();
+                string keyword = ClassId.Trim();
+                Stopwatch watch = CommonHelper.TimerStart();
+                List<ClassConfigView> ListData = ClassBll.GetPageListByCondition(keyword, jqgridparam);//===复制时需要修改===
+                var JsonData = new
+                {
+                    total = jqgridparam.total,
+                    page = jqgridparam.page,
+                    records = jqgridparam.records,
+                    costtime = CommonHelper.TimerEnd(watch),
+                    rows = ListData,
+                };
+                return Content(ListData.ToJson());
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                return null;
+            }
+        }
+        #endregion
+
+        #region 6.导入
         /// <summary>
         /// 导入Excel弹出框页面
         /// </summary>
@@ -201,7 +379,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             int IsCheck = 1;//用作检验重复地址的标识
             DataTable Result = new DataTable();//导入错误记录表
             IDatabase database = DataFactory.Database();
-            List<BFacR_ShiftBase> BFacRShiftBaseList = new List<BFacR_ShiftBase>();
+            List<BFacR_ClassBase> BFacRShiftBaseList = new List<BFacR_ClassBase>();
 
             //构造导入返回结果表
             DataTable Newdt = new DataTable("Result");
@@ -244,7 +422,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         {
                             dt.Rows[i]["rowid"] = i + 1;
                         }
-                        #region 班次基本信息导入
+                        #region 班制基本信息导入
                         //校验
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
@@ -252,21 +430,27 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                             IsCheck = 1;//重置标识
                             DataRow dr = Newdt.NewRow();
 
-                            if (dt.Rows[i]["班次编号"].ToString().Trim() != "" && dt.Rows[i]["班次名称"].ToString().Trim() != "" && dt.Rows[i]["时间类型"].ToString().Trim() != "" && dt.Rows[i]["开始时间"].ToString().Trim() != "" && dt.Rows[i]["结束时间"].ToString().Trim() != "")
+                            if (dt.Rows[i]["班制编号"].ToString().Trim() != "" && dt.Rows[i]["班制名称"].ToString().Trim() != "" && dt.Rows[i]["班制类型"].ToString().Trim() != "" && dt.Rows[i]["班制开始时间"].ToString().Trim() != "" && dt.Rows[i]["班制总时长"].ToString().Trim() != "")
                             {
-                                BFacR_ShiftBase ShiftBaseEntity = new BFacR_ShiftBase();
-                                ShiftBaseEntity.ShiftId = System.Guid.NewGuid().ToString();
-                                ShiftBaseEntity.ShiftCd = dt.Rows[i]["班次编号"].ToString().Trim();
-                                ShiftBaseEntity.ShiftNm = dt.Rows[i]["班次名称"].ToString().Trim();
-                                ShiftBaseEntity.RestTm = dt.Rows[i]["时间类型"].ToString().Trim();
-                                ShiftBaseEntity.StrtRestTm = dt.Rows[i]["开始时间"].ToString().Substring(dt.Rows[i]["开始时间"].ToString().Length - 8);
-                                ShiftBaseEntity.EndRestTm = dt.Rows[i]["结束时间"].ToString().Substring(dt.Rows[i]["开始时间"].ToString().Length - 8);
-                                ShiftBaseEntity.VersionNumber = "V1.0";
-                                ShiftBaseEntity.Enabled = "1";
-                                ShiftBaseEntity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                ShiftBaseEntity.CreCd = ManageProvider.Provider.Current().UserId;
-                                ShiftBaseEntity.CreNm = ManageProvider.Provider.Current().UserName;
-                                BFacRShiftBaseList.Add(ShiftBaseEntity);
+                                BFacR_ClassBase ClassBaseEntity = new BFacR_ClassBase();
+
+                                ClassBaseEntity.ClassId = System.Guid.NewGuid().ToString(); //班制主键
+
+                                ClassBaseEntity.ClassCd = dt.Rows[i]["班制编号"].ToString().Trim();
+                                ClassBaseEntity.ClassNm = dt.Rows[i]["班制名称"].ToString().Trim();
+                                ClassBaseEntity.ClassTyp = dt.Rows[i]["班制类型"].ToString().Trim();
+                                ClassBaseEntity.TmSpan = Convert.ToDecimal(dt.Rows[i]["班制总时长"].ToString().Trim());
+                                ClassBaseEntity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                ClassBaseEntity.StartTm = dt.Rows[i]["班制开始时间"].ToString().Substring(dt.Rows[i]["班制开始时间"].ToString().Length - 8);
+
+                                ClassBaseEntity.VersionNumber = "V1.0";
+                                ClassBaseEntity.Enabled = "1";
+
+                                ClassBaseEntity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                ClassBaseEntity.CreCd = ManageProvider.Provider.Current().UserId;
+                                ClassBaseEntity.CreNm = ManageProvider.Provider.Current().UserName;
+
+                                BFacRShiftBaseList.Add(ClassBaseEntity);
                                 int b = database.Insert(BFacRShiftBaseList);
                                 if (b > 0)
                                 {
@@ -289,7 +473,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                 dr = Newdt.NewRow();
                                 dr[0] = errorNum;
                                 dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
-                                dr[2] = "班次信息不能为空";
+                                dr[2] = "班次导入信息不能为空";
                                 Newdt.Rows.Add(dr);
                                 errorNum++;
                                 IsCheck = 0;
@@ -325,7 +509,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
         #endregion
 
-        #region 5.导出模板
+        #region 7.导出模板
         /// <summary>
         /// 下载Excell模板
         /// </summary>
@@ -377,158 +561,6 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             for (int i = 0; i < removelist.Count; i++)
             {
                 dt.Rows.Remove(removelist[i]);
-            }
-        }
-        #endregion
-
-        #region 6.班制班次配置
-        /// <summary>
-        /// 加载配置弹框中上半个表格
-        /// 加载的数据是已有班次信息但无配置
-        /// </summary>
-        /// <param name="KeyValue"></param>
-        /// <returns></returns>
-        public ActionResult GridListJson_Up(string KeyValue, JqGridParam jqgridparam)
-        {
-            try
-            {
-                BFacR_ShiftBaseBll ShiftBaseBll = new BFacR_ShiftBaseBll();
-                if (KeyValue!="")
-                {
-                    string keyvalue = KeyValue.Trim();//删除字符串头和尾的空白字符
-                    Stopwatch watch = CommonHelper.TimerStart();//测量时间
-                    List<BFacR_ShiftBase> ListData = ShiftBaseBll.GetReConfigList(keyvalue, jqgridparam);//===复制时需要修改===
-                    var JsonData = new
-                    {
-                        total = jqgridparam.total,
-                        page = jqgridparam.page,
-                        records = jqgridparam.records,
-                        costtime = CommonHelper.TimerEnd(watch),
-                        rows = ListData,
-                    };
-                    return Content(ListData.ToJson());
-                }
-                else
-                {
-                    return Content(new JsonMessage { Success = false, Code = "-1", Message = "请确保选中班制信息" }.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLog(-1, KeyValue, "操作失败：" + ex.Message);
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 加载配置弹框中下半个表格
-        /// 加载的数据是已有班次信息也有配置
-        /// </summary>
-        /// <param name="KeyValue"></param>
-        /// <returns></returns>
-        public ActionResult GridListJson_Down(string KeyValue, JqGridParam jqgridparam)
-        {
-            try
-            {
-                BFacR_ShiftBaseBll ShiftBaseBll = new BFacR_ShiftBaseBll();
-                if (KeyValue != "")
-                {
-                    string keyvalue = KeyValue.Trim();//删除字符串头和尾的空白字符
-                    Stopwatch watch = CommonHelper.TimerStart();//测量时间
-                    List<BFacR_ShiftBase> ListData = ShiftBaseBll.GetConfigList(keyvalue, jqgridparam);//===复制时需要修改===
-                    var JsonData = new
-                    {
-                        total = jqgridparam.total,
-                        page = jqgridparam.page,
-                        records = jqgridparam.records,
-                        costtime = CommonHelper.TimerEnd(watch),
-                        rows = ListData,
-                    };
-                    return Content(ListData.ToJson());
-                }
-                else
-                {
-                    return Content(new JsonMessage { Success = false, Code = "-1", Message = "请确保选中班制信息" }.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLog(-1, KeyValue, "操作失败：" + ex.Message);
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 提交班制班次配置信息
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult SubmitStaffConfig(List<BFacR_ShiftBase> listdto, string ClassId)
-        {
-            try
-            {
-                BFacR_ClassConfigBll ClassBll = new BFacR_ClassConfigBll();
-                var Message = "配置失败。";//定义返回信息，该信息将返回到界面上，给用户观看
-                int IsOk = 0;//用于判断          
-                if (ClassId != "")//先把对应ClassId中所有班组均删除，然后插入已配置班组
-                {
-                    List<BFacR_ClassConfig> ListData1 = ClassBll.GetClassList(ClassId,"");
-                    if (ListData1.Count > 0)
-                    {
-                        ClassBll.Delete(ListData1);//执行删除操作
-                    }
-                }
-                if (listdto !=null)
-                {
-                    for (int i = 0; i < listdto.Count; i++)
-                    {
-                        string a = listdto[i].ShiftId.ToString();
-                        List<BFacR_ClassConfig> ListData = ClassBll.GetClassList(ClassId, listdto[i].ShiftId.ToString());
-                        if (ListData.Count == 0)
-                        {
-                            IsOk = ClassBll.InsertClassConfig(ClassId, listdto[i]);//将实体插入数据库，插入成功返回1，失败返回0；
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }            
-                }
-                IsOk = 1;
-                return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "配置成功!" }.ToString());
-            }
-            catch (Exception ex)
-            {
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
-            }
-        }
-        #endregion
-
-        #region 7.班制配置信息搜索
-        //从视图中搜索
-        //本查询采用近似查询（like）
-
-        public ActionResult ClassGridPageJson(string ClassId, JqGridParam jqgridparam)
-        {
-            try
-            {
-                ClassConfigViewBll ClassBll = new ClassConfigViewBll();
-                string keyword = ClassId.Trim();
-                Stopwatch watch = CommonHelper.TimerStart();
-                List<ClassConfigView> ListData = ClassBll.GetPageListByCondition(keyword, jqgridparam);//===复制时需要修改===
-                var JsonData = new
-                {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
-                    costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
-                };
-                return Content(ListData.ToJson());
-            }
-            catch (Exception ex)
-            {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
-                return null;
             }
         }
         #endregion

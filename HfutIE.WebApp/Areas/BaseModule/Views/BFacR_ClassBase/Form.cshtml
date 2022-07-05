@@ -5,7 +5,7 @@
 <script type="text/javascript">
     var KeyValue = GetQuery('KeyValue');//主键
     $(function () {
-        BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
+        BindDropItem("#ClassTyp", "ClassTyp", "");
         InitControl();
     })
     //得到一个对象实体
@@ -62,10 +62,10 @@
         <tr>
             <th class='formTitle'>班制总时长：</th>
             <td class='formValue'>
-                <input id="TmSpan" maxlength=100 type="text" class="txt" />
+                <input id="TmSpan" maxlength=100 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
         </tr>
-        <tr id="Enable">
+        @*<tr id="Enable">
             <th class='formTitle' style="width: 120px; text-align: center; ">有效性：</th>
             <td class='formValue'>
                 <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性">
@@ -73,7 +73,7 @@
                     <option value="0">无效</option>
                 </select>
             </td>
-        </tr>    
+        </tr>*@    
         <tr style=" height:40px">
             <th class='formTitle'>备注：</th>
             <td class='formValue'>

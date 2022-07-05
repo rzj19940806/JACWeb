@@ -155,13 +155,13 @@ namespace HfutIE.Business
             DataTable dt1 = Repository().FindTableBySql(sql1.ToString());
             if (Condition == "")
             {
-                sql = @"select * from " + tableName + " where  Enabled = '1' order by CompanyId asc";
+                sql = @"select * from " + tableName + " where  Enabled = '1' order by sort asc";
                 dt = Repository().FindListBySql(sql.ToString());
             }
             else
             {
                 //根据条件查询
-                sql = @"select * from " + tableName + " where  Enabled = '1' and " + Condition + " like  '%" + keywords + "%' order by CompanyId asc";
+                sql = @"select * from " + tableName + " where  Enabled = '1' and " + Condition + " like  '%" + keywords + "%' order by sort asc";
                 dt = Repository().FindListBySql(sql.ToString());
             }
             return dt;
@@ -183,6 +183,21 @@ namespace HfutIE.Business
             BBdbR_CompanyBase1 = dt[0];
             return BBdbR_CompanyBase1;
         }
+        #endregion
+
+        #region 9.获取公司下拉框
+
+        public DataTable GetCompanyList()
+        {
+            StringBuilder strSql = new StringBuilder();
+            DataTable dt = new DataTable();
+
+            strSql.Append(@"SELECT  CompanyId, CompanyCd,	CompanyNm				
+                                                			
+                                      FROM    BBdbR_CompanyBase where Enabled = '1' ");
+            return dt = Repository().FindTableBySql(strSql.ToString(), false);
+        }
+
         #endregion
     }
 }

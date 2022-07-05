@@ -1,0 +1,264 @@
+@{
+    ViewBag.Title = "BBdbR_BarCodeBase";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        GetGrid1();
+        Show();
+    })
+    //加载条码基础信息表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_BarCodeBase/GridPageByCondition")",
+            datatype: "json",
+            height: ($(window).height() - 230)*0.5,
+        autowidth: true,
+        colModel: [
+            { label: '条码主键', name: 'BarId', index: 'BarId', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '条码编号', name: 'BarCd', index: 'BarCd', width: 0, align: 'center',sortable: true  },
+            { label: '条码名称', name: 'BarNm', index: 'BarNm', width: 0, align: 'center',sortable: true  },
+            { label: '条码长度', name: 'BarLength', index: 'BarLength', width: 100, align: 'center', sortable: true },
+            { label: '优先级', name: 'RsvFld1', index: 'RsvFld1', width: 75, align: 'center', sortable: true },//优先级
+            { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+            {
+                label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true
+                , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 100, align: 'center', sortable: true },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 100, align: 'center', sortable: true},
+            {
+                label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true
+                , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 100, align: 'center', sortable: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 100, align: 'center', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 300, align: 'center', sortable: true },
+            { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+        ],
+            pager: "#gridPager",
+            sortname: 'RsvFld1',
+            sortorder: 'asc',
+            onSelectRow: function (RowId) {
+            var KeyValue = GetJqGridRowValue("#gridTable", "BarId");
+                $("#gridTable1").jqGrid('setGridParam', { url: "@Url.Content("/BaseModule/BBdbR_BarCodeBase/GridPageJson2")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            },
+            viewrecords: true,//显示总的记录条数
+            rowNum: 100,
+            rowList: [100, 200, 500, 1000],
+            rownumbers: true,
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            rownumWidth: 45,
+    });
+}
+//加载解码规则信息表格
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+            datatype: "json",
+            height: ($(window).height() - 230) * 0.5,
+            autowidth: true,
+            colModel: [
+                { label: '解码规则主键', name: 'DecodeRulesId', index: 'DecodeRulesId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '条码主键', name: 'BarId', index: 'BarId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '条码编号', name: 'BarCd', index: 'BarCd', width: 0, align: 'center', sortable: true },
+                { label: '组成类型名称', name: 'CombineNm', index: 'CombineNm', width: 0, align: 'center', sortable: true },
+                { label: '组成类型起始位', name: 'CombineStart', index: 'CombineStart', width: 0, align: 'center', sortable: true },
+                { label: '组成类型长度', name: 'CombineLength', index: 'CombineLength', width: 0, align: 'center', sortable: true },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true
+                    , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                {
+                    label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true
+                    , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager1",
+            sortname: 'CombineStart',
+            sortorder: '',
+            rowNum: 100,
+            rowList: [100, 200, 500, 1000],
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+        });
+    }
+  //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+
+   //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable1").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //新增按钮
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_BarCodeBase/FormMain";
+        openDialog(url, "Form", "新增条码基础信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //新增按钮
+    function btn_add1() {
+        var BarId = GetJqGridRowValue("#gridTable", "BarId");
+        var BarCd = GetJqGridRowValue("#gridTable", "BarCd");
+        var BarNm = GetJqGridRowValue("#gridTable", "BarNm");
+        if (BarId == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BBdbR_BarCodeBase/Form?BarId=" + BarId + "&BarCd=" + BarCd + "&BarNm=" + escape(BarNm);
+        openDialog(url, "Form", "新增解码基础信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑按钮
+    function btn_edit() {
+        var BarId = GetJqGridRowValue("#gridTable", "BarId");
+        if (BarId == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BBdbR_BarCodeBase/FormMain?BarId=" + BarId;
+        openDialog(url, "Form", "编辑条码基础信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑按钮
+    function btn_edit1() {
+        var BarId = GetJqGridRowValue("#gridTable", "BarId");
+        var BarCd = GetJqGridRowValue("#gridTable", "BarCd");
+        var BarNm = GetJqGridRowValue("#gridTable", "BarNm");
+        var DecodeRulesId = GetJqGridRowValue("#gridTable1", "DecodeRulesId");
+        var CombineNm = GetJqGridRowValue("#gridTable1", "CombineNm");
+        var CombineStart = GetJqGridRowValue("#gridTable1", "CombineStart");
+        var CombineLength = GetJqGridRowValue("#gridTable1", "CombineLength");
+        var Rem = GetJqGridRowValue("#gridTable1", "Rem");
+        if (DecodeRulesId == undefined || BarId == undefined) {
+            tipDialog("您没有选中任何项，请同时选择上表及下表数据后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BBdbR_BarCodeBase/Form?DecodeRulesId=" + DecodeRulesId + "&BarId=" + BarId + " &BarCd=" + BarCd + "&BarNm=" + escape(BarNm) + "&CombineNm=" + escape(CombineNm) + "&CombineStart=" + escape(CombineStart) + "&CombineLength=" + escape(CombineLength) + "&Rem=" + escape(Rem);
+        openDialog(url, "Form", "编辑解码基础信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //删除
+    function btn_delete() {
+        var BarId = GetJqGridRowValue("#gridTable", "BarId");
+        if (IsDelData(BarId)) {
+            var delparm = 'KeyValue=' + BarId;
+            delConfig('/BaseModule/BBdbR_BarCodeBase/DeleteNew?DeleteMark=1&KeyValue=' + BarId, null, BarId.split(",").length);
+        }
+    }
+    //删除
+    function btn_delete1() {
+        var DecodeRulesId= GetJqGridRowValue("#gridTable1", "DecodeRulesId");
+        if (IsDelData(DecodeRulesId)) {
+            var delparm = 'DecodeRulesId=' + DecodeRulesId;
+            delConfig('/BaseModule/BBdbR_BarCodeBase/Delete1', delparm, DecodeRulesId.split(",").length);
+        }
+    }
+    //搜索
+     function btn_Search() {
+         var BarCd = $("#BarCd").val();
+         var BarNm = $("#BarNm").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_BarCodeBase/GridPageByCondition")?BarCd=" + escape(BarCd) + "&BarNm=" + escape(BarNm), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var BarCd = $("#BarCd").val();
+        var BarNm = $("#BarNm").val();
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_BarCodeBase/GetExcel_Data?BarCd=" + escape(BarCd) + "&BarNm=" + escape(BarNm);
+                Loading(false);
+            }, 200);
+        }
+    }
+    //规则工位
+    function btn_CodeWcMatch() {
+        var BarId = GetJqGridRowValue("#gridTable", "BarId");
+        if (IsChecked(BarId)) {
+            var url = "/BaseModule/BBdbR_BarCodeBase/CodeWc?BarId=" + BarId;
+            openDialog(url, "CodeWc", "规则工位配置", 625, 350, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 40px;">
+        <tr>
+
+            <th>条码编号：</th>
+            <td>
+                <input id="BarCd" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>条码名称：</th>
+            <td>
+                <input id="BarNm" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+    @*表格区域*@
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            解码规则信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable1"></table>
+        <div id="gridPager1"></div>
+        <div id="modal_volume" style="position: fixed; text-align: center;  top: 120px;left:70%; z-index: 9999; display: none;background-color:white;">
+        </div>
+    </div>
+</div>

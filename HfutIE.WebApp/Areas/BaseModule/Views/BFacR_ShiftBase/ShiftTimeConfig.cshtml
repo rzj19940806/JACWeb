@@ -1,0 +1,63 @@
+@{
+    ViewBag.Title = "班次时间配置表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var FatherKey = GetQuery('FatherKey');//父键
+    $(function () {
+        //BindDropItem("#RestTm", "RestTm", "==全部==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BFacR_ShiftBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BFacR_ShiftBase/SubmitForm_TmConfig?FatherKey=" + FatherKey + '&KeyValue=' + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style="display:none">
+            <th class='formTitle'>父键：</th>
+            <td class='formValue'>
+                <input id="ShiftId" maxlength=50 type="time" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="width: 120px; text-align: center; ">时间类型：</th>
+            <td class='formValue'>
+                <select id="RestTm" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="时间类型">
+                    <option>休息时间</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>开始时间：</th>
+            <td class='formValue'>
+                <input id="StrtRestTm" maxlength=50 type="time" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>结束时间：</th>
+            <td class='formValue'>
+                <input id="EndRestTm" maxlength=50 type="time" class="txt" />
+            </td>
+        </tr>
+    </table>
+</form>

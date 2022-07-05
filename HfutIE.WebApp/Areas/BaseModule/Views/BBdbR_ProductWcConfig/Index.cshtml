@@ -1,0 +1,337 @@
+@{
+    ViewBag.Title = "工位物料配置";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        Loadlayout();
+        GetGrid();
+        GetTree();
+        GetGrid1();
+        $("#ItemsTree").css("height", $(window).height() * 0.65 - 179);
+    })
+    var Nodetext = "";//定义全局变量来表示树是否被点击
+    var Nodesort = "";//在新增和物料配置时用于判断点击到的节点
+    var Nodeareaid = "";
+    var Nodeareacd = "";
+    var plinetype = "";
+    var plinename = "";
+
+    var productMatId = "";
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridPageJsonProduct")",//没有datatable从该方法控制器中返回
+            datatype: "json",
+            height: ($(window).height() - 210) * 0.35,
+        autowidth: true,
+            colModel: [
+                { label: '产品主键', name: 'MatId', MatId: 'matid', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '产品编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center',sortable: true  },
+                { label: '产品名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center',sortable: true  },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center',sortable: true  },
+                { label: '颜色', name: 'CarColor1', index: 'CarColor1', width: 0, align: 'center', sortable: true },
+            { label: '备注', name: 'rem', index: 'rem', width: 0, align: 'center', sortable: true, hidden: true },
+        ],
+        pager: "#gridPager",
+            sortname: 'MatCd',
+            sortorder: 'desc',
+            gridview: true,
+            rowNum: 200,
+            loadonce: true,//如果为ture则数据只从服务器端抓取一次，之后所有操作都是在客户端执行，但翻页功能会被禁用，
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            onSelectRow: function (row) {
+            var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
+                productMatId = rowData.MatId;
+                GetTree(productMatId);
+            $("#gridTable1").jqGrid('setGridParam', {
+                url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridMatListJson")?productMatId=" + escape(productMatId) , datatype: 'json'
+                }).trigger('reloadGrid');
+        }
+    });
+    }
+    //加载产品物料配置信息表格
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+            datatype: "json",
+            height: ($(window).height() - 210) * 0.65,
+            autowidth: true,
+            colModel: [
+                { label: '产品工位物料主键', name: 'ProductClassMatId', index: 'ProductClassMatId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '物料主键', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+                { label: '工位主键', name: 'WcId', index: 'WcId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '物料工位主键', name: 'matWcId', index: 'matWcId', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: '工位编号', name: 'WcCd', index: 'WcCd', width: 0, align: 'center', sortable: true },
+                { label: '工位编号', name: 'matWcCd', index: 'matWcCd', width: 0, align: 'center', sortable: true },
+                //{
+                //    label: '关重件', name: 'IsScan', index: 'IsScan', width: 0, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '1') { return "是"; }
+                //        else {
+                //            return "否";
+                //        }
+                //    } },
+                {
+                    label: '关重件', name: 'matIsScan', index: 'matIsScan', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "是"; }
+                        else {
+                            return "否";
+                        }
+                    } },
+                { label: '数量', name: 'MatNum', index: 'MatNum', width: 0, align: 'center', sortable: true },
+                //{ label: '物料数量', name: 'matMatNum', index: 'matMatNum', width: 0, align: 'center', sortable: true },
+                //{
+                //    label: '打印', name: 'IsPrint', index: 'IsPrint', width: 0, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '1') { return "是"; }
+                //        else {
+                //            return "否";
+                //        }
+                //    } },
+                {
+                    label: '打印', name: 'matIsPrint', index: 'matIsPrint', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "是"; }
+                        else {
+                            return "否";
+                        }
+                    } },
+                { label: '打印工位', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true },
+                { label: '简码', name: 'matShortCode', index: 'matShortCode', width: 0, align: 'center', sortable: true },
+            ],
+            pager: "#gridPager1",
+            sortname: '',
+            sortorder: 'desc',
+            gridview: true,
+            rowNum: 200,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+        });
+    }
+    //加载树
+    function GetTree(productMatId) {
+        var itemtree = {
+            //1.获取树
+            url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/TreeJson")?productMatId=" + escape(productMatId),
+            //2.点击数展示表格
+            onnodeclick: function (item) {
+                value = item.value;//编号
+                text = item.text;//名称
+                sort = item.Type;//层级编号
+                areaId = item.id;//ID
+                Nodetext = text;
+                Nodesort = sort;
+                Nodeareaid = areaId;
+                Nodeareacd = value;
+                $("#gridTable1").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridMatListJson")?productMatId=" + escape(productMatId) + "&wcId=" + escape(value), datatype: 'json'
+                }).trigger('reloadGrid');
+            },
+        };
+        $("#ItemsTree").treeview(itemtree);
+    }
+
+    //搜索
+    function btn_Search() {
+        $("#gridTable1").jqGrid('clearGridData');
+        var VIN = $("#VIN").val();
+        var ProductCd = $("#MatCd").val();
+        var ProductNm = $("#MatNm").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridPageJsonProduct1")?VIN=" + escape(VIN) + "&ProductCd=" + escape(ProductCd) + "&ProductNm=" + escape(ProductNm), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+    //原：首次页面表格加载--点击第一个子节点
+    //function GetfirstGrid() {
+    //    var Nodeareaid = "";
+    //    if (Nodeareaid == "") {
+    //        Nodeareaid = "e3ee0b0a-146b-4676-9fec-10e66a6aba84";//写死的，这里不应该
+    //        var reg = new RegExp("-", "g");//g,表示全部替换。
+    //        var s = Nodeareaid.replace(reg, "_");
+    //        s = "#ItemsTree_" + s;
+    //        $(s).click();
+    //        $("#ItemsTree").treeview(itemtree);
+    //    }632540523655452364
+    //}
+
+    ////新增产品
+    //function btn_add() {
+    //    let text = Nodetext;
+    //    let sort = Nodesort;
+    //    let plineid = Nodeareaid;
+    //    if (IsChecked(text)) {
+    //        if (sort == 0) {
+    //            var url = "/BaseModule/BBdbR_ProductWcConfig/Form?text=" + escape(text) + "&PlineId=" + escape(plineid);
+    //            openDialog(url, "Form", "新增产品工位配置", 770, 395, function (iframe) {
+    //                top.frames[iframe].AcceptClick()
+    //            });
+    //        }
+    //        else {
+    //            tipDialog('请您选中产线后再操作。', 2, 'warning');
+    //        }
+    //    }
+    //}
+
+    ////物料配置
+    //function btn_Configuration() {
+    //    let sort = Nodesort;
+    //    var wcid = Nodeareaid;
+    //    var wcnm = Nodetext;
+    //    var wccd = Nodeareacd;
+    //    //var productclassid = GetJqGridRowValue("#gridTable", "productclassid");
+    //    if (productMatId == "" || productMatId == undefined) {//判断是否选中已配置产品
+    //        tipDialog("请选中要配置的产品", 2, -2)
+    //    }
+    //    else {
+    //        var url = "/BaseModule/BBdbR_ProductWcConfig/ConfigMat?wcid=" + escape(wcid) + "&wcnm=" + escape(wcnm) + "&wccd=" + escape(wccd) + "&productclassid=" + escape(productMatId);
+    //        openDialog(url, "ConfigMat", "工位产品物料配置", 770, 395, function (iframe) {
+    //            top.frames[iframe].AcceptClick()
+    //        });
+    //    }
+    //}
+
+    ////图片编辑
+    //function btn_edit() {
+    //    var productclassid = GetJqGridRowValue("#gridTable", "productclassid");
+    //    var matid = GetJqGridRowValue("#gridTable", "matid");
+    //    var filecd= GetJqGridRowValue("#gridTable","filecd");
+    //    if (productclassid == "" || productclassid == undefined) {
+    //        tipDialog("请选中要编辑的产品", 2, -2)
+    //    }
+    //    else {
+    //        var url = "/BaseModule/BBdbR_ProductWcConfig/PictureEdit?matid=" + escape(matid) + "&filecd=" + escape(filecd) + "&productclassid=" + escape(productclassid);
+    //        openDialog(url, "PictureEdit", "产品图片信息编辑", 370, 295, function (iframe) {
+    //            top.frames[iframe].AcceptClick()
+    //        });
+    //    }
+    //}
+
+    ////解除配置
+    //function btn_delete() {
+    //    var MatKeyValue = GetJqGridRowValue("#gridTable1", "ProductClassMatId");
+    //    if (MatKeyValue == "" || MatKeyValue == undefined) {//判断是否选中已配置产品
+    //        tipDialog("请选择要解除配置的物料", 2, -2)
+    //    }
+    //    else {
+    //        AjaxJson('/BaseModule/BBdbR_ProductWcConfig/ConfigMatDelete?', { MatKeyValue: MatKeyValue }, function (data) {
+    //            if (data.Code == "1")//提交成功
+    //            {
+    //                tipDialog("解除配置成功", 2, 1);
+    //                //top.frames[tabiframeId()].windowload();
+    //                windowload();
+    //                closeDialog();
+    //            }
+    //        });
+    //    }
+    //}
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable1").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+    //打印
+    function btn_print() {
+        let datasource;
+        if (productMatId == "" || productMatId == undefined) {//判断是否选中已配置产品
+            tipDialog("请选择已配置的产品", 2, -2)
+        }
+        else if (typeof (Nodesort) == undefined || Nodesort != "0") {
+            tipDialog("请选择产线", 2, -2)
+        }
+        else {
+            PrintDialog("/BaseModule/BBdbR_ProductWcConfig/PrintPage?productMatId=" + escape(productMatId) + "&PlineCd=" + escape(value), "PrintPage", "打印", 1410, 500, function (iframe) {
+                top.frames[iframe].SubmitPrint();
+            })
+        }
+    }
+    //打印产线装配/配置单
+    //function PrintDataSource() {
+    //    var dataMode1 = "";//表头
+    //    var productclassid = GetJqGridRowValue("#gridTable", "productclassid");
+    //    AjaxJson('/BaseModule/BBdbR_ProductWcConfig/PrintDataSource?', { productclassid: productclassid }, function (data) {
+    //        plinetype = data.plinetype;
+    //        plinename = data.plinename;
+    //    })
+    //    dataMode1 = plinename;//表头
+    //}
+</script>
+<div id="bomall" style="height:100%">
+    <!--工具栏-->
+    <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>
+                VIN
+            </th>
+            <td>
+                <input id="VIN" type="text" class="txt" style="width: 125px" />
+            </td>
+            <th>
+                产品编号
+            </th>
+            <td>
+                <input id="MatCd" type="text" class="txt" style="width: 125px" />
+            </td>
+            <th>
+                产品名称
+            </th>
+            <td>
+                <input id="MatNm" type="text" class="txt" style="width: 125px" />
+            </td>
+            <th>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </th>
+        </tr>
+    </table>
+    <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+        @*<div class="btnbartitle">
+                <div style="float: left;margin-left:7px">
+                    <span class="ModuleName">产品信息</span>
+                </div>
+            </div>*@
+        <table id="gridTable" class="ui-jqgrid tr.jqgrow td"></table>
+        <div id="gridPager"></div>
+    </div>
+        <!--左边-->
+        <div id="bombar" style=" position: absolute; z-index: 99; left: 0px; width: 20%; user-select: text; overflow: scroll; margin: 0px; padding: 0px; ">
+            <div class="btnbartitle">
+                <div>
+                    工位索引
+                </div>
+            </div>
+            <div class="ScrollBar" id="ItemsTree" style="height: 95%; "></div>
+        </div>
+        <!--中间-->
+        <div class="" style="position: absolute; z-index: 99; left: 20%; width: 80%; overflow: hidden; margin: 0px; padding: 0px; ">
+            <!--表 -->
+            <div style="overflow: auto;">
+                <div class="topline rightline" style="margin: 0px; margin-top: -1px; ">
+                    @*<div class="btnbartitle">
+                            <div style="float: left;margin-left:7px">
+                                <span class="ModuleName">已配置物料信息</span>
+                            </div>
+                        </div>*@
+                    <table id="gridTable1" class="ui-jqgrid tr.jqgrow td"></table>
+                    <div id="gridPager1"></div>
+                </div>
+            </div>
+        </div>
+</div>

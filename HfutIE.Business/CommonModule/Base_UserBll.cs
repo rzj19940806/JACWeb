@@ -1,4 +1,4 @@
-//=====================================================================================
+ï»¿//=====================================================================================
 // All Rights Reserved , Copyright @ HfutIE 2014
 // Software Developers @ HfutIE 2014
 //=====================================================================================
@@ -17,7 +17,7 @@ using System.Text;
 namespace HfutIE.Business
 {
     /// <summary>
-    /// ÓÃ»§¹ÜÀí
+    /// ç”¨æˆ·ç®¡ç†
     /// <author>
     ///		<name>she</name>
     ///		<date>2014.08.11 15:45</date>
@@ -25,14 +25,70 @@ namespace HfutIE.Business
     /// </summary>
     public class Base_UserBll : RepositoryFactory<Base_User>
     {
+
+        #region 1.è·å–æ ‘ï¼Œéœ€è¦ä¿®æ”¹sqlè¯­å¥
+        public DataTable GetTree()
+        {
+            #region åŸç‰ˆæœ¬
+            //StringBuilder strSql = new StringBuilder();
+            ////===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+            //strSql.Append(@"select  
+            //            DepartmentID AS keys,     
+            //            DepartmentCode AS code,
+            //            DepartmentName AS name,
+            //            Enabled As IsAvailable,
+            //            '0' as parentId,  
+            //            0 as sort    
+            //            from BBdbR_DepartmentBase where Enabled = '1' and DepartmentType='çˆ¶éƒ¨é—¨'");
+            //strSql.Append(@" union select    
+            //                 DepartmentID AS keys,
+            //                 DepartmentCode AS code,
+            //                 DepartmentName AS name,
+            //                 Enabled As IsAvailable,
+            //                 ParentDepartmentID AS parentId,
+            //                 1 as sort 
+            //              from  BBdbR_DepartmentBase where Enabled = '1' and DepartmentType='å­éƒ¨é—¨' order by code asc");
+            //return Repository().FindTableBySql(strSql.ToString());
+            #endregion
+
+            #region ä¿®æ”¹ç‰ˆæœ¬
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"  select  
+                              DepartmentID AS keys,     
+                              DepartmentCode AS code,
+                              DepartmentName AS name,
+                              Enabled As IsAvailable,
+                              '0' as parentId,  
+                              CompanyId AS companyid,
+                              '0' as sort 
+                              from BBdbR_DepartmentBase where Enabled = '1' and ParentDepartmentID = CompanyId
+                              union
+             select  
+                              DepartmentID AS keys,     
+                              DepartmentCode AS code,
+                              DepartmentName AS name,
+                              Enabled As IsAvailable,
+                              ParentDepartmentID as parentId,  
+                              CompanyId AS companyid,
+                              '1' as sort 
+                              from BBdbR_DepartmentBase where Enabled = '1'and ParentDepartmentID != CompanyId ORDER BY code ");
+            return Repository().FindTableBySql(strSql.ToString());
+            #endregion
+
+
+
+        }
+        #endregion
+
+        #region 2.è·å–è¡¨æ ¼æ•°æ®
         /// <summary>
-        /// »ñÈ¡ÓÃ»§ÁĞ±í
+        /// è·å–ç”¨æˆ·åˆ—è¡¨
         /// </summary>
-        /// <param name="keyword">Ä£¿é²éÑ¯</param>
-        /// <param name="CompanyId">¹«Ë¾ID</param>
-        /// <param name="DepartmentId">²¿ÃÅID</param>
-        /// <param name="ParameterJson">¸ß¼¶²éÑ¯Ìõ¼şJSON</param>
-        /// <param name="jqgridparam">·ÖÒ³Ìõ¼ş</param>
+        /// <param name="keyword">æ¨¡å—æŸ¥è¯¢</param>
+        /// <param name="CompanyId">å…¬å¸ID</param>
+        /// <param name="DepartmentId">éƒ¨é—¨ID</param>
+        /// <param name="ParameterJson">é«˜çº§æŸ¥è¯¢æ¡ä»¶JSON</param>
+        /// <param name="jqgridparam">åˆ†é¡µæ¡ä»¶</param>
         /// <returns></returns>
         public DataTable GetPageList(string keyword, string CompanyId, string DepartmentId, string ParameterJson, ref JqGridParam jqgridparam)
         {
@@ -45,26 +101,250 @@ namespace HfutIE.Business
                                                 u.RealName ,				
                                                 u.Spell,                    
                                                 u.Gender ,					
-                                                u.Mobile ,					
+                                                u.Mobile ,
+                                                u.Birthday, 
                                                 u.Telephone ,				
                                                 u.Email ,
                                                 u.OICQ ,					
                                                 u.CompanyId ,			    
-                                                c.FullName AS CompanyName ,	
+                                                c.CompanyNm AS CompanyName ,	
                                                 u.DepartmentId,				
-                                                d.FullName AS DepartmentName,
-                                                e.Duty,                     
+                                                d.DepartmentName AS DepartmentName,
                                                 u.Enabled ,					
                                                 u.LogOnCount ,				
-                                                u.LastVisit ,				
+                                                u.FirstVisit ,				
+                                                u.PreviousVisit ,				
+                                                u.LastVisit ,	
+                                                u.IPAddress,
+                                                u.LastPwdModfyTm,
                                                 u.SortCode,                
-                                                u.CreateUserId,				
+                                                u.CreateUserId,		
+                                                u.CreateDate, 
+                                                u.CreateUserName, 
+                                                u.ModifyDate, 
+                                                u.ModifyUserName, 
+                                                u.ModifyUserId, 
                                                 u.Remark					
                                       FROM      Base_User u
-                                                LEFT JOIN Base_Company c ON c.CompanyId = u.CompanyId
-                                                LEFT JOIN Base_Department d ON d.DepartmentId = u.DepartmentId
-                                                LEFT JOIN Base_Employee e ON e.UserId = u.UserId
-                                    ) T WHERE 1=1");
+                                                LEFT JOIN BBdbR_CompanyBase c ON c.CompanyId = u.CompanyId
+                                                LEFT JOIN BBdbR_DepartmentBase d ON d.DepartmentId = u.DepartmentId
+                                                
+                                    ) T WHERE Enabled != '0'");
+            
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                strSql.Append(@" AND (RealName LIKE @keyword
+                                    OR Account LIKE @keyword
+                                    OR Code LIKE @keyword
+                                    OR Spell LIKE @keyword)");
+                parameter.Add(DbFactory.CreateDbParameter("@keyword", '%' + keyword + '%'));
+            }
+            if (!string.IsNullOrEmpty(CompanyId))
+            {
+                strSql.Append(" AND CompanyId = @CompanyId");
+                parameter.Add(DbFactory.CreateDbParameter("@CompanyId", CompanyId));
+            }
+            if (!string.IsNullOrEmpty(DepartmentId))
+            {
+                //if (DepartmentId== "54d98ff2-5399-4043-8983-57a967fdd74f")
+                //{
+                //    strSql.Append(" AND Enabled = '2'");
+                //}
+                strSql.Append(" AND DepartmentId = @DepartmentId");
+                parameter.Add(DbFactory.CreateDbParameter("@DepartmentId", DepartmentId));
+            }
+            //if (!string.IsNullOrEmpty(ParameterJson))
+            //{
+            //    List<DbParameter> outparameter = new List<DbParameter>();
+            //    strSql.Append(ConditionBuilder.GetWhereSql(ParameterJson.JonsToList<Condition>(), out outparameter));
+            //    parameter.AddRange(outparameter);
+            //}
+            //å…³è”æ•°æ®æƒé™
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
+            return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
+        }
+        #endregion
+
+        #region è·å–è¡¨æ ¼å¯¼å‡ºæ•°æ®
+        public DataTable GetExcel_Data(string keyword, string CompanyId, string DepartmentId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            List<DbParameter> parameter = new List<DbParameter>();
+            strSql.Append(@"SELECT  *
+                            FROM    ( SELECT    u.Code ,					
+                                                u.Account ,					
+                                                u.RealName ,			        
+                                                u.Gender ,	
+                                                u.Birthday, 				
+                                                u.Mobile ,			
+                                                u.Email ,		
+                                                u.LogOnCount ,				
+                                                u.LastVisit ,	
+                                                u.IPAddress,
+                                                u.LastPwdModfyTm,
+                                                u.CreateDate, 
+                                                u.CreateUserName, 
+                                                u.ModifyDate, 
+                                                u.ModifyUserName, 
+                                                u.Remark,
+                                                u.CompanyId,
+                                                u.DepartmentId
+                                      FROM      Base_User u
+                                                LEFT JOIN BBdbR_CompanyBase c ON c.CompanyId = u.CompanyId
+                                                LEFT JOIN BBdbR_DepartmentBase d ON d.DepartmentId = u.DepartmentId where u.Enabled !='0'
+                                                
+                                    ) T  where 1=1 ");
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                //strSql.Append(@" AND (RealName LIKE '%" + keyword + "%'OR Account LIKE '%" + keyword + "%'OR Code LIKE '%" + keyword + "%') ");
+                strSql.Append(" AND (RealName LIKE @keyword OR Account LIKE @keyword OR Code LIKE @keyword )  ");
+                parameter.Add(DbFactory.CreateDbParameter("@keyword", "%" + keyword + "%"));
+            }
+            if (!string.IsNullOrEmpty(CompanyId))
+            {
+                //strSql.Append(" AND CompanyId = '" + CompanyId +"' ");
+                strSql.Append(" and CompanyId = @CompanyId ");
+                parameter.Add(DbFactory.CreateDbParameter("@CompanyId", CompanyId));
+            }
+            if (!string.IsNullOrEmpty(DepartmentId))
+            {
+                //strSql.Append(" AND DepartmentId = '" + DepartmentId + "' ");
+                strSql.Append(" and DepartmentId = @DepartmentId ");
+                parameter.Add(DbFactory.CreateDbParameter("@DepartmentId", DepartmentId));
+            }
+            strSql.Append(" order by Code asc ");
+            
+            //return DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+            return DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+        }
+        #endregion
+
+        #region 2.è·å–è¡¨æ ¼æ•°æ®
+        /// <summary>
+        /// è·å–ç”¨æˆ·åˆ—è¡¨
+        /// </summary>
+        /// <param name="keyword">æ¨¡å—æŸ¥è¯¢</param>
+        /// <param name="CompanyId">å…¬å¸ID</param>
+        /// <param name="DepartmentId">éƒ¨é—¨ID</param>
+        /// <param name="ParameterJson">é«˜çº§æŸ¥è¯¢æ¡ä»¶JSON</param>
+        /// <param name="jqgridparam">åˆ†é¡µæ¡ä»¶</param>
+        /// <returns></returns>
+        //public DataTable GetPageList1(string keyword, string CompanyId, string DepartmentId,  ref JqGridParam jqgridparam)
+        //{
+        //    StringBuilder strSql = new StringBuilder();
+        //    List<DbParameter> parameter = new List<DbParameter>();
+        //    strSql.Append(@"SELECT  *
+        //                    FROM    ( SELECT    u.UserId ,					
+        //                                        u.Code ,					
+        //                                        u.Account ,					
+        //                                        u.RealName ,				
+        //                                        u.Spell,                    
+        //                                        u.Gender ,
+        //                                        u.Birthday ,
+        //                                        u.Mobile ,					
+        //                                        u.Telephone ,				
+        //                                        u.Email ,
+        //                                        u.OICQ ,					
+        //                                        u.CompanyId ,			    
+        //                                        c.CompanyNm AS CompanyName ,	
+        //                                        u.DepartmentId,				
+        //                                        d.DepartmentName AS DepartmentName,
+        //                                        u.Enabled ,					
+        //                                        u.LogOnCount ,				
+        //                                        u.FirstVisit ,				
+        //                                        u.PreviousVisit ,				
+        //                                        u.LastVisit ,
+        //                                        u.IPAddress,
+        //                                        u.LastPwdModfyTm,
+        //                                        u.SortCode,                
+        //                                        u.CreateUserId,				
+        //                                        u.Remark					
+        //                              FROM      Base_User u
+        //                                        LEFT JOIN BBdbR_CompanyBase c ON c.CompanyId = u.CompanyId
+        //                                        LEFT JOIN BBdbR_DepartmentBase d ON d.DepartmentId = u.DepartmentId
+
+        //                            ) T WHERE 1=1");
+        //    if (!string.IsNullOrEmpty(keyword))
+        //    {
+        //        strSql.Append(@" AND (RealName LIKE @keyword
+        //                            OR Account LIKE @keyword
+        //                            OR Code LIKE @keyword
+        //                            OR Spell LIKE @keyword)");
+        //        parameter.Add(DbFactory.CreateDbParameter("@keyword", '%' + keyword + '%'));
+        //    }
+        //    if (!string.IsNullOrEmpty(CompanyId))
+        //    {
+        //        strSql.Append(" AND CompanyId = @CompanyId");
+        //        parameter.Add(DbFactory.CreateDbParameter("@CompanyId", CompanyId));
+        //    }
+        //    if (!string.IsNullOrEmpty(DepartmentId))
+        //    {
+        //        strSql.Append(" AND DepartmentId = @DepartmentId");
+        //        parameter.Add(DbFactory.CreateDbParameter("@DepartmentId", DepartmentId));
+        //    }
+
+        //    //å…³è”æ•°æ®æƒé™
+        //    //if (!ManageProvider.Provider.Current().IsSystem)
+        //    //{
+        //    //    strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+        //    //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+        //    //    strSql.Append(" ) )");
+        //    //}
+        //    return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
+        //}
+        #endregion
+
+        #region 2.è·å–è¡¨æ ¼å†»ç»“æ•°æ®
+        /// <summary>
+        /// è·å–ç”¨æˆ·åˆ—è¡¨
+        /// </summary>
+        /// <param name="keyword">æ¨¡å—æŸ¥è¯¢</param>
+        /// <param name="CompanyId">å…¬å¸ID</param>
+        /// <param name="DepartmentId">éƒ¨é—¨ID</param>
+        /// <param name="ParameterJson">é«˜çº§æŸ¥è¯¢æ¡ä»¶JSON</param>
+        /// <param name="jqgridparam">åˆ†é¡µæ¡ä»¶</param>
+        /// <returns></returns>
+        public DataTable GetPageListFreeze(string keyword, string CompanyId, string DepartmentId, string ParameterJson, ref JqGridParam jqgridparam)
+        {
+            StringBuilder strSql = new StringBuilder();
+            List<DbParameter> parameter = new List<DbParameter>();
+            strSql.Append(@"SELECT  *
+                            FROM    ( SELECT    u.UserId ,     
+                                                u.Code ,     
+                                                u.Account ,     
+                                                u.RealName ,    
+                                                u.Spell,                    
+                                                u.Gender ,     
+                                                u.Mobile ,
+                                                u.Birthday, 
+                                                u.Telephone ,    
+                                                u.Email ,
+                                                u.OICQ ,     
+                                                u.CompanyId ,       
+                                                c.CompanyNm AS CompanyName , 
+                                                u.DepartmentId,    
+                                                d.DepartmentName AS DepartmentName,
+                                                u.Enabled ,     
+                                                u.LogOnCount ,    
+                                                u.FirstVisit ,    
+                                                u.PreviousVisit ,    
+                                                u.LastVisit , 
+                                                u.IPAddress,
+                                                u.LastPwdModfyTm,
+                                                u.SortCode,                
+                                                u.CreateUserId,    
+                                                u.Remark     
+                                      FROM      Base_User u
+                                                LEFT JOIN BBdbR_CompanyBase c ON c.CompanyId = u.CompanyId
+                                                LEFT JOIN BBdbR_DepartmentBase d ON d.DepartmentId = u.DepartmentId
+                                                
+                                    ) T WHERE Enabled = '2'");
             if (!string.IsNullOrEmpty(keyword))
             {
                 strSql.Append(@" AND (RealName LIKE @keyword
@@ -83,23 +363,45 @@ namespace HfutIE.Business
                 strSql.Append(" AND DepartmentId = @DepartmentId");
                 parameter.Add(DbFactory.CreateDbParameter("@DepartmentId", DepartmentId));
             }
-            if (!string.IsNullOrEmpty(ParameterJson))
-            {
-                List<DbParameter> outparameter = new List<DbParameter>();
-                strSql.Append(ConditionBuilder.GetWhereSql(ParameterJson.JonsToList<Condition>(), out outparameter));
-                parameter.AddRange(outparameter);
-            }
-            //¹ØÁªÊı¾İÈ¨ÏŞ
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
-            }
             return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
         }
+        #endregion
+
+        #region åŠ è½½å…¨éƒ¨ç”¨æˆ·
+        public Base_User GetUserList(string KeyValue)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT * FROM Base_User where UserId = '" + KeyValue + "'");
+            return Repository().FindEntityBySql(strSql.ToString());
+        }
+        #endregion
+
+        #region 5.åˆ é™¤æ–¹æ³•
+        //array éœ€è¦åˆ é™¤çš„ä¿¡æ¯çš„ä¸»é”®çš„æ•°ç»„
+        //åˆ é™¤è¡¨ä¸­æŸä¸€æ¡æ•°æ®è¡¨ç¤ºå°†è¡¨ä¸­è¯¥æ¡æ•°æ®çš„Enabledè®¾ç½®ä¸º0ï¼Œå¹¶ä¸æ˜¯çœŸçš„åˆ é™¤è¯¥æ•°æ®
+        //è¿”å›å€¼ä¸º1ï¼Œæˆ–è€…0
+        //1è¡¨ç¤ºæ“ä½œæˆåŠŸï¼Œ0è¡¨ç¤ºæ“ä½œå¤±è´¥
+        public int Delete(string[] array)
+        {
+            IDatabase database = DataFactory.Database();
+            DbTransaction isOpenTrans = database.BeginTrans();
+            //åˆ›å»ºä¸€ä¸ªè¡¨æ ¼çš„listï¼Œç”¨äºå­˜å‚¨é€šè¿‡ä¸»é”®æŸ¥è¯¢åˆ°çš„ä¿¡æ¯
+            List<Base_User> listEntity = new List<Base_User>(); //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+
+            foreach (string keyValue in array)
+            {
+                //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                //Base_User entity = Repository().FindEntity(keyValue);//æ ¹æ®ä¸»é”®ï¼ˆkeyValueï¼‰åœ¨æ•°æ®åº“ä¸­æŸ¥æ‰¾å®ä½“ //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                Base_User entity = database.FindEntityBySql<Base_User>($"SELECT * FROM Base_User WHERE UserId = '{keyValue}'");//è·å–æ²¡æ›´æ–°ä¹‹å‰å®ä½“å¯¹è±¡
+                entity.Enabled = "0";//å°†è¯¥å®ä½“çš„IsAvailableå±æ€§æ”¹ä¸ºfalse
+                listEntity.Add(entity);
+            }
+            return Repository().Update(listEntity);//ä¿®æ”¹æ•°æ®åº“
+        }
+        #endregion
+
         /// <summary>
-        /// ÅĞ¶ÏÊÇ·ñÁ¬½Ó·şÎñÆ÷
+        /// åˆ¤æ–­æ˜¯å¦è¿æ¥æœåŠ¡å™¨
         /// </summary>
         /// <returns></returns>
         public bool IsLinkServer()
@@ -116,25 +418,26 @@ namespace HfutIE.Business
                 return false;
             }
         }
+        
         /// <summary>
-        /// µÇÂ½ÑéÖ¤ĞÅÏ¢
+        /// ç™»é™†éªŒè¯ä¿¡æ¯
         /// </summary>
-        /// <param name="Account">ÕË»§</param>
-        /// <param name="Password">ÃÜÂë</param>
-        /// <param name="result">·µ»Ø½á¹û</param>
+        /// <param name="Account">è´¦æˆ·</param>
+        /// <param name="Password">å¯†ç </param>
+        /// <param name="result">è¿”å›ç»“æœ</param>
         /// <returns></returns>
         public Base_User UserLogin(string Account, string Password, out string result)
         {
             if (!this.IsLinkServer())
             {
-                throw new Exception("·şÎñÆ÷Á¬½Ó²»ÉÏ£¬" + DbResultMsg.ReturnMsg);
+                throw new Exception("æœåŠ¡å™¨è¿æ¥ä¸ä¸Šï¼Œ" + DbResultMsg.ReturnMsg);
             }
             Base_User entity = Repository().FindEntity("Account", Account);
             if (entity != null && entity.UserId != null)
             {
-                if (entity.Enabled == 1)
+                if (entity.Enabled == "1")
                 {
-                    string dbPassword = Md5Helper.MD5(DESEncrypt.Encrypt(Password.ToLower(), entity.Secretkey).ToLower(), 32).ToLower();//¼ÓÃÜ
+                    string dbPassword = Md5Helper.MD5(DESEncrypt.Encrypt(Password.ToLower(), entity.Secretkey).ToLower(), 32).ToLower();//åŠ å¯†
                     if (dbPassword == entity.Password)
                     {
                         DateTime PreviousVisit = CommonHelper.GetDateTime(entity.LastVisit);
@@ -143,6 +446,7 @@ namespace HfutIE.Business
                         entity.PreviousVisit = PreviousVisit;
                         entity.LastVisit = LastVisit;
                         entity.LogOnCount = LogOnCount;
+                        entity.IPAddress = NetHelper.GetIPAddress();
                         entity.Online = 1;
                         Repository().Update(entity);
                         result = "succeed";
@@ -162,18 +466,18 @@ namespace HfutIE.Business
             return null;
         }
         /// <summary>
-        /// »ñÈ¡ÓÃ»§½ÇÉ«ÁĞ±í
+        /// è·å–ç”¨æˆ·è§’è‰²åˆ—è¡¨
         /// </summary>
-        /// <param name="CompanyId">¹«Ë¾ID</param>
-        /// <param name="UserId">ÓÃ»§Id</param>
+        /// <param name="CompanyId">å…¬å¸ID</param>
+        /// <param name="UserId">ç”¨æˆ·Id</param>
         /// <returns></returns>
-        public DataTable UserRoleList(string CompanyId, string UserId)
+        public DataTable UserRoleList(string UserId)
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
             strSql.Append(@"SELECT  r.RoleId ,				
-                                    r.Code ,				
-                                    r.FullName ,			
+                                    r.RoleCd ,				
+                                    r.RoleNm ,			
                                     r.SortCode ,			
                                     ou.ObjectId			
                             FROM    Base_Roles r
@@ -181,21 +485,19 @@ namespace HfutIE.Business
                                                                             AND ou.UserId = @UserId
                                                                             AND ou.Category = 2
                             WHERE 1 = 1");
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(" AND ( RoleId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
-            }
-            strSql.Append(" AND r.CompanyId = @CompanyId");
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( RoleId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
             parameter.Add(DbFactory.CreateDbParameter("@UserId", UserId));
-            parameter.Add(DbFactory.CreateDbParameter("@CompanyId", CompanyId));
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
         /// <summary>
-        /// Ñ¡ÔñÓÃ»§ÁĞ±í
+        /// é€‰æ‹©ç”¨æˆ·åˆ—è¡¨
         /// </summary>
-        /// <param name="keyword">Ä£¿é²éÑ¯</param>
+        /// <param name="keyword">æ¨¡å—æŸ¥è¯¢</param>
         /// <returns></returns>
         public DataTable OptionUserList(string keyword)
         {
@@ -264,17 +566,17 @@ namespace HfutIE.Business
                                         LEFT JOIN Base_Department d ON d.DepartmentId = u.DepartmentId
                                 WHERE   1 = 1");
             }
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
-            }
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( UserId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
 
         /// <summary>
-        /// Ê÷ĞÎ ÓÃ»§ÁĞ±í
+        /// æ ‘å½¢ ç”¨æˆ·åˆ—è¡¨
         /// </summary>
         /// <returns></returns>
         public DataTable TreeUserList()
@@ -308,12 +610,12 @@ namespace HfutIE.Business
                                                 '1' AS Sort
                                       FROM      Base_User
                                     ) T WHERE 1=1");
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(" AND ( Id IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
-            }
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( Id IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
             strSql.Append("ORDER BY SortCode ASC;");
             return Repository().FindTableBySql(strSql.ToString());
         }
@@ -342,44 +644,26 @@ namespace HfutIE.Business
         //                                        b.area_key as parentid ,
         //                                        '3' as image                                            
         //                              FROM      AD_depart_basic  a, AREA  b
-        //                              WHERE 1=1     ");//Ö±½Ó×éºÏÒ»ĞĞÊı¾İ£¬¼´ÔÚÏÖÓĞµÄ±íÖĞ¼ÓÁËÒ»ĞĞÊı¾İ£¬ÓÃ´úÂëĞ´ËÀµÄÊı¾İ£¨¾ÍÊÇÇ°ÃæÒ»ĞĞ£©
+        //                              WHERE 1=1     ");//ç›´æ¥ç»„åˆä¸€è¡Œæ•°æ®ï¼Œå³åœ¨ç°æœ‰çš„è¡¨ä¸­åŠ äº†ä¸€è¡Œæ•°æ®ï¼Œç”¨ä»£ç å†™æ­»çš„æ•°æ®ï¼ˆå°±æ˜¯å‰é¢ä¸€è¡Œï¼‰
         //    return Repository().FindTableBySql(strSql.ToString());
         //}
 
-        #region 5.É¾ÓÃ»§±í
-        //array ĞèÒªÉ¾³ıµÄĞÅÏ¢µÄÖ÷¼üµÄÊı×é
-        //É¾³ı±íÖĞÄ³Ò»ÌõÊı¾İ±íÊ¾½«±íÖĞ¸ÃÌõÊı¾İµÄEnabledÉèÖÃÎª0£¬²¢²»ÊÇÕæµÄÉ¾³ı¸ÃÊı¾İ
-        //·µ»ØÖµÎª1£¬»òÕß0
-        //1±íÊ¾²Ù×÷³É¹¦£¬0±íÊ¾²Ù×÷Ê§°Ü
-        public int Delete(string[] array)
-        {
-            //´´½¨Ò»¸ö±í¸ñµÄlist£¬ÓÃÓÚ´æ´¢Í¨¹ıÖ÷¼ü²éÑ¯µ½µÄĞÅÏ¢
-            List<Base_User> listEntity = new List<Base_User>(); //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
-            foreach (string keyValue in array)
-            {
-                //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
-                Base_User entity = Repository().FindEntity(keyValue);//¸ù¾İÖ÷¼ü£¨keyValue£©ÔÚÊı¾İ¿âÖĞ²éÕÒÊµÌå //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
-                //entity.Enabled = 0;//½«¸ÃÊµÌåµÄIsAvailableÊôĞÔ¸ÄÎªfalse
-                listEntity.Add(entity);
-            }
-            return Repository().Delete(listEntity);//É¾Êı¾İ¿â
-        }
-        #endregion
+        
 
-        #region 6.²éÑ¯·½·¨£¬ĞèÒªĞŞ¸ÄsqlÓï¾ä
+        #region 6.æŸ¥è¯¢æ–¹æ³•ï¼Œéœ€è¦ä¿®æ”¹sqlè¯­å¥
         /// <summary>
-        ///     ²éÑ¯Ê±Ìá¹©ÁËÁ½¸ö¹Ø¼ü×Ö£¬Ò»¸öÊÇCondition£¬ÁíÒ»¸öÊÇkeywords
+        ///     æŸ¥è¯¢æ—¶æä¾›äº†ä¸¤ä¸ªå…³é”®å­—ï¼Œä¸€ä¸ªæ˜¯Conditionï¼Œå¦ä¸€ä¸ªæ˜¯keywords
         ///     
-        ///     ConditionÊÇ¹Ø¼ü×Ö£¬¼´²éÑ¯Ìõ¼ş£¬¶ÔÓ¦Êı¾İ¿âÖĞµÄÒ»¸ö×Ö¶Î
-        ///     keywordsÊÇ²éÑ¯Öµ£¬¼´²éÑ¯Ìõ¼şµÄ¾ßÌåÖµ£¬¶ÔÓ¦Êı¾İ¿âÖĞ²éÑ¯Ìõ¼ş×Ö¶ÎµÄÖµ
-        ///     ²éÑ¯µÄÊ±ºò´«µİÁËConditionºÍkeywords
+        ///     Conditionæ˜¯å…³é”®å­—ï¼Œå³æŸ¥è¯¢æ¡ä»¶ï¼Œå¯¹åº”æ•°æ®åº“ä¸­çš„ä¸€ä¸ªå­—æ®µ
+        ///     keywordsæ˜¯æŸ¥è¯¢å€¼ï¼Œå³æŸ¥è¯¢æ¡ä»¶çš„å…·ä½“å€¼ï¼Œå¯¹åº”æ•°æ®åº“ä¸­æŸ¥è¯¢æ¡ä»¶å­—æ®µçš„å€¼
+        ///     æŸ¥è¯¢çš„æ—¶å€™ä¼ é€’äº†Conditionå’Œkeywords
         /// 
         /// </summary>
-        /// <param name="keywords">²éÑ¯Öµ</param>
-        /// <param name="Condition">¹Ø¼ü×Ö£¨²éÑ¯Ìõ¼ş£©</param>
-        /// <param name="jqgridparam">·ÖÒ³²ÎÊı</param>
-        /// <returns>²éÑ¯µÄÊı¾İ£¨ÁĞ±í£©</returns>
-        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
+        /// <param name="keywords">æŸ¥è¯¢å€¼</param>
+        /// <param name="Condition">å…³é”®å­—ï¼ˆæŸ¥è¯¢æ¡ä»¶ï¼‰</param>
+        /// <param name="jqgridparam">åˆ†é¡µå‚æ•°</param>
+        /// <returns>æŸ¥è¯¢çš„æ•°æ®ï¼ˆåˆ—è¡¨ï¼‰</returns>
+        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
         {
             string sql = "";
             //List<Base_User> dt;
@@ -393,7 +677,7 @@ namespace HfutIE.Business
             }
             else
             {
-                //¸ù¾İÌõ¼ş²éÑ¯
+                //æ ¹æ®æ¡ä»¶æŸ¥è¯¢
                 sql = @"select * from Base_User where 1 = 1 and " + Condition + " like  '%" + keywords + "%'";
                 return Repository().FindTableBySql(sql.ToString());
             }
@@ -401,10 +685,33 @@ namespace HfutIE.Business
         }
         #endregion
 
-        #region 7.±à¼­ÓÃ»§ĞÅÏ¢
+        #region 7.ç¼–è¾‘ç”¨æˆ·ä¿¡æ¯
 
         #endregion
 
+        #region æ ¹æ®éƒ¨é—¨IDæŸ¥è¯¢äººå‘˜
+        public int GetStfCount(string KeyValue) //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+        {
+            string sql = "";
+            if (KeyValue != "")
+            {
+                sql = @"select * from Base_User where Enabled='1' and DepartmentID='" + KeyValue + "'";
+                DataTable dt = Repository().FindTableBySql(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    return Repository().FindTableBySql(sql).Rows.Count;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        #endregion
 
     }
 

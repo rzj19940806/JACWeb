@@ -6,6 +6,7 @@
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -32,35 +33,37 @@ namespace HfutIE.Business
         #region 方法区
 
         #region 1.页面表格
-        /// <summary>
-        /// 联合查询，展示页面表格
-        /// </summary>
-        /// <param name="CheckId"></param>
-        /// <returns></returns>
-        public DataTable GetPlanList()
-        {
-            StringBuilder sql1 = new StringBuilder();
-            StringBuilder sql2 = new StringBuilder();
-            DataTable dt1 = new DataTable();
-            DataTable dt2 = new DataTable();
-            sql1.Append(@"SELECT a.*,b.PlineNm as PlineNm FROM  " + tableName + " a join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.IsIndependence='0' and a.Enabled=1 ");
-            dt1 = Repository().FindTableBySql(sql1.ToString(), false);
-            sql2.Append(@"SELECT *,'无' as PlineNm FROM  " + tableName + " where IsIndependence='1' and Enabled=1 ");
-            dt2 = Repository().FindTableBySql(sql2.ToString(), false);
-            DataTable dt = dt1.Clone();
-            object[] obj = new object[dt.Columns.Count];
-            for (int i = 0; i < dt1.Rows.Count; i++)
-            {
-                dt1.Rows[i].ItemArray.CopyTo(obj, 0);
-                dt.Rows.Add(obj);
-            }
-            for (int i = 0; i < dt2.Rows.Count; i++)
-            {
-                dt2.Rows[i].ItemArray.CopyTo(obj, 0);
-                dt.Rows.Add(obj);
-            }
-            return dt;
-        }
+        ///// <summary>
+        ///// 联合查询，展示页面表格
+        ///// </summary>
+        ///// <param name="CheckId"></param>
+        ///// <returns></returns>
+        //public DataTable GetPlanList()
+        //{
+        //    string sql = "";
+
+        //    //StringBuilder sql1 = new StringBuilder();
+        //    //StringBuilder sql2 = new StringBuilder();
+        //    //DataTable dt1 = new DataTable();
+        //    //DataTable dt2 = new DataTable();
+        //    //sql1.Append(@"SELECT a.*,b.PlineNm as PlineNm FROM  " + tableName + " a join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.IsIndependence='0' and a.Enabled=1 ");
+        //    //dt1 = Repository().FindTableBySql(sql1.ToString(), false);
+        //    //sql2.Append(@"SELECT *,'无' as PlineNm FROM  " + tableName + " where IsIndependence='1' and Enabled=1 ");
+        //    //dt2 = Repository().FindTableBySql(sql2.ToString(), false);
+        //    //DataTable dt = dt1.Clone();
+        //    //object[] obj = new object[dt.Columns.Count];
+        //    //for (int i = 0; i < dt1.Rows.Count; i++)
+        //    //{
+        //    //    dt1.Rows[i].ItemArray.CopyTo(obj, 0);
+        //    //    dt.Rows.Add(obj);
+        //    //}
+        //    //for (int i = 0; i < dt2.Rows.Count; i++)
+        //    //{
+        //    //    dt2.Rows[i].ItemArray.CopyTo(obj, 0);
+        //    //    dt.Rows.Add(obj);
+        //    //}
+        //    //return dt;
+        //}
         #endregion
 
         #region 2.新增方法
@@ -158,24 +161,21 @@ namespace HfutIE.Business
         /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns>查询的数据（列表）</returns>
-        public List<BBdbR_AVIBase> GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
-            List<BBdbR_AVIBase> dt;
 
             if (Condition == "all" || keywords == "")
             {
-                sql = @"select * from " + tableName + " where Enabled = '1' order by AviCd asc";
-                dt = Repository().FindListBySql(sql.ToString());
+                sql = $@"select a.*,b.PlineNm from {tableName} a left join BBdbR_PlineBase b on a.PlineId=b.PlineId  where a.Enabled = '1' order by {jqgridparam.sidx} {jqgridparam.sord}";
             }
             else
             {
                 //根据条件查询
-                sql = @"select * from " + tableName + " where Enabled = '1' and " + Condition + " like  '%" + keywords + "%' order by AviCd asc";
-                dt = Repository().FindListBySql(sql.ToString());
+                sql = $@"select a.*,b.PlineNm from {tableName} a left join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.Enabled = '1' and a.{Condition} like  '%{keywords}%' order by {jqgridparam.sidx} {jqgridparam.sord}";
             }
+            return Repository().FindTableBySql(sql.ToString(), false);
 
-            return dt;
         }
         #endregion
 
@@ -185,6 +185,109 @@ namespace HfutIE.Business
         {
             string sql = @"select PlineId as id, PlineNm as plinenm from BBdbR_PlineBase where Enabled='1'";
             return Repository().FindTableBySql(sql);
+        }
+        #endregion
+
+        #region 8.获取工序编号下拉框
+        /// <summary>
+        ///     查询时提供了两个关键字，一个是Condition，另一个是keywords
+        ///     
+        ///     Condition是关键字，即查询条件，对应数据库中的一个字段
+        ///     keywords是查询值，即查询条件的具体值，对应数据库中查询条件字段的值
+        ///     查询的时候传递了Condition和keywords
+        /// 
+        /// </summary>
+        /// <param name="keywords">查询值</param>
+        /// <param name="Condition">关键字（查询条件）</param>
+        /// <param name="jqgridparam">分页参数</param>
+        /// <returns>查询的数据（列表）</returns>
+        public DataTable Getopcode() //===复制时需要修改===
+        {
+            string sql = @"select OP_CODE,OP_NAME from BBdbR_AVIBase where OP_CODE  is not null and OP_CODE != '' order by OP_CODE ";
+            
+            
+            return Repository().FindTableBySql(sql.ToString(), false);
+
+        }
+        #endregion
+
+        #region 9.获取AVI名称下拉框
+        /// <summary>
+        ///     查询时提供了两个关键字，一个是Condition，另一个是keywords
+        ///     
+        ///     Condition是关键字，即查询条件，对应数据库中的一个字段
+        ///     keywords是查询值，即查询条件的具体值，对应数据库中查询条件字段的值
+        ///     查询的时候传递了Condition和keywords
+        /// 
+        /// </summary>
+        /// <param name="keywords">查询值</param>
+        /// <param name="Condition">关键字（查询条件）</param>
+        /// <param name="jqgridparam">分页参数</param>
+        /// <returns>查询的数据（列表）</returns>
+        public DataTable GetAviNm() //===复制时需要修改===
+        {
+            string sql = @"select OP_CODE,AviCd,AviNm from BBdbR_AVIBase where OP_CODE  is not null and OP_CODE != '' order by OP_CODE ";
+
+
+            return Repository().FindTableBySql(sql.ToString(), false);
+
+        }
+        #endregion
+
+        #region 10.导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
         }
         #endregion
 

@@ -1,4 +1,4 @@
-using HfutIE.Business;
+ï»¿using HfutIE.Business;
 using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
@@ -18,24 +18,26 @@ using System.Web.Mvc;
 namespace HfutIE.WebApp.Areas.CommonModule.Controllers
 {
     /// <summary>
-    /// ÏµÍ³ÈÕÖ¾¿ØÖÆÆ÷
+    /// ç³»ç»Ÿæ—¥å¿—æ§åˆ¶å™¨
     /// </summary>
     public class SysLogController : PublicController<Base_SysLog>
     {
         private Base_SysLogBll base_syslogbll = new Base_SysLogBll();
+
+        #region æŸ¥è¯¢
         /// <summary>
-        /// ¡¾ÏµÍ³ÈÕÖ¾¡¿·µ»ØÏµÍ³ÈÕÖ¾ÁĞ±íJSON
+        /// ã€ç³»ç»Ÿæ—¥å¿—ã€‘è¿”å›ç³»ç»Ÿæ—¥å¿—åˆ—è¡¨JSON
         /// </summary>
-        /// <param name="ModuleId">Ä£¿éID</param>
-        /// <param name="ParameterJson">ËÑË÷Ìõ¼ş</param>
-        /// <param name="jqgridparam">±í¸ñ²ÎÊı</param>
+        /// <param name="ModuleId">æ¨¡å—ID</param>
+        /// <param name="ParameterJson">æœç´¢æ¡ä»¶</param>
+        /// <param name="jqgridparam">è¡¨æ ¼å‚æ•°</param>
         /// <returns></returns>
-        public ActionResult GridPageListJson(string ModuleId, string ParameterJson, JqGridParam jqgridparam)
+        public ActionResult GridPageListJson(string ModuleId,string LogType, string CreateUserName, string IPAddress ,string StartTime ,string EndTime,string ParameterJson, JqGridParam jqgridparam)
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = base_syslogbll.GetPageList(ModuleId, ParameterJson, ref jqgridparam);
+                DataTable ListData = base_syslogbll.GetPageList(ModuleId, LogType, CreateUserName,  IPAddress,  StartTime,  EndTime, ParameterJson, ref jqgridparam);
                 var JsonData = new
                 {
                     total = jqgridparam.total,
@@ -44,18 +46,20 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                     costtime = CommonHelper.TimerEnd(watch),
                     rows = ListData,
                 };
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "ç³»ç»Ÿæ—¥å¿—ä¿¡æ¯æŸ¥è¯¢æˆåŠŸ");
                 return Content(JsonData.ToJson());
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "Òì³£´íÎó£º" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "ç³»ç»Ÿæ—¥å¿—ä¿¡æ¯æŸ¥è¯¢å¼‚å¸¸é”™è¯¯ï¼š" + ex.Message);
                 return null;
             }
         }
+        #endregion
         /// <summary>
-        /// ¡¾ÏµÍ³ÈÕÖ¾Ã÷Ï¸¡¿·µ»Ø±í¸ñJSON
+        /// ã€ç³»ç»Ÿæ—¥å¿—æ˜ç»†ã€‘è¿”å›è¡¨æ ¼JSON
         /// </summary>
-        /// <param name="SysLogId">Ö÷¼üÖµ</param>
+        /// <param name="SysLogId">ä¸»é”®å€¼</param>
         /// <returns></returns>
         public JsonResult GetSysLogDetailJson(string SysLogId)
         {
@@ -63,7 +67,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// ¡¾Çå¿ÕÈÕÖ¾¡¿
+        /// ã€æ¸…ç©ºæ—¥å¿—ã€‘
         /// </summary>
         /// <returns></returns>
         [ManagerPermission(PermissionMode.Enforce)]
@@ -72,49 +76,53 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return View();
         }
         /// <summary>
-        /// ¡¾Çå¿ÕÈÕÖ¾¡¿ ±íµ¥Ìá½»ÊÂ¼ş
+        /// ã€æ¸…ç©ºæ—¥å¿—ã€‘ è¡¨å•æäº¤äº‹ä»¶
         /// </summary>
-        /// <param name="KeepTime">ÈÕÖ¾±£ÁôÊ±¼ä</param>
+        /// <param name="KeepTime">æ—¥å¿—ä¿ç•™æ—¶é—´</param>
         public ActionResult SubmitRemoveLog(string KeepTime)
         {
             string Remark = "";
-            if (KeepTime == "7")//±£Áô½üÒ»ÖÜ
+            if (KeepTime == "6")//ä¿ç•™è¿‘åŠå¹´
             {
-                Remark = "±£Áô½üÒ»ÖÜ";
+                Remark = "ä¿ç•™è¿‘åŠå¹´";
             }
-            else if (KeepTime == "1")//±£Áô½üÒ»¸öÔÂ
+            else if (KeepTime == "12")//ä¿ç•™è¿‘ä¸€å¹´
             {
-                Remark = "±£Áô½üÒ»¸öÔÂ";
+                Remark = "ä¿ç•™è¿‘ä¸€å¹´";
             }
-            else if (KeepTime == "3")//±£Áô½üÈı¸öÔÂ
+            else if (KeepTime == "36")//ä¿ç•™è¿‘ä¸‰å¹´
             {
-                Remark = "±£Áô½üÈı¸öÔÂ";
+                Remark = "ä¿ç•™è¿‘ä¸‰å¹´";
             }
-            if (KeepTime == "0")//
+            else if (KeepTime == "60")//ä¿ç•™è¿‘äº”å¹´
             {
-                Remark = "²»±£Áô£¬È«²¿É¾³ı";
+                Remark = "ä¿ç•™è¿‘äº”å¹´";
+            }
+            else if (KeepTime == "0")//ä¸ä¿ç•™ï¼Œå…¨éƒ¨åˆ é™¤
+            {
+                Remark = "ä¸ä¿ç•™ï¼Œå…¨éƒ¨åˆ é™¤";
             }
             try
             {
-                var Message = "Çå¿ÕÊ§°Ü¡£";
+                var Message = "æ¸…ç©ºå¤±è´¥ã€‚";
                 int IsOk = Base_SysLogBll.Instance.RemoveLog(KeepTime);
                 if (IsOk >= 0)
                 {
                     IsOk = 1;
-                    Message = "É¾³ı³É¹¦¡£";
+                    Message = "åˆ é™¤æˆåŠŸã€‚";
                 }
                 Base_SysLogBll.Instance.WriteLog("", OperationType.Other, IsOk.ToString(), Message + Remark);
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = Message }.ToString());
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Other, "-1", Remark + "," + "´íÎó£º" + ex.Message);
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "²Ù×÷Ê§°Ü£¬´íÎó£º" + ex.Message }.ToString());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Other, "-1", Remark + "," + "é”™è¯¯ï¼š" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "æ“ä½œå¤±è´¥ï¼Œé”™è¯¯ï¼š" + ex.Message }.ToString());
             }
         }
-        #region ÈÕÖ¾ÎÄ¼ş
+        #region æ—¥å¿—æ–‡ä»¶
         /// <summary>
-        /// ÈÕÖ¾ÎÄ¼şÊÓÍ¼
+        /// æ—¥å¿—æ–‡ä»¶è§†å›¾
         /// </summary>
         /// <returns></returns>
         public ActionResult FileIndex()
@@ -122,7 +130,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return View();
         }
         /// <summary>
-        /// ÈÕÖ¾ÎÄ¼şÁĞ±í
+        /// æ—¥å¿—æ–‡ä»¶åˆ—è¡¨
         /// </summary>
         /// <returns></returns>
         public ActionResult FileList()
@@ -131,7 +139,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             sb.Append("[");
             DirectoryInfo dir = new DirectoryInfo(Server.MapPath("~/log"));
             FileInfo[] files = dir.GetFiles();
-            FileDateSorter.QuickSort(files, 0, files.Length - 1);//°´Ê±¼äÅÅĞò
+            FileDateSorter.QuickSort(files, 0, files.Length - 1);//æŒ‰æ—¶é—´æ’åº
             foreach (FileInfo fsi in files)
             {
                 sb.Append("{");
@@ -148,24 +156,24 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return Content(sb.ToString());
         }
         /// <summary>
-        /// ¶ÁÈÕÖ¾
+        /// è¯»æ—¥å¿—
         /// </summary>
-        /// <param name="FileName">ÎÄ¼şÃû</param>
+        /// <param name="FileName">æ–‡ä»¶å</param>
         /// <returns></returns>
         public ActionResult ReadTxtLog(string FileName)
         {
             string filepath = Server.MapPath("~/log/" + FileName);
             FileStream fs = new System.IO.FileStream(filepath, FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite);
-            StreamReader sr = new StreamReader(fs, Encoding.GetEncoding("gb2312"));//È¡µÃÕâtxtÎÄ¼şµÄ±àÂë
+            StreamReader sr = new StreamReader(fs, Encoding.GetEncoding("gb2312"));//å–å¾—è¿™txtæ–‡ä»¶çš„ç¼–ç 
             string txtvalue = sr.ReadToEnd().ToString();
             sr.Close();
             return Content(txtvalue);
         }
         #endregion
 
-        #region µÇÂ½·ÃÎÊÍ³¼Æ
+        #region ç™»é™†è®¿é—®ç»Ÿè®¡
         /// <summary>
-        /// µÇÂ½·ÃÎÊÍ³¼Æ
+        /// ç™»é™†è®¿é—®ç»Ÿè®¡
         /// </summary>
         /// <returns></returns>
         public ActionResult LogChartIndex()
@@ -173,9 +181,9 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return View();
         }
         /// <summary>
-        /// µÇÂ½·ÃÎÊÁĞ±í
+        /// ç™»é™†è®¿é—®åˆ—è¡¨
         /// </summary>
-        /// <param name="day">Ìì</param>
+        /// <param name="day">å¤©</param>
         /// <returns></returns>
         public ActionResult LoginList(string day)
         {
@@ -194,7 +202,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return Content(dt.ToJson());
         }
         /// <summary>
-        /// µÇÂ½·ÃÎÊÍ³¼Æ£¨·µ»ØJSON£©
+        /// ç™»é™†è®¿é—®ç»Ÿè®¡ï¼ˆè¿”å›JSONï¼‰
         /// </summary>
         /// <returns></returns>
         public ActionResult LoginChart()
@@ -222,5 +230,119 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return Content(dt.ToJson());
         }
         #endregion
+
+
+        #region é‡æ„å¯¼å‡º
+        public ActionResult GetExcel_Data(string ModuleId, string LogType, string CreateUserName, string IPAddress, string StartTime, string EndTime, string ParameterJson, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region æ ¹æ®å½“å‰æœç´¢æ¡ä»¶æŸ¥å‡ºæ•°æ®å¹¶å¯¼å‡º
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"SELECT  *
+                            FROM    (SELECT    
+                                               l.CreateDate ,
+                                               m.FullName AS ModuleName ,
+                                               l.LogType ,
+                                               l.IPAddress ,
+                                               l.CreateUserName ,
+                                               l.Status,
+                                               l.Remark ,
+												ld.PropertyField,
+												ld.PropertyName,
+												ld.NewValue,
+												ld.OldValue
+                                      FROM      Base_SysLog l
+                                                LEFT JOIN Base_Department d ON d.DepartmentId = l.DepartmentId
+                                                LEFT JOIN Base_Company c ON c.CompanyId = l.CompanyId
+                                                LEFT JOIN Base_Module m ON m.ModuleId = l.ModuleId
+                                                LEFT JOIN Base_SysLogDetail ld ON ld.SysLogId = l.SysLogId
+                                    ) A WHERE LogType != '0' ");
+                //if (!string.IsNullOrEmpty(ModuleId))
+                //{
+                //    strSql.Append(" AND ModuleId = '"+ ModuleId + "'");
+                //}
+                //if (!string.IsNullOrEmpty(LogType))
+                //{
+                //    strSql.Append(" AND LogType = '"+ LogType + "'");
+                //}
+                //if (!string.IsNullOrEmpty(CreateUserName))
+                //{
+                //    strSql.Append(" AND CreateUserName LIKE '%" + CreateUserName + "%'");
+                //}
+                //if (!string.IsNullOrEmpty(IPAddress))
+                //{
+                //    strSql.Append(" AND IPAddress LIKE '%" + IPAddress + "%'");
+                //}
+                //if (!string.IsNullOrEmpty(StartTime))
+                //{
+                //    strSql.Append(" AND CreateDate >= '" + StartTime + "' ");
+                //}
+                //if (!string.IsNullOrEmpty(EndTime))
+                //{
+                //    strSql.Append(" AND CreateDate <=  '" + EndTime + "' ");
+                //}
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (!string.IsNullOrEmpty(ModuleId))
+                {
+                    strSql.Append(" AND ModuleId = @ModuleId");
+                    parameter.Add(DbFactory.CreateDbParameter("@ModuleId", ModuleId));
+                }
+                if (!string.IsNullOrEmpty(LogType))
+                {
+                    strSql.Append(" AND LogType = @LogType");
+                    parameter.Add(DbFactory.CreateDbParameter("@LogType", LogType));
+                }
+                if (!string.IsNullOrEmpty(CreateUserName))
+                {
+                    strSql.Append(" AND CreateUserName LIKE @CreateUserName");
+                    parameter.Add(DbFactory.CreateDbParameter("@CreateUserName", "%" + CreateUserName + "%"));
+                }
+                if (!string.IsNullOrEmpty(IPAddress))
+                {
+                    strSql.Append(" AND IPAddress LIKE @IPAddress");
+                    parameter.Add(DbFactory.CreateDbParameter("@IPAddress", "%" + IPAddress + "%"));
+                }
+                
+                if (!string.IsNullOrEmpty(StartTime))
+                {
+                    parameter.Add(DbFactory.CreateDbParameter("@StartTime", CommonHelper.GetDateTime(StartTime)));
+                    strSql.Append(" AND DATEDIFF(ss, @StartTime,A.CreateDate)>=0 ");
+                }
+                if (!string.IsNullOrEmpty(EndTime))
+                {
+
+                    parameter.Add(DbFactory.CreateDbParameter("@EndTime", CommonHelper.GetDateTime(EndTime)));
+                    strSql.Append(" AND DATEDIFF(ss, @EndTime,A.CreateDate)<=0 ");
+                }
+
+                strSql.Append(" order by CreateDate desc ");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+
+                string fileName = "ç³»ç»Ÿæ—¥å¿—";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_SysLog(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "ç³»ç»Ÿæ—¥å¿—å¯¼å‡ºæˆåŠŸ");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "ç³»ç»Ÿæ—¥å¿—å¯¼å‡ºæ“ä½œå¤±è´¥ï¼š" + ex.Message);
+                return null;
+            }
+
+        }
+        #endregion
+
+
+
     }
 }

@@ -1,0 +1,237 @@
+@{
+    ViewBag.Title = "接口管理";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .differ {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<!--MQTT-->
+<script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
+<script type="text/javascript">
+    var guid = "";//唯一标识
+    var VIN = "";
+    //1.5mqtt实例
+    var client;
+    var topic1;
+    var topic2;
+    $(function () {
+        guid = uuid();
+        GetGrid();
+        MqttConnect();      //连接Mqtt
+    })
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/BaseModule/BBdbR_Interface/GetInterfaceListJson")",
+            datatype: "json",
+            height: $(window).height() - 109,
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'InterfaceId', index: 'InterfaceId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '接口编号', name: 'InterfaceCd', index: 'InterfaceCd', width: 0, align: 'center', sortable: true },
+                { label: '接口名称', name: 'InterfaceNm', index: 'InterfaceNm', width: 0, align: 'center', sortable: true },
+                { label: '接口类型', name: 'InterfaceType', index: 'InterfaceType', width: 0, align: 'center', sortable: true },
+                { label: '发送方', name: 'Sender', index: 'Sender', width: 0, align: 'center', sortable: true },
+                { label: '接收方', name: 'Receiver', index: 'Receiver', width: 0, align: 'center', sortable: true },
+                //{ label: '执行方式', name: 'ExecutionMode', index: 'ExecutionMode', width: 0, align: 'left', sortable: true },
+                //{ label: '执行时间', name: 'ExecutionTime', index: 'ExecutionTime', width: 0, align: 'left', sortable: true, hidden: true  },
+                { label: '执行间隔(分钟)', name: 'InterfaceTime', index: 'InterfaceTime', width: 0, align: 'center', sortable: true },
+                {
+                    label: '上次执行结束时间', name: 'LastTime', index: 'LastTime', width: 200, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }
+                },
+                {
+                    label: '下次执行开始时间', name: 'NextTime', index: 'NextTime', width: 200, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }
+                },
+                {
+                    label: '状态', name: 'Status', index: 'Status', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == "true") {
+                            return "启用";
+                        } else if (cellvalue == "false") {
+                            return "停止";
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+                { label: '上次执行结果', name: 'Result', index: 'Result', width: 0, align: 'center', sortable: true },
+                { label: 'SQL语句', name: 'Sql', index: 'Sql', width: 0, align: 'center', sortable: true },
+                { label: '完整SQL', name: 'CompleteSql', index: 'CompleteSql', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                //{ label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'left', sortable: true, hidden: true },
+            ],
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            rowNum: 100,
+            pager: "#gridPager",
+            sortname: 'Sort',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+        });
+    }
+
+    //编辑
+    function btn_edit() {
+        var type = GetJqGridRowValue("#gridTable", "InterfaceType");
+        if (type == "系统") {
+            var KeyValue = GetJqGridRowValue("#gridTable", "InterfaceId");
+            //VIN = GetJqGridRowValue("#gridTable", "VIN");
+            if (IsChecked(KeyValue)) {
+                var url = "/BaseModule/BBdbR_Interface/Form?KeyValue=" + KeyValue;
+                openDialog(url, "Form", "编辑接口信息", 500, 300, function (iframe) {
+                    top.frames[iframe].AcceptClick();
+                });
+            }
+        } else {
+            tipDialog("接口类型不是系统接口不可编辑！", 3, -1);
+        }
+    }
+    //执行服务
+    function btn_startInterface() {
+        var InterfaceId = GetJqGridRowValue("#gridTable", "InterfaceId");
+        
+        if (IsChecked(InterfaceId)) {
+
+            var sendinfo = InterfaceId;
+            let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+            message.destinationName = topic1;//发送的主题
+            client.send(message);
+            tipDialog("执行成功", 3, 2);
+            
+        }
+    }
+    //停止服务
+    function btn_stopInterface(InterfaceId) {
+        var sendinfo = InterfaceId;
+        let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+        message.destinationName = topic2;//发送的主题
+        client.send(message);
+        tipDialog("执行成功", 3, 2);
+    }
+    
+    //2.5连接Mqtt
+    function MqttConnect() {
+        client = new Paho.MQTT.Client("10.138.13.3", 8083, "/FAS/Interface/" + guid);//建立客户端实例
+        client.connect({
+            userName: "userName",
+            password: "password",
+            onSuccess: onConnect,
+            onFailure: onFailConnect
+        });//连接服务器并注册连接成功处理事件
+        //client.onConnectionLost = onConnectionLost;//注册连接断开处理事件
+        //client.onMessageArrived = onMessageArrived;//注册消息接收处理事件
+        //client.onMessageDelivered = onMessageDelivered;//注册消息发布事件
+    }
+
+    //4.1连接成功回调
+    function onConnect() {
+        //console.log("onConnect");
+        topic1 = '/FAS/Interface/Start'; //执行接口方法
+        topic2 = '/FAS/Interface/Reset'; //执行接口方法
+        
+    }
+    //4.2连接失败回调
+    function onFailConnect() {
+        tipDialog("消息队列连接失败", 3, -1);
+    }
+    //4.3连接断开回调
+    function onConnectionLost(requestObject) {
+        //if (requestObject.errorCode !== 0) {
+        //    //console.log("第" + ++ReconnectionNumber + "次重连。异常信息为：" + requestObject.errorMessage);
+        //    // 定时器重连
+        //    disconnect();
+        //    MqttConnect();
+        //}
+    }
+    
+    //生成唯一标识
+    function uuid() {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+
+        var uuid = s.join("");
+        return uuid;
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+    }
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <td>
+                    搜索条件：
+                </td>
+                <td>
+                    <select id="Condition" onchange="Show()" class="txt" style="height: 28px;width: 150px">
+                        <option value="PlanTime">预计生产时间</option>
+                        <option value="ProducePlanCd">计划编号</option>
+                        <option value="OrderCd">订单号</option>
+                        <option value="VIN">VIN码</option>
+                        <option value="MatCd">整车物料代码</option>
+                        <option value="CarType">车型</option>
+                        <option value="CarColor1">颜色</option>
+                        <option value="OrderStatus">订单状态</option>
+                        <option value="PlanStatus">计划状态</option>
+                        <option value="PlanPublishTime">计划发布时间</option>
+                        <option value="Quene">顺序号</option>
+                    </select>
+                </td>
+                <td id="STime_s" style="display:none">开始时间：</td>
+                <td>
+                    <input id="StartTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(-3)" style="width: 120px" onfocus="var endDate=$dp.$('EndTime');WdatePicker({onpicked:function(){EndTime.focus();},maxDate:'#F{$dp.$D(\'EndTime\')}'})" />
+                </td>
+                <td id="ETime_s" style="display:none">结束时间：</td>
+                <td>
+                    <input id="EndTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(+4)" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTime\')}'})" />
+                </td>
+                <td>
+                    <select id="State" name="State" type="text" class="txt" style="height:auto">
+                        <option value="0">未执行</option>
+                        <option value="1">执行中</option>
+                        <option value="2">已完成</option>
+                        <option value="3">报废</option>
+                    </select>
+                </td>
+                <td >
+                    <input id="Keywords" type="text" class="txt" style="width: 120px" />
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+    </div>*@
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

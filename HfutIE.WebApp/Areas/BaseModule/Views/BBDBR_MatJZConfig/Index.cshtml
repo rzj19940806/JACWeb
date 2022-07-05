@@ -1,0 +1,155 @@
+@{
+    ViewBag.Title = "物料加注配置表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#JZType", "JZType", "==全部==");
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBDBR_MatJZConfig/GridPageByCondition")?MatCd=&JZType=" ,
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+            colModel: [
+                { label: '物料加注配置主键', name: 'Id', index: 'Id', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center',sortable: true  },
+                { label: '加注类型', name: 'JZType', index: 'JZType', width: 0, align: 'center',sortable: true  },
+                { label: '加注量', name: 'JZNumber', index: 'JZNumber', width: 0, align: 'center', sortable: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 150, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true  },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true  },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true  },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true  },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                { label: '备用字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备用字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true},
+        ],
+        pager: "#gridPager",
+        sortname: 'MatCd',
+        sortorder: 'asc',
+        gridview: true,
+        rownumbers: true,//启用记录条数
+        rowList: [200, 100, 500, 1000],//记录条数列表
+        viewrecords: true,//显示总的记录条数
+        rownumWidth: 45,//序号列宽
+        shrinkToFit: true,//列宽自适应
+        loadonce: true,//排序
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+
+
+     //搜索
+    function btn_Search() {
+        var MatCd = $("#MatCd").val();
+        var JZType = $("#JZType").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBDBR_MatJZConfig/GridPageByCondition")?MatCd=" + escape(MatCd) + "&JZType=" + escape(JZType), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //新增按钮
+    function btn_add() {
+        var url = "/BaseModule/BBDBR_MatJZConfig/Form"
+        openDialog(url, "Form", "新增物料加注配置信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "Id");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BBDBR_MatJZConfig/Form?KeyValue=" + KeyValue;
+        openDialog(url, "Form", "编辑物料加注配置信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "Id");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBDBR_MatJZConfig/DeleteRule', delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }  
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var MatCd = $("#MatCd").val();
+        var JZType = $("#JZType").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBDBR_MatJZConfig/GetExcel_Data?MatCd=" + escape(MatCd) + "&JZType=" + escape(JZType);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //物料加注信息导入
+    function btn_Import() {
+        var OrderID = GetJqGridRowValue("#gridTable", "Id");
+        openDialog("/BaseModule/BBDBR_MatJZConfig/ExcelImportDialog", "ExcelImportDialog", "物料加注信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>物料编号：</th>
+            <td>
+                <input id="MatCd" type="text" class="txt" style="width: 200px" />
+            </td>
+            <th>加注类型：</th>
+            <td>
+                <select id="JZType" style="width: 150px;height:25px"></select>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

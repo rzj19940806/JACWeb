@@ -5,7 +5,7 @@
 <script type="text/javascript">
     var KeyValue = GetQuery('KeyValue');//主键
     $(function () {
-        BindDropItem("#RestTm", "RestTm", "==全部==");
+        //BindDropItem("#RestTm", "RestTm", "==全部==");
         InitControl();
     })
 
@@ -52,23 +52,23 @@
             <th class='formTitle' style="width: 120px; text-align: center; ">时间类型：</th>
             <td class='formValue'>
                 <select id="RestTm" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="时间类型">
-                    <option>---请选择区域编号--</option>
+                    <option>总时间</option>
                 </select>
             </td>
         </tr>
         <tr>
-            <th class='formTitle' style="width: 120px; text-align: center; ">开始时间(如：08:00)：</th>
+            <th class='formTitle'style="width: 120px; text-align: center; ">开始时间：</th>
             <td class='formValue'>
-                <input id="StrtRestTm" type="time" class="txt" />
+                <input id="StrtRestTm" maxlength=50 type="time" class="txt" />
             </td>
         </tr>
         <tr>
-            <th class='formTitle' style="width: 120px; text-align: center; ">结束时间(如：08:00)：</th>
+            <th class='formTitle'style="width: 120px; text-align: center; ">结束时间：</th>
             <td class='formValue'>
-                <input id="EndRestTm" type="time" class="txt" />
+                <input id="EndRestTm" maxlength=50 type="time" class="txt" />
             </td>
         </tr>
-        <tr id="Enable">
+        @*<tr id="Enable">
             <th class='formTitle' style="width: 120px; text-align: center; ">有效性：</th>
             <td class='formValue'>
                 <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性">
@@ -76,14 +76,13 @@
                     <option value="0">无效</option>
                 </select>
             </td>
-        </tr>
+        </tr>*@
         <tr style=" height:40px">
-            <th class='formTitle'>备注：</th>
+            <th class='formTitle' style="width: 120px; text-align: center; ">备注：</th>
             <td class='formValue'>
                 <input id="Rem" maxlength=200 type="text" class="txt" />
             </td>
         </tr>
-        <tr>
-        </tr>
+        <tr></tr>
     </table>
 </form>

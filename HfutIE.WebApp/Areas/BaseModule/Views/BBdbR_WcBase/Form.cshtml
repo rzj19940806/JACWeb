@@ -26,7 +26,7 @@
             return false;
         }
         var postData = GetWebControls("#form1");
-        AjaxJson("/BaseModule/BBdbR_WcBase/SubmitForm?KeyValue=" + KeyValue + '&PlineId=' + PlineId, postData, function (data) {
+        AjaxJson("/BaseModule/BBdbR_WcBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
             if (data.Message == "该编号已经存在！") {
                 tipCss("FactoryCode", data.Message);
                 return;
@@ -62,46 +62,59 @@
             <th class='formTitle'>工位类型：</th>
             <td class='formValue'>
                 <select id="WcTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="工位类型" onclick="">
+                    <option value=" ">请选择工位类型 </option>
                 </select>
             </td>
         </tr>
-        <tr style="display:none">
+        @*<tr>
             <th class='formTitle'>工位长度：</th>
             <td class='formValue'>
                 <input id="WcLength" maxlength=50 type="text" class="txt" />
-            </td>          
+            </td>
         </tr>
-        <tr style="display:none">
+        <tr>
             <th class='formTitle'>工位顺序：</th>
             <td class='formValue'>
                 <input id="WcQueue" maxlength=10 type="text" class="txt" />
             </td>
-        </tr>
-        <tr style="display:none">
+        </tr>*@
+        <tr>
             <th class='formTitle'>工位开始：</th>
             <td class='formValue'>
-                <input id="StartPoint" maxlength=50 type="text" class="txt" />
-            </td>      
+                <input id="StartPoint" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
         </tr>
-        <tr  style="display:none">
+        <tr>
             <th class='formTitle'>预警：</th>
             <td class='formValue'>
-                <input id="PreAlarm" maxlength=10 type="text" class="txt" />
+                <input id="PreAlarmPoint" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
-        <tr style="display:none">
-            <th class='formTitle'>结束：</th>
-            <td class='formValue'>
-                <input id="EndPoint" maxlength=50 type="text" class="txt" />
-            </td>            
-        </tr>
-        <tr style="display:none">
+        <tr>
             <th class='formTitle'>停止：</th>
             <td class='formValue'>
-                <input id="StopPoint" maxlength=10 type="text" class="txt" />
+                <input id="StopPoint" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
-       <tr style="height:50px">
+        <tr>
+            <th class='formTitle'>结束：</th>
+            <td class='formValue'>
+                <input id="EndPoint" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>顺序号：</th>
+            <td class='formValue'>
+                <input id="sort" maxlength=200 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>Pass次数：</th>
+            <td class='formValue'>
+                <input id="Seq" maxlength=200 type="number" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
+        </tr>
+        <tr style="height:50px">
             <th class='formTitle'>工位描述：</th>
             <td class='formValue'>
                 <input id="Dsc" maxlength=500 type="text" class="txt" />

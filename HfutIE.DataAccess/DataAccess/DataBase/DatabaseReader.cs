@@ -66,6 +66,7 @@ namespace HfutIE.DataAccess
                         {
                             if (!IsNullOrDBNull(dr[property.Name]))
                             {
+                                var s = HackType(dr[property.Name], property.PropertyType);
                                 property.SetValue(model, HackType(dr[property.Name], property.PropertyType), null);
                             }
                         }

@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -28,7 +29,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
     public class UserController : PublicController<Base_User>
     {
         Base_UserBll base_userbll = new Base_UserBll();
-        Base_CompanyBll base_companybll = new Base_CompanyBll();
+        //Base_CompanyBll base_companybll = new Base_CompanyBll();
         Base_ObjectUserRelationBll base_objectuserrelationbll = new Base_ObjectUserRelationBll();
         public readonly RepositoryFactory<BBdbR_StfBase> repositoryfactory2 = new RepositoryFactory<BBdbR_StfBase>();
 
@@ -228,22 +229,22 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                     database.Insert(base_employee, isOpenTrans);
                     Base_DataScopePermissionBll.Instance.AddScopeDefault(ModuleId, ManageProvider.Provider.Current().UserId, base_user.UserId, "5", isOpenTrans);
                     //20210623加_部分数据插入BBdbR_StfBase
-                    BBdbR_StfBase stfbase = new BBdbR_StfBase();
-                    stfbase.StfId = base_user.UserId;                    
-                    stfbase.StfCd = base_user.Code;
-                    stfbase.StfNm = base_user.RealName;
-                    stfbase.Wechat = base_user.OICQ;
-                    stfbase.Email = base_user.Email;
-                    //stfbase.InnerUser = base_user.InnerUser;
-                    stfbase.Account = base_user.Account;
-                    stfbase.Pssw = base_user.Password;
-                    stfbase.StfGndr = base_user.Gender;
-                    stfbase.Phn = base_user.Mobile;
-                    stfbase.Sctkey = base_user.Secretkey;
-                    stfbase.DepartmentID = base_user.DepartmentId;
-                    stfbase.Rem = base_user.Remark;
-                    stfbase.Enabled = Convert.ToString(base_user.Enabled);
-                    database.Insert(stfbase, isOpenTrans);
+                    //BBdbR_StfBase stfbase = new BBdbR_StfBase();
+                    //stfbase.StfId = base_user.UserId;                    
+                    //stfbase.StfCd = base_user.Code;
+                    //stfbase.StfNm = base_user.RealName;
+                    //stfbase.Wechat = base_user.OICQ;
+                    //stfbase.Email = base_user.Email;
+                    ////stfbase.InnerUser = base_user.InnerUser;
+                    //stfbase.Account = base_user.Account;
+                    //stfbase.Pssw = base_user.Password;
+                    //stfbase.StfGndr = base_user.Gender;
+                    //stfbase.Phn = base_user.Mobile;
+                    //stfbase.Sctkey = base_user.Secretkey;
+                    //stfbase.DepartmentID = base_user.DepartmentId;
+                    //stfbase.Rem = base_user.Remark;
+                    //stfbase.Enabled = Convert.ToString(base_user.Enabled);
+                    //database.Insert(stfbase, isOpenTrans);
                 }
                 #region 新增处理人员图片
 
@@ -324,7 +325,7 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             //员工信息
             strJson = strJson.Insert(1, base_employee.ToJson().Replace("{", "").Replace("}", "") + ",");
             //自定义
-            //strJson = strJson.Insert(1, Base_FormAttributeBll.Instance.GetBuildForm(KeyValue));
+            strJson = strJson.Insert(1, Base_FormAttributeBll.Instance.GetBuildForm(KeyValue));
             return Content(strJson);
         }
         #endregion
@@ -357,13 +358,16 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                 base_user.ModifyUserName = ManageProvider.Provider.Current().UserName;
                 base_user.Secretkey = Md5Helper.MD5(CommonHelper.CreateNo(), 16).ToLower();
                 base_user.Password = Md5Helper.MD5(DESEncrypt.Encrypt(Password, base_user.Secretkey).ToLower(), 32).ToLower();
+                base_user.LastPwdModfyTm = DateTime.Now;//密码修改时间
                 IsOk = repositoryfactory.Repository().Update(base_user);
-                Base_SysLogBll.Instance.WriteLog(KeyValue, OperationType.Update, IsOk.ToString(), "修改密码");
+                //Base_SysLogBll.Instance.WriteLog(KeyValue, OperationType.Update, IsOk.ToString(), "修改密码");
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "修改密码");
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "密码修改成功。" }.ToString());
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog(KeyValue, OperationType.Update, "-1", "密码修改失败：" + ex.Message);
+                //Base_SysLogBll.Instance.WriteLog(KeyValue, OperationType.Update, "-1", "密码修改失败：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "修改密码操作失败：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "密码修改失败：" + ex.Message }.ToString());
             }
         }
@@ -385,10 +389,10 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
         /// <param name="CompanyId">公司ID</param>
         /// <param name="UserId">用户Id</param>
         /// <returns></returns>
-        public ActionResult UserRoleList(string CompanyId, string UserId)
+        public ActionResult UserRoleList(string UserId)
         {
             StringBuilder sb = new StringBuilder();
-            DataTable dt = base_userbll.UserRoleList(CompanyId, UserId);
+            DataTable dt = base_userbll.UserRoleList(UserId);
             foreach (DataRow dr in dt.Rows)
             {
                 string strchecked = "";
@@ -396,8 +400,8 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                 {
                     strchecked = "selected";
                 }
-                sb.Append("<li title=\"" + dr["fullname"] + "(" + dr["code"] + ")" + "\" class=\"" + strchecked + "\">");
-                sb.Append("<a id=\"" + dr["RoleId"] + "\"><img src=\"../../Content/Images/Icon16/role.png \">" + dr["fullname"] + "</a><i></i>");
+                sb.Append("<li title=\"" + dr["rolenm"] + "(" + dr["rolecd"] + ")" + "\" class=\"" + strchecked + "\">");
+                sb.Append("<a id=\"" + dr["RoleId"] + "\"><img src=\"../../Content/Images/Icon16/role.png \">" + dr["rolenm"] + "</a><i></i>");
                 sb.Append("</li>");
             }
             return Content(sb.ToString());
@@ -414,10 +418,12 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             {
                 string[] array = ObjectId.Split(',');
                 int IsOk = base_objectuserrelationbll.BatchAddObject(UserId, array, "2");
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, IsOk.ToString(), "用户角色配置成功");
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = "操作成功。" }.ToString());
             }
             catch (Exception ex)
             {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "用户角色配置操作失败：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败，错误：" + ex.Message }.ToString());
             }
         }
@@ -489,6 +495,15 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
             return View();
         }
         /// <summary>
+        /// 登录时修改密码
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ModifyPwd()
+        {
+            
+            return View();
+        }
+        /// <summary>
         /// 验证旧密码
         /// </summary>
         /// <param name="OldPassword"></param>
@@ -509,6 +524,66 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
                 return Content(new JsonMessage { Success = true, Code = "1", Message = "通过信息验证" }.ToString());
             }
         }
+        /// <summary>
+        /// 新密码格式是否正确
+        /// </summary>
+        /// <param name="NewPassword"></param>
+        /// <returns></returns>
+        public ActionResult ValidationNewPassword(string NewPassword)
+        {
+            if (ManageProvider.Provider.Current().Account == "System" || ManageProvider.Provider.Current().Account == "guest")
+            {
+                return Content(new JsonMessage { Success = true, Code = "0", Message = "当前账户不能修改密码" }.ToString());
+            }
+            string mdpwd = Md5Helper.MD5(DESEncrypt.Encrypt(Md5Helper.MD5(NewPassword, 32).ToLower(), ManageProvider.Provider.Current().Secretkey).ToLower(), 32).ToLower();
+            
+            if (mdpwd != ManageProvider.Provider.Current().Password)
+            {
+                string Code = "0";
+                string Message = "";
+                if (ManageProvider.Provider.Current().PwdRank == "2")//二级密码策略
+                {
+                    //密码(长度在6~20之间，必须包含大小写字母、数字)
+                    Message = "密码长度在6~20之间，必须包含大小写字母、数字";
+                    Regex reg = new Regex(@"(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,20}$");
+                    if (reg.IsMatch(NewPassword))
+                    {
+                        Code = "1";
+                    }
+                }
+                else if (ManageProvider.Provider.Current().PwdRank == "3")//三级密码策略
+                {
+
+                    //强密码(必须包含大小写字母和数字和特殊字符，长度在8-20之间)
+                    Message = "密码长度在8~20之间，必须包含大小写字母、数字和特殊字符";
+                    Regex reg = new Regex(@"(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,20}$");//密码强度正则，最少8位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符
+                    
+                    if (reg.IsMatch(NewPassword))
+                    {
+                        Code = "1";
+                    }
+                    
+                }
+                else//一级密码策略
+                {
+                    Message = "密码长度在6~20之间";
+                    Regex reg = new Regex(@"^.{6,20}$");
+                    if (reg.IsMatch(NewPassword))
+                    {
+                        Code = "1";
+                    }
+                    
+                }
+
+                return Content(new JsonMessage { Success = true, Code = Code, Message = Message }.ToString());
+            }
+            else
+            {
+                return Content(new JsonMessage { Success = true, Code = "2", Message = "新密码不能与旧密码相同" }.ToString());
+            }
+        }
+
+
         #endregion
 
         #region 修改后的部分（上传图片）
@@ -774,71 +849,71 @@ namespace HfutIE.WebApp.Areas.CommonModule.Controllers
 
         #region 从request中获取Base_User对象和Base_Employee对象（未使用）
 
-        public Base_User GetUser()
-        {
-            try
-            {
-                HttpFileCollectionBase files = Request.Files;
-                HttpPostedFileBase file = files["DepartmentId"];//获取上传的文件
-                NameValueCollection forms = Request.Form;
-                Base_User user = new Base_User();
+        //public Base_User GetUser()
+        //{
+        //    try
+        //    {
+        //        HttpFileCollectionBase files = Request.Files;
+        //        HttpPostedFileBase file = files["DepartmentId"];//获取上传的文件
+        //        NameValueCollection forms = Request.Form;
+        //        Base_User user = new Base_User();
 
-                PropertyInfo[] properties = user.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (PropertyInfo _target in properties)
-                {
-                    if (_target.CanWrite)
-                    {
-                        object value = forms[_target.Name];
-                        if (value != null && value.ToString() != "" /*&& value.ToString() != "&nbsp;"*/)
-                        {
-                            if (value != null && value.ToString() == "on" && (_target.PropertyType == typeof(int) || _target.PropertyType == typeof(int?)))//此语句是为了前台CheckBox设计的，当前台CheckBox选中时，后台值为1；CheckBox不选中时，无此属性值
-                            {
-                                value = 1;
-                            }
-                            _target.SetValue(user, ChangeType(value, _target.PropertyType), null);
-                        }
-                    }
-                }
-                user.Enabled = user.Enabled == null ? 0 : 1;
-                user.InnerUser = user.InnerUser == null ? 0 : 1;
-                return user;
-            }
-            catch (Exception ex)
-            {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
-                return null;
-            }
-        }
-        public Base_Employee GetEmployee()
-        {
-            try
-            {
-                HttpFileCollectionBase files = Request.Files;
-                HttpPostedFileBase file = files["DepartmentId"];//获取上传的文件
-                NameValueCollection forms = Request.Form;
-                Base_Employee employee = new Base_Employee();
-                PropertyInfo[] properties = employee.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (PropertyInfo _target in properties)
-                {
-                    if (_target.CanWrite)
-                    {
-                        object value = forms[_target.Name];
-                        if (value != null && value.ToString() == "on" && (_target.PropertyType == typeof(int) || _target.PropertyType == typeof(int?))) //此语句是为了前台CheckBox设计的，当前台CheckBox选中时，后台值为1；CheckBox不选中时，无此属性值
-                        {
-                            value = 1;
-                        }
-                        _target.SetValue(employee, ChangeType(value, _target.PropertyType), null);
-                    }
-                }
-                employee.IsDimission = employee.IsDimission == null ? 0 : 1;
-                return employee;
-            }
-            catch (Exception ex)
-            {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
-                return null;
-            }
-        }
+        //        PropertyInfo[] properties = user.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        //        foreach (PropertyInfo _target in properties)
+        //        {
+        //            if (_target.CanWrite)
+        //            {
+        //                object value = forms[_target.Name];
+        //                if (value != null && value.ToString() != "" /*&& value.ToString() != "&nbsp;"*/)
+        //                {
+        //                    if (value != null && value.ToString() == "on" && (_target.PropertyType == typeof(int) || _target.PropertyType == typeof(int?)))//此语句是为了前台CheckBox设计的，当前台CheckBox选中时，后台值为1；CheckBox不选中时，无此属性值
+        //                    {
+        //                        value = 1;
+        //                    }
+        //                    _target.SetValue(user, ChangeType(value, _target.PropertyType), null);
+        //                }
+        //            }
+        //        }
+        //        user.Enabled = user.Enabled == null ? 0 : 1;
+        //        user.InnerUser = user.InnerUser == null ? 0 : 1;
+        //        return user;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+        //        return null;
+        //    }
+        //}
+        //public Base_Employee GetEmployee()
+        //{
+        //    try
+        //    {
+        //        HttpFileCollectionBase files = Request.Files;
+        //        HttpPostedFileBase file = files["DepartmentId"];//获取上传的文件
+        //        NameValueCollection forms = Request.Form;
+        //        Base_Employee employee = new Base_Employee();
+        //        PropertyInfo[] properties = employee.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        //        foreach (PropertyInfo _target in properties)
+        //        {
+        //            if (_target.CanWrite)
+        //            {
+        //                object value = forms[_target.Name];
+        //                if (value != null && value.ToString() == "on" && (_target.PropertyType == typeof(int) || _target.PropertyType == typeof(int?))) //此语句是为了前台CheckBox设计的，当前台CheckBox选中时，后台值为1；CheckBox不选中时，无此属性值
+        //                {
+        //                    value = 1;
+        //                }
+        //                _target.SetValue(employee, ChangeType(value, _target.PropertyType), null);
+        //            }
+        //        }
+        //        employee.IsDimission = employee.IsDimission == null ? 0 : 1;
+        //        return employee;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+        //        return null;
+        //    }
+        //}
         #endregion
 
         #region 对于可空类型（如int?）使用ChangeType方法进行类型转化

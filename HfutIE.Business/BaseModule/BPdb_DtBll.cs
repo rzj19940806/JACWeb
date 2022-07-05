@@ -108,39 +108,18 @@ namespace HfutIE.Business
         /// <returns></returns>
         public List<BPdb_Dt> GetList(string areaId, string parentId, ref JqGridParam jqgridparam) //===复制时需要修改===
         {
-            List<BPdb_Dt> listEntity = new List<BPdb_Dt>();
-            List<BPdb_Dt> listEntity1 = new List<BPdb_Dt>();
             string sql = "";
             if (parentId != "0")
             {
+                string mounth = areaId.Substring(0, areaId.Length - 1);//取出具体的月份
                 //从本表中查询上级表主键与传入主键相同相等的数据，并返回列表
-                sql = "select * from " + tableName + " where Enabled = 1 order by Tm asc";     //===复制时需要修改===
-                listEntity = Repository().FindListBySql(sql); //执行sql语句
-                for (int i = 0; i < listEntity.Count; i++)
-                {
-                    string a = listEntity[i].Tm.ToString().Substring(0, 4) + "年";
-                    string b = listEntity[i].Tm.ToString().Substring(5, 1) + "月";
-                    if (b == areaId && a == parentId)
-                    {
-                        listEntity1.Add(listEntity[i]);
-                    }
-                } 
+                sql = "select * from " + tableName + " where Enabled = 1 and MONTH(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' order by Tm asc";
             }
             else
             {
-                sql = "select * from BPdb_Dt where Enabled = 1 order by Tm asc";     //===复制时需要修改===
-                listEntity = Repository().FindListBySql(sql); //执行sql语句
-                string a = "";
-                for (int i = 0; i < listEntity.Count; i++)
-                {
-                    a = listEntity[i].Tm.ToString().Substring(0, 4) + "年";
-                    if (a == areaId)
-                    {
-                        listEntity1.Add(listEntity[i]);
-                    }
-                }
+                sql = "select * from " + tableName + " where Enabled = 1 and YEAR(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' order by Tm asc";
             }
-            return listEntity1;
+            return Repository().FindListBySql(sql);
         }
         #endregion
 
@@ -150,7 +129,7 @@ namespace HfutIE.Business
         {
             string sql = @"SELECT ClassId AS id, ClassNm
                            FROM BFacR_ClassBase
-                           WHERE 1 = 1";
+                           WHERE Enabled = '1' order by ClassCd";
             return Repository().FindTableBySql(sql);
         }
         //车间
@@ -167,7 +146,7 @@ namespace HfutIE.Business
         {
             string sql = @"SELECT PlineId AS id, PlineNm
                            FROM BBdbR_PlineBase
-                           WHERE 1 = 1";
+                           WHERE PlineCd not like '%Quality%' and (PlineTyp != 'PBS线' or PlineCd = 'Line-01') and Enabled = '1'";
             return Repository().FindTableBySql(sql);
         }
         #endregion
@@ -181,7 +160,7 @@ namespace HfutIE.Business
         public List<BPdb_Dt> GetPlanList()
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT  * FROM  BPdb_Dt where 1=1 order by Tm asc");
+            strSql.Append(@"SELECT  * FROM  BPdb_Dt where Enabled = '1' order by Tm desc");
             List<BPdb_Dt> dt = Repository().FindListBySql(strSql.ToString());
             //for (int i = 0; i < dt.Count; i++)
             //{
@@ -357,5 +336,110 @@ namespace HfutIE.Business
             return dt;
         }
         #endregion
+
+        #region 9.导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
+        }
+        #endregion
+
+        #region 11.导入时的机构ID获取
+        public DataTable searchClassID(string ClassCD, string OrgRank)
+        {
+            try
+            {
+                string sql = "";
+                DataTable Dt = new DataTable();
+                if (OrgRank == "1") //1-车间
+                {
+                    sql = @"select WorkshopId as id from BBdbR_WorkshopBase where WorkshopCd = '" + ClassCD + "' and Enabled = 1";
+                    Dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                else if (OrgRank == "0")//2-产线
+                {
+                    sql = @"select PlineId as id from BBdbR_PlineBase where PlineCd = '" + ClassCD + "' and Enabled = 1";
+                }
+
+                return Dt != null ? Dt : null;
+            }
+            catch (Exception EX)
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region 12.导入时的班制id
+        public DataTable serarchId(string ClassCd) //班制编号
+        {
+            try
+            {
+                DataTable dataTable = new DataTable();
+                string sql = @"select ClassId as id from BFacR_ClassBase where ClassCd = '" + ClassCd + "' and Enabled = '1'";
+                dataTable = Repository().FindTableBySql(sql.ToString(), false);
+                return dataTable != null ? dataTable : null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        public DataTable getTime(string ClassId)
+        {
+            return Repository().FindTableBySql($"select min(StrtRestTm) StrtTm,max(EndRestTm) EndTm,max(TmSpan) from BFacR_ShiftBase A join BFacR_ClassConfig B on A.RestTm='总时间' and B.ClassId = '{ClassId}' and A.ShiftCd = B.ShiftCd join BFacR_ClassBase C on C.ClassId = B.ClassId ");
+        }
     }
 }

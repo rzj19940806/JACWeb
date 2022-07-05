@@ -1,0 +1,193 @@
+@{
+    ViewBag.Title = "冲焊涂装质量检查销项过程表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/Q_HTCarQualityOutput_Pro/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/Q_HTCarQualityOutput_Pro/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>车身质检销项主键：</th>
+            <td class='formValue'>
+                <input id="CarInspectionOutputId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身部位质检结果主键：</th>
+            <td class='formValue'>
+                <input id="CarQualityResultId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>转序日期：</th>
+            <td class='formValue'>
+                <input id="TransitionTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点组主键：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointGroupId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点组编号：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointGroupCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点组名称（工段）：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointGroupNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点主键：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点编号：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点名称：</th>
+            <td class='formValue'>
+                <input id="QualityCheckPointNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷名称：</th>
+            <td class='formValue'>
+                <input id="DefectNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷分析：</th>
+            <td class='formValue'>
+                <input id="DefectAnalysis" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入人员编号：</th>
+            <td class='formValue'>
+                <input id="StfCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入人员姓名：</th>
+            <td class='formValue'>
+                <input id="StfNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质检录入时间：</th>
+            <td class='formValue'>
+                <input id="QualityInspectTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <input id="Enabled" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <input id="CreTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <input id="CreCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <input id="CreNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <input id="MdfTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <input id="MdfCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <input id="MdfNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <input id="RsvFld1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <input id="RsvFld2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

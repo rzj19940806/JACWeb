@@ -37,10 +37,59 @@ namespace HfutIE.Entity
         [DisplayName("日期")]
         public DateTime? Tm { get; set; }
         /// <summary>
+        /// 开始时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("开始时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string MorningStrTm { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("结束时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string MorningEndTm { get; set; }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("开始时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string AfternoonStrTm { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("结束时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string AfternoonEndTm { get; set; }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("开始时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string NightStrTm { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("结束时间")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string NightEndTm { get; set; }
+        /// <summary>
+        /// 工作时间
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("工作时间")]
+        public decimal? WorkTime { get; set; }
+        /// <summary>
         /// 日期类型
         /// </summary>
         /// <returns></returns>
         [DisplayName("日期类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DtTyp { get; set; }
         /// <summary>
         /// 机构id
@@ -71,7 +120,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -89,7 +138,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -107,6 +156,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1
@@ -130,7 +180,7 @@ namespace HfutIE.Entity
         {
             this.DtId = CommonHelper.GetGuid;
             this.Enabled = "1";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -141,7 +191,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.DtId = KeyValue;
-            this.MdfTm = DateTime.Now;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

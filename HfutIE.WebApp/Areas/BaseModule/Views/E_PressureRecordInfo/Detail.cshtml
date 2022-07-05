@@ -1,0 +1,157 @@
+@{
+    ViewBag.Title = "E_PressureRecordInfo》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_PressureRecordInfo/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>ID：</th>
+            <td class='formValue'>
+                <label id="ID" />
+            </td>
+            <th class='formTitle'>VIN：</th>
+            <td class='formValue'>
+                <label id="VIN" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CarType：</th>
+            <td class='formValue'>
+                <label id="CarType" />
+            </td>
+            <th class='formTitle'>SensorNm：</th>
+            <td class='formValue'>
+                <label id="SensorNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTireID：</th>
+            <td class='formValue'>
+                <label id="RFTireID" />
+            </td>
+            <th class='formTitle'>RFTirePressureLimit：</th>
+            <td class='formValue'>
+                <label id="RFTirePressureLimit" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <label id="RFTirePressureLowerLimit" />
+            </td>
+            <th class='formTitle'>RFTirePressureValue：</th>
+            <td class='formValue'>
+                <label id="RFTirePressureValue" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureResult：</th>
+            <td class='formValue'>
+                <label id="RFTirePressureResult" />
+            </td>
+            <th class='formTitle'>LFTireID：</th>
+            <td class='formValue'>
+                <label id="LFTireID" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTirePressureLimit：</th>
+            <td class='formValue'>
+                <label id="LFTirePressureLimit" />
+            </td>
+            <th class='formTitle'>FTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <label id="FTirePressureLowerLimit" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTirePressureValue：</th>
+            <td class='formValue'>
+                <label id="LFTirePressureValue" />
+            </td>
+            <th class='formTitle'>LFTirePressureResult：</th>
+            <td class='formValue'>
+                <label id="LFTirePressureResult" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTireID：</th>
+            <td class='formValue'>
+                <label id="RBTireID" />
+            </td>
+            <th class='formTitle'>RBTirePressureLimit：</th>
+            <td class='formValue'>
+                <label id="RBTirePressureLimit" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <label id="RBTirePressureLowerLimit" />
+            </td>
+            <th class='formTitle'>RBTirePressureValue：</th>
+            <td class='formValue'>
+                <label id="RBTirePressureValue" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureResult：</th>
+            <td class='formValue'>
+                <label id="RBTirePressureResult" />
+            </td>
+            <th class='formTitle'>LBTireID：</th>
+            <td class='formValue'>
+                <label id="LBTireID" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureLimit：</th>
+            <td class='formValue'>
+                <label id="LBTirePressureLimit" />
+            </td>
+            <th class='formTitle'>LBTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <label id="LBTirePressureLowerLimit" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureValue：</th>
+            <td class='formValue'>
+                <label id="LBTirePressureValue" />
+            </td>
+            <th class='formTitle'>LBTirePressureResult：</th>
+            <td class='formValue'>
+                <label id="LBTirePressureResult" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>TirePressureUnit：</th>
+            <td class='formValue'>
+                <label id="TirePressureUnit" />
+            </td>
+            <th class='formTitle'>DetectionSource：</th>
+            <td class='formValue'>
+                <label id="DetectionSource" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>DetectionTime：</th>
+            <td class='formValue'>
+                <label id="DetectionTime" />
+            </td>
+        </tr>
+    </table>
+</form>

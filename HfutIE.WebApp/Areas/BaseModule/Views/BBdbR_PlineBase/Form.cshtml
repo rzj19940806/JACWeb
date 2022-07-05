@@ -7,14 +7,14 @@
     var WorkSectionId = GetQuery('area_key');//主键
     $(function () {
         BindDropItem("#PlineTyp", "PlineTyp", "==请选择==");
-        StaffList();
+        //StaffList();
         InitControl();
     })
     //加载人员列表
     function StaffList() {
         AjaxJson("/BaseModule/BBdbR_PlineBase/GetPlineNm", {}, function (data) {
             for (var i = 0; i < data.rows.length; i++) {
-                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["stfnm"] + "</option>");
+                $("#StfId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["StfNm"] + "</option>");
             }
         });
         RateGrade();
@@ -22,22 +22,23 @@
     //加载人员信息
     function RateGrade() {
         let StfId = $("#StfId").val();
-        AjaxJson("/BaseModule/BBdbR_PlineBase/GetPlineNm2?StfId=" + StfId, {}, function (data) {
-            $("#Phn").val(data.rows[0]["phn"]);
-            //$("#FacEmail").val(data.rows[0]["email"]);
-        });
-    }
-    function OptionClick() {
-        var obj = document.getElementById('StfId');
-        var index = obj.selectedIndex;
-        if (index != -1) {
-            var PlineNm = obj.options[index].value;
-            $('#StfId').val(PlineNm);
+        if (StfId != "") {
+            AjaxJson("/BaseModule/BBdbR_PlineBase/GetPlineNm?StfId=" + StfId, {}, function (data) {
+                $("#StfNm").val(data.rows[0]["StfNm"]);
+                if (data.rows[0]["Phn"] == "&nbsp;") {
+                    data.rows[0]["Phn"] = "";
+                }
+                $("#Phn").val(data.rows[0]["Phn"]);
+            });
+        }
+        else {
+            $("#StfNm").val("");
+            $("#Phn").val("");
         }
     }
     //得到一个对象实体
     function InitControl() {
-        $("#StfId").val(StfId);
+        //$("#StfId").val(StfId);
         $("#WorkSectionId").val(WorkSectionId);
         if (!!GetQuery('KeyValue')) {
             AjaxJson("/BaseModule/BBdbR_PlineBase/SetForm", { KeyValue: KeyValue }, function (data) {
@@ -56,8 +57,33 @@
         if (!CheckDataValid('#form1')) {
             return false;
         }
+        //var CacheQantity = $("#CacheQantity").val();//缓存上限必须要大于缓存下限
+        //var CacheLimit = $("#CacheLimit").val();
+        //if (CacheQantity < CacheLimit) {
+        //    alert("缓存上限必须要大于缓存下限！");
+        //    return; 
+        //}
+        //var HighestQantity = $("#HighestQantity").val();//最高在制必须要大于最低在制
+        //var LowestQantity = $("#LowestQantity").val();
+        //if (HighestQantity < LowestQantity) {
+        //    alert("最高在制必须要大于最低在制！");
+        //    return;
+        //}
+        //var HighestFrontCache = $("#HighestFrontCache").val();//缓存上限必须要大于缓存下限
+        //var LowestFrontCache = $("#LowestFrontCache").val();
+        //if (HighestFrontCache < LowestFrontCache) {
+        //    alert("前缓存上限必须要大于前缓存下限！");
+        //    return; HighestFrontCache
+        //}
+        //var HighestPostCache = $("#HighestPostCache").val();//最高在制必须要大于最低在制
+        //var LowestPostCache = $("#LowestPostCache").val();
+        //if (HighestPostCache < LowestPostCache) {
+        //    alert("后缓存上限必须要大于后前缓存下限！");
+        //    return;
+        //}
+       
         var postData = GetWebControls("#form1");
-        AjaxJson("/BaseModule/BBdbR_PlineBase/SubmitForm1?KeyValue=" + KeyValue + "&WorkSectionId=" + WorkSectionId , postData, function (data) {
+        AjaxJson("/BaseModule/BBdbR_PlineBase/SubmitForm1?KeyValue=" + KeyValue  , postData, function (data) {
             if (data.Message == "该编号已经存在！") {
                 tipCss("PlineCd", data.Message);
                 return;
@@ -80,86 +106,98 @@
             <td class='formValue'>
                 <input id="PlineNm" maxlength=50 type="text" class="txt required" datacol="yes" err="产线名称" checkexpession="NotNull" checkdata="hasOne" />
             </td>
-            
-        </tr>      
+        </tr>
+        <tr style="display:none">
+            <th class='formTitle' style="height:30px">负责人姓名：</th>
+            <td class='formValue' colspan="3">
+                <input id="StfNm" maxlength=50 type="text" class="txt required" datacol="yes" err="负责人姓名" checkdata="hasOne" />
+            </td>
+        </tr>
         <tr>
             <th class='formTitle' style="height:30px">产线类型：</th>
-            <td class='formValue'>
-                <select id="PlineTyp" maxlength=100 type="text" class="txt"  datacol="yes" onclick="">
-                    
+            <td class='formValue' colspan="3">
+                <select id="PlineTyp" maxlength=100 type="text" class="txt" datacol="yes" onclick="">
                 </select>
-            </td>          
-        </tr>    
-        <tr>
-            <th class='formTitle'>负责人员姓名：</th>
-            <td class='formValue'>
-                <select id="StfId" maxlength=50 type="text" class="txt" onchange="RateGrade()">
-                    <option value="">--请选择产线负责人--</option>
-                </select>
-            </td>
-            <th class='formTitle' style="height:30px">负责人手机号：</th>
-            <td class='formValue'>
-                <input id="Phn" maxlength=50 type="text" class="txt" readonly/>
             </td>
         </tr>
         <tr>
             <th class='formTitle'>工位数量：</th>
             <td class='formValue'>
-                <input id="WcQuantity" maxlength=10 type="text" class="txt" />
+                <input id="WcQuantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>工位默认长度：</th>
             <td class='formValue'>
-                <input id="WcLength" maxlength=10 type="text" class="txt" />
+                <input id="WcLength" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>工位默认截距：</th>
             <td class='formValue'>
-                <input id="WcIntercept" maxlength=10 type="text" class="txt" />
+                <input id="WcIntercept" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
-            <th class='formTitle'>JPH：</th>
-            <td class='formValue' >
-                <input id="WspJPH" maxlength=10 type="text" class="txt" />
-            </td>
+            @*<th class='formTitle'>JPH：</th>
+            <td class='formValue'>
+                <input id="WspJPH" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>*@
         </tr>
-        <tr>
+        @*<tr>
             <th class='formTitle'>缓存上限：</th>
             <td class='formValue'>
-                <input id="CacheQantity" maxlength=10 type="text" class="txt" />
+                <input id="CacheQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>缓存下限：</th>
             <td class='formValue'>
-                <input id="CacheLimit" maxlength=10 type="text" class="txt" />
+                <input id="CacheLimit" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>最高在制：</th>
             <td class='formValue'>
-                <input id="HighestQantity" maxlength=10 type="text" class="txt" />
+                <input id="HighestQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>最低在制：</th>
             <td class='formValue'>
-                <input id="LowestQantity" maxlength=10 type="text" class="txt" />
+                <input id="LowestQantity" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>前缓存上限：</th>
             <td class='formValue'>
-                <input id="HighestFrontCache" maxlength=10 type="text" class="txt" />
+                <input id="HighestFrontCache" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>前缓存下限：</th>
             <td class='formValue'>
-                <input id="LowestFrontCache" maxlength=10 type="text" class="txt" />
+                <input id="LowestFrontCache" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>后缓存上限：</th>
             <td class='formValue'>
-                <input id="HighestPostCache" maxlength=10 type="text" class="txt" />
+                <input id="HighestPostCache" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
             <th class='formTitle'>后缓存下限：</th>
             <td class='formValue'>
-                <input id="LowestPostCache" maxlength=10 type="text" class="txt" />
+                <input id="LowestPostCache" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>负责人员：</th>
+            <td class='formValue'>
+                <select id="StfId" maxlength=50 type="text" class="txt  checkdata" onchange="RateGrade()">
+                    <option value="">
+                        请选择负责人
+                    </option>
+                </select>
+            </td>
+            <th class='formTitle'>负责人员手机号：</th>
+            <td class='formValue'>
+                <input id="Phn" maxlength=50 type="text" class="txt" readonly />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>顺序号：</th>
+            <td class='formValue' colspan="3">
+                <input id="sort" maxlength=200 type="text" class="txt"  onkeyup="this.value=this.value.replace(/\D/g,'')" />
             </td>
         </tr>
         <tr>

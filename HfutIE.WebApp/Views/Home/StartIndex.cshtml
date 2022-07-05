@@ -25,7 +25,7 @@
     <script>
         /**初始化**/
         $(document).ready(function () {
-            AddTabMenu('Imain', '@Url.Content("~/Home/StartPanel")', '欢迎首页', "house.png", 'false');
+            AddTabMenuNext('Imain', '@Url.Content("~/Home/StartPanel")', '欢迎首页', "house.png", 'false');
             GetStartmenu();
             ShortcutsList();
             setIframeH();
@@ -35,7 +35,12 @@
                 clearInterval(interval);
                 window.open('#', '_blank');
             })
+            topMouseOver();
         });
+        function AddTabMenuNext(ModuleId, Url, FullName,Icon,statue) {
+            AddTabMenu(ModuleId, Url, FullName, Icon, statue);
+            eachIframe(ModuleId);
+        }
         /*设置iframe高度*/
         function setIframeH() {
             resizeU();
@@ -115,7 +120,7 @@
                     if (IsBelowMenu(StartmenuJson[i].ModuleId) > 0) {
                         html += "<div title='" + StartmenuJson[i].FullName + "' class=\"shortcuticons\" onclick=\"GetSubmenu('" + StartmenuJson[i].ModuleId + "')\"><img src='../Content/Images/Icon32/" + Icon + "'><br />" + StartmenuJson[i].FullName + "</div>";
                     } else {
-                        html += "<div title='" + StartmenuJson[i].FullName + "' class=\"shortcuticons\" onclick=\"AddTabMenu('" + StartmenuJson[i].ModuleId + "', '" + RootPath() + StartmenuJson[i].Location + "', '" + StartmenuJson[i].FullName + "',  '" + StartmenuJson[i].Icon + "','true');\"><img src='../Content/Images/Icon32/" + Icon + "'><br />" + StartmenuJson[i].FullName + "</div>";
+                        html += "<div title='" + StartmenuJson[i].FullName + "' class=\"shortcuticons\" onclick=\"AddTabMenuNext('" + StartmenuJson[i].ModuleId + "', '" + RootPath() + StartmenuJson[i].Location + "', '" + StartmenuJson[i].FullName + "',  '" + StartmenuJson[i].Icon + "','true');\"><img src='../Content/Images/Icon32/" + Icon + "'><br />" + StartmenuJson[i].FullName + "</div>";
                     }
                 }
             });
@@ -132,6 +137,33 @@
             });
             return count;
         }
+
+        //自动退出
+        let currtentTime = new Date().getTime(),
+            lastTime = new Date().getTime(),
+            diff = 1800000;
+        let timer = setInterval(function () {
+            currentTime = new Date().getTime();
+            if (currentTime - lastTime > diff) {
+                setTimeout(function () {
+                    getAjax("/Login/OutLogin", "", function (data) {
+                        window.location.href = '../Login/Index';
+                    })
+                }, 200);
+                clearInterval(timer);
+            }
+        }, 1000);
+        function topMouseOver() {
+            $(document)[0].onmousemove = mousemove;
+        }
+        function eachIframe(iframeName) {
+            setTimeout(function (params) {
+                document.getElementById("tabs_iframe_" + iframeName).contentWindow.document.onmousemove = mousemove;
+            }, 500);
+        }
+        function mousemove() {
+            lastTime = new Date().getTime();
+        }
     </script>
 </head>
 <body onbeforeunload="PageClose()" onselectstart="return false;" style="-moz-user-select: none; overflow: hidden;">
@@ -143,18 +175,18 @@
         <div class="logo fleft" style="margin-left:0px;margin-top:0px;">
             <div style="height:60px;width:204px;float:left">
                 @*<img src="~/Content/Images/SHENGEN/JACNIO.png" style="height:39px;padding-left:10px;padding-top:15px;" />*@
-                <img src="~/Content/Images/SHENGEN/JACNIO.png" style="height:39px;padding-left:10px;padding-top:15px;" />
+                <img src="~/Content/Images/LOGO/logoRefine1.png" style="height:30px;padding-left:10px;padding-top:20px;" />
             </div>
             <div style="height:60px;float:right;">
-                @*<img src="~/Content/Images/SHENGEN/logotop.png" style="height:38px;padding-left:22px;padding-top:16px" />*@
-                <img src="~/Content/Images/SHENGEN/logotop.png" style="height:38px;padding-left:22px;padding-top:16px" />
+
+                <img src="~/Content/Images/LOGO/logotop.png" style="height:38px;padding-left:52px;padding-top:16px" />
             </div>
             @*<div style="height:68px;background-color:white;width:204px;float:left">
-                <img src="~/Content/Images/SHENGEN/Jac Logo1.png" style="height:60px;padding-left:30px;padding-top:5px;" />
-            </div>
-            <div style="height:60px;float:right;">
-                <img src="~/Content/Images/SHENGEN/logo3.png" style="height:50px;padding-top:14px;padding-left:30px" />
-            </div>*@
+            <img src="~/Content/Images/SHENGEN/Jac Logo1.png" style="height:60px;padding-left:30px;padding-top:5px;" />
+        </div>
+        <div style="height:60px;float:right;">
+            <img src="~/Content/Images/SHENGEN/logo3.png" style="height:50px;padding-top:14px;padding-left:30px" />
+        </div>*@
         </div>
         @*<div class="logo fleft">
             <img src="~/Content/Images/SHENGEN/logo2.png" style="height:50px" />
@@ -211,11 +243,11 @@
                         
                     </a>
                 </li>*@
-                <li id="metnav_2" class="list" onclick="SkinIndex()">
+                @*<li id="metnav_2" class="list" onclick="SkinIndex()">
                     <a id="nav_2">
                         <span class="c2"></span>切换皮肤
                     </a>
-                </li>
+                </li>*@
                 <li id="metnav_5" class="list" onclick="PersonCenter()">
                     <a id="nav_5">
                         <span class="c5"></span>个人中心

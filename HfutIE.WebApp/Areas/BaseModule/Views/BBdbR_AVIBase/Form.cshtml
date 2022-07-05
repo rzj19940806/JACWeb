@@ -20,13 +20,13 @@
                 var IsIndependence = data.IsIndependence;
                 if (IsIndependence == "1") {
                     document.getElementById("Pline").style.display = "none";
-                    document.getElementById("Sequence").style.display = "none";
                     $("#PlineID").val("");
-                    $("#AVISequence").val("");
                 }
                 else {
                     document.getElementById("Pline").style.display = "table-row";
-                    document.getElementById("Sequence").style.display = "table-row";
+                }
+                if (data.IsStranded=="0") {
+                    document.getElementById("Stranded").style.display = "none";
                 }
                 document.getElementById("AviCd").readOnly = true;
             });
@@ -44,16 +44,25 @@
                 var IsIndependence = $("#IsIndependence").val();
                 if (IsIndependence == "1") {
                     document.getElementById("Pline").style.display = "none";
-                    document.getElementById("Sequence").style.display = "none";
                     $("#PlineId").val("");
                 }
                 else {
                     document.getElementById("Pline").style.display = "table-row";
-                    document.getElementById("Sequence").style.display = "table-row";
                     $("#PlineId").val("");
                 }
             }
         )
+    }
+    //加载滞留车管理列表
+    function stranded() {
+        var IsStranded = $("#IsStranded").val();
+        if (IsStranded == "0") {
+            document.getElementById("Stranded").style.display = "none";
+            $("#StrandedCategory").val("");
+        }
+        else {
+            document.getElementById("Stranded").style.display = "table-row";
+        }
     }
     //保存事件
     function AcceptClick() {
@@ -80,8 +89,6 @@
             <td class='formValue'>
                 <input id="AviCd" maxlength=50 type="text" class="txt required" datacol="yes" err="AVI站点编号" checkexpession="NotNull" checkdata="hasOne" />
             </td>
-        </tr>
-        <tr>
             <th class='formTitle'>AVI站点名称：</th>
             <td class='formValue'>
                 <input id="AviNm" maxlength=50 type="text" class="txt required" datacol="yes" err="AVI站点名称" checkexpession="NotNull" checkdata="hasOne" />
@@ -89,20 +96,41 @@
         </tr>
         <tr>
             <th class='formTitle'>AVI站点类型：</th>
-            <td class='formValue'>
+            <td class='formValue' colspan="3">
                 <select id="AviType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="AVI站点类型" onclick=""></select>
             </td>
         </tr>
         <tr>
-            <th class='formTitle' style="height:30px">有效性：</th>
+            <th class='formTitle'>工序编号：</th>
             <td class='formValue'>
-                <select id="Enabled" maxlength=300 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onclick="">
-                    <option value="1">有效</option>
-                    <option value="0">无效</option>
-                </select>
+                <input id="OP_CODE" maxlength=50 type="text" class="txt "  />
+            </td>
+            <th class='formTitle'>工序名称：</th>
+            <td class='formValue'>
+                <input id="OP_NAME" maxlength=50 type="text" class="txt "  />
             </td>
         </tr>
         <tr>
+            <th class='formTitle'>是否报工：</th>
+            <td class='formValue'>
+                <select id="IsReport" maxlength=100 type="text" class="txt" onclick="">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </td>
+            <th class='formTitle'>AVI顺序：</th>
+            <td class='formValue'>
+                <input id="AVISequence" maxlength=50 type="number" class="txt " />
+            </td>
+        </tr>
+        <tr style="display:none;">
+            <th class='formTitle'>是否允许重复过点：</th>
+            <td class='formValue'>
+                <select id="IsRePeated" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否允许重复过点" onclick="">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
             <th class='formTitle'>是否需要监控：</th>
             <td class='formValue'>
                 <select id="IsMonitor" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否需要关键视频监控" onclick="">
@@ -110,17 +138,6 @@
                     <option value="1">是</option>
                 </select>
             </td>
-        </tr>
-        <tr>
-            <th class='formTitle'>是否重复过点：</th>
-            <td class='formValue'>
-                <select id="IsRePeated" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否允许重复过点" onclick="">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
             <th class='formTitle'>是否独立：</th>
             <td class='formValue'>
                 <select id="IsIndependence" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否独立" onclick="">
@@ -133,33 +150,51 @@
             <th class='formTitle'>选择产线：</th>
             <td class='formValue'>
                 <select id="PlineId" maxlength=100 type="text" class="txt" onclick="">
+                    <option value="">--请选择所属产线--</option>
                 </select>
             </td>
-        </tr>
-        <tr id="Sequence" style=" display :none">
             <th class='formTitle'>AVI站点顺序：</th>
             <td class='formValue'>
-                <input id="AVISequence" maxlength=300 type="text" class="txt" />
-            </td>
-        </tr>
-        <tr>
-            <th class='formTitle'>是否报工：</th>
-            <td class='formValue'>
-                <select id="IsReport" maxlength=100 type="text" class="txt" onclick="">
-                    <option value="1">是</option>
-                    <option value="0">否</option>
+                <select id="AVISequence" maxlength=100 type="text" class="txt">
+                    <option value="0">--请选择AVI站点顺序--</option>
+                    <option value="1">第1个AVI站点</option>
+                    <option value="2">第2个AVI站点</option>
+                    <option value="3">第3个AVI站点</option>
+                    <option value="4">第4个AVI站点</option>
+                    <option value="5">第5个AVI站点</option>
+                    <option value="6">第6个AVI站点</option>
+                    <option value="7">第7个AVI站点</option>
                 </select>
             </td>
         </tr>
+        <tr style="display:none">
+            <th class='formTitle'>是否滞留管理：</th>
+            <td class='formValue' colspan="3">
+                <select id="IsStranded" maxlength=100 type="text" class="txt" onclick="stranded()">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+        @*<tr id="Stranded" style="display:none">
+            <th class='formTitle'>滞留管理类别：</th>
+            <td class='formValue'  colspan="3">
+                <select id="StrandedCategory" maxlength=100 type="text" class="txt" onclick="">
+                    <option value="">--请选择滞留管理类别--</option>
+                    <option value="滞留管理起始点">滞留管理起始点</option>
+                    <option value="滞留管理终止点">滞留管理终止点</option>
+                </select>
+            </td>
+        </tr>*@
         <tr>
             <th class='formTitle'>AVI描述：</th>
-            <td class='formValue'>
-                <input id="Dsc" maxlength=300 type="text" class="txt" rows="3" />
+            <td class='formValue' colspan="3">
+                <input id="Dsc" maxlength=300 type="text" class="txt" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>备注：</th>
-            <td class='formValue'>
+            <td class='formValue' colspan="3">
                 <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
             </td>
         </tr>

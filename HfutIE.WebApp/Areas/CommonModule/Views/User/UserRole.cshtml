@@ -10,7 +10,7 @@
     })
     //加载角色
     function GetList() {
-        getAjax("/CommonModule/User/UserRoleList", { CompanyId: CompanyId, UserId: UserId }, function (data) {
+        getAjax("/CommonModule/User/UserRoleList", { UserId: UserId }, function (data) {
             $(".sys_spec_text").html(data);
         });
         $("#RoleList li").click(function () {

@@ -1,0 +1,132 @@
+@{
+    ViewBag.Title = "燃油标识信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/AUEX_NEW_FUELOIL_ID/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/AUEX_NEW_FUELOIL_ID/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr style="display:none">
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <input id="GID" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="width:110px">生产企业：</th>
+            <td class='formValue' colspan="3">
+                <input id="MANUFACTURER" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车辆型号：</th>
+            <td class='formValue'>
+                <input id="PRODUCT_VEHICLE_CODE" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>发动机型号：</th>
+            <td class='formValue'>
+                <input id="ENGINE_MODEL" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>变速器类型：</th>
+            <td class='formValue'>
+                <input id="TRANSMISSION_TYPE" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>能源种类：</th>
+            <td class='formValue'>
+                <input id="FUEL_TYPE" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle'>整车整备质量：</th>
+            <td class='formValue'>
+                <input id="ENTIRE_QUALITY" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>排量：</th>
+            <td class='formValue'>
+                <input id="DISPLACEMENT" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle'>最大设计总质量：</th>
+            <td class='formValue'>
+                <input id="DESIGN_QUALITY" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>最大净功率：</th>
+            <td class='formValue'>
+                <input id="MAX_POWERS" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class='formTitle'>驱动型式：</th>
+            <td class='formValue'>
+                <input id="DRIVE_TYPE" maxlength=50 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>市区工况：</th>
+            <td class='formValue'>
+                <input id="URBAN_OPERATING_MODE" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>市郊工况：</th>
+            <td class='formValue'>
+                <input id="SUBURBAN_OPERATING_MODE" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>综合工况：</th>
+            <td class='formValue'>
+                <input id="INTEGRATED_OPERATING_MODE" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>其他信息：</th>
+            <td class='formValue' colspan="3">
+                <input id="ADDTIONAL_INFORMATION" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>领跑值：</th>
+            <td class='formValue'>
+                <input id="LEADVALUE" maxlength=10 type="text" class="txt" />
+            </td>
+            <th class='formTitle'>限值：</th>
+            <td class='formValue'>
+                <input id="LIMIT" maxlength=10 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备案号：</th>
+            <td class='formValue' colspan="3">
+                <input id="RECORD_NUMBER" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>       
+    </table>
+</form>

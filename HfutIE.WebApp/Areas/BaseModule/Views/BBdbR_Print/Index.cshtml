@@ -1,0 +1,447 @@
+@{
+    ViewBag.Title = "打印信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+<link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#PrintType", "PrintType", "==全部==");
+        CellItem_PrintType;
+        CellItem_PrintConfigType;
+        GetGrid();//加载打印基础信息
+        GetGrid2();//加载打印配置信息
+        
+    })
+    var PrintTypeCellItem = "";
+    var PrintConfigTypeCellItem = "";
+    
+    
+
+    //加载打印信息表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_Print/GridPageByCondition")",
+        datatype: "json",
+        height: ($(window).height()-250) * 0.50,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: 'Id', index: 'Id', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '编号', name: 'PrintCd', index: 'PrintCd', width: 100, align: 'center', sortable: true },
+                {
+                    label: '类型', name: 'PrintType', index: 'PrintType', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "配置单"; }
+                        else if (cellvalue == '2') { return "扫码单"; }
+                        else if (cellvalue == '3') { return "燃油车"; }
+                        else if (cellvalue == '4') { return "电动车"; }
+                        else { return cellvalue; }
+                    }
+                },
+                { label: '左边距', name: 'LeftMargin', index: 'LeftMargin', width: 0, align: 'center', sortable: false},
+                { label: '右边距', name: 'RightMargin', index: 'RightMargin', width: 0, align: 'center', sortable: false},
+                { label: '上边距', name: 'UpMargin', index: 'UpMargin', width: 0, align: 'center', sortable: false },
+                { label: '下边距', name: 'DownMargin', index: 'DownMargin', width: 0, align: 'center', sortable: false },
+                { label: '边框宽度', name: 'Width', index: 'Width', width: 0, align: 'center', sortable: false },
+                { label: '边框高度', name: 'Height', index: 'Height', width: 0, align: 'center', sortable: false },
+                { label: '边框粗细', name: 'Board', index: 'Board', width: 0, align: 'center', sortable: false },
+                {
+                    label: '打印方向', name: 'Orientation', index: 'Orientation', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "横向"; }
+                        else if (cellvalue == '2') { return "纵向"; }
+                        else { return cellvalue; }
+                    }
+                },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 100, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else if (cellvalue == '2') { return "<img src='../../Content/Images/checknomark.gif'/>";  }
+                        else { return cellvalue}
+                    }
+                },
+
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '创建人姓名', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: false },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '修改人姓名', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: false },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                
+            ],
+            pager: "#gridPager",
+            sortable:true,
+            sortname: 'PrintCd',
+            sortorder: 'asc',
+            rownumbers: true,//启用记录条数
+            rowList: [200, 300, 500, 1000,10000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+        //单击事件
+        onSelectRow: function (RowId) {
+            var KeyValue = GetJqGridRowValue("#gridTable", "Id");
+            $("#gridTable2").jqGrid('setGridParam', { url: "@Url.Content("/BaseModule/BBdbR_Print/GridPageJson2")?KeyValue=" + escape(KeyValue), page: 1, datatype: 'json' }).trigger('reloadGrid');
+            },
+        
+       });
+    }
+
+   
+
+
+    //加载打印配置表格
+    function GetGrid2() {
+        $("#gridTable2").jqGrid({
+        datatype: "json",
+        height: ($(window).height()-250) * 0.5,
+        autowidth: true,
+            colModel: [
+                { label: '配置主键', name: 'Id', index: 'Id', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '打印表主键', name: 'PridId', index: 'PridId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '配置编号', name: 'PrintConfigCd', index: 'PrintConfigCd', width: 0, align: 'center', sortable: true },
+                {
+                    label: '类型', name: 'Type', index: 'Type', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') { return "普通"; }
+                        else if (cellvalue == '1') { return "表格"; }
+                        else if (cellvalue == '2') { return "条码"; }
+                        else if (cellvalue == '3') { return "函数公式"; }
+                        else { return cellvalue; }
+                    }
+                },
+                { label: '左侧距离', name: 'X', index: 'X', width: 0, align: 'center', sortable: true },
+                { label: '左侧距离公式', name: 'MX', index: 'MX', width: 0, align: 'center', sortable: true },
+                { label: '顶部距离', name: 'Y', index: 'Y', width: 0, align: 'center', sortable: true },
+                { label: '顶部距离公式', name: 'MY', index: 'MY', width: 0, align: 'center', sortable: true },
+                { label: '宽度', name: 'Width', index: 'Width', width: 0, align: 'center', sortable: true },
+                { label: '宽度公式', name: 'MWidth', index: 'MWidth', width: 0, align: 'center', sortable: true },
+                { label: '高度', name: 'Height', index: 'Height', width: 0, align: 'center', sortable: true },
+                { label: '高度公式', name: 'MHeight', index: 'MHeight', width: 0, align: 'center', sortable: true },
+                { label: '边框粗细', name: 'Board', index: 'Board', width: 0, align: 'center', sortable: true },
+                { label: '自定义内容', name: 'Context', index: 'Context', width: 0, align: 'center', sortable: true },
+                { label: '字号', name: 'FontSize', index: 'FontSize', width: 0, align: 'center', sortable: true },
+                { label: '字体', name: 'FontFamily', index: 'FontFamily', width: 0, align: 'center', sortable: true },
+                {
+                    label: '字形', name: 'FontStyle', index: 'FontStyle', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') { return "普通"; }
+                        else if (cellvalue == '1') { return "加粗"; }
+                        else if (cellvalue == '2') { return "倾斜"; }
+                        else if (cellvalue == '4') { return "下划线"; }
+                        else if (cellvalue == '8') { return "删除线"; }
+                        else { return cellvalue; }
+                    }
+                },
+                {
+                    label: '水平对齐', name: 'Alignment', index: 'Alignment', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') { return "居左"; }
+                        else if (cellvalue == '1') { return "居中"; }
+                        else if (cellvalue == '2') { return "居右"; }
+                        else { return cellvalue; }
+                    }
+                },
+                {
+                    label: '垂直对齐', name: 'LineAlignment', index: 'LineAlignment', width: 80, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') { return "居上"; }
+                        else if (cellvalue == '1') { return "居中"; }
+                        else if (cellvalue == '2') { return "居下"; }
+                        else { return cellvalue; }
+                    }
+                },
+                { label: '条码高度', name: 'CodeHeight', index: 'CodeHeight', width: 0, align: 'center', sortable: true },
+                { label: '条码宽度', name: 'CodeWidth', index: 'CodeWidth', width: 0, align: 'center', sortable: true },
+                { label: '行数', name: 'RowNum', index: 'RowNum', width: 0, align: 'center', sortable: true },
+                { label: '列数', name: 'ColNum', index: 'ColNum', width: 0, align: 'center', sortable: true },
+                { label: '行间隔', name: 'RowHeight', index: 'RowHeight', width: 0, align: 'center', sortable: true },
+                { label: '列间隔', name: 'ColWidth', index: 'ColWidth', width: 0, align: 'center', sortable: true },
+                { label: '列间隔', name: 'ColWidth', index: 'ColWidth', width: 0, align: 'center', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 100, align: 'center', sortable: true, hidden: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
+                        else { return "<img src='../../Content/Images/checknomark.gif'/>"; }
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '创建人姓名', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: false },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 220, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: false, hidden: true },
+                { label: '修改人姓名', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: false },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            ],
+            pager: "#gridPager2",
+            sortable:true,
+            sortname: 'PrintConfigCd',
+            sortorder: 'asc',
+            rowNum: 50,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+
+       });
+    }
+
+
+
+    //根据数据字典显示打印类别
+    function CellItem_PrintType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                PrintTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                PrintTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+
+    //根据数据字典显示打印配置类别
+    function CellItem_PrintConfigType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                PrintConfigTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                PrintConfigTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable2").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
+    }
+
+
+
+      //搜索
+   function btn_Search() {
+       var PrintCd = $("#PrintCd").val();
+       var PrintType = $("#PrintType").val();
+       
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_Print/GridPageByCondition")?PrintCd=" + escape(PrintCd) + "&PrintType=" + escape(PrintType), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+
+    //新增按钮
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_Print/Form"
+        openDialog(url, "Form", "新增打印基础信息", 500, 320, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "Id");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = KeyValue.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_Print/Form?KeyValue=" + KeyValue;
+                openDialog(url, "Form", "编辑打印配置信息", 500, 350, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "Id");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_Print/DeletePrint', delparm, KeyValue.split(",").length);
+            windowload();
+        }
+    }
+
+
+
+    //打印配置按钮-新增
+    function btn_addPrintConfig() {
+        var PridId = GetJqGridRowValue("#gridTable", "Id");             //打印基础信息主键
+        var PrintCd = GetJqGridRowValue("#gridTable", "PrintCd");       //打印基础信息编号
+        var PrintType = GetJqGridRowValue("#gridTable", "PrintType");   //打印基础信息类型
+        if (PridId == undefined || PridId == "" || PridId == 'null' || PridId == 'undefined') {
+            tipDialog('请选择打印基础信息。', 4, 'warning');
+        }
+        else {
+            var count = PridId.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_Print/Form2?PridId=" + PridId + "&PrintCd=" + escape(PrintCd) + "&PrintType=" + escape(PrintType);
+                openDialog(url, "Form2", "打印配置新增", 500, 400, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+                windowload();
+            }
+        }
+    }
+
+
+    //打印配置按钮-编辑
+    function btn_editPrintConfig() {
+        var Id = GetJqGridRowValue("#gridTable2", "Id");
+        if (Id == undefined || Id == "" || Id == 'null' || Id == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = Id.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/BaseModule/BBdbR_Print/Form2?Id=" + Id;
+                openDialog(url, "Form2", "打印配置编辑", 500, 400, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+
+    //删除
+    function btn_deletePrintConfig() {
+        var KeyValue2 = GetJqGridRowValue("#gridTable2", "Id");
+        if (IsDelData(KeyValue2)) {
+            var delparm = 'KeyValue2=' + KeyValue2;
+            delConfig('/BaseModule/BBdbR_Print/DeletePrintConfig', delparm, KeyValue2.split(",").length);
+            windowload();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //删除物料配置信息
+    function btn_delete3() {
+        var KeyValue3 = GetJqGridRowValue("#gridTable3", "Id");
+        if (IsDelData(KeyValue3)) {
+            var delparm = 'KeyValue3=' + KeyValue3;
+            delConfig('/BaseModule/BBdbR_Print/DeleteMaterial3', delparm, KeyValue3.split(",").length);
+            windowload();
+        }
+    }
+
+
+
+  
+
+   
+
+  
+    
+    
+    
+
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+
+            <th>编号：</th>
+            <td>
+                <input id="PrintCd" type="text" class="txt" style="width: 200px" />
+            </td>
+
+            <th>类型：</th>
+            <td>
+                <select id="PrintType" class="txt" style="height: 28px;width: 150px">
+                    <option value="">==全部==</option>
+                    <option value="1">配置单</option>
+                    <option value="2">扫码单</option>
+                    <option value='3'>燃油车</option>
+                    <option value='4'>电动车</option>
+                </select>
+            </td>
+
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+
+
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+    <div class="bd" style="border-bottom: none; margin: 1px;">
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="tab_list_top" style="position: absolute">
+                <div id="Tabcheck2" >打印配置</div>
+            </div>
+        </div>
+    </div>
+    <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+        <!--打印配置信息-->
+        <div id="check2" class="tabPanel">
+            <table id="gridTable2" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager2"></div>
+        </div>
+    </div>
+</div>

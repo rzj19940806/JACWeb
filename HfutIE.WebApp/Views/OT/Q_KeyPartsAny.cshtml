@@ -1,0 +1,419 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安驰FAS-主线关重件录入界面</title>
+    <title>江淮安驰FAS系统</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <!--页面必备-->
+    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css">
+    <script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
+    <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
+
+    <script src="~/Content/Scripts/OT.js"></script>
+    <script src="~/Content/Scripts/jquery/jQuery.md5.js"></script>
+    <style type="text/css">
+        /*滚动条*/
+        *::-webkit-scrollbar { /*滚动条整体样式*/
+            width: 18px; /*高宽分别对应横竖滚动条的尺寸*/
+            height: 1px;
+        }
+
+        *::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+            border-radius: 10px;
+            background-color: #a5a099;
+            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+            /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            background: #535353;*/
+        }
+
+        *::-webkit-scrollbar-track { /*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            /*border-radius: 10px;*/
+            background: #EDEDED;
+        }
+
+        fieldset {
+            display: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            Initialize();
+        });
+        //1.全局变量
+        //1.1初始加载静态信息
+        var allStaticInfo;
+        var barcodeRule;
+        var parts;
+        //1.3工位车身状态
+        var stationCarState = "0";  //0-初始状态，1-已经过入站位，2-已经过预警位，3-已经过停止位
+        //1.5mqtt实例
+        var client;
+        //辅助判断是否自己发送消息
+        var gid = guid();
+
+        //初始化加载
+        function Initialize() {
+            try {
+                SetAllWH();         //加载界面的宽高
+                GetStaticInfo(true);    //加载静态信息
+                GetCurrentDate();   //实时时间刷新
+                bindKeyDown("vin_input", function () {
+                    let vin = $("#vin_input").val().trim();
+                    $("#vin_input").val("");
+                    manualCarStart(allStaticInfo, vin, true, "主线", gid);
+                });                 //为VIN输入框绑定回车事件
+                bindKeyDown("part_input", function () {
+                    var BarCode = $("#part_input").val().trim();
+                    $("#part_input").val("");
+                    partBind(allStaticInfo, barcodeRule, parts, BarCode, "主线", stationCarState);
+                });                 //为条码输入框绑定回车事件
+                $("#part_input").focus();
+                //setTimeout(getCar, 1000);
+            } catch (e) {
+                uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
+            }
+        }
+
+        //界面加载时获取车身信息
+        function getCarMain() {
+            AjaxJson("/OT/NowVin_ANY", { wcId: allStaticInfo.WcId }, function (data) {
+                manualCarStart(allStaticInfo, data.Message, true, "主线", gid);
+            });
+        }
+
+        //连接Mqtt
+        function MqttConnect() {
+            try {
+                client = new Paho.MQTT.Client("10.138.13.3", 8083, "partsBind" + allStaticInfo.WcId + gid);//建立客户端实例
+                client.connect({
+                    userName: "admin",
+                    password: "public",
+                    onSuccess: onConnect,
+                    onFailure: onFailConnect
+                });
+                //连接服务器并注册连接成功处理事件
+                client.onConnectionLost = onConnectionLost;//注册连接断开处理事件
+                client.onMessageArrived = onMessageArrived;//注册消息接收处理事件
+                //client.onMessageDelivered = onMessageDelivered;//注册消息发布事件
+            } catch (e) {
+                uperrorLog("消息队列错误:【工位：" + allStaticInfo.WcNm + "】【异常信息：" + e + "！无法进行正常作业！！】");
+            }
+        }
+
+        //连接成功回调
+        function onConnect() {
+            if (allStaticInfo.DvcCatg == "多屏协同") {
+                subscribe("/OTScreen/MatPass/" + allStaticInfo.WcId);
+                subscribe("/OTScreen/MatBind/" + allStaticInfo.WcId);
+                subscribe("/OTScreen/NewVin/" + allStaticInfo.WcId);
+            }
+            try {
+                subscribe("/KeyParts/CarStatus/" + allStaticInfo.WcId);//订阅主题
+            } catch (e) {
+                uperrorLog("订阅消息错误:【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "无法进行正常作业！！】");
+            }
+            try {
+                subscribe("/KeyParts/reading/" + allStaticInfo.WcId);//订阅主题
+            } catch (e) {
+                uperrorLog("订阅消息异常:【工位：" + allStaticInfo.WcNm + "】【异常信息：" + e + "倒计时无法正常显示！】");
+            }
+            getCarMain();
+        }
+
+        //4.1mqtt接收消息后处理
+        function mqttMsgArrived(topic, msg) {
+            if (topic == "/KeyParts/reading/" + allStaticInfo.WcId) {
+                autoCoder(Number(msg));
+            }
+            else if (topic == "/KeyParts/CarStatus/" + allStaticInfo.WcId) {
+                var recevie = msg.split('_');
+                switch (recevie[0]) {
+                    case "1":
+                        autoCarStart(recevie[1]);//车身入站处理
+                        break;
+                    case "2": carWarn();//车身预警处理
+                        break;
+                    case "3": carOut();//车身出站处理
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (topic == "/OTScreen/MatBind/" + allStaticInfo.WcId) {
+                var Message = jQuery.parseJSON(msg);
+                if (Message.gid != gid) {
+                    partDeal(Message.matId, Message.matno, "green");
+                }
+            }
+            else if (topic == "/OTScreen/MatPass/" + allStaticInfo.WcId) {
+                var Message = jQuery.parseJSON(msg);
+                if (Message.gid != gid) {
+                    partDeal(Message.matId, Message.matno, "orange");
+                }
+            }
+            else if (topic == "/OTScreen/NewVin/" + allStaticInfo.WcId) {
+                var Message = jQuery.parseJSON(msg);
+                if (Message.gid != gid) {
+                    $("#in_main_box_left")[0].innerHTML = "";
+                    $("#in_main_box_right")[0].innerHTML = "";
+                    carStart(Message, stationCarState);
+                }
+            }
+        }
+        //4.1.1自动编码器读数处理
+        function autoCoder(value) {
+            if (value < allStaticInfo.EndPoint) {
+                $("#countdown_time").html(parseInt((allStaticInfo.EndPoint - value) * 180 / allStaticInfo.EndPoint));
+            } else {
+                $("#countdown_time").html(0);
+            }
+        }
+        //4.1.2自动车身入站
+        function autoCarStart(vin) {
+            $("#up_countdown").css("background-color", "green");
+            if (stationCarState == 3 || stationCarState == 0) {
+                stationCarState = 1;
+                if (vin == "9999") {
+                    updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                    NotHaveCar();
+                    return;
+                }
+                AjaxJson('@Url.Content("~/OT/GetCarInfoByStf")', { VIN: vin, WcId: allStaticInfo.WcId, del: true }, function (data) {
+                    if (data.code == 1) {
+                        $("#in_main_box_left")[0].innerHTML = "";
+                        $("#in_main_box_right")[0].innerHTML = "";
+                        if (carStart(data, stationCarState)) {
+                            updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                        }
+                        return;
+                    } else if (data.code == -2) uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + data.msg + "】");
+                    else uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【错误信息：" + data.msg + "】");
+                    NotHaveCar();
+                });
+            }
+        }
+
+
+        //4.1.5车身预警
+        function carWarn() {
+            if (stationCarState == 1 || stationCarState == 0) {
+                stationCarState = 2;
+                $("#up_countdown").css("background-color", "yellow");
+            }
+        }
+        //4.1.6车身出站
+        function carOut() {
+            if (stationCarState == 2 || stationCarState == 0) {
+                stationCarState = 3;
+                try {
+                    $("#up_countdown").css("background-color", "red");
+                    let unselects = $(".part_dis_box_right");
+                    if (unselects.length == 0) {
+                        NotHaveCar();
+                    } else {
+                        uperrorLog("车身作业停线:【工位：" + allStaticInfo.WcNm + "】【VIN：" + $("#vin").html() + "】");
+                    }
+                } catch (e) {
+                    uperrorLog("车身出站错误：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
+                }
+            }
+        }
+
+        function byPass(obj) {
+            byPassFun(allStaticInfo, parts, obj, "主线", stationCarState);
+        }
+
+        //4.Mqtt
+        //4.2连接失败回调
+        function onFailConnect() {
+            window.location.reload();
+            uperrorLog("设备连接错误:【工位：" + allStaticInfo.WcNm + "】【异常信息：设备连接失败！界面刷新】");
+        }
+        //4.3连接断开回调
+        function onConnectionLost(requestObject) {
+            if (requestObject.errorCode !== 0) {
+                uperrorLog("设备连接断开:【工位：" + allStaticInfo.WcNm + "】【异常信息：设备连接失败！无法进行正常作业！！】");
+                window.location.reload();
+            }
+        }
+        //4.4消息接收回调
+        function onMessageArrived(message) {
+            mqttMsgArrived(message.destinationName,message.payloadString);
+        }
+        //4.5发布消息
+        function publishMqtt(text,topic) {
+            var message = new Paho.MQTT.Message(text);
+            message.destinationName = topic;
+            message.qos = 1;
+            client.send(message);
+        }
+        //4.5消息发布回调
+        function onMessageDelivered(requestObject) {
+            console.log(requestObject);
+        }
+        //4.6订阅主题
+        function subscribe(filter) {
+            client.subscribe(filter);
+            console.log(filter);
+        }
+        //4.7取消订阅
+        function unsubscribe(filter) {
+            client.unsubscribe(filter);
+            console.log("unsubscribe");
+        }
+        //4.8断开连接
+        function disconnect() {
+            client.disconnect();
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="all" id="all" style="position:relative">
+        <div id="materro" style="width: 1000px; height: 150px; line-height: 150px; position: absolute; top: 300px; left: 500px; background-color: red; color: white; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料输入异常
+        </div>
+        <div id="matfinish" style="width: 1000px; height: 150px; line-height: 150px; position: absolute; top: 300px; left: 500px; background-color: yellow; color: black; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料完成绑定
+        </div>
+        <div class="up" id="up">
+            <div id="logo_img" class="logo_img">
+                <img id="refinelogo" src="~/Content/Images/LOGO/logoRefine.png" alt="refineLogo" align="middle" />
+            </div>
+            <div class="up_box baclground" id="up_localtime">
+                <div id="localtime" class="p_in_upbox" style="font-size: 15px;"></div>
+                <p id="localtime_dis" class="p_mark_in_upbox">时间</p>
+            </div>
+            <div class="up_box" id="up_countdown" style="background-color: green;">
+                <div id="countdown" class="p_in_upbox" style="font-size: 15px;"><span style="font-size: 30px;font-weight:bolder" id="countdown_time">180</span>s</div>
+                <p id="countdown_dis" class="p_mark_in_upbox">倒计时</p>
+            </div>
+            <div class="up_box baclground" id="up_station">
+                <div id="station" class="p_in_upbox" style="font-size: 15px;">工位</div>
+                <p id="station_dis" class="p_mark_in_upbox">工位</p>
+            </div>
+            <div class="up_box baclground" id="up_people" title="人员等级">
+                <div id="people" class="p_in_upbox" style="font-size: 15px;">人员</div>
+                <p id="people_dis" class="p_mark_in_upbox">人员</p>
+            </div>
+            <div class="up_box baclground" id="up_button">
+                <div class="up_button" id="videoButton" onclick="getVideo()">
+                    <img src="../Content/Images/Icon32/file_manager.png" />
+                    <br />
+                    工艺指导文件
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="down" id="down">
+            <div class="left" id="left">
+                <div id="car_img" class="car_img">
+                    <img id='productpicture' alt="车身照片" onclick="imgShow(this)" onerror="javascript:this.src='/Content/Images/LOGO/logoM5.jpg'" />
+                </div>
+                <div class="left_box" id="vin_box">
+                    <div id="vin" class="in_left_box baclground">
+                        VIN码
+                    </div>
+                </div>
+                <div class="left_box" id="sequence_box">
+                    <div id="sequence" class="in_left_box baclground">
+                        流水号
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="color_box">
+                    <div id="color" class="in_left_box in_left_box_small baclground">
+                        颜色
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="cartype_box">
+                    <div id="cartype" class="in_left_box in_left_box_small baclground">
+                        车型
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="left_box" id="car_dis_box" style="height:15%">
+                    <div class="in_left_box baclground">
+                        <div id="car_dis" class="in_left_box baclground">
+                            车身描述
+                        </div>
+                    </div>
+                </div>
+                <div class="left_box" id="engintype_box">
+                    <div id="engintype" class="in_left_box" style="background-color:inherit">
+
+                    </div>
+                </div>
+                <div class="left_box" id="vin_input_box">
+                    <input id="vin_input" class="input_text" type="text" placeholder="请输入VIN码" >
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="main" id="main">
+                <div class="main_box main_box_left" id="main_left">
+                    <div class="main_title" id="instruction_dis">
+                        装配指示
+                    </div>
+                    <div class="in_main_box_left" id="in_main_box_left">
+                    </div>
+                </div>
+                <div class="main_box main_box_right" id="main_right">
+                    <div class="main_title" id="instruction_dis">
+                        关重件扫码指示
+                    </div>
+                    <div class="in_main_box_right" id="in_main_box_right"></div>
+                    <div class="part_manual_box">
+                        <div class="part_input_box">
+                            <input id="part_input" class="part_input" type="text" placeholder="请输入物料码">
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="bottom" id="bottom">
+                <div id="bottem_dis">
+                    日志信息
+                </div>
+                <div id="bottom_text">
+
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+
+    </div>
+    <!-- 图片放大时使用 -->
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="max_img" style="border:5px solid #fff;" src="" />
+        </div>
+    </div>
+</body>
+
+</html>
+

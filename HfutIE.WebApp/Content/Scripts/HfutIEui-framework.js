@@ -271,9 +271,9 @@ function GetWebControls(element) {
                 }
                 break;
             default:
-                if (value == "") {
-                    value = "&nbsp;";
-                }
+                //if (value == "") {
+                //    value = "&nbsp;";
+                //}
                 reVal += '"' + id + '"' + ':' + '"' + value + '",'
                 break;
         }
@@ -1570,5 +1570,86 @@ function IsDelData(id, content) {
         }
     }
     return isOK;
+}
+/*高级检索自定义方法*/
+//获取Dom对象
+function ge(a) {
+    return document.getElementById(a)
+}
+//添加条件
+function AddRowEx(divid, divindex, divcount) {
+    try {
+        //仅一项条件则不做操作
+        if (!ge(divindex) || !ge(divcount) || ge(divindex).value == ge(divcount).value) {
+            return
+        }
+        var curID = parseInt($("#" + divindex).val());//选中条件的索引
+        var copyID = curID + 1;//要添加的新索引
+        var curTrID = divid + "_" + curID.toString();//选中条件所处的行id
+        var copyTrID = divid + "_" + copyID.toString();//生成新行id
+        var copyHtml = "";
+        if ($("#" + copyTrID).html() != null) {
+            $("#" + copyTrID).show()//新行已存在则显示
+        } else {
+            var html = $("#" + curTrID).html();
+            var cloneObj = $("#" + curTrID).clone();//新行不存在则复制选中行
+            if (curID == 1) {
+                //只有第一行存在按钮，同时也只有第一行没有关联逻辑
+                if (cloneObj.find("td:first") != null) {
+                    cloneObj.find("td:first").remove()
+                }
+                var logicalTd = $("#hidden_logical_" + divid).html();
+                if (logicalTd != "") {
+                    var reg = /{key}/g;//正则表达式全局匹配
+                    logicalTd = logicalTd.replace(reg, copyTrID);//替换当前关联逻辑选择combbox元素id为新行id,并插入到复制内容头部
+                    cloneObj = cloneObj.prepend(logicalTd)
+                }
+            }
+            copyHtml = $("<div></div>").append(cloneObj).html();//将完整的复制内容追加到div中,生成html
+            var reg1 = eval("/" + curTrID + "/g");//所选行id封装成正则表达式
+            copyHtml = copyHtml.replace(reg1, copyTrID);//替换html中所有当前行的id为新id
+            if (copyHtml != "") {
+                $("#" + curTrID).after(copyHtml)//将生成html插入到选中行后
+            }
+        }
+        var objvalue = ge(copyTrID + "_value1");
+        if (objvalue != null) {
+            objvalue.value = ""//将关键字清空
+        }
+        ge(divindex).value = copyID.toString();//更新最大条目数
+        var obj = ge(copyTrID + "_sel");
+        if (obj) {
+            obj.options[curID].selected = true;//更新检索条件选择comb
+            //GetCondition(copyTrID + "_sel");
+        }
+    } catch (e) { }
+}
+//删除条件
+function DeleteRowSaveID(d, a) {
+    try {
+        if (ge(a).value == "1") {//最大条件数为1时无效
+            return
+        }
+        else {
+            var j = parseInt(ge(a).value);//最大条件数
+            var g = d + "_" + j;
+            var c = ge(g + "_value1");//最大条件行的keyvalue值
+            if (c != null) {
+                c.value = ""//keyvalue置为空
+            }
+            SetDisplayValue(g, "none");//最大条件行不显示
+            j--;//更新最大行
+            ge(a).value = j;
+        }
+    } catch (f) { return }
+}
+//设置条件可见性
+function SetDisplayValue(b, a) {
+    var c = ge(b);
+    if (c) {
+        if (c.style) {
+            c.style.display = a
+        }
+    }
 }
 

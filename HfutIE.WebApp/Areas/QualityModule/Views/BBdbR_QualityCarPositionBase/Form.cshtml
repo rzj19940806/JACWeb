@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "检验岗基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityModule/BBdbR_QualityCarPositionBase/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("CarPositionCd").readOnly = true;//编辑时不可修改==复制时需更改==
+                document.getElementById("CarPositionNm").readOnly = true;//编辑时不可修改==复制时需更改==
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!(checkHasOne(KeyValue))) {
+            return false;
+        }
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/QualityModule/BBdbR_QualityCarPositionBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>检验岗编号：</th>
+            <td class='formValue'>
+                <input id="CarPositionCd" maxlength=50 type="text" class="txt required" datacol="yes" err="检验岗编号" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检验岗名称：</th>
+            <td class='formValue'>
+                <input id="CarPositionNm" maxlength=50 type="text" class="txt required" datacol="yes" err="检验岗名称" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检验岗描述：</th>
+            <td class='formValue'>
+                <textarea id="Dsc" maxlength=200 class="txt"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <textarea id="Rem" maxlength=200 class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

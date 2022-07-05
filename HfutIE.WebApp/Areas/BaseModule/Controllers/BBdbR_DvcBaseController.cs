@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
     /// </summary>
     public class BBdbR_DvcBaseController : PublicController<BBdbR_DvcBase>
     {
-        
+        #region 全局变量定义区
+        //定义本页面主要操作的表的表名，称为主表
+        string tableName = "BBdbR_DvcBase";
+        public static DataTable DvcList = new DataTable();
+        #endregion
+
         #region 创建数据库操作对象区域
         //BBdbR_FacBaseBll，用以访问BBdbR_FacBaseBll中操作数据库的方法
         BBdbR_DvcBaseBll MyBll = new BBdbR_DvcBaseBll(); //===复制时需要修改===
@@ -130,26 +136,147 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string DvcCd, string DvcNm, string DvcCatg, string DvcTyp, string DvcLocatn, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region 查询原方法
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //DvcList = MyBll.GetPageListByCondition(keyword,Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = DvcList,
+                //};
+                //return Content(DvcList.ToJson());
+                #endregion
+
+                #region 查询修改
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword,Condition, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append(@"select * from BBdbR_DvcBase where Enabled=1 ");
+                #region 搜索条件判定
+                //设备编号模糊搜索
+                if (DvcCd != "" && DvcCd != null)
+                {
+                    //strSql.Append(" and DvcCd like '%" + DvcCd + "%' ");
+                    strSql.Append(" and DvcCd like @DvcCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DvcCd", "%" + DvcCd + "%"));
+                }
+                else { }
+                //设备名称模糊搜索
+                if (DvcNm != "" && DvcNm != null)
+                {
+                    //strSql.Append(" and DvcNm like '%" + DvcNm + "%' ");
+                    strSql.Append(" and DvcNm like @DvcNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DvcNm", "%" + DvcNm + "%"));
+                }
+                else { }
+                //设备类别模糊搜索
+                if (DvcCatg != "" && DvcCatg != null)
+                {
+                    //strSql.Append(" and DvcCatg like '%" + DvcCatg + "%' ");
+                    strSql.Append(" and DvcCatg like @DvcCatg ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DvcCatg", "%" + DvcCatg + "%"));
+                }
+                else { }
+                //设备类型模糊搜索
+                if (DvcTyp != "" && DvcTyp != null)
+                {
+                    //strSql.Append(" and DvcTyp like '%" + DvcTyp + "%' ");
+                    strSql.Append(" and DvcTyp like @DvcTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DvcTyp", "%" + DvcTyp + "%"));
+                }
+                else { }
+                //设备位置模糊搜索
+                if (DvcLocatn != "" && DvcLocatn != null)
+                {
+                    //strSql.Append(" and DvcLocatn like '%" + DvcLocatn + "%' ");
+                    strSql.Append(" and DvcLocatn like @DvcLocatn ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DvcLocatn", "%" + DvcLocatn + "%"));
+                }
+                else { }
+                #endregion
+                //排序
+                strSql.Append(" order by DvcCd asc");
+                DvcList = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+
+                DvcList.Columns.Add("ClassNm");
+                for (int i = 0; i < DvcList.Rows.Count; i++)
+                {
+                    if (DvcList.Rows[i]["Class"].ToString() == "车间")
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("select WorkshopNm from BBdbR_WorkshopBase where WorkshopId='" + DvcList.Rows[i]["ClassId"].ToString() + "'and Enabled=1 ");
+                        DataTable dt1 = DataFactory.Database().FindTableBySql(sql.ToString(), false);
+                        if (dt1.Rows.Count > 0)
+                        {
+                            DvcList.Rows[i]["ClassNm"] = dt1.Rows[0][0];
+                        }
+                    }
+                    else if (DvcList.Rows[i]["Class"].ToString() == "工位")
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("select WcNm from BBdbR_WcBase where WcId='" + DvcList.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ");
+                        DataTable dt2 = DataFactory.Database().FindTableBySql(sql.ToString(), false);
+                        if (dt2.Rows.Count > 0)
+                        {
+                            DvcList.Rows[i]["ClassNm"] = dt2.Rows[0][0];
+                        }
+                    }
+                    else if (DvcList.Rows[i]["Class"].ToString() == "产线")
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("select PlineNm from BBdbR_PlineBase where PlineId='" + DvcList.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ");
+                        DataTable dt3 = DataFactory.Database().FindTableBySql(sql.ToString(), false);
+                        if (dt3.Rows.Count > 0)
+                        {
+                            DvcList.Rows[i]["ClassNm"] = dt3.Rows[0][0];
+                        }
+                    }
+                    else if (DvcList.Rows[i]["Class"].ToString() == "岗位")
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("select PostNm from BBdbR_PostBase where PostId='" + DvcList.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ");
+                        DataTable dt4 = DataFactory.Database().FindTableBySql(sql.ToString(), false);
+                        if (dt4.Rows.Count > 0)
+                        {
+                            DvcList.Rows[i]["ClassNm"] = dt4.Rows[0][0];
+                        }
+                    }
+                    else if (DvcList.Rows[i]["Class"].ToString() == "AVI设备")
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("select AviNm from BBdbR_AVIBase where AviId ='" + DvcList.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ");
+                        DataTable dt5 = DataFactory.Database().FindTableBySql(sql.ToString(), false);
+                        if (dt5.Rows.Count > 0)
+                        {
+                            DvcList.Rows[i]["ClassNm"] = dt5.Rows[0][0];
+                        }
+                    }
+                }
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = DvcList,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "设备管理信息查询成功");
+                return Content(JsonData.ToJson());
+
+                #endregion
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "设备管理信息查询异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -387,41 +514,16 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     {
                         IsCheck = 1;//重置标识
                         DataRow dr = Newdt.NewRow();
-                        string DvcCatg = "";
-                        string DvcTyp = "";
-                        switch (dt.Rows[i]["设备类别"].ToString())
+                        if (dt.Rows[i]["机构级别"].ToString().Trim() != "车间" && dt.Rows[i]["机构级别"].ToString().Trim() != "工位"&& dt.Rows[i]["机构级别"].ToString().Trim() != "产线"&& dt.Rows[i]["机构级别"].ToString().Trim() != "岗位")
                         {
-                            case "工艺设备":
-                                DvcCatg = "S001"; break;
-                            case "控制设备":
-                                DvcCatg = "S002"; break;
-                            case "系统设备":
-                                DvcCatg = "S003"; break;
-                            default:
-                                dr = Newdt.NewRow();
-                                dr[0] = errorNum;
-                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[设备类别]";
-                                dr[2] = "数字格式不正确请重新输入";
-                                Newdt.Rows.Add(dr);
-                                errorNum++;
-                                IsCheck = 0;
-                                break;
-                        }
-                        switch (dt.Rows[i]["设备类型"].ToString())
-                        {
-                            case "喷涂机":
-                                DvcTyp = "C001"; break;
-                            case "面漆机":
-                                DvcTyp = "C002"; break;                       
-                            default:
-                                dr = Newdt.NewRow();
-                                dr[0] = errorNum;
-                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[设备类型]";
-                                dr[2] = "数字格式不正确请重新输入";
-                                Newdt.Rows.Add(dr);
-                                errorNum++;
-                                IsCheck = 0;
-                                break;
+                            dr = Newdt.NewRow();
+                            dr[0] = errorNum;
+                            dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[岗位类型]";
+                            dr[2] = "岗位类型错误";
+                            Newdt.Rows.Add(dr);
+                            errorNum++;
+                            IsCheck = 0;
+                            continue;
                         }
                         if (dt.Rows[i]["设备编号"].ToString().Trim() != "")
                         {
@@ -442,24 +544,48 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                 BBdbR_DvcBase Device = new BBdbR_DvcBase();
                                 Device.DvcId = System.Guid.NewGuid().ToString();
                                 Device.Class = dt.Rows[i]["机构级别"].ToString().Trim();
-                                Device.ClassId = dt.Rows[i]["机构ID"].ToString().Trim();
-                                Device.DvcCd= dt.Rows[i]["设备编号"].ToString().Trim();
+                                string classCD = dt.Rows[i]["机构编号"].ToString().Trim(); //界面配置的是ClassId====>机构编号
+                                Device.DvcCd = dt.Rows[i]["设备编号"].ToString().Trim();
                                 Device.DvcNm = dt.Rows[i]["设备名称"].ToString().Trim();
-                                Device.DvcCatg = DvcCatg;
-                                Device.DvcTyp = DvcTyp;
+                                Device.DvcCatg = dt.Rows[i]["设备类别"].ToString().Trim();//设备类别
+                                Device.DvcTyp = dt.Rows[i]["设备类型"].ToString().Trim();  //设备类型
                                 Device.IPAddr = dt.Rows[i]["IP地址"].ToString().Trim();
                                 Device.Port = dt.Rows[i]["端口"].ToString().Trim();
                                 Device.DvcMaker = dt.Rows[i]["设备型号"].ToString().Trim();
                                 Device.DvcMdl = dt.Rows[i]["设备产商"].ToString().Trim();
                                 Device.DvcLife = dt.Rows[i]["设备寿命"].ToString().Trim();
                                 Device.DvcLocatn = dt.Rows[i]["设备位置"].ToString().Trim();
-                                Device.MaintCycle = int.Parse(dt.Rows[i]["维保周期(天)"].ToString().Trim());
-                                Device.LeadTm = int.Parse(dt.Rows[i]["提前期（天）"].ToString().Trim());
+                                Device.MaintCycle = dt.Rows[i]["维保周期(天)"].ToString().Trim();
+                                Device.LeadTm = dt.Rows[i]["提前期（天）"].ToString().Trim();
                                 Device.Dsc = dt.Rows[i]["设备描述"].ToString().Trim();
                                 Device.Rem = dt.Rows[i]["备注"].ToString().Trim();
                                 Device.DvcMDt = dt.Rows[i]["设备制造日期"].ToString().Trim();
                                 Device.Enabled = "1";
                                 Device.VersionNumber = "V1.0.0";
+                                Device.CreTm = DateTime.Now.ToString();  //修改时间
+                                Device.CreNm = ManageProvider.Provider.Current().UserId; //修改人编号
+                                Device.CreCd = ManageProvider.Provider.Current().UserName;//修改人名称
+
+                                DataTable dataTable = MyBll.searchClass(Device.Class, classCD);//机构级别、机构编号
+                                //string idTest = Convert.ToString(dataTable.Rows[0]["id"]);  ///机构ID
+
+                                if(dataTable == null)
+                                {
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[机构编号]";
+                                    dr[2] = "无效的机构编号";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    continue;
+                                }
+                                else
+                                {
+                                    Device.ClassId = dataTable.Rows[0]["id"].ToString();  ///机构ID
+                                }
+
+
                                 DeviceList.Add(Device);
                                 int b = database.Insert(DeviceList);
                                 if (b > 0)
@@ -534,6 +660,45 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 throw;
             }
+        }
+        #endregion
+
+        #region 10.重构导出方法
+        /// <summary>
+        /// 1.如果是按照条件查询后再进行
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public ActionResult GetExcel_Data(string DvcCd, string DvcNm, string DvcCatg, string DvcTyp, string DvcLocatn, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 获取数据
+                DataTable ListData = new DataTable();
+                if (DvcList.Rows.Count > 0)
+                {
+                    ListData = DvcList.DefaultView.ToTable("设备信息", true, "DvcCd", "DvcNm", "Class", "ClassNm", "DvcLocatn", "IPAddr", "DvcCatg", "DvcTyp", "CreTm", "CreNm", "MdfTm", "MdfNm", "Rem");//获取表中特定列
+                }
+                #endregion
+
+
+                string fileName = "设备信息表";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_Dvc(ListData, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "设备信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "设备信息导出操作失败：" + ex.Message);
+                throw;
+            }
+           
         }
         #endregion
 

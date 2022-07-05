@@ -1,0 +1,344 @@
+@{
+    ViewBag.Title = "关重件车身队列";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+<style type="text/css">
+    .differ {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<!--MQTT-->
+<script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
+<script type="text/javascript">
+    var guid = "";//唯一标识
+    var VIN = "";
+    //1.5mqtt实例
+    var client;
+    var topic1;
+    var topic2;
+    var topic3;
+    $(function () {
+        guid = uuid();
+        GetGrid();
+        MqttConnect();      //连接Mqtt
+    })
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/PlanModule/FitEnCode/GetEnCodeListJson")",
+            datatype: "json",
+            height: $(window).height() - 109,
+            autowidth: true,
+            colModel: [
+                { label: '车身队列主键', name: 'PlineQueID', index: 'PlineQueID', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '关重件车身队列主键', name: 'FitEnCodeInfoId', index: 'FitEnCodeInfoId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '产线名称', name: 'PlineNm', index: 'PlineNm', width: 0, align: 'center', sortable: true},
+                { label: '序号', name: 'No', index: 'No', width: 0, align: 'center', sortable: true },
+                { label: '实际VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '理论VIN', name: 'VIN2', index: 'VIN2', width: 0, align: 'center', sortable: true },
+                {
+                    label: 'VIN一致', name: 'YN', index: 'YN', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checknomark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                    }
+                },
+                { label: '工位', name: 'WcNm', index: 'WcNm', width: 0, align: 'center', sortable: true },
+                { label: '工位开始', name: 'StartPoint', index: 'StartPoint', width: 0, align: 'center', sortable: true },
+                { label: '累计距离', name: 'CodeValue', index: 'CodeValue', width: 0, align: 'center', sortable: true },
+                { label: '工位结束', name: 'EndPoint', index: 'EndPoint', width: 0, align: 'center', sortable: true }
+            ],
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            viewrecords: true,//显示总的记录条数
+            rowNum: 200,
+            rowList: [ 200, 500, 1000],
+            pager: "#gridPager",
+            multiselect: true,
+            multiboxonly: true,
+            rownumbers: true,
+            shrinkToFit: true,
+            gridview: true,
+            rownumWidth: 45,
+        });
+    }
+
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FitEnCodeInfoId");
+        //VIN = GetJqGridRowValue("#gridTable", "VIN");
+        if (IsDelData(KeyValue)) {
+            var count = KeyValue.split(",").length;
+            swal({
+                title: "修改距离",
+                //text: "输入产线名称",
+                type: "input",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "建议输入±100之间 "
+            },
+                function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("不能为空！");
+                        return false;
+                    }
+                    if (inputValue.indexOf(" ") != -1) {
+                        swal.showInputError("不能输入空格！");
+                        return false;
+                    }
+                    if (!isNaN(Number(inputValue))) {
+                        var sendinfo = inputValue + "," + KeyValue;
+                        //alert(sendinfo);
+                        let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+                        message.destinationName = topic2;//发送的主题
+                        client.send(message);
+                        swal({
+                            title: "成功",
+                            //text: "不存在该VIN码。",
+                            timer: 1000,
+                            type: "success",
+                            showConfirmButton: false
+                        });
+                    } else {
+                        swal.showInputError("必须为数字！");
+                    }
+                    
+                });
+        }
+    }
+
+
+
+    //删除AVI车身队列
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "PlineQueID");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            var url = '/PlanModule/FitEnCode/Delete';
+
+            var count = KeyValue.split(",").length;
+            //delConfig('/PlanModule/FitEnCode/Delete', delparm, KeyValue.split(",").length);
+            if (count == undefined) {
+                count = 1;
+            }
+            if (count > 1) {
+                tipDialog("一次只能删除一台车！", 3, -2);
+            } else {
+                confirmDialog("温馨提示", "注：您确定要删除 " + count + " 笔记录？", function (r) {
+                    if (r) {
+                        Loading(true, "正在删除数据...");
+                        window.setTimeout(function () {
+                            AjaxJson(url, delparm, function (data) {
+                                tipDialog(data.Message, 3, data.Code);
+                                if (data.Code > 0) {
+                                    //VIN校准
+                                    var sendinfo = GetJqGridRowValue("#gridTable", "PlineNm");
+                                    let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+                                    message.destinationName = topic3;//发送的主题
+                                    client.send(message);
+                                    windowload();
+                                }
+                            });
+                        }, 200);
+                    }
+                });
+            }
+        }
+    }
+
+
+
+    //VIN校准
+    function btn_clear() {
+        swal({
+            title: "VIN校准",
+            //text: "输入产线名称",
+            type: "input",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "请输入产线名称"
+        },
+            function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("产线名称不能为空！");
+                    return false;
+                }
+                if (inputValue.indexOf(" ") != -1) {
+                    swal.showInputError("不能输入空格！");
+                    return false;
+                }
+                var sendinfo = inputValue;
+                let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+                message.destinationName = topic3;//发送的主题
+                client.send(message);
+                swal({
+                            title: "成功",
+                            timer: 1000,
+                            type: "success",
+                            showConfirmButton: false
+                        });
+
+      //          AjaxJson("/PlanModule/FitEnCode/VINToOk", { PlineNm: inputValue }, function (data) {  //将输入的8位转成完整VIN码
+      //              if (data.Code = "1") {
+      //                  //if (data.Message=="0") {
+      //                  //    swal({
+      //                  //        title: "异常",
+      //                  //        text: "未发生修改",
+      //                  //        timer: 1000,
+      //                  //        type: "error",
+      //                  //        showConfirmButton: false
+      //                  //    });
+      //                  //} else {
+                            
+      //                  //}
+      //                  swal({
+      //                      title: "成功",
+      //                      //text: "不存在该VIN码。",
+      //                      timer: 1000,
+      //                      type: "success",
+      //                      showConfirmButton: false
+      //                  });
+      //                  //发送产线名称重启服务的消息
+						//var sendinfo = inputValue;
+						//let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+						//message.destinationName = topic3;//发送的主题
+						//client.send(message);
+      //              }  else {
+      //                  inputValue = "";
+      //                  swal({
+      //                      title: "失败",
+      //                      text: data.Message,
+      //                      timer: 1000,
+      //                      showConfirmButton: false
+      //                  });
+      //              }
+      //          });
+            });
+    }
+    //2.5连接Mqtt
+    function MqttConnect() {
+        client = new Paho.MQTT.Client("10.138.13.3", 8083, "/FAS/FitEnCode/" + guid);//建立客户端实例
+        client.connect({
+            userName: "userName",
+            password: "password",
+            onSuccess: onConnect,
+            onFailure: onFailConnect
+        });//连接服务器并注册连接成功处理事件
+        //client.onConnectionLost = onConnectionLost;//注册连接断开处理事件
+        //client.onMessageArrived = onMessageArrived;//注册消息接收处理事件
+        //client.onMessageDelivered = onMessageDelivered;//注册消息发布事件
+    }
+
+    //4.1连接成功回调
+    function onConnect() {
+        //console.log("onConnect");
+        topic2 = '/FAS/FitEnCode/UpdateValue'; //修改某个VIN码编码器数值
+        topic3 = '/FAS/FitEnCode/VINOK'; //VIN校准
+		//topic1 = '/FAS/FitEnCode/StartService'; //重启服务
+
+    }
+    //4.2连接失败回调
+    function onFailConnect() {
+        //tipDialog("消息队列连接失败", 3, -1);
+        alert("消息队列连接失败,请刷新页面！");
+    }
+    //4.3连接断开回调
+    function onConnectionLost(requestObject) {
+        //if (requestObject.errorCode !== 0) {
+        //    //console.log("第" + ++ReconnectionNumber + "次重连。异常信息为：" + requestObject.errorMessage);
+        //    // 定时器重连
+        //    disconnect();
+        //    MqttConnect();
+        //}
+    }
+    
+    function uuid() {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+
+        var uuid = s.join("");
+        return uuid;
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+    }
+    
+    //生成唯一标识
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <td>
+                    搜索条件：
+                </td>
+                <td>
+                    <select id="Condition" onchange="Show()" class="txt" style="height: 28px;width: 150px">
+                        <option value="PlanTime">预计生产时间</option>
+                        <option value="ProducePlanCd">计划编号</option>
+                        <option value="OrderCd">订单号</option>
+                        <option value="VIN">VIN码</option>
+                        <option value="MatCd">整车物料代码</option>
+                        <option value="CarType">车型</option>
+                        <option value="CarColor1">颜色</option>
+                        <option value="OrderStatus">订单状态</option>
+                        <option value="PlanStatus">计划状态</option>
+                        <option value="PlanPublishTime">计划发布时间</option>
+                        <option value="Quene">顺序号</option>
+                    </select>
+                </td>
+                <td id="STime_s" style="display:none">开始时间：</td>
+                <td>
+                    <input id="StartTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(-3)" style="width: 120px" onfocus="var endDate=$dp.$('EndTime');WdatePicker({onpicked:function(){EndTime.focus();},maxDate:'#F{$dp.$D(\'EndTime\')}'})" />
+                </td>
+                <td id="ETime_s" style="display:none">结束时间：</td>
+                <td>
+                    <input id="EndTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(+4)" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTime\')}'})" />
+                </td>
+                <td>
+                    <select id="State" name="State" type="text" class="txt" style="height:auto">
+                        <option value="0">未执行</option>
+                        <option value="1">执行中</option>
+                        <option value="2">已完成</option>
+                        <option value="3">报废</option>
+                    </select>
+                </td>
+                <td >
+                    <input id="Keywords" type="text" class="txt" style="width: 120px" />
+                </td>
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+    </div>*@
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

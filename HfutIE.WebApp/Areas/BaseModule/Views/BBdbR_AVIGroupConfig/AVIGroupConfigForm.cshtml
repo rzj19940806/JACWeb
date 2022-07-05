@@ -4,36 +4,22 @@
 }
 <script type="text/javascript">
     var KeyValue = GetQuery('AVIGroupId');
-    var AVIGroupNm = GetQuery('AVIGroupNm');
-    var AVIGroupCd = GetQuery('AVIGroupCd');
     $(function () {
         GetGrid_up();
         GetGrid_down();
     })
 
-    
     function GetGrid_up() {
         $("#gridTable_up").jqGrid({
             url: "/BaseModule/BBdbR_AVIGroupConfig/AVIGroupConfig_Up?KeyValue=" + KeyValue,
             datatype: "json",
-            autowidth: false,
-            //width: 850,  
+            width: 650,
             height: 160,
             colModel: [
-                //{ label: 'AVI站点组主键', name: 'AVIGroupId', index: 'AVIGroupId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: 'AVI站点组编号', name: 'AVIGroupCd', index: 'AVIGroupCd', width: 0, align: 'center', sortable: true },
-                { label: 'AVI站点组名称', name: 'AVIGroupNm', index: 'AVIGroupNm', width: 0, align: 'center', sortable: true },
                 { label: 'AVI主键', name: 'AVIId', index: 'AVIId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: 'AVI编号', name: 'AVICd', index: 'AVICd', width: 0, align: 'center', sortable: true },
                 { label: 'AVI名称', name: 'AVINm', index: 'AVINm', width: 0, align: 'center', sortable: true },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                //{
-                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                //    formatter: function (cellvalue, options, rowObject) {
-                //        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                //    }
-                //},
                 { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
@@ -52,27 +38,21 @@
             sortorder: 'desc',
             sortname: '',
             rownumbers: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             loadonce: true,
             gridview: true,
             cellEdit: true,
             cellsubmit: 'clientArray',
             ondblClickRow: function (RowId) {
-                //var groupid = GetJqGridRowValue("#gridTable_down", "AVIGroupId");
-                //var groupcd = GetJqGridRowValue("#gridTable_down", "AVIGroupCd");
-                //var groupnm = GetJqGridRowValue("#gridTable_down", "AVIGroupNm");
                 var id = GetJqGridRowValue("#gridTable_up", "AVIId");
                 var code = GetJqGridRowValue("#gridTable_up", "AVICd");
                 var fullname = GetJqGridRowValue("#gridTable_up", "AVINm");
                 var Content = GetJqGridRowValue("#gridTable_up", "Rem");
-                //var Enabled = GetJqGridRowValue("#gridTable_up", "Enabled");
-                var groupnm = AVIGroupNm;
-                var groupcd = AVIGroupCd;
                 var equipment = KeyValue;//获取grid1选中行的数据
                 if (KeyValue != "") {
                     $("#gridTable_down").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_down").jqGrid("setRowData", RowId, {
-                        /*AVIGroupId: groupid,*/AVIGroupNm: groupnm, AVIGroupCd: groupcd, AVIId: id, AVICd: code, AVINm: fullname,
+                        AVIId: id, AVICd: code, AVINm: fullname,
                         Rem: Content
                     });//将grid选中行数据复制给grid1中新增的行
                         $("#gridTable_up").jqGrid("delRowData", RowId);//删除grid选中行的数据                   
@@ -89,23 +69,14 @@
         $("#gridTable_down").jqGrid({
             url: "/BaseModule/BBdbR_AVIGroupConfig/AVIGroupConfig_Down?KeyValue=" + KeyValue,
             datatype: "json",
+            width: 650,
             height: 170,
             autowidth: false,
             colModel: [
-                //{ label: 'AVI站点组主键', name: 'AVIGroupId', index: 'AVIGroupId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: 'AVI站点组编号', name: 'AVIGroupCd', index: 'AVIGroupCd', width: 0, align: 'center', sortable: true },
-                { label: 'AVI站点组名称', name: 'AVIGroupNm', index: 'AVIGroupNm', width: 0, align: 'center', sortable: true },
                 { label: 'AVI主键', name: 'AVIId', index: 'AVIId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: 'AVI编号', name: 'AVICd', index: 'AVICd', width: 0, align: 'center', sortable: true },
                 { label: 'AVI名称', name: 'AVINm', index: 'AVINm', width: 0, align: 'center', sortable: true },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                //{
-                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true,
-                //    formatter: function (cellvalue, options, rowObject) {
-                //        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                //    }
-                //},
                 { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
@@ -124,25 +95,21 @@
             sortorder: 'desc',
             sortname: '',
             rownumbers: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             loadonce: true,
             gridview: true,
             cellEdit: true,
             cellsubmit: 'clientArray',
             ondblClickRow: function (RowId) {
-                //var groupid = GetJqGridRowValue("#gridTable_down", "AVIGroupId");
-                var groupcd = GetJqGridRowValue("#gridTable_down", "AVIGroupCd");
-                var groupnm = GetJqGridRowValue("#gridTable_down", "AVIGroupNm");
                 var id = GetJqGridRowValue("#gridTable_down", "AVIId");
                 var code = GetJqGridRowValue("#gridTable_down", "AVICd");
                 var fullname = GetJqGridRowValue("#gridTable_down", "AVINm");
                 var Content = GetJqGridRowValue("#gridTable_down", "Rem");
-                //var Enabled = GetJqGridRowValue("#gridTable_down", "Enabled");
                 var equipment = KeyValue;//获取grid1选中行的数据
                 if (KeyValue != "") {
                     $("#gridTable_up").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_up").jqGrid("setRowData", RowId, {
-                        /*AVIGroupId: groupid,*/ AVIGroupNm: groupnm, AVIGroupCd: groupcd,AVIId: id, AVICd: code, AVINm: fullname,
+                        AVIId: id, AVICd: code, AVINm: fullname,
                         Rem: Content
                     });//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_down").jqGrid("delRowData", RowId);//删除grid选中行的数据
@@ -158,8 +125,7 @@
         });
         jQuery("#gridTable_down").jqGrid('navGrid', '#pgwidth', { edit: false, add: false, del: false });
     }
-
-    
+   
     //刷新
     function windowload() {
         $("#gridTable_up").trigger("reloadGrid"); //重新载入
@@ -259,7 +225,7 @@
                 </div>
                 <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
                     <table id="gridTable_up"></table>
-                    <div id="gridPager_up" @*style="height:50px;background-color:transparent;position:relative"*@></div>
+                    <div id="gridPager_up"></div>
                 </div>
                 <div class="btnbartitle">
                     <div>

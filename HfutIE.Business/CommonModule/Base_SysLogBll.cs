@@ -1,4 +1,4 @@
-//=====================================================================================
+ï»¿//=====================================================================================
 // All Rights Reserved , Copyright @ HfutIE 2014
 // Software Developers @ HfutIE 2014
 //=====================================================================================
@@ -19,7 +19,7 @@ using System.Threading;
 namespace HfutIE.Business
 {
     /// <summary>
-    /// ÏµÍ³ÈÕÖ¾±í
+    /// ç³»ç»Ÿæ—¥å¿—è¡¨
     /// <author>
     ///		<name>she</name>
     ///		<date>2014.07.22 22:43</date>
@@ -27,36 +27,37 @@ namespace HfutIE.Business
     /// </summary>
     public class Base_SysLogBll : RepositoryFactory<Base_SysLog>
     {
-        #region ¾²Ì¬ÊµÀı»¯
+        #region é™æ€å®ä¾‹åŒ–
         private static Base_SysLogBll item;
         public static Base_SysLogBll Instance
         {
             get
             {
-                if (item == null)
-                {
-                    item = new Base_SysLogBll();
-                }
-                return item;
+                //if (item == null)
+                //{
+                //    item = new Base_SysLogBll();
+                //}
+                return new Base_SysLogBll();
             }
         }
         #endregion
 
         public Base_SysLog SysLog = new Base_SysLog();
 
-        #region Ğ´Èë²Ù×÷ÈÕÖ¾
+        #region å†™å…¥æ“ä½œæ—¥å¿—
         /// <summary>
-        /// Ğ´Èë×÷ÒµÈÕÖ¾
+        /// å†™å…¥ä½œä¸šæ—¥å¿—
         /// </summary>
-        /// <param name="ObjectId">¶ÔÏóÖ÷¼ü</param>
-        /// <param name="OperationType">²Ù×÷ÀàĞÍ</param>
-        /// <param name="Status">×´Ì¬</param>
-        /// <param name="Remark">²Ù×÷ËµÃ÷</param>
+        /// <param name="ObjectId">å¯¹è±¡ä¸»é”®</param>
+        /// <param name="OperationType">æ“ä½œç±»å‹</param>
+        /// <param name="Status">çŠ¶æ€</param>
+        /// <param name="Remark">æ“ä½œè¯´æ˜</param>
         /// <returns></returns>
         public void WriteLog(string ObjectId, OperationType OperationType, string Status, string Remark = "")
         {
             if (ConfigHelper.AppSettings("IsLog") == "true")
             {
+
                 SysLog.SysLogId = CommonHelper.GetGuid;
                 SysLog.ObjectId = ObjectId;
                 SysLog.LogType = CommonHelper.GetString((int)OperationType);
@@ -72,7 +73,7 @@ namespace HfutIE.Business
                 SysLog.ModuleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
                 SysLog.Remark = Remark;
                 SysLog.Status = Status;
-                ThreadPool.QueueUserWorkItem(new WaitCallback(WriteLogUsu), SysLog);//·ÅÈëÒì²½Ö´ĞĞ
+                ThreadPool.QueueUserWorkItem(new WaitCallback(WriteLogUsu), SysLog);//æ”¾å…¥å¼‚æ­¥æ‰§è¡Œ
             }
         }
         private void WriteLogUsu(object obSysLog)
@@ -81,12 +82,12 @@ namespace HfutIE.Business
             DataFactory.Database().Insert(VSysLog);
         }
         /// <summary>
-        /// Ğ´Èë×÷ÒµÈÕÖ¾£¨ĞÂÔö²Ù×÷£©
+        /// å†™å…¥ä½œä¸šæ—¥å¿—ï¼ˆæ–°å¢æ“ä½œï¼‰
         /// </summary>
-        /// <param name="entity">ÊµÌå¶ÔÏó</param>
-        /// <param name="OperationType">²Ù×÷ÀàĞÍ</param>
-        /// <param name="Status">×´Ì¬</param>
-        /// <param name="Remark">²Ù×÷ËµÃ÷</param>
+        /// <param name="entity">å®ä½“å¯¹è±¡</param>
+        /// <param name="OperationType">æ“ä½œç±»å‹</param>
+        /// <param name="Status">çŠ¶æ€</param>
+        /// <param name="Remark">æ“ä½œè¯´æ˜</param>
         /// <returns></returns>
         public void WriteLog<T>(T entity, OperationType OperationType, string Status, string Remark = "")
         {
@@ -113,7 +114,7 @@ namespace HfutIE.Business
                     SysLog.Remark = Remark;
                     SysLog.Status = Status;
                     database.Insert(SysLog, isOpenTrans);
-                    //Ìí¼ÓÈÕÖ¾ÏêÏ¸ĞÅÏ¢
+                    //æ·»åŠ æ—¥å¿—è¯¦ç»†ä¿¡æ¯
                     Type objTye = typeof(T);
                     foreach (PropertyInfo pi in objTye.GetProperties())
                     {
@@ -139,13 +140,13 @@ namespace HfutIE.Business
             }
         }
         /// <summary>
-        /// Ğ´Èë×÷ÒµÈÕÖ¾£¨¸üĞÂ²Ù×÷£©
+        /// å†™å…¥ä½œä¸šæ—¥å¿—ï¼ˆæ›´æ–°æ“ä½œï¼‰
         /// </summary>
-        /// <param name="oldObj">¾ÉÊµÌå¶ÔÏó</param>
-        /// <param name="newObj">ĞÂÊµÌå¶ÔÏó</param>
-        /// <param name="OperationType">²Ù×÷ÀàĞÍ</param>
-        /// <param name="Status">×´Ì¬</param>
-        /// <param name="Remark">²Ù×÷ËµÃ÷</param>
+        /// <param name="oldObj">æ—§å®ä½“å¯¹è±¡</param>
+        /// <param name="newObj">æ–°å®ä½“å¯¹è±¡</param>
+        /// <param name="OperationType">æ“ä½œç±»å‹</param>
+        /// <param name="Status">çŠ¶æ€</param>
+        /// <param name="Remark">æ“ä½œè¯´æ˜</param>
         /// <returns></returns>
         public void WriteLog<T>(T oldObj, T newObj, OperationType OperationType, string Status, string Remark = "")
         {
@@ -172,7 +173,7 @@ namespace HfutIE.Business
                     SysLog.Remark = Remark;
                     SysLog.Status = Status;
                     database.Insert(SysLog, isOpenTrans);
-                    //Ìí¼ÓÈÕÖ¾ÏêÏ¸ĞÅÏ¢
+                    //æ·»åŠ æ—¥å¿—è¯¦ç»†ä¿¡æ¯
                     Type objTye = typeof(T);
                     foreach (PropertyInfo pi in objTye.GetProperties())
                     {
@@ -202,12 +203,12 @@ namespace HfutIE.Business
             }
         }
         /// <summary>
-        /// Ğ´Èë×÷ÒµÈÕÖ¾£¨É¾³ı²Ù×÷£©
+        /// å†™å…¥ä½œä¸šæ—¥å¿—ï¼ˆåˆ é™¤æ“ä½œï¼‰
         /// </summary>
-        /// <param name="oldObj">¾ÉÊµÌå¶ÔÏó</param>
-        /// <param name="KeyValue">¶ÔÏóÖ÷¼ü</param>
-        /// <param name="Status">×´Ì¬</param>
-        /// <param name="Remark">²Ù×÷ËµÃ÷</param>
+        /// <param name="oldObj">æ—§å®ä½“å¯¹è±¡</param>
+        /// <param name="KeyValue">å¯¹è±¡ä¸»é”®</param>
+        /// <param name="Status">çŠ¶æ€</param>
+        /// <param name="Remark">æ“ä½œè¯´æ˜</param>
         public void WriteLog<T>(string[] KeyValue, string Status, string Remark = "") where T : new()
         {
             if (ConfigHelper.AppSettings("IsLog") == "true")
@@ -236,7 +237,7 @@ namespace HfutIE.Business
                         SysLog.Remark = Remark;
                         SysLog.Status = Status;
                         database.Insert(SysLog, isOpenTrans);
-                        //Ìí¼ÓÈÕÖ¾ÏêÏ¸ĞÅÏ¢
+                        //æ·»åŠ æ—¥å¿—è¯¦ç»†ä¿¡æ¯
                         Type objTye = typeof(T);
                         foreach (PropertyInfo pi in objTye.GetProperties())
                         {
@@ -265,34 +266,23 @@ namespace HfutIE.Business
 
 
         /// <summary>
-        /// Çå¿Õ²Ù×÷ÈÕÖ¾
+        /// æ¸…ç©ºæ“ä½œæ—¥å¿—
         /// </summary>
         /// <param name="CreateDate"></param>
         /// <returns></returns>
         public int RemoveLog(string KeepTime)
         {
             StringBuilder strSql = new StringBuilder();
-            DateTime CreateDate = DateTime.Now;
-            if (KeepTime == "7")//±£Áô½üÒ»ÖÜ
+            DateTime CreateDate = DateTime.Now.AddMonths(-(Convert.ToInt32(KeepTime)));
+            
+            if (KeepTime == "0")//ä¸ä¿ç•™ï¼Œå…¨éƒ¨åˆ é™¤
             {
-                CreateDate = DateTime.Now.AddDays(-7);
-            }
-            else if (KeepTime == "1")//±£Áô½üÒ»¸öÔÂ
-            {
-                CreateDate = DateTime.Now.AddMonths(-1);
-            }
-            else if (KeepTime == "3")//±£Áô½üÈı¸öÔÂ
-            {
-                CreateDate = DateTime.Now.AddMonths(-3);
-            }
-            if (KeepTime == "0")//²»±£Áô£¬È«²¿É¾³ı
-            {
-                strSql.Append("DELETE FROM Base_SysLog");
+                strSql.Append("DELETE FROM Base_SysLog WHERE LogType != '0'");
                 return DataFactory.Database().ExecuteBySql(strSql);
             }
             else
             {
-                strSql.Append("DELETE FROM Base_SysLog WHERE 1=1 ");
+                strSql.Append("DELETE FROM Base_SysLog WHERE LogType != '0' ");
                 strSql.Append("AND CreateDate <= @CreateDate");
                 List<DbParameter> parameter = new List<DbParameter>();
                 parameter.Add(DbFactory.CreateDbParameter("@CreateDate", CreateDate));
@@ -300,13 +290,13 @@ namespace HfutIE.Business
             }
         }
         /// <summary>
-        /// »ñÈ¡ÏµÍ³ÈÕÖ¾ÁĞ±í
+        /// è·å–ç³»ç»Ÿæ—¥å¿—åˆ—è¡¨â€”â€”ç³»ç»Ÿæ—¥å¿—
         /// </summary>
-        /// <param name="ModuleId">Ä£¿éID</param>
-        /// <param name="ParameterJson">ËÑË÷Ìõ¼ş</param>
-        /// <param name="jqgridparam">·ÖÒ³Ìõ¼ş</param>
+        /// <param name="ModuleId">æ¨¡å—ID</param>
+        /// <param name="ParameterJson">æœç´¢æ¡ä»¶</param>
+        /// <param name="jqgridparam">åˆ†é¡µæ¡ä»¶</param>
         /// <returns></returns>
-        public DataTable GetPageList(string ModuleId, string ParameterJson, ref JqGridParam jqgridparam)
+        public DataTable GetPageList(string ModuleId,string LogType, string CreateUserName, string IPAddress, string StartTime, string EndTime, string ParameterJson, ref JqGridParam jqgridparam)
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
@@ -323,18 +313,69 @@ namespace HfutIE.Business
                                                 l.CreateUserName ,
                                                 m.FullName AS ModuleName ,
                                                 m.ModuleId,
-                                                l.Remark ,
-                                                l.Status
+                                                l.Remark,
+                                                l.Status,
+                                                ld.SysLogDetailId,
+												ld.PropertyField,
+												ld.PropertyName,
+												ld.NewValue,
+												ld.OldValue
+
                                       FROM      Base_SysLog l
                                                 LEFT JOIN Base_Department d ON d.DepartmentId = l.DepartmentId
                                                 LEFT JOIN Base_Company c ON c.CompanyId = l.CompanyId
                                                 LEFT JOIN Base_Module m ON m.ModuleId = l.ModuleId
-                                    ) A WHERE 1 = 1");
+                                                LEFT JOIN Base_SysLogDetail ld ON ld.SysLogId = l.SysLogId
+
+                                    ) A WHERE LogType != '0' ");
             if (!string.IsNullOrEmpty(ModuleId))
             {
                 strSql.Append(" AND ModuleId = @ModuleId");
                 parameter.Add(DbFactory.CreateDbParameter("@ModuleId", ModuleId));
             }
+            if (!string.IsNullOrEmpty(LogType))
+            {
+                strSql.Append(" AND LogType = @LogType");
+                parameter.Add(DbFactory.CreateDbParameter("@LogType", LogType));
+            }
+            if (!string.IsNullOrEmpty(CreateUserName))
+            {
+                strSql.Append(" AND CreateUserName LIKE @CreateUserName");
+                parameter.Add(DbFactory.CreateDbParameter("@CreateUserName", "%" + CreateUserName + "%"));
+            }
+            if (!string.IsNullOrEmpty(IPAddress))
+            {
+                strSql.Append(" AND IPAddress LIKE @IPAddress");
+                parameter.Add(DbFactory.CreateDbParameter("@IPAddress", "%" + IPAddress + "%"));
+            }
+            if (!string.IsNullOrEmpty(StartTime))
+            {
+                parameter.Add(DbFactory.CreateDbParameter("@StartTime", CommonHelper.GetDateTime(StartTime)));
+                strSql.Append(" AND DATEDIFF(ss, @StartTime,A.CreateDate)>=0 ");
+            }
+            if (!string.IsNullOrEmpty(EndTime))
+            {
+
+                parameter.Add(DbFactory.CreateDbParameter("@EndTime", CommonHelper.GetDateTime(EndTime)));
+                strSql.Append(" AND DATEDIFF(ss, @EndTime,A.CreateDate)<=0 ");
+            }
+            //å¼€å§‹æ—¶é—´
+            //if (!string.IsNullOrEmpty(StartTime))
+            //{
+            //    //strSql.Append(" and DateDiff(dd,AcqTm,getdate()) <= DateDiff(dd,'" + TimeStart + "',getdate()) ");
+            //    //å¼€å§‹æ—¶é—´æŠŠ@æ”¾åœ¨å‰é¢
+            //    strSql.Append(" and DateDiff(dd,@StartTime,CreateDate) >=0 ");
+            //    parameter.Add(DbFactory.CreateDbParameter("@StartTime", StartTime));
+            //}
+            ////ç»“æŸæ—¶é—´
+            //if (!string.IsNullOrEmpty(EndTime))
+            //{
+            //    //strSql.Append(" and DateDiff(dd,AcqTm,getdate()) >= DateDiff(dd,'" + TimeEnd + "',getdate()) ");
+            //    //ç»“æŸæ—¶é—´æŠŠ@æ”¾åœ¨åé¢
+            //    strSql.Append(" and DateDiff(dd,CreateDate,@EndTime) >=0 ");
+            //    parameter.Add(DbFactory.CreateDbParameter("@EndTime", EndTime));
+            //}
+
             if (!string.IsNullOrEmpty(ParameterJson))
             {
                 List<DbParameter> outparameter = new List<DbParameter>();
@@ -344,9 +385,9 @@ namespace HfutIE.Business
             return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
         }
         /// <summary>
-        /// »ñÈ¡ÏµÍ³ÈÕÖ¾Ã÷Ï¸ÁĞ±í
+        /// è·å–ç³»ç»Ÿæ—¥å¿—æ˜ç»†åˆ—è¡¨
         /// </summary>
-        /// <param name="SysLogId">ÏµÍ³ÈÕÖ¾Ö÷¼ü</param>
+        /// <param name="SysLogId">ç³»ç»Ÿæ—¥å¿—ä¸»é”®</param>
         /// <returns></returns>
         public List<Base_SysLogDetail> GetSysLogDetailList(string SysLogId)
         {
@@ -355,46 +396,136 @@ namespace HfutIE.Business
             parameter.Add(DbFactory.CreateDbParameter("@SysLogId", SysLogId));
             return DataFactory.Database().FindList<Base_SysLogDetail>(WhereSql, parameter.ToArray());
         }
+
+        #region è·å–ç™»å½•æ—¥å¿—
+        //public DataTable GetLoginList( ref JqGridParam jqgridparam)
+        //{
+        //    StringBuilder strSql = new StringBuilder();
+        //    List<DbParameter> parameter = new List<DbParameter>();
+        //    strSql.Append(@"SELECT  *
+        //                    FROM    (SELECT    l.SysLogId ,
+        //                                        l.ObjectId ,
+        //                                        l.LogType ,
+        //                                        l.IPAddress ,
+        //                                        l.IPAddressName ,
+        //                                        c.FullName AS CompanyId ,
+        //                                        D.FullName AS DepartmentId ,
+        //                                        l.CreateDate ,
+        //                                        l.CreateUserId ,
+        //                                        l.CreateUserName ,
+        //                                        m.FullName AS ModuleName ,
+        //                                        m.ModuleId,
+        //                                        l.Remark ,
+        //                                        l.Status
+        //                              FROM      Base_SysLog l
+        //                                        LEFT JOIN Base_Department d ON d.DepartmentId = l.DepartmentId
+        //                                        LEFT JOIN Base_Company c ON c.CompanyId = l.CompanyId
+        //                                        LEFT JOIN Base_Module m ON m.ModuleId = l.ModuleId
+        //                            ) A WHERE LogType = '0'");
+            
+        //    return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
+        //}
+        /// <summary>
+        /// æ ¹æ®æŸ¥è¯¢æ¡ä»¶æœç´¢â€”â€”ç™»å½•æ—¥å¿—
+        /// </summary>
+        /// <param name="StartTime">åˆ¶å•å¼€å§‹æ—¶é—´</param>
+        /// <param name="EndTime">åˆ¶å•ç»“æŸæ—¶é—´</param>
+        /// <param name="jqgridparam">åˆ†é¡µå‚æ•°</param>
+        /// <returns></returns>
+        public DataTable GetLogList(string CreateUserName, string IPAddress, string StartTime, string EndTime, ref JqGridParam jqgridparam)
+        {
+            StringBuilder strSql = new StringBuilder();
+            List<DbParameter> parameter = new List<DbParameter>();
+            strSql.Append(@"SELECT * FROM Base_SysLog WHERE LogType = '0' ");
+
+            if (!string.IsNullOrEmpty(CreateUserName))
+            {
+                strSql.Append(" AND CreateUserName LIKE @CreateUserName");
+                parameter.Add(DbFactory.CreateDbParameter("@CreateUserName", "%" + CreateUserName + "%"));
+            }
+            if (!string.IsNullOrEmpty(IPAddress))
+            {
+                strSql.Append(" AND IPAddress LIKE @IPAddress");
+                parameter.Add(DbFactory.CreateDbParameter("@IPAddress", "%" + IPAddress + "%"));
+            }
+            
+            if (!string.IsNullOrEmpty(StartTime))
+            {
+                parameter.Add(DbFactory.CreateDbParameter("@StartTime", CommonHelper.GetDateTime(StartTime)));
+                strSql.Append(" AND DATEDIFF(ss, @StartTime,CreateDate)>=0 ");
+            }
+            if (!string.IsNullOrEmpty(EndTime))
+            {
+
+                parameter.Add(DbFactory.CreateDbParameter("@EndTime", CommonHelper.GetDateTime(EndTime)));
+                strSql.Append(" AND DATEDIFF(ss, @EndTime,CreateDate)<=0 ");
+            }
+
+            return Repository().FindTablePageBySql(strSql.ToString(), parameter.ToArray(), ref jqgridparam);
+            //return  DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+        }
+        public int RemoveLoginLog(string KeepTime)
+        {
+            StringBuilder strSql = new StringBuilder();
+            DateTime CreateDate = DateTime.Now.AddMonths(-(Convert.ToInt32(KeepTime)));
+            
+            if (KeepTime == "0")//ä¸ä¿ç•™ï¼Œå…¨éƒ¨åˆ é™¤
+            {
+                strSql.Append("DELETE FROM Base_SysLog WHERE LogType = '0' ");
+                return DataFactory.Database().ExecuteBySql(strSql);
+            }
+            else
+            {
+                strSql.Append("DELETE FROM Base_SysLog WHERE LogType = '0' ");
+                strSql.Append("AND CreateDate <= @CreateDate");
+                List<DbParameter> parameter = new List<DbParameter>();
+                parameter.Add(DbFactory.CreateDbParameter("@CreateDate", CreateDate));
+                return DataFactory.Database().ExecuteBySql(strSql, parameter.ToArray());
+            }
+        }
+        #endregion
+
+
     }
     /// <summary>
-    /// ²Ù×÷ÀàĞÍ
+    /// æ“ä½œç±»å‹
     /// </summary>
     public enum OperationType
     {
         /// <summary>
-        /// µÇÂ½
+        /// ç™»é™†
         /// </summary>
         Login = 0,
         /// <summary>
-        /// ĞÂÔö
+        /// æ–°å¢
         /// </summary>
         Add = 1,
         /// <summary>
-        /// ĞŞ¸Ä
+        /// ä¿®æ”¹
         /// </summary>
         Update = 2,
         /// <summary>
-        /// É¾³ı
+        /// åˆ é™¤
         /// </summary>
         Delete = 3,
         /// <summary>
-        /// ÆäËû
+        /// å…¶ä»–
         /// </summary>
         Other = 4,
         /// <summary>
-        /// ·ÃÎÊ
+        /// è®¿é—®
         /// </summary>
         Visit = 5,
         /// <summary>
-        /// Àë¿ª
+        /// ç¦»å¼€
         /// </summary>
         Leave = 6,
         /// <summary>
-        /// ²éÑ¯
+        /// æŸ¥è¯¢
         /// </summary>
         Query = 7,
         /// <summary>
-        /// °²È«ÍË³ö
+        /// å®‰å…¨é€€å‡º
         /// </summary>
         Exit = 8,
     }

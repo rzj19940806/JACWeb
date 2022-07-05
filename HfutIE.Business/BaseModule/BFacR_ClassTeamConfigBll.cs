@@ -38,7 +38,7 @@ namespace HfutIE.Business
             if (ClassId != "")
             {
                 //根据条件查询
-                sql = @"select * from " + tableName + " where  ClassId='" + ClassId + "' and Enabled=1";
+                sql = @"select * from " + tableName + " where  ShiftId='" + ClassId + "' and Enabled=1";
                 return Repository().FindListBySql(sql.ToString());
             }
             else

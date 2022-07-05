@@ -60,7 +60,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         tree.parentId = row["parentId"].ToString();
                         tree.Attribute = "Type";
                         tree.AttributeValue = row["sort"].ToString();
-                        tree.isexpand = true;
+                        tree.isexpand = false;
                         tree.complete = true;
                         tree.hasChildren = hasChildren;
                         if (row["parentid"].ToString() == "0")
@@ -93,22 +93,88 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GridListJson(string areaId, string parentId, JqGridParam jqgridparam)
+        public ActionResult GridListJson(string areaId, string parentId, string RsvFld1, string RsvFld2, string DtTyp, JqGridParam jqgridparam)
         {
             try
             {
-                Stopwatch watch = CommonHelper.TimerStart();
+                #region 原查询-不考虑搜索条件
+                //Stopwatch watch = CommonHelper.TimerStart();
                 //获取点击节点对应的数据（列表）            
-                List<BPdb_Dt> ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                //List<BPdb_Dt> ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Json(JsonData, JsonRequestBehavior.AllowGet);
+                #endregion
+
+
+                #region 查询修改-考虑搜索条件
+                Stopwatch watch = CommonHelper.TimerStart();
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select * from BPdb_Dt where Enabled = 1 ");
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        string mounth = areaId.Substring(0, areaId.Length - 1);//取出具体的月份
+                                                                               //从本表中查询上级表主键与传入主键相同相等的数据，并返回列表
+                        strSql.Append(@"select * from BPdb_Dt where Enabled = 1 and MONTH(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                    else
+                    {
+                        strSql.Append(@"select * from BPdb_Dt where Enabled = 1 and YEAR(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                    
+                }
+                //机构名称
+                if (RsvFld1 != "" && RsvFld1 != null)
+                {
+                    //strSql.Append(" and RsvFld1 like '%" + RsvFld1 + "%'");
+                    strSql.Append(" and RsvFld1 like @RsvFld1 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld1", "%" + RsvFld1 + "%"));
+                }
+                else { }
+                //班制名称
+                if (RsvFld2 != "" && RsvFld2 != null)
+                {
+                    //strSql.Append(" and RsvFld2 like '%" + RsvFld2 + "%'");
+                    strSql.Append(" and RsvFld2 like @RsvFld2 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld2", "%" + RsvFld2 + "%"));
+                }
+                else { }
+                //日期类型
+                if (DtTyp != "" && DtTyp != null)
+                {
+                    //strSql.Append(" and DtTyp like '%" + DtTyp + "%'");
+                    strSql.Append(" and DtTyp like @DtTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DtTyp", "%" + DtTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by Tm desc");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Json(JsonData, JsonRequestBehavior.AllowGet);
+                return Content(JsonData.ToJson());
+                #endregion
+
+
             }
             catch (Exception ex)
             {
@@ -226,16 +292,20 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         {
             try
             {
+                int IsOk = 0;//用于判断
                 string Message = KeyValue == "" ? "新增成功" : "编辑成功";                               
                 //int count = 0;                
                 if (!string.IsNullOrEmpty(KeyValue)) //编辑操作
                 {
+
+                    BPdb_Dt Oldentity = repository_dt.Repository().FindEntity(KeyValue);//获取没更新之前实体对象
                     entity.OrgId = idvalue;
                     entity.RsvFld1 = idtext;
                     entity.ClassId = classid;
                     entity.RsvFld2 = classname;
                     entity.Modify(KeyValue);
-                    MyBll.Update(entity);
+                    IsOk = MyBll.Update(entity);
+                    this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//记录日志
                 }
                 else // 新增操作
                 {
@@ -251,7 +321,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     entity.ClassId = classid;
                     entity.RsvFld2 = classname;
                     entity.Create();
-                    MyBll.Insert(entity);
+                    this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志
+                    IsOk = MyBll.Insert(entity);
                 }
                 return Content(new JsonMessage { Success = true, Code = "1", Message = Message }.ToString());
                 }
@@ -361,31 +432,448 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string areaId, string parentId, string RsvFld1, string RsvFld2, string DtTyp, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region 查询原方法-不考虑树节点
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //List<BPdb_Dt> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改，考虑树节点
                 Stopwatch watch = CommonHelper.TimerStart();
-                List<BPdb_Dt> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select * from BPdb_Dt where Enabled = 1 ");
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        string mounth = areaId.Substring(0, areaId.Length - 1);//取出具体的月份
+                                                                               //从本表中查询上级表主键与传入主键相同相等的数据，并返回列表
+                        strSql.Append(@"select * from BPdb_Dt where Enabled = 1 and MONTH(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                    else
+                    {
+                        strSql.Append(@"select * from BPdb_Dt where Enabled = 1 and YEAR(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                  
+                }
+                //机构名称
+                if (RsvFld1 != "" && RsvFld1 != null)
+                {
+                    //strSql.Append(" and RsvFld1 like '%" + RsvFld1 + "%'");
+                    strSql.Append(" and RsvFld1 like @RsvFld1 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld1", "%" + RsvFld1 + "%"));
+                }
+                else { }
+                //班制名称
+                if (RsvFld2 != "" && RsvFld2 != null)
+                {
+                    //strSql.Append(" and RsvFld2 like '%" + RsvFld2 + "%'");
+                    strSql.Append(" and RsvFld2 like @RsvFld2 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld2", "%" + RsvFld2 + "%"));
+                }
+                else { }
+                //日期类型
+                if (DtTyp != "" && DtTyp != null)
+                {
+                    //strSql.Append(" and DtTyp like '%" + DtTyp + "%'");
+                    strSql.Append(" and DtTyp like @DtTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DtTyp", "%" + DtTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by Tm desc");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "生产日历信息查询成功");
+                return Content(JsonData.ToJson());
+                #endregion
             }
             catch (Exception ex)
             {
                 //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "生产日历信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
         #endregion
+
+        #region 9.导入
+        /// <summary>
+        /// 导入Excel弹出框页面
+        /// </summary>
+        /// <returns></returns>
+        [ManagerPermission(PermissionMode.Enforce)]
+        public ActionResult ExcelImportDialog()
+        {
+            string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
+            //模板主表
+            Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
+            if (base_excellimport.ModuleId != null)
+            {
+                ViewBag.ModuleId = moduleId;
+                ViewBag.ImportFileName = base_excellimport.ImportFileName;
+                ViewBag.ImportName = base_excellimport.ImportName;
+                ViewBag.ImportId = base_excellimport.ImportId;
+            }
+            else
+            {
+                ViewBag.ModuleId = "0";
+            }
+            return View();
+        }
+        /// <summary>
+        /// 导入Excell数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ImportExel()
+        {
+            int IsOk = 0;//导入状态
+            int IsCheck = 1;//用作检验重复地址的标识
+            DataTable Result = new DataTable();//导入错误记录表
+            IDatabase database = DataFactory.Database();
+            List<BPdb_Dt> BFacRShiftBaseList = new List<BPdb_Dt>();
+
+            //构造导入返回结果表
+            DataTable Newdt = new DataTable("Result");
+            Newdt.Columns.Add("rowid", typeof(System.String));                 //行号
+            Newdt.Columns.Add("locate", typeof(System.String));                 //位置
+            Newdt.Columns.Add("reason", typeof(System.String));                 //原因
+            int errorNum = 1;
+            try
+            {
+                string moduleId = Request["moduleId"]; //表名
+                StringBuilder sb_table = new StringBuilder();
+                HttpFileCollectionBase files = Request.Files;
+                HttpPostedFileBase file = files["filePath"];//获取上传的文件
+                if (file != null)
+                {
+                    string fullname = file.FileName;
+                    string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtension获得文件的扩展名
+                    if (!IsXls.EndsWith(".xls") && !IsXls.EndsWith(".xlsx"))
+                    {
+                        IsOk = 0;
+                    }
+                    else
+                    {
+
+                        string filename = Guid.NewGuid().ToString() + ".xls";
+                        if (fullname.EndsWith(".xlsx"))
+                        {
+                            filename = Guid.NewGuid().ToString() + ".xlsx";
+                        }
+                        if (file != null && file.FileName != "")
+                        {
+                            string msg = UploadHelper.FileUpload(file, Server.MapPath("~/Resource/UploadFile/ImportExcel/"), filename);
+                        }
+
+                        DataTable dt = ImportExcel.ExcelToDataTable(Server.MapPath("~/Resource/UploadFile/ImportExcel/") + filename);
+
+                        RemoveEmpty(dt);//清除空行。???=>20210712注：方法是否真的有用？void返回对dt未生效
+                        dt.Columns.Add("rowid", typeof(System.String));//用来标识excell行ID
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            dt.Rows[i]["rowid"] = i + 1;
+                        }
+                        #region 工厂日历信息导入
+                        //校验
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            IsCheck = 1;//重置标识
+                            DataRow dr = Newdt.NewRow();
+
+                            string OrgRank = ""; //机构级别
+                            string DtTyp = ""; //日期类型
+                            switch (dt.Rows[i]["机构级别"].ToString())
+                            {
+                                case "车间":
+                                    OrgRank = "1"; break;
+                                case "产线":
+                                    OrgRank = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[机构级别]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+                            switch (dt.Rows[i]["日期类型"].ToString())
+                            {
+                                case "工作":
+                                    DtTyp = "1"; break;
+                                case "休息":
+                                    DtTyp = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[日期类型]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
+
+                            if (true)
+                            {
+                                BPdb_Dt Entity = new BPdb_Dt();
+                                Entity.DtId = System.Guid.NewGuid().ToString();
+                                Entity.Tm = Convert.ToDateTime(dt.Rows[i]["日期"].ToString());
+                                Entity.OrgRank = OrgRank; //机构级别
+                                Entity.DtTyp = DtTyp; //日期类型
+                                Entity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                Entity.Enabled = "1";
+                                Entity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                Entity.CreCd = ManageProvider.Provider.Current().UserId;
+                                Entity.CreNm = ManageProvider.Provider.Current().UserName;
+
+                                string ClassCD = dt.Rows[i]["机构编号"].ToString();  //代替机构ID
+                                DataTable dataTable = MyBll.searchClassID(ClassCD, OrgRank); //机构编号    机构级别：1-车间  2-产线
+                                Entity.OrgId = Convert.ToString(dataTable.Rows[0]["id"]);//机构Id      Convert.ToString(),当为null时，不会报错
+
+                                string ClassCd = dt.Rows[i]["班制编号"].ToString(); //班制编号，代替班制id
+                                DataTable dataT = MyBll.serarchId(ClassCd);
+                                Entity.ClassId = Convert.ToString(dataT.Rows[0]["id"]);
+
+                                BFacRShiftBaseList.Add(Entity);
+                                int b = database.Insert(BFacRShiftBaseList);
+                                if (b > 0)
+                                {
+                                    IsOk = IsOk + b;
+                                    BFacRShiftBaseList.Clear();
+                                }
+                                else
+                                {
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                    dr[2] = "工厂日历信息插入失败";
+                                    Newdt.Rows.Add(dr);
+                                    IsCheck = 0;
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                dr = Newdt.NewRow();
+                                dr[0] = errorNum;
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                dr[2] = "工厂日历信息不能为空";
+                                Newdt.Rows.Add(dr);
+                                errorNum++;
+                                IsCheck = 0;
+                                continue;
+                            }
+                        }
+                        if (IsCheck == 0)
+                        {
+                            IsOk = 0;
+                        }
+                        #endregion
+
+                    }
+                    Result = Newdt;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "异常错误：" + ex.Message);
+                IsOk = 0;
+            }
+            if (Result.Rows.Count > 0)
+            {
+                IsOk = 0;
+            }
+            var JsonData = new
+            {
+                Status = IsOk > 0 ? "true" : "false",
+                ResultData = Result
+            };
+            return Content(JsonData.ToJson());
+        }
+        #endregion
+
+        #region 10.导出模板
+        /// <summary>
+        /// 下载Excell模板
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExcellTemperature(string ImportId)
+        {
+            if (!string.IsNullOrEmpty(ImportId))
+            {
+                DataSet ds = new DataSet();
+                DataTable data = new DataTable(); string DataColumn = ""; string fileName;
+                MyBll.GetExcellTemperature(ImportId, out data, out DataColumn, out fileName);
+                ds.Tables.Add(data);
+                MemoryStream ms = DeriveExcel.ExportToExcel(ds, "xls", DataColumn.Split('|'));
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// 清除Datatable空行
+        /// </summary>
+        /// <param name="dt"></param>
+        public void RemoveEmpty(DataTable dt)
+        {
+            List<DataRow> removelist = new List<DataRow>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                bool rowdataisnull = true;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
+                    {
+
+                        rowdataisnull = false;
+                    }
+                }
+                if (rowdataisnull)
+                {
+                    removelist.Add(dt.Rows[i]);
+                }
+
+            }
+            for (int i = 0; i < removelist.Count; i++)
+            {
+                dt.Rows.Remove(removelist[i]);
+            }
+        }
+
+        #endregion
+
+        #region 11.重构导出
+        public ActionResult GetExcel_Data(string areaId, string parentId, string RsvFld1, string RsvFld2, string DtTyp, JqGridParam jqgridparam)
+        {
+            try
+            {
+
+
+                #region 根据当前搜索条件查出数据并导出
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select OrgRank,RsvFld1,RsvFld2,Tm,WorkTime,MorningStrTm,MorningEndTm,AfternoonStrTm,AfternoonEndTm,NightStrTm,NightEndTm,DtTyp,CreNm,CreTm,MdfNm,MdfTm,Rem from BPdb_Dt where Enabled = 1 ");
+                }
+                else
+                {
+                    if (parentId != "0")
+                    {
+                        string mounth = areaId.Substring(0, areaId.Length - 1);//取出具体的月份
+                                                                               //从本表中查询上级表主键与传入主键相同相等的数据，并返回列表
+                        strSql.Append(@"select OrgRank,RsvFld1,RsvFld2,Tm,WorkTime,MorningStrTm,MorningEndTm,AfternoonStrTm,AfternoonEndTm,NightStrTm,NightEndTm,DtTyp,CreNm,CreTm,MdfNm,MdfTm,Rem from BPdb_Dt where Enabled = 1 and MONTH(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                    else
+                    {
+                        strSql.Append(@"select OrgRank,RsvFld1,RsvFld2,Tm,WorkTime,MorningStrTm,MorningEndTm,AfternoonStrTm,AfternoonEndTm,NightStrTm,NightEndTm,DtTyp,CreNm,CreTm,MdfNm,MdfTm,Rem from BPdb_Dt where Enabled = 1 and YEAR(Tm) = '" + areaId.Substring(0, areaId.Length - 1) + "' ");
+                    }
+                   
+                }
+                //机构名称
+                if (RsvFld1 != "" && RsvFld1 != null)
+                {
+                    //strSql.Append(" and RsvFld1 like '%" + RsvFld1 + "%'");
+                    strSql.Append(" and RsvFld1 like @RsvFld1 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld1", "%" + RsvFld1 + "%"));
+                }
+                else { }
+                //班制名称
+                if (RsvFld2 != "" && RsvFld2 != null)
+                {
+                    //strSql.Append(" and RsvFld2 like '%" + RsvFld2 + "%'");
+                    strSql.Append(" and RsvFld2 like @RsvFld2 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld2", "%" + RsvFld2 + "%"));
+                }
+                else { }
+                //日期类型
+                if (DtTyp != "" && DtTyp != null)
+                {
+                    //strSql.Append(" and DtTyp like '%" + DtTyp + "%'");
+                    strSql.Append(" and DtTyp like @DtTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@DtTyp", "%" + DtTyp + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by Tm desc");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+
+
+
+                string fileName = "生产日历";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_BPdb_Dt(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "生产日历导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "生产日历导出操作失败：" + ex.Message);
+                return null;
+            }
+
+        }
+        #endregion
+
+        public ActionResult getTime(string ClassId)
+        {
+            try
+            {
+                DataTable ListData = MyBll.getTime(ClassId);
+                if (ListData.Rows.Count>0)
+                {
+                    return Content(ListData.Rows[0].ToJson());
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
 
         #endregion
 
@@ -677,7 +1165,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         }
                     }
                 }
-                user.Enabled = user.Enabled == null ? 0 : 1;
+                user.Enabled = user.Enabled == null ? "0" : "1";
                 user.InnerUser = user.InnerUser == null ? 0 : 1;
                 return user;
             }

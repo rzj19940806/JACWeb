@@ -72,9 +72,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 int IsOk = 0;//用于判断
                 string Name = "AviCd";        //页面中的编号字段名，如：公司编号   //===复制时需要修改===
-                //string Value = entity.AviCd;  //页面中的编号字段值                 //===复制时需要修改===\
                 string Name2 = "AviNm";
-                //string Value2 = entity.AviNm;
                 string Message = KeyValue == "" ? "新增成功。" : "编辑成功。";
 
                 if (!string.IsNullOrEmpty(KeyValue))//编辑操作
@@ -82,6 +80,10 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     //===复制时需要修改===
                     BBdbR_CntlAddrConf Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//获取没更新之前实体对象
                     entity.RecId = KeyValue;//编辑保持主键不变
+                    if(entity.IsMonitoring == "0")
+                    {
+                        entity.MonitorRate = 0;
+                    }
                     entity.Modify(KeyValue);
                     IsOk = MyBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     if (IsOk > 0)
@@ -295,33 +297,60 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         {
                             dt.Rows[i]["rowid"] = i + 1;
                         }
-                        #region 班次基本信息导入
+                        #region 数采地址信息导入
                         //校验
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
 
                             IsCheck = 1;//重置标识
                             DataRow dr = Newdt.NewRow();
+                            string IsMonitoring = "";
+                            switch (dt.Rows[i]["是否监控"].ToString())
+                            {
+                                case "是":
+                                    IsMonitoring = "1"; break;
+                                case "否":
+                                    IsMonitoring = "0"; break;
+                                default:
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[是否监控]";
+                                    dr[2] = "数字格式不正确请重新输入";
+                                    Newdt.Rows.Add(dr);
+                                    errorNum++;
+                                    IsCheck = 0;
+                                    break;
+                            }
 
-                            if (dt.Rows[i]["设备名称"].ToString().Trim() != "" && dt.Rows[i]["数采类型"].ToString().Trim() != "" && dt.Rows[i]["地址名称"].ToString().Trim() != "" )
+                            if (dt.Rows[i]["采集分组"].ToString().Trim() != "" && dt.Rows[i]["数采类型"].ToString().Trim() != "" && dt.Rows[i]["地址名称"].ToString().Trim() != "" && dt.Rows[i]["地址值"].ToString().Trim() != "")
                             {
                                 BBdbR_CntlAddrConf entity = new BBdbR_CntlAddrConf();
                                 entity.RecId = System.Guid.NewGuid().ToString();
-                                entity.DvcId = dt.Rows[i]["设备名称"].ToString().Trim();
+                                //entity.DvcId = dt.Rows[i]["设备"].ToString().Trim();
                                 entity.CntlType = dt.Rows[i]["数采类型"].ToString().Trim();
+                                entity.CntlGroup = dt.Rows[i]["采集分组"].ToString().Trim();
                                 entity.SingnalNm = dt.Rows[i]["地址名称"].ToString().Trim();
                                 entity.CntlAddr = dt.Rows[i]["地址值"].ToString();
                                 entity.CntlAddrDsc = dt.Rows[i]["地址描述"].ToString();
                                 entity.CntlDateType = dt.Rows[i]["地址数据类型"].ToString();
                                 entity.SglSource = dt.Rows[i]["地址来源"].ToString();
-                                entity.IsMonitoring = dt.Rows[i]["是否监控"].ToString().Trim();
+                                entity.IsMonitoring = IsMonitoring;
                                 entity.MonitorRate = int.Parse(dt.Rows[i]["监控频率"].ToString().Trim());
                                 entity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+
+
                                 entity.Enabled = "1";
                                 entity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                 entity.CreCd = ManageProvider.Provider.Current().UserId;
                                 entity.CreNm = ManageProvider.Provider.Current().UserName;
+
+                                string dvcCd = dt.Rows[i]["设备编号"].ToString();
+                                DataTable dtCd = MyBll.searchID(dvcCd);
+                                entity.DvcId = Convert.ToString(dtCd.Rows[0]["id"]);
+
                                 BBdbR_CntlAddrConfList.Add(entity);
+
+
                                 int b = database.Insert(BBdbR_CntlAddrConfList);
                                 if (b > 0)
                                 {
@@ -435,6 +464,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
         #endregion
+
         #endregion
     }
 }

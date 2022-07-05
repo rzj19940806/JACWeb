@@ -15,10 +15,7 @@ namespace HfutIE.DataAccess
 {
     public abstract class DbHelperSQL
     {
-        //protected static string connectionString = "Server=172.26.35.2;Initial Catalog=DCT_ACTIVE;User ID=sa;Password=sa";//正式库
-        //protected static string connectionString = "Server=172.26.37.253;Initial Catalog=DCT_ACTIVE2;User ID=sa;Password=JAC_1234";//测试库
-        protected static string connectionString = "Server=.;Initial Catalog=JAC_FAS;User ID=sa;Password=sa123";//本地数据库
-        //protected static string connectionString = "Server=192.168.0.102;Initial Catalog=DCT_ACTIVE;User ID=sa;Password=sa123";//其它库
+        protected static string connectionString = ConfigurationManager.ConnectionStrings["HfutIEFramework_SqlServer"].ToString();//从配置文件中获取值
         public DbHelperSQL()
         {
         }
@@ -119,7 +116,41 @@ namespace HfutIE.DataAccess
                 }
             }
         }
+        public static string ExecuteSqlTran1(ArrayList SQLStringList)//执行多条SQL语句，实现数据库事务。
+        {
+            //ArrayList sqllist = new ArrayList();
+            //sqllist.Add("sqlasdasdasdasd");
+            string backString = "success";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+                SqlTransaction tx = conn.BeginTransaction();
+                cmd.Transaction = tx;
+                try
+                {
+                    for (int n = 0; n < SQLStringList.Count; n++)
+                    {
+                        string strsql = SQLStringList[n].ToString();
+                        if (strsql.Trim().Length > 1)
+                        {
+                            cmd.CommandText = strsql;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    tx.Commit();
+                }
+                catch (System.Data.SqlClient.SqlException E)
+                {
+                    tx.Rollback();
+                    backString = E.Message;
+                    throw new Exception(E.Message);
+                }
 
+            }
+            return backString;
+        }
 
         public static void ExecuteSqlTran(ArrayList SQLStringList)//执行多条SQL语句，实现数据库事务。
         {

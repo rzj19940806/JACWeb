@@ -20,19 +20,20 @@ using System.Web.Mvc;
 
 namespace HfutIE.WebApp.Controllers
 {
-
-
     /// <summary>
     /// 登录控制器
     /// </summary>
     public class LoginController : Controller
     {
-        public   string _P_account;
+        public string _P_account;
         public static string P_account1;
-       public string P_account
-        {       
-            get { _P_account = P_account1;
-                return _P_account; }      
+        public string P_account
+        {
+            get
+            {
+                _P_account = P_account1;
+                return _P_account;
+            }
         }
         public string _P_user_name;
         public string P_user_name
@@ -41,7 +42,7 @@ namespace HfutIE.WebApp.Controllers
             {
                 _P_account = user_name;
                 return _P_account;
-             }
+            }
         }
         /// <summary>
         /// 调试日志
@@ -132,6 +133,17 @@ namespace HfutIE.WebApp.Controllers
             }
         }
 
+        ///// <summary>
+        ///// 获取本机IP地址
+        ///// </summary>
+        ///// <returns></returns>
+        //public static string GetLocalIpAddress()
+        //{
+        //    string hostinfo = System.Net.Dns.GetHostName();
+        //    System.Net.IPAddress addr = new System.Net.IPAddress(System.Net.Dns.GetHostByName(hostinfo).AddressList[0].Address);
+        //    return addr.ToString();
+        //}
+
         /// <summary>
         /// 获取本机IP地址
         /// </summary>
@@ -139,8 +151,13 @@ namespace HfutIE.WebApp.Controllers
         public static string GetLocalIpAddress()
         {
             string hostinfo = System.Net.Dns.GetHostName();
-            System.Net.IPAddress addr = new System.Net.IPAddress(System.Net.Dns.GetHostByName(hostinfo).AddressList[0].Address);
+            System.Net.IPAddress addr = Dns.GetHostEntry(hostinfo).AddressList.Last();
             return addr.ToString();
+        }
+        public ActionResult GetIpAddress()
+        {
+            string IPAddress = NetHelper.GetIPAddress();
+            return Content(IPAddress);
         }
 
         /// <summary>
@@ -167,104 +184,132 @@ namespace HfutIE.WebApp.Controllers
                 //}
                 //if (dt_mac != null && dt_mac.Rows.Count > 0)
                 //{
-                    //string enable = dt_mac.Rows[0]["enable"].ToString();
-                    //if (enable == "0")
-                    //{
-                    //    Msg = "6";//该电脑的MAC码无权限登录
-                    //}
-                    //else
-                    //{
-                        IPScanerHelper objScan = new IPScanerHelper();
-                        string IPAddress = NetHelper.GetIPAddress();
-                        objScan.IP = IPAddress;
-                        objScan.DataPath = Server.MapPath("~/Resource/IPScaner/QQWry.Dat");
-                        string IPAddressName = objScan.IPLocation();
-                        string outmsg = "";
-                        VerifyIPAddress(Account, IPAddress, IPAddressName, Token);
-                        //系统管理
-                        if (Account == ConfigHelper.AppSettings("CurrentUserName"))
-                        {
-                            if (ConfigHelper.AppSettings("CurrentPassword") == Password)
-                            {
-                                IManageUser imanageuser = new IManageUser();
-                                imanageuser.UserId = "System";
-                                user = "System";
-                                imanageuser.Account = "System";
-                                imanageuser.UserName = "超级管理员";
-                                imanageuser.Gender = "男";
-                                imanageuser.Code = "System";
-                                imanageuser.LogTime = DateTime.Now;
-                                imanageuser.CompanyId = "系统";
-                                imanageuser.DepartmentId = "系统";
-                                imanageuser.IPAddress = IPAddress;
-                                imanageuser.IPAddressName = IPAddressName;
-                                imanageuser.IsSystem = true;
-                                ManageProvider.Provider.AddCurrent(imanageuser);
-                                //对在线人数全局变量进行加1处理
-                                HttpContext rq = System.Web.HttpContext.Current;
-                                rq.Application["OnLineCount"] = (int)rq.Application["OnLineCount"] + 1;
-                                Msg = "3";//验证成功
-                                Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "1", "登陆成功、IP所在城市：" + IPAddressName);
-                            }
-                            else
-                            {
-                                return Content("4");
-                            }
-                        }
-                        else
-                        {
-                            Base_User base_user = base_userbll.UserLogin(Account, Password, out outmsg);
-                            switch (outmsg)
-                            {
-                                case "-1":      //账户不存在
-                                    Msg = "-1";
-                                    Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "账户不存在、IP所在城市：" + IPAddressName);
-                                    break;
-                                case "lock":    //账户锁定
-                                    Msg = "2";
-                                    Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "账户锁定、IP所在城市：" + IPAddressName);
-                                    break;
-                                case "error":   //密码错误
-                                    Msg = "4";
-                                    Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "密码错误、IP所在城市：" + IPAddressName);
-                                    break;
-                                case "succeed": //验证成功
-                                    IManageUser imanageuser = new IManageUser();
-                                    imanageuser.UserId = base_user.UserId;
-                                    user = base_user.Account;//系统操作室自动获取用户名
-                                    imanageuser.Account = base_user.Account;
-                                    imanageuser.UserName = base_user.RealName;
-                                    user_name = base_user.RealName;
-                                    imanageuser.Gender = base_user.Gender;
-                                    imanageuser.Password = base_user.Password;
-                                    imanageuser.Code = base_user.Code;
-                                    imanageuser.Secretkey = base_user.Secretkey;
-                                    imanageuser.LogTime = DateTime.Now;
-                                    imanageuser.CompanyId = base_user.CompanyId;
-                                    imanageuser.CompanyName = DataFactory.Database().FindEntity<Base_Company>(base_user.CompanyId).FullName;
-                                    imanageuser.DepartmentId = base_user.DepartmentId;
-                                    imanageuser.DepartmentName = DataFactory.Database().FindEntity<Base_Department>(base_user.DepartmentId).FullName;
-                                    imanageuser.ObjectId = base_objectuserrelationbll.GetObjectId(imanageuser.UserId);
-                                    imanageuser.IPAddress = IPAddress;
-                                    imanageuser.IPAddressName = IPAddressName;
-                                    imanageuser.IsSystem = false;
-                                    ManageProvider.Provider.AddCurrent(imanageuser);
-                                    //对在线人数全局变量进行加1处理
-                                    HttpContext rq = System.Web.HttpContext.Current;
-                                    rq.Application["OnLineCount"] = (int)rq.Application["OnLineCount"] + 1;
-                                    Msg = "3";//验证成功
-                                    Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "1", "登陆成功、IP所在城市：" + IPAddressName);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                    //}
+                //string enable = dt_mac.Rows[0]["enable"].ToString();
+                //if (enable == "0")
+                //{
+                //    Msg = "6";//该电脑的MAC码无权限登录
                 //}
+                //else
+                //{
+                IPScanerHelper objScan = new IPScanerHelper();
+                string IPAddress = NetHelper.GetIPAddress();
+                objScan.IP = IPAddress;
+                objScan.DataPath = Server.MapPath("~/Resource/IPScaner/QQWry.Dat");
+                string IPAddressName = objScan.IPLocation();
+                string outmsg = "";
+                VerifyIPAddress(Account, IPAddress, IPAddressName, Token);
+                //系统管理
+                if (Account == ConfigHelper.AppSettings("CurrentUserName"))
+                {
+                    if (ConfigHelper.AppSettings("CurrentPassword") == Password)
+                    {
+                        IManageUser imanageuser = new IManageUser();
+                        imanageuser.UserId = "System";
+                        user = "System";
+                        imanageuser.Account = "System";
+                        imanageuser.UserName = "超级管理员";
+                        imanageuser.Gender = "男";
+                        imanageuser.Code = "System";
+                        imanageuser.LogTime = DateTime.Now;
+                        imanageuser.CompanyId = "系统";
+                        imanageuser.DepartmentId = "系统";
+                        imanageuser.IPAddress = IPAddress;
+                        imanageuser.IPAddressName = IPAddressName;
+                        imanageuser.IsSystem = true;
+                        ManageProvider.Provider.AddCurrent(imanageuser);
+                        //对在线人数全局变量进行加1处理
+                        HttpContext rq = System.Web.HttpContext.Current;
+                        rq.Application["OnLineCount"] = (int)rq.Application["OnLineCount"] + 1;
+                        Msg = "3";//验证成功
+                        Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "1", "登陆成功、IP所在城市：" + IPAddressName);
+                    }
+                    else
+                    {
+                        return Content("4");
+                    }
+                }
+                else
+                {
+                    Base_User base_user = base_userbll.UserLogin(Account, Password, out outmsg);
+                    switch (outmsg)
+                    {
+                        case "-1":      //账户不存在
+                            Msg = "-1";
+                            Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "账户不存在、IP所在城市：" + IPAddressName);
+                            break;
+                        case "lock":    //账户锁定
+                            Msg = "2";
+                            Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "账户锁定、IP所在城市：" + IPAddressName);
+                            break;
+                        case "error":   //密码错误
+                            Msg = "4";
+                            Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "-1", "密码错误、IP所在城市：" + IPAddressName);
+                            break;
+                        case "succeed": //验证成功
+                            
+                            
 
+                            IManageUser imanageuser = new IManageUser();
+                            user = base_user.Account;//系统操作室自动获取用户名
+                            imanageuser.UserId = base_user.UserId;
+                            imanageuser.Account = base_user.Account;
+                            
+                            imanageuser.UserName = base_user.RealName;
+                            imanageuser.Gender = base_user.Gender;
+                            imanageuser.Password = base_user.Password;
+                            imanageuser.Code = base_user.Code;
+                            imanageuser.Secretkey = base_user.Secretkey;
+                            imanageuser.LogTime = DateTime.Now;
+                            imanageuser.CompanyId = base_user.CompanyId;
+                            //imanageuser.CompanyName = DataFactory.Database().FindEntity<BBdbR_CompanyBase>(base_user.CompanyId)?.CompanyNm;
+                            imanageuser.DepartmentId = base_user.DepartmentId;
+                            //imanageuser.DepartmentName = DataFactory.Database().FindEntity<Base_Department>(base_user.DepartmentId).FullName;
 
-                
+                            //imanageuser.UserName = base_user.RealName;
+                            //user_name = base_user.RealName;
+                            //imanageuser.Gender = base_user.Gender;
+                            //imanageuser.Password = base_user.Password;
+                            //imanageuser.Code = base_user.Code;
+                            //imanageuser.Secretkey = base_user.Secretkey;
+                            //imanageuser.LogTime = DateTime.Now;
+                            //imanageuser.CompanyId = base_user.CompanyId;
+                            //imanageuser.CompanyName = DataFactory.Database().FindEntity<BBdbR_CompanyBase>(base_user.CompanyId)?.CompanyNm;
+                            //imanageuser.DepartmentId = base_user.DepartmentId;
+                            //imanageuser.DepartmentName = DataFactory.Database().FindEntity<Base_Department>(base_user.DepartmentId).FullName;
+                            imanageuser.ObjectId = base_objectuserrelationbll.GetObjectId(imanageuser.UserId);
+                            imanageuser.IPAddress = IPAddress;
+                            imanageuser.IPAddressName = IPAddressName;
+                            imanageuser.IsSystem = false;
+                            imanageuser.PwdRank = base_user.PwdRank;//2021.12.20新增
+                            ManageProvider.Provider.AddCurrent(imanageuser);
+
+                            #region 判断是否需要修改密码
+                            //if (Password == "4a7d1ed414474e4033ac29ccb8653d9b" || base_user.LastPwdModfyTm == null)//密码为默认密码0000/从未修改过密码
+                            //{
+                            //    Msg = "7";
+                            //    break;
+                            //}
+                            //else if (base_user.LastPwdModfyTm != null)
+                            //{
+                            //    var span = (DateTime.Now - DateTime.Parse(base_user.LastPwdModfyTm.ToString())).TotalDays;
+                            //    if (span >= 60)//距离上次修改密码时间超过两个月
+                            //    {
+                            //        Msg = "7";
+                            //        break;
+                            //    }
+                            //}
+                            #endregion
+
+                            //对在线人数全局变量进行加1处理
+                            HttpContext rq = System.Web.HttpContext.Current;
+                            rq.Application["OnLineCount"] = (int)rq.Application["OnLineCount"] + 1;
+                            Msg = "3";//验证成功
+                            Base_SysLogBll.Instance.WriteLog(Account, OperationType.Login, "1", "登陆成功、IP所在城市：" + IPAddressName);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             catch (Exception ex)
             {

@@ -1,0 +1,652 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+    @*<title>HfutIE.信息化快速开发框架</title>*@
+    <title>江淮安驰-缺陷录入</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Arial";
+            color: #6F7479;
+            font-weight: normal;
+            background: #D6E9FF;
+            height: 100%;
+            width: 100%;
+            background-size: 100%;
+            /*竖直滚动条*/
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        /*.content-block {*/
+            /*max-width: 2600px;*/
+            /*clear: both;*/
+            /*margin: 0 0px;
+            padding: 12% 10px;
+            text-align: center;*/
+            /*height:120%;*/
+            /*background: #F17C70;*/
+        /*}*/
+
+        /*ul {
+            list-style: none;
+        }*/
+
+        :after, :before {
+            box-sizing: inherit;
+        }
+        /*头部背景*/
+        .header {
+            height: 80px;
+            width: 100%;
+            background-color: white;
+            display: flex;
+            /*background-color:rebeccapurple;*/
+        }
+        /*导航栏*/
+        .topnav1 {
+            width: 30%;
+            margin-left: 0%;
+            height: 70px;
+            background: #EEF3FC;
+            opacity: 0.8;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            /*-webkit-tap-highlight-color: transparent;*/
+        }
+        .topnav2 {
+            /*float: right;*/
+            width: 180px;
+            margin-left: 30px;
+            height: 70px;
+            transition: all .6s;
+            background: #EEF3FC;
+            opacity: 0.8;
+            cursor: pointer;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .topnav3 {
+            /*float: right;*/
+            width: 180px;
+            margin-left: 30px;
+            height: 70px;
+            transition: all .6s;
+            background: #00B050;
+            opacity: 0.8;
+            cursor: pointer;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .leftclass1 {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            float: left;
+            text-align: center
+        }
+        .atitle {
+            text-decoration: none;
+            color: black;
+            margin-top: 5px;
+            margin-left:6px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .Information {
+            width: 20%;
+            height: 800px;
+            background-color: white;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .QuaCheckItem {
+            width: 28%;
+            height: 680px;
+            background-color: white;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .DefectCatg {
+            width: 28%;
+            height: 680px;
+            background-color: white;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .frepro {
+            width: 21%;
+            height:330px;
+            background-color: white;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+        }
+        .selected {
+            width: 21%;
+            height: 330px;
+            background-color: white;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+        }
+        .process {
+            width: 78%;
+            height: 104px;
+            background-color: white;
+            float: left;
+            margin-top: 4px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+        }
+        .infor-clock1 {
+            width: 95%;
+            height: 50px;
+            background-color: #EEF3FC;
+            float:left;
+            margin-top: 5px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .infor-clock2 {
+            width: 46%;
+            height: 50px;
+            background-color: #EEF3FC;
+            float: left;
+            margin-top: 5px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .infor-clock3 {
+            width: 95%;
+            height: 80px;
+            background-color: #EEF3FC;
+            float: left;
+            margin-top: 5px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        #VIN{
+            width: 95%;
+            height: 60px;
+            background-color: #FFFFFF;
+            float: left;
+            border-style: solid;
+            border-color: #000000;
+            margin-top: 50px;
+            margin-left: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .small-docker1 {
+            width: 98%;
+            height: 60px;
+            background-color: #F2F5F9;
+            float: left;
+            /*margin-top: 5px;*/
+            margin-left: 5px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #797979;
+        }
+        .small-docker2 {
+            width: 98%;
+            height:500px;
+            background-color: #F2F5F9;
+            float: left;
+            /*margin-top: 5px;*/
+            margin-left: 5px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #797979;
+        }
+
+        .docker-CarOrientation {
+            height: 35px;
+            width: 40px;
+            background-color: white;
+            border-style: solid;
+            border-width: 2px;
+            margin-left: 3px;
+            margin-top: 3px;
+        }
+
+        .litter-title {
+            height: 15px;
+            width: 50px;
+            background-color: #5176A3;
+            margin-top: 0px;
+        }
+        .Part {
+            height: 50px;
+            width: 27%;
+            margin-left: 15px;
+            margin-top: 10px;
+            border-width: 1px;
+        }
+        .CarPartCd {
+            float: left;
+            margin-left: 0px;
+            height: 50px;
+            width: 27%;
+            background-color: white;
+        }
+        .CarPartNm {
+            float: left;
+            margin-left: 0px;
+            border-left-style :hidden;
+            height: 50px;
+            width: 72%;
+            background-color: white;
+        }
+        
+        /*方块*/
+        .docker {
+            /*background-color: rgba(255,255,255,0.1);*/
+            /* padding: 140px 0 40px 0; */
+            margin-top: 0px;
+            padding-left: 50px;
+            height: 235px;
+            width: 100%;
+            padding: 0 10px;
+        }
+        #litter-title1 {
+            text-align: center;
+            font-size: 0.2em;
+            font-weight: bold;
+            color: white;
+        }
+        img {
+            margin-top: 5px;
+        }
+        .button1 {
+            /*background-color:antiquewhite;*/
+            border-radius: 6px;
+        }
+            .button1:hover {
+                transform: scale(1.1);
+                background-color: ghostwhite;
+            }
+
+    </style>
+    <script type="text/javascript">
+    var taskid = GetQuery('taskid');//
+    $(function () {
+        Show();
+    })
+
+        //获取质控点名称
+        function Show() {
+            $("#WcId").empty();
+            $("#WcId").append("<option value=''>全部</option>");
+            //var KeyValue = $("#WcId").val();
+            AjaxJson("/EnterDefect/GetWcName", {}, function (data) {
+                console.log(data)
+                let str=''
+                for (var i = 0; i < data.rows.length; i++) {
+                    str += `<option value=${data.rows[i].wcnm}>${data.rows[i].wcnm}</option>`
+                    //$("#WcId").append("<option value='" + data.rows[i]["id"] + "'>" + data.rows[i]["name"] + "</option>");
+                    //document.getElementById('WcId').innerHTML = data.rows[0].WcNm;
+                }
+                document.getElementById('WcId').innerHTML = str;
+            });
+        }
+
+
+        //倒计时
+        window.onload = function () {
+            var oCountDown = document.getElementById("countdown");
+            var aInput = oCountDown.getElementsByTagName("input")[0];
+            var timer = null;
+            aInput.onclick = function () {
+                this.className == "" ? (timer = setInterval(updateTime, 1000), updateTime()) : (clearInterval(timer));
+                this.className = this.className == '' ? "cancel" : '';
+            };
+            function format(a) {
+                return a.toString().replace(/^(\d)$/, '0$1');
+            }
+            function updateTime() {
+                var aSpan = oCountDown.getElementsByTagName("span");
+                var oRemain = aSpan[0].innerHTML.replace(/^0/, '') * 60 + parseInt(aSpan[1].innerHTML.replace(/^0/, ''));
+                if (oRemain <= 0) {
+                    clearInterval(timer);
+                    return;
+                }
+                oRemain--;
+                aSpan[0].innerHTML = format(parseInt(oRemain / 60));
+                oRemain %= 60;
+                aSpan[1].innerHTML = format(parseInt(oRemain));
+            }
+            // 加上此句即可。
+            aInput.click();
+            aInput.style.display = "none"
+        }
+        //时间显示
+        function mytime() {
+            var Nowtime = new Date();
+            var LocaleTime = Nowtime.toLocaleTimeString();
+            var LocaleDate = Nowtime.toLocaleDateString();
+            document.getElementById("clock1").value = LocaleTime;
+            document.getElementById("clock2").value = LocaleDate;
+        }
+        //间隔一秒执行一次获取当前时间的方法
+        setInterval("mytime()", 1000);
+
+        //动态加载缺陷DIV(待测试）
+        function getDate()
+        {
+            $("#Part").empty();
+            //$("#CarPartNm").empty();
+            //for (var i = 0; i < data.rows.length; i++)
+            //{
+                //获取div
+                //var div = document.getElementById("Part");
+                //获取编号
+                //var div2 = document.createElement("button");
+                //div2.innerText = data[n].CarPartCd;
+                //div.appendChild(div2);
+               //获取名称
+                //var div3 = document.createElement("button");
+                //div3.innerText = data[n].CarPartNm;
+                //div.appendChild(div3);
+                //将数据展示在DIV里
+            for (var i = 0; i < data.rows.length; i++) {
+                AjaxJson("/EnterDefect/GetCarInfor", { keywords: keywords }, function (data) {
+                    $("#Part").append(obj[i].CarPartCd + obj[i].CarPartNm)
+                    document.getElementById('CarPartCd').innerHTML = data.CarPartCd;
+                    document.getElementById('CarPartNm').innerHTML = data.CarPartNm;
+                });
+            }
+        }
+        //搜索
+        function btn_search() {
+            $("#VIN1").empty();
+         var keywords = $("#VIN").val();
+         //将数据展示在DIV里
+            AjaxJson("/EnterDefect/GetCarInfor", { keywords: keywords }, function (data) {
+             document.getElementById('VIN1').innerHTML = data.VIN;
+             document.getElementById('SequenceNo').innerHTML = data.SequenceNo;
+             document.getElementById('MatNm').innerHTML = data.CarPartNm;
+             document.getElementById('CarColor1').innerHTML = data. CarColor1;
+             document.getElementById('CarType').innerHTML = data.CarType;
+         });
+         //document.getElementById('VIN1').innerHTML = data.VIN;
+         //var data2 = $("#SequenceNo").val();
+         //document.getElementById('SequenceNo').innerHTML = data2;
+         //var data3 = $("#MatNm").val();
+         //document.getElementById('MatNm').innerHTML = data3;
+         //var data4 = $("#CarColor1").val();
+         //document.getElementById('CarColor1').innerHTML = data4;
+         //var data5 = $("#CarType").val();
+         //document.getElementById('CarType').innerHTML = data5;
+         
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    </script>
+</head>
+<body>
+    <div id="ajax-loader" style="position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: #fff; z-index: 100; overflow: hidden;">
+        <img src="~/Content/Images/ajax-loader.gif" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto;" />
+    </div>
+    <!-- header -->
+    <div id="ContentPannel">
+        <div class="header" >
+            <div class="logo fleft" style="margin-left:0px;margin-top:0px;height:100%;width:25%;">             
+                <div >
+                    <img src="~/Content/Images/LOGO/logoRefine.png" style="height:4.5em;width:29em;padding-left:0.6em;padding-top:0.7em;" />
+                </div>
+            </div>
+            <div id="Headermenu" style="width:75%;background-color:greenyellow;display:flex;padding:0.3%;">
+                @*<ul id="topnav" style="height:100%;width:100%;">
+                    <li id="topnav1" class="list" style="border-radius: 8px; display:flex;">
+                        <div id ="History" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;" onclick="">
+                            <img src="~/Content/Images/history.png" style="height: 2em; width: 2.1em; margin-left:20px;" />
+                            <p class="atitle">历史问题</p>
+                        </div>
+                        <div id="file" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;" onclick="">
+                            <img src="~/Content/Images/scroll_pane_tree.png" style="height: 2em; width: 2.1em; margin-left: 20px;" />
+                            <p class="atitle">指导文件</p>
+                        </div>
+                        <div id="exit" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;"onclick="">
+                            <img src="~/Content/Images/leave.png" style="height: 2em; width: 2em; margin-left:12px;" />
+                            <p class="atitle">离开</p>
+                        </div>
+                    </li> 
+                    <li id="topnav2" class="list">
+                        <div id="QCP" style="margin-left: 2px; margin-top: 5px;" >
+                            <select id="WcId" style="width: 150px; height: 25px;margin-left:5px;" onchange="Show()"></select>
+                            <p class="" style="color: black; margin-top: 15px; margin-left:45px; font-size: 1.2em; font-weight: bold; ">质控点</p>
+                        </div>
+                    </li>
+                    <li id="topnav2" class="list">
+                    </li>
+                    <li id="topnav3" class="list" >
+                        <div id="countdown" style="margin-left:0; margin-top: 5px; float: left; width:100%;font-size:2em;color:black; ">
+                            <span style="font-size: 1.3em; color: #B03E00; font-weight: bold;">02</span>分钟<span style="font-size: 1.3em; color: #B03E00; font-weight: bold;">45</span>秒
+                            <input type="button" value="开始" />
+                            <p class="" style="color: black; margin-top:5px; margin-left:40px; font-size:0.6em; font-weight: bold; ">倒计时</p>
+                        </div>
+                    </li>
+                    <li id="topnav2" class="list">
+                        <div id="mytime" style=" font-weight: bold; display:flex;flex-direction:column; width: 100%; style=" background-color:aqua;"" readonly/>
+                            <div style="margin-top:10%;margin-left:10%;height:80%;width:80%;background-color:antiquewhite">
+                                <input type="text" id="clock2" style="width: 100%; height: 50%; border-width: 0px; background-color: #EEF3FC; font-size: 1.5em; font-weight: bold;">
+                                <input type="text" id="clock1" style="width: 100%; height: 50%; border-width: 0px; background-color: #EEF3FC; font-size: 1.2em; font-weight: bold;">
+                            </div>
+                        </div>
+                    </li>
+                </ul>*@
+
+                <div class="topnav1"  style="border-radius: 8px; display:flex;">
+                    <div id="History" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;" onclick="">
+                        <img src="~/Content/Images/history.png" style="height: 2em; width: 2.1em; margin-left:20px;" />
+                        <p class="atitle">历史问题</p>
+                    </div>
+                    <div id="file" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;" onclick="">
+                        <img src="~/Content/Images/scroll_pane_tree.png" style="height: 2em; width: 2.1em; margin-left: 20px;" />
+                        <p class="atitle">指导文件</p>
+                    </div>
+                    <div id="exit" class="button1" style="margin-left:10%; margin-top: 2%; width: 23%; padding: 0px;" onclick="">
+                        <img src="~/Content/Images/leave.png" style="height: 2em; width: 2em; margin-left:12px;" />
+                        <p class="atitle">离开</p>
+                    </div>
+                </div>
+                <div class="topnav2" style="width:25%">
+                    <div id="QCP" style="margin-left: 2px; margin-top: 5px;">
+                        <select id="WcId" style="width: 150px; height: 25px;margin-left:5px;" onchange="Show()"></select>
+                        <p class="" style="color: black; margin-top: 15px; margin-left:45px; font-size: 1.2em; font-weight: bold; ">质控点</p>
+                    </div>
+                </div>
+                <div class="topnav3" >
+                    <div id="countdown" style="margin-left:0; margin-top: 5px; float: left; width:100%;font-size:2em;color:black; ">
+                        <span style="font-size: 1.3em; color: #B03E00; font-weight: bold;">02</span>分钟<span style="font-size: 1.3em; color: #B03E00; font-weight: bold;">45</span>秒
+                        <input type="button" value="开始" />
+                        <p class="" style="color: black; margin-top:5px; margin-left:40px; font-size:0.6em; font-weight: bold; ">倒计时</p>
+                    </div>
+                </div>
+                <div class="topnav2">
+                    <div id="mytime" style=" font-weight: bold; display:flex;flex-direction:column; width: 100%; style=" background-color:aqua;"" readonly />
+                        <div style="margin-top:10%;margin-left:10%;height:80%;width:80%;background-color:antiquewhite">
+                            <div id="clock2" style="width: 100%; height: 50%; border-width: 0px; background-color: #EEF3FC; font-size: 1.5em; font-weight: bold;"></div>
+                            <div ></div>
+                            <input type="text" id="clock2" style="width: 100%; height: 50%; border-width: 0px; background-color: #EEF3FC; font-size: 1.5em; font-weight: bold;">
+                            <input type="text" id="clock1" style="width: 100%; height: 50%; border-width: 0px; background-color: #EEF3FC; font-size: 1.2em; font-weight: bold;">
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div> 
+    <div class="content-block">
+        @*最左边栏*@
+        <div class="Information">
+        @*车身图片*@
+            <div class="image1">
+                <img src="~/Content/Images/Login/windos_arrow.png" style="height: 15em; width: 15em; padding-left: 7em; padding-top:3em;" />
+            </div>
+        @*车身信息展示*@
+        <div class="infor-clock1">
+            <div id ="VIN1"class="leftclass1" style="font-size: 20px; color: black; font-weight: bold; margin-top: 10px; "></div>
+        </div>
+        <div class="infor-clock1">
+            <div id="SequenceNo" class="leftclass1" style="font-size: 20px; color: black; font-weight: bold; margin-top: 10px; "></div>
+        </div>
+        <div class="infor-clock1">
+            <div id="MatNm" class="leftclass1" style="font-size: 20px; color: black; font-weight: bold; margin-top: 10px; "></div>
+        </div>
+        <div class="infor-clock2">
+            <div id="CarColor1" class="leftclass1" style="font-size: 20px; color: black; font-weight: bold; margin-top: 10px; "></div>
+        </div>
+        <div class="infor-clock2">
+            <div id="CarType" class="leftclass1" style="font-size: 20px; color: black; font-weight: bold; margin-top: 10px; "></div>
+        </div>
+            <div class="infor-clock3">
+            </div>
+            @*VIN码输入*@
+            <div class="infor-clock4">
+                <input id="VIN" type="text" class="txt " value="请输入VIN码" onfocus="if(value=='请输入VIN码') {value=''}" onblur="if (value=='') {value='请输入VIN码'}">
+            </div>
+            @*确定按钮*@
+            <div class="infor-clock5">
+                <input id="btnSearch1" type="button" class="btnSearch" value="确定" style="width: 75%; height: 60px; background-color: #5176A3; float: left; margin-top: 30px; margin-left:30px; margin-bottom: 5px; text-align: center; font-size: 30px; color: white; "onclick="btn_search()" />
+            </div>
+        </div>  
+            @*右边模块*@
+            <div class="admit">
+            @*组件选择*@
+                <div class="QuaCheckItem">
+                    <div class="title" style="height: 40px; background-color: #5176A3; margin-bottom:5px; border-radius: 5px; ">
+                        <p id="title1" style="color: black; text-align:center; font-size:2em; font-weight: bold; color:white;">组件选择</p>
+                    </div>
+                    <div class="small-docker1">
+                        <div class="litter-title">
+                            <p id="litter-title1">方位</p>
+                        </div>
+                        <div id="CarOrientation" class="docker-CarOrientation">
+                        </div>
+                    </div>
+                    <div class="small-docker1">
+                        <div class="litter-title">
+                            <p id ="litter-title1">分组</p>
+                        </div>
+                    </div>
+                    @*组件模块*@
+                <div class="small-docker2">
+                    <div class="litter-title">
+                        <p id="litter-title1">组件</p>
+                    </div>
+                    <div class="searchPart">
+                        <select id="WcBd" style="width:200px; height: 25px; margin-top: 5px; margin-left: 10px; ">
+                            <option value="all">简码</option>
+                        </select>
+                        <input id="WcSc" type="text" class="txt " style="width :200px; margin-left: 10px; border-width: 10px; border-color: black; " value="请输入检索条件" onfocus="if(value=='请输入检索条件') {value=''}" onblur="if (value=='') {value='请输入检索条件'}">
+                        <input id="btnSearch" type="button" class="btnSearch" value="确定" style="height:25px; background-color:#5176A3;margin-left:10px;text-align:center;color: white; " onclick="btn_search()" />
+                    </div>
+                    @*动态加载各组件DIV*@
+                    <div class="Part">
+                        <input id="CarPartCd" type="button" class="CarPartCd"  onclick="btn_search()" />
+                        <input id="CarPartNm" type="button" class="CarPartNm"  onclick="btn_search()" />
+                    </div>
+                </div>                   
+                </div>
+            @*缺陷选择*@
+            <div class="DefectCatg">
+                <div class="title" style="height: 40px; background-color: #5176A3; margin-bottom: 5px; border-radius: 5px; ">
+                    <p id="title1" style="color: black; text-align:center; font-size:2em; font-weight: bold; color:white;">缺陷选择</p>
+                </div>
+                <div class="small-docker1">
+                    <div class="litter-title">
+                        <p id ="litter-title1">组</p>
+                    </div>
+                </div>
+                <div class="small-docker1">
+                    <div class="litter-title">
+                        <p id ="litter-title1">分组</p>
+                    </div>
+                </div>
+                <div class="small-docker2">
+                    <div class="litter-title">
+                        <p id="litter-title1">问题</p>
+                    </div>
+                    <div class="Search1">
+                        <select id="WcBd" style="width:200px; height: 25px; margin-top: 5px; margin-left: 10px; ">
+                            <option value="all">简码</option>
+                        </select>
+                        <input id="WcSc" type="text" class="txt " style="width :200px; margin-left: 10px; border-width: 10px; border-color: black; " value="请输入检索条件" onfocus="if(value=='请输入检索条件') {value=''}" onblur="if (value=='') {value='请输入检索条件'}">
+                        <input id="btnSearch" type="button" class="btnSearch" value="确定" style="height:25px; background-color:#5176A3;margin-left:10px;text-align:center;color: white; " onclick="btn_search()" />
+                    </div>
+                </div>
+            </div>
+            @*最右边栏*@
+                <div class="DefectCollect">
+            @*频发问题*@
+                    <div class="frepro">
+                        <div class="title" style="height: 40px; background-color: #5176A3; margin-bottom: 5px; border-radius: 5px; ">
+                            <p id="title1" style="color: black; text-align:center; font-size:2em; font-weight: bold; color:white;">频发问题</p>
+                        </div>
+                    </div>
+            @*已选择问题*@
+                    <div class="selected">
+                        <div class="title" style="height: 40px; background-color: #5176A3; margin-bottom: 5px; border-radius: 5px; ">
+                            <p id="title1" style="color: black; text-align:center; font-size:2em; font-weight: bold; color:white;">已选择问题</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="process">
+                </div>
+            </div>
+    </div>           
+</body>
+</html>

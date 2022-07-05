@@ -21,7 +21,7 @@ namespace HfutIE.Utilities
             }
         }
         /// <summary>
-        /// 短日期格式(yyyy/MM/dd)
+        /// 短日期格式(yyyy-MM-dd)
         /// </summary>
         public static string ShortDate
         {

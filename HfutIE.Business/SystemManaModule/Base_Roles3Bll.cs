@@ -16,16 +16,15 @@ using System.Text;
 namespace HfutIE.Business
 {
     /// <summary>
-    /// Base_Roles3
+    /// Base_Roles
     /// <author>
     ///		<name>she</name>
     ///		<date>2021.03.25 13:41</date>
     /// </author>
     /// </summary>
-    public class Base_Roles3Bll : RepositoryFactory<Base_Roles3>
+    public class Base_Roles3Bll : RepositoryFactory<Base_Roles>
     {
-        #region
-        #endregion
+        
 
         #region 3.获取为配置角色信息
         public System.Data.DataTable GetNoConList(string Tycd, string ParameterJson, JqGridParam jqgridparam)
@@ -107,37 +106,47 @@ namespace HfutIE.Business
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            strSql.Append(@"SELECT [RoleId] as ID,[RoleNm] as name,'0'AS ParentId,'0' as Sort FROM Base_Roles3 WHERE 1=1");
+            strSql.Append(@"SELECT DISTINCT [RoleCatg] as name,'0'AS ParentId,'0' as Sort FROM Base_Roles WHERE 1=1");
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion
 
+        public DataTable GetRoles()
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"select code as ID,FullName as name ,'0'AS ParentId,'0' as Sort  from Base_DataDictionaryDetail where  DataDictionaryId IN(SELECT DataDictionaryId FROM Base_DataDictionary WHERE Code='FASRolesCategory')");
+            //strSql.Append(@"SELECT RoleId ID, [RoleNm] as name,'0'AS ParentId,'0' as Sort FROM Base_Roles WHERE 1=1");
+            return Repository().FindTableBySql(strSql.ToString());
+        }
+
         #region 根据树节点加载角色信息
-        public DataTable GetPageList(string RoleId, JqGridParam jqgridparam)
+        public DataTable GetPageList(string RoleCatg, JqGridParam jqgridparam)
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            strSql.Append(@"SELECT * FROM Base_Roles3 WHERE RoleId='"+ RoleId + "'");
-            return Repository().FindTableBySql(strSql.ToString());
+            //strSql.Append(@"SELECT * FROM Base_Roles WHERE RoleCatg='" + RoleCatg + "'");
+            strSql.Append(" SELECT * FROM Base_Roles WHERE RoleCatg = @RoleCatg ");
+            parameter.Add(DbFactory.CreateDbParameter("@RoleCatg", RoleCatg));
+            return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
         #endregion
 
         #region 加载全部信息
-        public DataTable GetRoleList(JqGridParam jqgridparam)
+        public DataTable GetRoleList( ref JqGridParam jqgridparam)
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            strSql.Append(@"SELECT * FROM Base_Roles3 WHERE 1=1");
-            return Repository().FindTableBySql(strSql.ToString());
+            strSql.Append(@"SELECT * FROM Base_Roles WHERE 1=1");
+            return Repository().FindTablePageBySql(strSql.ToString(),ref jqgridparam);
         }
         #endregion
 
         #region  编辑推送信息
-        public DataTable SetPushinfor(string RoleId)
+        public Base_Roles SetPushinfor(string RoleId)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"select * from Base_Roles3 where RoleId='" + RoleId + "'");
-            return Repository().FindTableBySql(strSql.ToString());
+            strSql.Append(@"select * from Base_Roles where RoleId='" + RoleId + "' and Enabled = '1'");
+            return Repository().FindEntityBySql(strSql.ToString());
         }
         #endregion
 
@@ -152,17 +161,17 @@ namespace HfutIE.Business
                                     r.FullName ,			
                                     r.SortCode ,			
                                     ou.ObjectId			
-                            FROM    Base_Roles3 r
+                            FROM    Base_Roles r
                                     LEFT JOIN Base_ObjectUserRelation ou ON ou.ObjectId = r.RoleId
                                                                             AND ou.UserId = @UserId
                                                                             AND ou.Category = 2
                             WHERE 1 = 1");
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(" AND ( RoleId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
-                strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
-                strSql.Append(" ) )");
-            }
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(" AND ( RoleId IN ( SELECT ResourceId FROM Base_DataScopePermission WHERE");
+            //    strSql.Append(" ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "') ");
+            //    strSql.Append(" ) )");
+            //}
             //strSql.Append(" AND r.CompanyId = @CompanyId");
             parameter.Add(DbFactory.CreateDbParameter("@UserId", UserId));
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());

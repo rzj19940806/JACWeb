@@ -1,0 +1,298 @@
+﻿@{
+    ViewBag.Title = "产品上下线查询";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style type="text/css">
+    .someClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+
+    a {
+        text-decoration: none;
+        /*font-style: italic;*/
+        font-weight: 600;
+    }
+
+        a[href*="javascript"]:link {
+            color: orange;
+            font-style: italic;
+        }
+
+        a[href*="javascript"]:visited {
+            color: orange;
+            font-style: italic;
+        }
+
+        a[href*="javascript"]:hover {
+            color: orange;
+            font-style: italic;
+        }
+
+        a[href*="javascript"]:active {
+            color: orange;
+            font-style: italic;
+        }
+</style>
+<script type="text/javascript">
+
+    var names = [];
+    var model = [];
+
+    $(function () {
+        bindAVINm();
+        ColumnList();
+        GetGrid();
+        btn_Search();
+    })
+    //加载不良数据
+        function GetGrid() {
+        $("#gridTable").jqGrid({
+        @*url: "@Url.Content("~/BaseModule/P_OnlineOfflineInfo/GridList")",*@
+        datatype: "json",
+        height:  $(window).height() - 149,
+            autowidth: true,
+            //autoheight: true,
+            colNames: names,//列名
+            colModel: model,
+
+            pager: "#gridPager",
+            sortable: true,
+            sortname: '',
+            rowNum: 200,
+            sortorder: 'desc',
+            // 隔行变色
+            altRows: true,
+            altclass: 'someClass',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+
+            //footerrow: true,
+            //合计行
+            //gridComplete: function () {
+            //    var gridName = 'gridTable';
+            //    Merger(gridName, 'ProductionLineName');
+            //}
+            });
+        }
+
+
+    //绑定AVI名称下拉框
+    function bindAVINm() {
+        $("#AviCd").html("");
+        $("#AviCd").append("<option value=''>全部</option>");
+        AjaxJson("/BaseModule/P_OnlineOfflineInfo/getAllAviNm", {}, function (DataJson) {
+            $.each(DataJson, function (i) {
+                $("#AviCd").append($("<option></option>").val(DataJson[i].AviCd).html(DataJson[i].AviNm));
+            });
+        });
+    }
+    //加载列名 ColumnList
+    function ColumnList() {
+        var AviCd = $("#AviCd").val();
+        var VIN = $("#VIN").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        //console.log(new Date(ColletionTimeStart).getTime());
+        //console.log(new Date(ColletionTimeEnd).getTime());
+        if (ColletionTimeStart != "" && ColletionTimeEnd != "") {
+            // 对时间校验
+            if (new Date(ColletionTimeStart).getTime() > new Date(ColletionTimeEnd).getTime()) {
+                tipDialog('开始时间大结束时间，请选择正确的日期。', 2, 'warning');
+                return;
+            }
+        } else if (ColletionTimeStart == "" && ColletionTimeEnd == "") {
+            tipDialog('请选择开始时间或结束时间', 2, 'warning');
+            return;
+        } else {
+            tipDialog('请重新选择开始时间或结束时间', 2, 'warning');
+            return;
+        }
+        names = [];//清空
+        model = [];//清空
+
+        //加载jqgrid列名
+        let url1 = "/BaseModule/P_OnlineOfflineInfo/GridNamesList?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd);
+        AjaxJson(url1, {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+
+                var str = data.rows[i]["names"];
+                if (str.indexOf("empty") != -1) {
+                    names.push("");
+                    model.push({
+                        name: "",
+                        index: "",
+                        width: 130,
+                        align: 'center',
+                        sortable: true
+                    });
+                } else {
+                    names.push(data.rows[i]["names"]);
+                    if (i >= 6) {
+                        model.push({
+                            name: data.rows[i]["englishnames"],
+                            index: data.rows[i]["englishnames"],
+                            width: 130,
+                            align: 'center',
+                            sorttype: "datetime", formatter: "date", formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y/m/d H:i:s' }
+
+                        });
+                    } else {
+                        model.push({
+                            name: data.rows[i]["englishnames"],
+                            index: data.rows[i]["englishnames"],
+                            width: 130,
+                            align: 'center'
+
+                        });
+                    }
+
+                }
+
+            }
+            //model = eval("[" + data.rows["m_StringValue"] + "]");
+        });
+        jQuery('#gridTable').GridUnload();//卸载JqGrid
+        GetGrid();//加载表格
+        //let url = "/ChartAndTableModule/InputAchieRate/GridInputList";
+        //AjaxJson(url, {}, function (data) {
+        //    //填充表格
+        //    for (var i = 0; i < data.rows.length; i++) {
+        //        jQuery("#gridTable").jqGrid('addRowData', i + 1, data.rows[i]);
+        //    }
+        //});
+        //btn_Search1();
+    }
+    //搜索
+    function btn_Search() {
+        var AviCd = $("#AviCd").val();
+        var VIN = $("#VIN").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+       
+        //if (ColletionTimeStart != "" && ColletionTimeEnd != "") {
+        //    // 对时间校验
+        //    if (new Date(ColletionTimeStart).getTime() > new Date(ColletionTimeEnd).getTime()) {
+        //        tipDialog('开始时间大结束时间，请选择正确的日期。', 2, 'warning');
+        //        return;
+        //    }
+        //} else if (ColletionTimeStart == "" && ColletionTimeEnd == "") {
+        //    tipDialog('请选择开始时间或结束时间', 2, 'warning');
+        //    return;
+        //} else {
+        //    tipDialog('请重新选择开始时间或结束时间', 2, 'warning');
+        //    return;
+        //}
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/P_OnlineOfflineInfo/GridList")?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //导出Excel
+    //function btn_derive() {
+    //    SetDeriveExcel("#gridTable", "产品上下线信息-" + formatDate(CurrentTime(), 'yyyyMMdd'));
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "产品上下线信息导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/P_OnlineOfflineInfo/GetExcel_Data";
+                Loading(false);
+            }, 200);
+        }
+       
+    }
+
+
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+         $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    // 回车键事件
+    $(document).keypress(function (e) {
+
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton" >
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>
+                AVI点名称
+            </th>
+            <td>
+                <select id="AviCd" style="width: 150px;height:25px"></select>
+            </td>
+            <th>
+                VIN码
+            </th>
+            <td>
+                <input id="VIN" type="text" class="txt" style="width: 150px" />
+            </td>
+            <th>
+                车型编码
+            </th>
+            <td>
+                <input id="MatCd" type="text" class="txt" style="width: 150px" />
+            </td>
+            <th>
+                工单号
+            </th>
+            <td>
+                <input id="ProducePlanCd" type="text" class="txt" style="width: 150px" />
+            </td>
+            <td id="timetd">
+                <label>开始时间：</label>
+                <input id="ColletionTimeStart" type="text" class="txt Wdate" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'ColletionTimeEnd\')}'}); blur();" value="@DateTime.Now.AddDays(-DateTime.Now.Day + 1).ToString("yyyy-MM-dd")" readonly />
+                <label>结束时间：</label>
+                <input id="ColletionTimeEnd" type="text" class="txt Wdate" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'ColletionTimeStart\')}'}); blur();" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" readonly />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

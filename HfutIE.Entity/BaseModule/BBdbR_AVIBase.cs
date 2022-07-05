@@ -23,6 +23,14 @@ namespace HfutIE.Entity
     [PrimaryKey("AviId")]
     public class BBdbR_AVIBase : BaseEntity
     {
+        public string OP_CODE { get; set; }
+        /// <summary>
+        /// 工序名称
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("工序名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string OP_NAME { get; set; }
         #region 获取/设置 字段值
         /// <summary>
         /// AVI站点主键
@@ -54,25 +62,26 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("AVI描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// IsMonitor
         /// </summary>
         /// <returns></returns>
-        [DisplayName("IsMonitor")]
-        public int? IsMonitor { get; set; }
+        [DisplayName("是否需要关键视频监控")]
+        public string IsMonitor { get; set; }
         /// <summary>
         /// 是否允许重复过点
         /// </summary>
         /// <returns></returns>
         [DisplayName("是否允许重复过点")]
-        public int? IsRePeated { get; set; }
+        public string IsRePeated { get; set; }
         /// <summary>
         /// AVI站点是否独立
         /// </summary>
         /// <returns></returns>
         [DisplayName("AVI站点是否独立")]
-        public int? IsIndependence { get; set; }
+        public string IsIndependence { get; set; }
         /// <summary>
         /// 产线Id
         /// </summary>
@@ -80,17 +89,29 @@ namespace HfutIE.Entity
         [DisplayName("产线Id")]
         public string PlineId { get; set; }
         /// <summary>
-        /// AVI站点顺序
+        /// 是否报工
         /// </summary>
         /// <returns></returns>
-        [DisplayName("AVI站点顺序")]
-        public string AVISequence { get; set; }
+         [DisplayName("AVI站点顺序")]
+        public int AVISequence { get; set; }
         /// <summary>
         /// 是否报工
         /// </summary>
         /// <returns></returns>
         [DisplayName("是否报工")]
         public string IsReport { get; set; }
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("是否滞留管理")]
+        public int IsStranded { get; set; }
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("滞留管理类别")]
+        public string StrandedCategory { get; set; }
         /// <summary>
         /// 版本号
         /// </summary>
@@ -144,6 +165,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1

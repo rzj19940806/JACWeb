@@ -1,0 +1,85 @@
+@{
+    ViewBag.Title = "E_EOLDetailResult》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_EOLDetailResult/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/E_EOLDetailResult/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <input id="EDRID" maxlength=19 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>测试次数：</th>
+            <td class='formValue'>
+                <input id="TestNum" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>站点：</th>
+            <td class='formValue'>
+                <input id="Station" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检查模块：</th>
+            <td class='formValue'>
+                <input id="ModuleNm" maxlength=100 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CheckNm：</th>
+            <td class='formValue'>
+                <input id="CheckNm" maxlength=100 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CheckContent：</th>
+            <td class='formValue'>
+                <input id="CheckContent" maxlength=300 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CheckResult：</th>
+            <td class='formValue'>
+                <input id="CheckResult" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

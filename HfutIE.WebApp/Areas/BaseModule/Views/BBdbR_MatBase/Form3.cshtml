@@ -1,0 +1,195 @@
+@{
+    ViewBag.Title = "_组件物料配置》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var Id = GetQuery('Id');//物料主键
+    var PartId = GetQuery('MatId');//物料主键
+    var PartCd = GetQuery('MatCd');//物料编号
+    var PartNm = GetQuery('MatNm');//物料名称
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('Id')) {
+            AjaxJson("/BaseModule/BBdbR_MatBase/SetPartMatForm", { KeyValue: Id }, function (data) {
+                SetWebControls(data.rows[0]);//自动给控件赋值
+                if (data.rows[0]["RsvFld2"] == "0" || data.rows[0]["RsvFld2"] == "1") {
+                    $("#RsvFld2").val(data.rows[0]["RsvFld2"]);     //安全件
+                }
+                else if (data.rows[0]["RsvFld2"] == "" || data.rows[0]["RsvFld2"] == null) {
+                    $("#RsvFld2").val("0");
+                }
+                else {
+                    $("#RsvFld2").val("2");
+                    $("#RsvFld2_2").val(data.rows[0]["RsvFld2"]);
+                    $('#RsvFld2_2_title_1').show();
+                    $('#RsvFld2_2_title_2').show();
+                }
+            });
+        } else {
+            $("#PartId").val(PartId);
+            $("#PartCd").val(PartCd);
+            $("#PartNm").val(PartNm) ;
+        }
+    }   
+
+     //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        var status;
+        var status2;
+        if (postData.WcCd!="") {
+            AjaxJson("/BaseModule/BBdbR_MatBase/IfexistWcCd?WcCd=" + escape(postData.WcCd), {}, function (data) {
+                status = data;
+            });
+        }
+        if (status == "unfind") {
+            tipDialog("关重件工位编号不存在", 3, -1);
+            return;
+        }
+        else {
+            //postData["WcNm"] = status;
+        }
+
+        if (postData.RsvFld1 != "") {
+            AjaxJson("/BaseModule/BBdbR_MatBase/IfexistWcCd?WcCd=" + escape(postData.RsvFld1), {}, function (data) {
+                status2 = data;
+            });
+        }
+        if (status2 == "unfind") {
+            tipDialog("打印工位编号不存在", 3, -1);
+            return;
+        }
+
+        var RsvFld2 = document.getElementById("RsvFld2").value; //安全件
+        if (RsvFld2 == "2") {
+            RsvFld2 = document.getElementById("RsvFld2_2").value;
+        }
+        else { }
+        postData["RsvFld2"] = RsvFld2;
+
+
+        AjaxJson("/BaseModule/BBdbR_MatBase/SubmitForm3", postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+
+
+    //安全件下拉框
+    function RsvFld2change() {
+        var RsvFld2 = $('#RsvFld2').val();
+        if (RsvFld2 == '2') {
+            $('#RsvFld2_2_title_1').show();
+            $('#RsvFld2_2_title_2').show();
+        }
+        else {
+            $('#RsvFld2_2_title_1').hide();
+            $('#RsvFld2_2_title_2').hide();
+        }
+    }
+
+
+   
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <td class='formValue' hidden="hidden">
+                <input id="PartId" maxlength=50 type="text" class="txt required" datacol="yes" err="组件ID" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">组件编号：</th>
+            <td class='formValue'>
+                <input id="PartCd" maxlength=50 type="text" class="txt required" datacol="yes" err="组件编号" checkexpession="NotNull" readonly />
+            </td>
+            <th class='formTitle' style="height:30px">组件名称：</th>
+            <td class='formValue'>
+                <input id="PartNm" maxlength=50 type="text" class="txt required" datacol="yes" err="组件名称" checkexpession="NotNull" readonly />
+            </td>
+        </tr>
+        <tr>
+            <td class='formValue' hidden="hidden">
+                <input id="Id" maxlength=50 type="text" class="txt required" />
+            </td>
+            <th class='formTitle' style="height:30px">物料编号：</th>
+            <td class='formValue'>
+                <input id="MatCd" maxlength=50 type="text" class="txt required" datacol="yes" err="物料编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">物料名称：</th>
+            <td class='formValue'>
+                <input id="MatNm" maxlength=50 type="text" class="txt required" datacol="yes" err="物料名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">是否关重件：</th>
+            <td class='formValue'>
+                <select id="IsScan" maxlength=50 type="text" class="txt required checkdata" checkexpession="是否关重件" datacol="yes" err="是否关重件" onclick="">
+                    <option value='0'>否</option>
+                    <option value='1'>是</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">关重件工位编号：</th>
+            <td class='formValue'>
+                <input id="WcCd" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">是否打印：</th>
+            <td class='formValue'>
+                <select id="IsPrint" maxlength=50 type="text" class="txt required checkdata" checkexpession="是否打印" datacol="yes" err="是否打印" onclick="">
+                    <option value='0'>否</option>
+                    <option value='1'>是</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">打印工位编号：</th>
+            <td class='formValue'>
+                <input id="RsvFld1" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">安全件：</th>
+            <td class='formValue'>
+                <select id="RsvFld2" maxlength=30 type="text" class="txt" onchange="RsvFld2change()">
+                    <option value='1'>是</option>
+                    <option value='0'>否</option>
+                    <option value='2'>编辑</option>
+                </select>
+            </td>
+            <th id="RsvFld2_2_title_1" class='formTitle' style="height:30px;display:none;">安全件编码：</th>
+            <td id="RsvFld2_2_title_2" class='formValue' style="display:none;">
+                <input id="RsvFld2_2" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">数量：</th>
+            <td class='formValue'>
+                <input id="MatNum" maxlength=50 type="text" class="txt  " />
+            </td>
+            <th class='formTitle' style="height:30px">简码：</th>
+            <td class='formValue'>
+                <input id="ShortCode" maxlength=50 type="text" class="txt  " />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">禁止重复：</th>
+            <td class='formValue'>
+                <select id="MatTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="禁止重复" datacol="yes" err="禁止重复" checkdata="hasOne">
+                    <option value='0'>允许</option>
+                    <option value='1'>禁止</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">备注：</th>
+            <td class='formValue' colspan="1">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="2"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>

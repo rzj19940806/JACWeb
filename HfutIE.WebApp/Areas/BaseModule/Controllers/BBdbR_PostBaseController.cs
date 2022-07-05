@@ -1,4 +1,5 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
@@ -7,7 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -23,11 +26,13 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
         //定义本页面主要操作的表的表名，称为主表
         string tableName = "BBdbR_PostBase";//===复制时需要修改===
-        public readonly RepositoryFactory<BBdbR_PostBase> repository_postbase = new RepositoryFactory<BBdbR_PostBase>();//?
+        public static DataTable PostList = new DataTable();
+        
         #endregion
 
         #region 创建数据库操作对象区域
         BBdbR_PostBaseBll MyBll = new BBdbR_PostBaseBll(); //===复制时需要修改===
+        public readonly RepositoryFactory<BBdbR_PostBase> repository_postbase = new RepositoryFactory<BBdbR_PostBase>();//?
         #endregion
 
         #region 打开视图区域
@@ -64,7 +69,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         tree.parentId = row["parentId"].ToString();
                         tree.Attribute = "Type";
                         tree.AttributeValue = row["sort"].ToString();
-                        tree.isexpand = true;
+                        tree.isexpand = false;
                         tree.complete = true;
                         tree.hasChildren = hasChildren;
                         if (row["sort"].ToString() == "0")
@@ -108,16 +113,17 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 Stopwatch watch = CommonHelper.TimerStart();//?
                 //获取点击节点对应的数据（列表）
-                DataTable ListData = MyBll.GetList(areaId, parentId, sort,ref jqgridparam);//===复制时需要修改===
+                //DataTable ListData = MyBll.GetList(areaId, parentId, sort,ref jqgridparam);//===复制时需要修改===
+                PostList = MyBll.GetList(areaId, parentId, sort, ref jqgridparam);//===复制时需要修改===
                 var JsonData = new
                 {
                     total = jqgridparam.total,
                     page = jqgridparam.page,
                     records = jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = PostList,
                 };
-                return Content(ListData.ToJson());
+                return Content(PostList.ToJson());
             }
             catch (Exception ex)
             {
@@ -158,6 +164,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     entity.Modify(KeyValue);
                     IsOk = MyBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//记录日志
+                    IsOk = MyBll.CheckCount(Name, Value);//判断页面中填写的数据的编号字段的值是否存在
+                    if (IsOk > 1)//存在
+                    {
+                        Message = "该编号已经存在！";
+                        return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
+                    }
                 }
                 else//新增操作
                 {
@@ -239,16 +251,17 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 string keyword = keywords.Trim();
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                PostList = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
                 var JsonData = new
                 {
                     total = jqgridparam.total,
                     page = jqgridparam.page,
                     records = jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = PostList,
                 };
-                return Content(ListData.ToJson());
+                return Content(PostList.ToJson());
             }
             catch (Exception ex)
             {
@@ -306,7 +319,282 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
         #endregion
-       
+
+        #region 9.导入
+        /// <summary>
+        /// 导入Excel弹出框页面
+        /// </summary>
+        /// <returns></returns>
+        [ManagerPermission(PermissionMode.Enforce)]
+        public ActionResult ExcelImportDialog(string areaId)
+        {
+            string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
+            //模板主表
+            Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
+            if (base_excellimport.ModuleId != null)
+            {
+                ViewBag.ModuleId = moduleId;
+                ViewBag.ImportFileName = base_excellimport.ImportFileName;
+                ViewBag.ImportName = base_excellimport.ImportName;
+                ViewBag.ImportId = base_excellimport.ImportId;
+                ViewBag.areaId = areaId;
+            }
+            else
+            {
+                ViewBag.ModuleId = "0";
+                ViewBag.areaId = areaId;
+            }
+            return View();
+        }
+
+        #region 导出模板
+        /// <summary>
+        /// 下载Excell模板
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExcellTemperature(string ImportId)
+        {
+            if (!string.IsNullOrEmpty(ImportId))
+            {
+                DataSet ds = new DataSet();
+                DataTable data = new DataTable(); string DataColumn = ""; string fileName;
+                MyBll.GetExcellTemperature(ImportId, out data, out DataColumn, out fileName);
+                ds.Tables.Add(data);
+                MemoryStream ms = DeriveExcel.ExportToExcel(ds, "xls", DataColumn.Split('|'));
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region 清除Datatable空行
+        /// <summary>
+        /// 清除Datatable空行
+        /// </summary>
+        /// <param name="dt"></param>
+        public void RemoveEmpty(DataTable dt)
+        {
+            List<DataRow> removelist = new List<DataRow>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                bool rowdataisnull = true;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
+                    {
+
+                        rowdataisnull = false;
+                    }
+                }
+                if (rowdataisnull)
+                {
+                    removelist.Add(dt.Rows[i]);
+                }
+
+            }
+            for (int i = 0; i < removelist.Count; i++)
+            {
+                dt.Rows.Remove(removelist[i]);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 导入Excell数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ImportExel(string areaId)
+        {
+            int IsOk = 0;//导入状态
+            int IsCheck = 1;//用作检验重复地址的标识
+            DataTable Result = new DataTable();//导入错误记录表
+            IDatabase database = DataFactory.Database();
+            List<BBdbR_PostBase> CntlAddrList = new List<BBdbR_PostBase>();
+
+            //构造导入返回结果表
+            DataTable Newdt = new DataTable("Result");
+            Newdt.Columns.Add("rowid", typeof(System.String));                 //行号
+            Newdt.Columns.Add("locate", typeof(System.String));                 //位置
+            Newdt.Columns.Add("reason", typeof(System.String));                 //原因
+            int errorNum = 1;
+            try
+            {
+                string moduleId = Request["moduleId"]; //表名
+                StringBuilder sb_table = new StringBuilder();
+                HttpFileCollectionBase files = Request.Files;
+                HttpPostedFileBase file = files["filePath"];//获取上传的文件
+                string fullname = file.FileName;
+                string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtension获得文件的扩展名
+                if (!IsXls.EndsWith(".xls") && !IsXls.EndsWith(".xlsx"))
+                {
+                    IsOk = 0;
+                }
+                else
+                {
+
+                    string filename = Guid.NewGuid().ToString() + ".xls";
+                    if (fullname.EndsWith(".xlsx"))
+                    {
+                        filename = Guid.NewGuid().ToString() + ".xlsx";
+                    }
+                    if (file != null && file.FileName != "")
+                    {
+                        string msg = UploadHelper.FileUpload(file, Server.MapPath("~/Resource/UploadFile/ImportExcel/"), filename);
+                    }
+
+                    DataTable dt = ImportExcel.ExcelToDataTable(Server.MapPath("~/Resource/UploadFile/ImportExcel/") + filename);
+
+                    RemoveEmpty(dt);//清除空行。???=>20210712注：方法是否真的有用？void返回对dt未生效
+                    dt.Columns.Add("rowid", typeof(System.String));//用来标识excell行ID
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        dt.Rows[i]["rowid"] = i + 1;
+                    }
+                    #region 岗位信息导入
+                    //校验
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+
+                        IsCheck = 1;//重置标识
+                        DataRow dr = Newdt.NewRow();
+                        if (dt.Rows[i]["岗位类型"].ToString().Trim() != "左岗位" && dt.Rows[i]["岗位类型"].ToString().Trim() != "右岗位")
+                        {
+                            dr = Newdt.NewRow();
+                            dr[0] = errorNum;
+                            dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[岗位类型]";
+                            dr[2] = "岗位类型错误";
+                            Newdt.Rows.Add(dr);
+                            errorNum++;
+                            IsCheck = 0;
+                            continue;
+                        }
+
+                        if (dt.Rows[i]["岗位编号"].ToString().Trim() != "" && dt.Rows[i]["岗位名称"].ToString().Trim() != "")
+                        {
+                            int DeviceCount = MyBll.CheckCount("PostCd", dt.Rows[i]["岗位编号"].ToString());//是否有相同的岗位编号
+                            if (DeviceCount > 0)
+                            {
+                                dr = Newdt.NewRow();
+                                dr[0] = errorNum;
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行[岗位编号]";
+                                dr[2] = "在系统中已存在不能重复插入";
+                                Newdt.Rows.Add(dr);
+                                errorNum++;
+                                IsCheck = 0;
+                                continue;
+                            }
+                            else
+                            {
+                                BBdbR_PostBase pushGetItem = new BBdbR_PostBase();
+                                pushGetItem.PostId = System.Guid.NewGuid().ToString();
+                                pushGetItem.WcId = areaId; //工位主键
+                                pushGetItem.PostCd = dt.Rows[i]["岗位编号"].ToString().Trim();
+                                pushGetItem.PostNm = dt.Rows[i]["岗位名称"].ToString().Trim();
+                                pushGetItem.PostType = dt.Rows[i]["岗位类型"].ToString().Trim();
+                                pushGetItem.PostPosition = dt.Rows[i]["岗位位置"].ToString().Trim();
+                                pushGetItem.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                pushGetItem.VersionNumber = "V1.0.0";
+                                pushGetItem.Enabled = "1";
+                                pushGetItem.CreTm = DateTime.Now.ToString();  //修改时间
+                                pushGetItem.CreCd = ManageProvider.Provider.Current().UserId; //修改人编号
+                                pushGetItem.CreNm = ManageProvider.Provider.Current().UserName;//修改人名称
+
+                                CntlAddrList.Add(pushGetItem);
+                                int b = database.Insert(CntlAddrList);
+                                if (b > 0)
+                                {
+                                    IsOk = IsOk + b;
+                                    CntlAddrList.Clear();
+                                }
+                                else
+                                {
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                    dr[2] = "岗位信息导入失败";
+                                    Newdt.Rows.Add(dr);
+                                    IsCheck = 0;
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            dr = Newdt.NewRow();
+                            dr[0] = errorNum;
+                            dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                            dr[2] = "岗位编号不能为空";
+                            Newdt.Rows.Add(dr);
+                            errorNum++;
+                            IsCheck = 0;
+                            continue;
+                        }
+                    }
+                    if (IsCheck == 0)
+                    {
+                        IsOk = 0;
+                    }
+                    #endregion
+
+                }
+                Result = Newdt;
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "异常错误：" + ex.Message);
+                IsOk = 0;
+            }
+            if (Result.Rows.Count > 0)
+            {
+                IsOk = 0;
+            }
+            var JsonData = new
+            {
+                Status = IsOk > 0 ? "true" : "false",
+                ResultData = Result
+            };
+            return Content(JsonData.ToJson());
+        }
+
+        #endregion
+
+        #region 10.重构导出方法
+        /// <summary>
+        /// 1.如果是按照条件查询后再进行
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public ActionResult GetExcel_Data(string type, JqGridParam jqgridparam)
+        {
+            Stopwatch watch = CommonHelper.TimerStart();
+            DataTable ListData = new DataTable();
+
+            ListData = PostList.DefaultView.ToTable("岗位信息表", true, "PostCd", "PostNm", "PostType", "WcCd", "WcNm", "WcTyp", "PostPosition", "CreTm", "CreCd", "CreNm");//获取岗位信息中特定列
+
+            if (ListData.Rows.Count > 0)
+            {
+                string fileName = "岗位基本信息";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_Post(ListData, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+                return null;
+        }
+        #endregion
+
         #endregion
     }
 }

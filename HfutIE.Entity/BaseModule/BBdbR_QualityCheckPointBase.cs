@@ -71,7 +71,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -89,7 +89,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -131,7 +131,7 @@ namespace HfutIE.Entity
             this.QualityCheckPointId = CommonHelper.GetGuid;
             this.Enabled = "1";
             this.VersionNumber = "V1.0";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
 
@@ -143,7 +143,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.QualityCheckPointId = KeyValue;
-            this.MdfTm = DateTime.Now;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
 

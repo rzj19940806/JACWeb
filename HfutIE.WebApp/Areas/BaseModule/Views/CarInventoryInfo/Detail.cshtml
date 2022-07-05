@@ -1,0 +1,173 @@
+@{
+    ViewBag.Title = "车身过点记录信息表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/P_CarPastRecordInfo/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>过点信息记录主键：</th>
+            <td class='formValue'>
+                <label id="CarPastRecordId" />
+            </td>
+            <th class='formTitle'>AVI站点主键：</th>
+            <td class='formValue'>
+                <label id="AviId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点编号：</th>
+            <td class='formValue'>
+                <label id="AviCd" />
+            </td>
+            <th class='formTitle'>AVI站点名称：</th>
+            <td class='formValue'>
+                <label id="AviNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点类别：</th>
+            <td class='formValue'>
+                <label id="AviCatg" />
+            </td>
+            <th class='formTitle'>AVI站点类型：</th>
+            <td class='formValue'>
+                <label id="AviType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身号：</th>
+            <td class='formValue'>
+                <label id="BodyNo" />
+            </td>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <label id="CarType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身物料号：</th>
+            <td class='formValue'>
+                <label id="MatCd" />
+            </td>
+            <th class='formTitle'>车身面漆颜色：</th>
+            <td class='formValue'>
+                <label id="CarColor1" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身罩光颜色：</th>
+            <td class='formValue'>
+                <label id="CarColor2" />
+            </td>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <label id="VIN" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>SequenceNo：</th>
+            <td class='formValue'>
+                <label id="SequenceNo" />
+            </td>
+            <th class='formTitle'>涂装生产计划编号：</th>
+            <td class='formValue'>
+                <label id="ProducePlanCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向：</th>
+            <td class='formValue'>
+                <label id="CarRoute" />
+            </td>
+            <th class='formTitle'>车身去向产线主键：</th>
+            <td class='formValue'>
+                <label id="PlineId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向产线编号：</th>
+            <td class='formValue'>
+                <label id="PlineCd" />
+            </td>
+            <th class='formTitle'>车身去向产线名称：</th>
+            <td class='formValue'>
+                <label id="PlineNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>过点类型：</th>
+            <td class='formValue'>
+                <label id="PastType" />
+            </td>
+            <th class='formTitle'>PastDate：</th>
+            <td class='formValue'>
+                <label id="PastDate" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>过点时间：</th>
+            <td class='formValue'>
+                <label id="PastTime" />
+            </td>
+            <th class='formTitle'>过点顺序：</th>
+            <td class='formValue'>
+                <label id="PastNo" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入类型：</th>
+            <td class='formValue'>
+                <label id="RecordType" />
+            </td>
+            <th class='formTitle'>特殊标识：</th>
+            <td class='formValue'>
+                <label id="SpecialTag" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入时间：</th>
+            <td class='formValue'>
+                <label id="CreTm" />
+            </td>
+            <th class='formTitle'>录入人员：</th>
+            <td class='formValue'>
+                <label id="CreStaff" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>是否反馈至工厂FAS系统：</th>
+            <td class='formValue'>
+                <label id="IsBack" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

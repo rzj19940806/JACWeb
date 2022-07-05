@@ -28,6 +28,10 @@
         }
         var postData = GetWebControls("#form1");
         AjaxJson("/BaseModule/BBdbR_CarStrandedBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("AreaCd", data.Message);
+                return;
+            }
             tipDialog(data.Message, 3, data.Code);
             top.frames[tabiframeId()].windowload();
             closeDialog();
@@ -137,13 +141,13 @@
         <tr>
             <th class='formTitle'>区域编号：</th>
             <td class='formValue'>
-                <input id="AreaCd" maxlength=50 type="text" class="txt" />
+                <input id="AreaCd" maxlength=50 type="text" class="txt required" datacol="yes" err="区域编号" checkexpession="NotNull" checkdata="hasOne" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>区域名称：</th>
             <td class='formValue'>
-                <input id="AreaNm" maxlength=50 type="text" class="txt" />
+                <input id="AreaNm" maxlength=50 type="text" class="txt required" datacol="yes" err="区域名称" checkexpession="NotNull" checkdata="hasOne" />
             </td>
         </tr>
         <tr>

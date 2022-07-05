@@ -16,7 +16,7 @@
             url: "/BaseModule/BBdbR_AVIBase/GridListJson_Up?KeyValue=" + KeyValue,
             datatype: "json",
             autowidth: false,
-            //width: 850,
+            width: 650,
             height: 160,
             colModel: [
                 { label: '产线主键', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -28,15 +28,7 @@
                         return CellItem('PlineTyp', cellvalue);
                     }
                 },                
-                { label: '产线描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        if (cellvalue == '1') return "有效";
-                        if (cellvalue == '0') return "无效";
-                    }
-                },               
+                { label: '产线描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },            
             ],
             viewrecords: true,//显示总的记录条数
             rowNum: 10,
@@ -56,15 +48,13 @@
                 var code = GetJqGridRowValue("#gridTable_up", "PlineCd");
                 var fullname = GetJqGridRowValue("#gridTable_up", "PlineNm");
                 var type = GetJqGridRowValue("#gridTable_up", "PlineTyp");
-                var Enabled = GetJqGridRowValue("#gridTable_up", "Enabled");
                 var Dsc = GetJqGridRowValue("#gridTable_up", "Dsc");
-                var VersionNumber = GetJqGridRowValue("#gridTable_up", "VersionNumber");
                 var equipment = KeyValue;//获取grid1选中行的数据
                 if (KeyValue != "") {
                     $("#gridTable_down").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_down").jqGrid("setRowData", RowId, {
                         PlineId: id, PlineCd: code, PlineNm: fullname, PlineTyp: type,
-                        Dsc: Dsc, VersionNumber: VersionNumber,Enabled: Enabled
+                        Dsc: Dsc
                     });//将grid选中行数据复制给grid1中新增的行
                         $("#gridTable_up").jqGrid("delRowData", RowId);//删除grid选中行的数据                   
                 }
@@ -81,6 +71,7 @@
             url: "/BaseModule/BBdbR_AVIBase/GridListJson_Down?KeyValue=" + KeyValue,
             datatype: "json",
             height: 170,
+            width: 650,
             autowidth: false,
             colModel: [
                 { label: '产线主键', name: 'PlineId', index: 'PlineId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -93,14 +84,7 @@
                     }
                 },
                 { label: '产线描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        if (cellvalue == '1') return "有效";
-                        if (cellvalue == '0') return "无效";
-                    }
-                }
+              
             ],
             viewrecords: true,//显示总的记录条数
             rowNum: 10,
@@ -121,15 +105,13 @@
                 var code = GetJqGridRowValue("#gridTable_down", "PlineCd");
                 var fullname = GetJqGridRowValue("#gridTable_down", "PlineNm");
                 var type = GetJqGridRowValue("#gridTable_down", "PlineTyp");
-                var Enabled = GetJqGridRowValue("#gridTable_down", "Enabled");
                 var Dsc = GetJqGridRowValue("#gridTable_down", "Dsc");
-                var VersionNumber = GetJqGridRowValue("#gridTable_down", "VersionNumber");
                 var equipment = KeyValue;//获取grid1选中行的数据
                 if (KeyValue != "") {
                     $("#gridTable_up").jqGrid("addRowData", RowId, equipment, "last");//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_up").jqGrid("setRowData", RowId, {
                         PlineId: id, PlineCd: code, PlineNm: fullname, PlineTyp: type,
-                        Dsc: Dsc, VersionNumber: VersionNumber, Enabled: Enabled
+                        Dsc: Dsc
                     });//将grid选中行数据复制给grid1中新增的行
                     $("#gridTable_down").jqGrid("delRowData", RowId);//删除grid选中行的数据
                 }

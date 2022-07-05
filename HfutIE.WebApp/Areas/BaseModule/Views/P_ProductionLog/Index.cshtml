@@ -1,0 +1,206 @@
+@{
+    ViewBag.Title = "P_ProductionLog";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        btn_Search();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        @*url: "@Url.Content("~/BaseModule/P_ProductionLog/GridPageByCondition")",*@
+        datatype: "json",
+        height: $(window).height() - 150,
+        autowidth: true,
+        colModel: [
+                { label: '项目', name: 'OPModule', index: 'OPModule', width: 0, align: 'center',sortable: true  },
+            { label: '模块', name: 'OPAction', index: 'OPAction', width: 0, align: 'center',sortable: true  },
+            { label: '主对象', name: 'OPObject', index: 'OPObject', width: 0, align: 'center',sortable: true  },
+            { label: '辅对象', name: 'OPAssistObject', index: 'OPAssistObject', width: 0, align: 'center',sortable: true  },
+            { label: '操作', name: 'OPType', index: 'OPType', width: 0, align: 'center',sortable: true  },
+            { label: '结果', name: 'OPResult', index: 'OPResult', width: 0, align: 'center',sortable: true  },
+            { label: '备注', name: 'OPRem', index: 'OPRem', width: 0, align: 'center',sortable: true  },
+                //{ label: 'UserId', name: 'UserId', index: 'UserId', width: 0, align: 'center',sortable: true  },
+                //{ label: 'UserCd', name: 'UserCd', index: 'UserCd', width: 0, align: 'center',sortable: true  },
+                //{ label: 'UserNm', name: 'UserNm', index: 'UserNm', width: 0, align: 'center',sortable: true  },
+                //{ label: 'PointId', name: 'PointId', index: 'PointId', width: 0, align: 'center',sortable: true  },
+                //{ label: 'PointCd', name: 'PointCd', index: 'PointCd', width: 0, align: 'center',sortable: true  },
+                //{ label: 'PointNm', name: 'PointNm', index: 'PointNm', width: 0, align: 'center',sortable: true  },
+            {
+                label: '时间', name: 'OPTime', index: 'OPTime', width: 0, align: 'center', sortable: true
+                , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+            },
+        ],
+        pager: "#gridPager",
+            sortname: 'OPTime',
+        sortorder: 'desc',
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            rownumbers: true,
+            rowNum: 200,
+            rowList: [200, 500, 1000, 2000],
+            viewrecords: true,//显示总的记录条数
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+    }
+
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //清空数据
+    function btn_broom() {
+        var url = "/BaseModule/P_ProductionLog/RemoveLog";
+        openDialog(url, "Form", "清空接口日志", 300, 80, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+
+     function btn_Search() {
+        var condition = {};
+        condition["TimeStart"] = $("#TimeStart").val();
+        condition["TimeEnd"] = $("#TimeEnd").val();
+
+        let time1 = new Date(condition.TimeStart).getTime();
+        let time2 = new Date(condition.TimeEnd).getTime();
+
+        if (time1 > time2 || TimeStart == '' || TimeEnd == '') {
+            tipDialog("时间不合法，请重新操作！", 1, 0);
+            return;
+        } else
+        {
+            condition["OPModule"] = $("#OPModule").val();
+            condition["OPAction"] = $("#OPAction").val();
+            condition["OPType"] = $("#OPType").val();
+            condition["OPResult"] = $("#OPResult").val();
+
+            $("#gridTable").jqGrid('setGridParam', {
+                url:"@Url.Content("~/BaseModule/P_ProductionLog/GridPageByCondition")", postData: condition, page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+        }
+    }
+
+
+
+
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var TimeStart = $("#TimeStart").val();
+        var TimeEnd  = $("#TimeEnd").val();
+        var OPModule  = $("#OPModule").val();
+        var OPAction  = $("#OPAction").val();
+        var OPType  = $("#OPType").val();
+        var OPResult = $("#OPResult").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/P_ProductionLog/GetExcel_Data?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) + "&OPModule=" + escape(OPModule) + "&OPAction=" + escape(OPAction) + "&OPType=" + escape(OPType) + "&OPResult=" + escape(OPResult);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+
+
+</script>
+<!--工具栏-->
+@*按钮区域*@
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*搜索框区域*@
+<table border="0" class="form-find" style="height: 45px;">
+    <tr>
+        <th>
+            项目
+        </th>
+        <td>
+            <input id="OPModule" type="text" class="txt" value="接口" style="width: 125px" />
+        </td>
+        <th>
+            模块
+        </th>
+        <td>
+            <select id="OPAction" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="日计划接口">日计划接口</option>
+                <option value="发布序列计划接口">发布序列计划接口</option>
+                <option value="物料清单接口">物料清单接口</option>
+                <option value="产品基础信息接口">产品基础信息接口</option>
+                <option value="BOM接口">BOM接口</option>
+                <option value="燃油标识接口">燃油标识接口</option>
+                <option value="入库数据接口">入库数据接口</option>
+                <option value="报工反馈接口">报工反馈接口</option>
+                <option value="检测线设备接口">检测线设备接口</option>
+                <option value="供应商接口">供应商接口</option>
+            </select>
+        </td>
+        <th>
+            操作
+        </th>
+        <td>
+            <select id="OPType" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="删除">删除</option>
+                <option value="执行">执行</option>
+                <option value="接收">接收</option>
+                <option value="报工">报工</option>
+                <option value="新增">新增</option>
+            </select>
+        </td>
+        <th>
+            结果
+        </th>
+        <td>
+            <select id="OPResult" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="成功">成功</option>
+                <option value="失败">失败</option>
+                <option value="无异常">无异常</option>
+                <option value="异常">异常</option>
+            </select>
+        </td>
+        <th>
+            开始时间
+        </th>
+        <td>
+            <input id="TimeStart" type="text" class="txt Wdate" style="width: 150px" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd ',maxDate:'#F{$dp.$D(\'TimeEnd\')||\'%y-%M-%d\'}'}); blur();" value="@DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")" readonly />
+        </td>
+        <th>
+            结束时间
+        </th>
+        <td>
+            <input id="TimeEnd" type="text" class="txt Wdate" style="width: 150px" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd ',minDate:'#F{$dp.$D(\'TimeStart\')}'}); blur();" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" readonly />
+        </td>
+        <th>
+            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+        </th>
+    </tr>
+</table>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

@@ -1,0 +1,62 @@
+@{
+    ViewBag.Title = "物料加注配置表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#JZType", "JZType", "==请选择==");
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBDBR_MatJZConfig/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBDBR_MatJZConfig/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>物料编号：</th>
+            <td class='formValue'>
+                <input id="MatCd" maxlength=50 type="text" class="txt required"   checkexpession="NotNull" datacol="yes" err="加注类型" checkdata="hasOne"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>加注类型：</th>
+            <td class='formValue'>
+                <select id="JZType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="加注类型" checkdata="hasOne"></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>加注量：</th>
+            <td class='formValue'>
+                <input id="JZNumber" maxlength=18 type="number" min="0" class="txt required"   checkexpession="NotNull" datacol="yes" err="加注量" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=50 type="text" class="txt "   />
+            </td>
+        </tr>
+      
+       
+    </table>
+</form>

@@ -29,7 +29,7 @@ namespace HfutIE.Business
         #endregion
 
         #region 成批提交角色用户
-        public int BatchAddMember(string[] arrayUserId, string RoleId, string Category)
+        public int BatchAddMember(string[] arrayUserId, string RoleId)
         {
             IDatabase database = DataFactory.Database();
             DbTransaction isOpenTrans = database.BeginTrans();

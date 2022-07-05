@@ -15,13 +15,13 @@
         autowidth: true,
             colModel: [
                 { label: '主键', name: 'RuleId', index: 'RuleId', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '机构级别', name: 'Class', index: 'Class', width: 0, align: 'left', sortable: true },
+                { label: '机构级别', name: 'Class', index: 'Class', width: 0, align: 'left', sortable: true, hidden: true },
                 { label: '机构名称', name: 'ClassId', index: 'ClassId', width: 0, align: 'left', sortable: true, hidden: true },
                 { label: '设备主键', name: 'DvcId', index: 'DvcId', width: 0, align: 'left', sortable: true, hidden: true },
                 { label: '设备名称', name: 'DvcNm', index: 'DvcNm', width: 0, align: 'left', sortable: true },
                 { label: '报警地址', name: 'AlarmAddress', index: 'AlarmAddress', width: 0, align: 'left',sortable: true  },
                 { label: '报警位数', name: 'AlarmBit', index: 'AlarmBit', width: 0, align: 'left',sortable: true  },
-                { label: '路径', name: 'AlarmRoute', index: 'AlarmRoute', width: 0, align: 'left',sortable: true  },
+                { label: '路径', name: 'AlarmRoute', index: 'AlarmRoute', width: 200, align: 'left',sortable: true  },
                 { label: '报警等级', name: 'AlarmClass', index: 'AlarmClass', width: 0, align: 'left',sortable: true  },
                 { label: '描述', name: 'AlarmDsc', index: 'AlarmDsc', width: 0, align: 'left',sortable: true  },
             {
@@ -99,11 +99,20 @@
     }).trigger('reloadGrid');
     }
     //导出Excel
+    //function btn_derive() {
+    //    SetDeriveExcel("#gridTable", "设备报警地址");
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "设备报警地址导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
-        SetDeriveExcel("#gridTable", "设备报警地址");
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "设备报警地址导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
+        var type = $("#Condition").val();
+        window.setTimeout(function () {
+            location.href = "/BaseModule/BBdbR_AlarmAddressBase/GetExcel_Data?type=" + escape(type);
+            Loading(false);
+        }, 200);
     }
 
     //导入

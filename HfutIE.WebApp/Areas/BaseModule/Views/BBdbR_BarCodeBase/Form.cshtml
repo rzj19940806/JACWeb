@@ -1,0 +1,110 @@
+@{
+    ViewBag.Title = "BBdbR_BarCodeBase》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var BarId = GetQuery('BarId');//主键-条码基础信息id
+    var BarCd = GetQuery('BarCd');//主键-条码基础信息id
+    var BarNm = GetQuery('BarNm');//主键-条码基础信息id
+    var DecodeRulesId = GetQuery('DecodeRulesId');//主键-解码规则信息id
+    var CombineNm = GetQuery('CombineNm');//主键-解码规则信息id
+    var CombineLength = GetQuery('CombineLength');//主键-条码基础信息id
+    var CombineStart = GetQuery('CombineStart');//主键-解码规则信息id
+    var Rem = GetQuery('Rem');//主键-解码规则信息id
+    $(function () {
+        BindDropItem("#CombineNm", "MatBarCode", "");
+        //SetWebControls(data);
+        $("#BarId").val(BarId);
+        $("#BarCd").val(BarCd);
+        $("#BarNm").val(BarNm);
+        $("#CombineNm").val(CombineNm);
+        $("#CombineLength").val(CombineLength);
+        $("#CombineStart").val(CombineStart);
+        $("#Rem").val(Rem);
+        if (CombineNm != undefined && CombineNm !="") {
+            $('#CombineNm').attr("disabled", true);
+        }
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!DecodeRulesId) {
+            AjaxJson("/BaseModule/BBdbR_BarCodeBase/SetForm1", { KeyValue: DecodeRulesId }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+   
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        $('#CombineNm').attr("disabled", false);
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_BarCodeBase/SubmitForm1?DecodeRulesId=" + DecodeRulesId, postData, function (data) {
+            if (data.Message == "编码位数超过限制") {
+                tipCss("CombineLength", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+       
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr hidden="hidden">
+            <th class='formTitle'>条码主键：</th>
+            <td class='formValue'>
+                <input id="BarId" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>条码编号：</th>
+            <td class='formValue'>
+
+                <input id="BarCd" maxlength=50 type="text" class="txt required" datacol="yes" err="条码编号" checkexpession="NotNull" readonly="readonly"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>条码名称：</th>
+            <td class='formValue'>
+
+                <input id="BarNm" maxlength=50 type="text" class="txt required" datacol="yes" err="条码名称" checkexpession="NotNull" readonly="readonly"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>组成类型名称：</th>
+            <td class='formValue'>
+                <select id="CombineNm" axlength=100 type="text" class="txt"></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>组成类型起始位：</th>
+            <td class='formValue'>
+                <input id="CombineStart" maxlength=10 class="txt required" datacol="yes"err="组成类型起始位" checkexpession="Num"  type="number" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>组成类型长度：</th>
+            <td class='formValue'>
+                <input id="CombineLength" maxlength=10 type="number" class="txt" err="组成类型长度" datacol="yes" checkexpession="NumOrNull" min="0" 
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"/>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>
+

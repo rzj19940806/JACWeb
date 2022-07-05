@@ -1,0 +1,613 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安驰FAS-辅线关重件录入界面</title>
+    <title>江淮安驰FAS系统</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <!--页面必备-->
+    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css">
+    <script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
+
+    <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
+    <script>
+        $(document).ready(function () {
+            Initialize();
+        });
+        //1.全局变量
+        //1.1初始加载静态信息
+        var allStaticInfo;
+        var barcodeRule;
+        var parts;
+
+
+        //3.1自动清除输入框中文字
+        function InputOnFocus(obj) {
+            var val = obj.value.trim();
+            if (val == "请输入VIN码" || val == "请输入物料码") {
+                obj.value = "";
+            }
+        }
+        //3.2光标离开时恢复输入框提示
+        function InputOnBlur(obj) {
+            if (obj.value.trim() == "") {
+                if (obj.id == "vin_input") {
+                    obj.value = "请输入VIN码";
+                } else if (obj.id == "part_input") {
+                    obj.value = "请输入物料码";
+                }
+            }
+        }
+        //3.3显示大图
+        function imgShow(_this) {
+            outerdiv = $("#outerdiv");
+            innerdiv = $("#innerdiv");
+            max_img = $("#max_img");
+            var src = _this.src;//获取当前点击的min_img元素中的src属性
+            $("#max_img").attr("src", src);//设置#max_img元素的src属性
+
+            /*获取当前点击图片的真实大小，并显示弹出层及大图*/
+            $("<img/>").attr("src", src).load(function () {
+                var windowW = $(window).width();//获取当前窗口宽度
+                var windowH = $(window).height();//获取当前窗口高度
+                var realWidth = this.width;//获取图片真实宽度
+                var realHeight = this.height;//获取图片真实高度
+                var imgWidth, imgHeight;
+                var scale = 0.8;//缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放
+
+                if (realHeight > windowH * scale) {//判断图片高度
+                    imgHeight = windowH * scale;//如大于窗口高度，图片高度进行缩放
+                    imgWidth = imgHeight / realHeight * realWidth;//等比例缩放宽度
+                    if (imgWidth > windowW * scale) {//如宽度扔大于窗口宽度
+                        imgWidth = windowW * scale;//再对宽度进行缩放
+                    }
+                } else if (realWidth > windowW * scale) {//如图片高度合适，判断图片宽度
+                    imgWidth = windowW * scale;//如大于窗口宽度，图片宽度进行缩放
+                    imgHeight = imgWidth / realWidth * realHeight;//等比例缩放高度
+                } else {//如果图片真实高度和宽度都符合要求，高宽不变
+                    imgWidth = realWidth;
+                    imgHeight = realHeight;
+                }
+                $("#max_img").css("width", imgWidth);//以最终的宽度对图片缩放
+                var w = (windowW - imgWidth) / 2;//计算图片与窗口左边距
+                var h = (windowH - imgHeight) / 2;//计算图片与窗口上边距
+                $(innerdiv).css({ "top": h, "left": w });//设置#innerdiv的top和left属性
+                $(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg
+            });
+            $(outerdiv).click(function () {//再次点击淡出消失弹出层
+                $(this).fadeOut("fast");
+            });
+        }
+        //2.1加载界面的宽高
+        function SetAllWH() {
+            var width = $(window).width();
+            var height = $(window).height();
+            $("#all").width(width);
+            $("#all").height(height);
+
+            $("#matfinish").css("left", (width - 1000) / 2);
+            $("#matfinish").css("top", (height - 150) / 2);
+            $("#materro").css("left", (width - 1000) / 2);
+            $("#materro").css("top", (height - 150) / 2);
+        }
+        //2.5实时时间刷新
+        function GetCurrentDate() {
+            var myDate = new Date();
+            var year = myDate.getFullYear();        //获取当前年
+            var month = myDate.getMonth() + 1;   //获取当前月
+            var date = myDate.getDate();            //获取当前日
+            var h = myDate.getHours();              //获取当前小时数(0-23)
+            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+            var s = myDate.getSeconds();
+            var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+            jQuery("#localtime").html(now);
+            setTimeout(GetCurrentDate, 1000);
+        }
+        //2.3默认输入位置至于物料码输入框
+        function SetDefaultFocus() {
+            $("#part_input").focus();
+        }
+        //2.初始化加载
+        function Initialize() {
+            try {
+                SetAllWH();         //加载界面的宽高
+                GetCurrentDate();   //实时时间刷新
+                SetDefaultFocus();  //默认输入位置至于物料码输入框
+                bindKeyDown();      //为物料码输入框绑定键盘点击事件
+                GetStaticInfo();    //加载静态信息
+                getCar()//加载车身信息
+            } catch (e) {
+                uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
+            }
+        }
+        //2.4为物料码输入框和VIN码绑定键盘点击事件--回车
+        function bindKeyDown() {
+            $("#part_input").bind("keydown", function (e) {
+                //兼容浏览器的事件
+                let theEvent = e || window.event;
+                //兼容各浏览器的键盘事件+
+                let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (keyCode == 13) {
+                    partBind();
+                }
+            });
+            $("#vin_input").bind("keydown", function (e) {
+                let theEvent = e || window.event;
+                let keyCode = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (keyCode == 13) {
+                    let vin = $("#vin_input").val().trim();
+                    manualCarStart(vin, true);
+                }
+            });
+        }
+        //2.2加载静态信息
+        function GetStaticInfo() {
+            try {
+                AjaxJson('@Url.Content("~/OT/GetStaticInfo")', null, function (data) {
+                    if (data.code == 1) {
+                        allStaticInfo = data.props;
+                        barcodeRule = data.BarCode;
+                        $("#station").html(data.props.WcNm);
+                        $("#people").html(data.props.StfNm);
+                        MqttConnect();      //连接Mqtt
+                        updateLog("设备登陆成功:【工位：" + data.props.WcNm + "】【人员：" + data.props.StfNm + "】");
+                    } else if (data.code == -1) {
+                        uperrorLog("设备登陆错误:【错误信息：" + data.msg + "】");
+                        $("#vin_input").attr("readonly", "true");
+                        $("#part_input").attr("readonly", "readonly");
+                    }
+                });
+            } catch (e) {
+                uperrorLog("HTML静态信息错误:【错误信息：" + e + "】");
+            }
+        }
+        //界面加载时获取车身信息
+        function getCar() {
+            AjaxJson("/OT/getScanStatus", { WcId: allStaticInfo.WcId, type: "辅线" }, function (data) {
+                if (data.Code == 1) {
+                    manualCarStart(data.VIN, true);
+                } else if (data.Code == -1) {
+                    uperrorLog("车身信息错误：【工位：" + allStaticInfo.WcId + "】【异常信息：" + data.Message + "】");
+                } else if (data.Code == 0) {
+                    uperrorLog("无数据信息:【工位：" + allStaticInfo.WcNm + "】【异常信息：请手动输入VIN码】");
+                }
+            });
+        }
+        function getnewCar() {
+            AjaxJson("/OT/getScanStatus2", { Vin: allStaticInfo.VIN}, function (data) {
+                if (data.Code == 1) {
+                    manualCarStart(data.VIN, true);
+                } else if (data.Code == 2) {
+                    setTimeout(getnewCar, 10000);
+                } else if (data.Code == -1) {
+                    uperrorLog("车身信息错误：【工位：" + allStaticInfo.WcId + "】【异常信息：" + data.Message + "】");
+                }
+            })
+        }
+        //4.1.3VIN码入站
+        function manualCarStart(vin,del) {
+            if (del == undefined) {
+                del = true;
+            }
+            AjaxJson('@Url.Content("~/OT/GetCarInfoByStf")', { VIN: vin, WcId: allStaticInfo.WcId, del: del, plineTyle:"辅线"}, function (data) {
+                if (data.code == 1) {
+                    $("#in_main_box_left")[0].innerHTML = "";
+                    $("#in_main_box_right")[0].innerHTML = "";
+                    if (carStart(data)) {
+                        $("#vin_input").val("");
+                        updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                        if (del = true) {
+                            if ($(".part_dis_box_right").length == 0) {
+                                setTimeout(function () {
+                                    swal(
+                                        {
+                                            title: vin,
+                                            text: "当前车身未配置物料，将在60s后自动加载后续车身",
+                                            confirmButtonText: "提前结束",
+                                            timer: 59000,
+                                        },
+                                        function (a) {
+                                            swal.close();
+                                            setTimeout(getnewCar, 1000);
+                                        });
+                                }, 0);
+                            }
+                        }
+                    }
+                } else if (data.code == -2) uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + data.msg + "】");
+                else uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【错误信息：" + data.msg + "】");
+            });
+        }
+        //4.1.4入站处理
+        function carStart(data) {
+            try {
+                parts = data.Parts;
+                allStaticInfo["VIN"] = data.vinInfo[0].vin;
+                allStaticInfo["OrderCd"] = data.vinInfo[0].ordercd;
+                allStaticInfo["SequenceNo"] = data.vinInfo[0].pastno;
+                allStaticInfo["BodyNo"] = data.vinInfo[0].bodyno;
+                allStaticInfo["ProductMatCd"] = data.vinInfo[0].matcd;
+                allStaticInfo["CarType"] = data.vinInfo[0].cartype;
+                allStaticInfo["CarColor1"] = data.vinInfo[0].carcolor1;
+                //左侧加载图片
+                CarPicture(data.vinInfo[0].cartype + data.vinInfo[0].carcolor1);
+                $("#vin").html(data.vinInfo[0].vin);//Vin码
+                $("#sequence").html(data.vinInfo[0].sequenceno);//顺序号
+                $("#color").html(data.vinInfo[0].carcolor1);//颜色
+                $("#cartype").html(data.vinInfo[0].cartype);//车型
+                $("#car_dis").html(data.Product[0].matnm);//车身描述
+                let left = "";
+                $("#in_main_box_left")[0].innerHTML = "";
+                if (data.PartImgs.length > 0) {
+                    $.each(data.PartImgs, function (i, item) {
+                        let src = "data: image/png;base64," + item.matimg;
+                        left += `   <div class="part_box_left">
+                                <div class="part_dis_box_left baclground">
+                                    <p class="part_code_left" id="part_code_left_${item.matid}">${item.matcd}</p>
+                                    <p class="part_name_left" id="part_name_left_${item.matid}">${item.matnm}</p>
+                                </div>
+                                <div class="part_img_box_left">
+                                    <img class="part_img_left" id="part_image_left_${item.matnm}" src="${src}" onclick="imgShow(this)">
+                                </div>
+                            </div>`;
+                    });
+                    $("#in_main_box_left").append(left);//为装配指示添加div
+                }
+
+                $("#in_main_box_right")[0].innerHTML = "";
+                if (data.Parts.length > 0) {
+                    let right = `  <div class="part_box_right" id="part_box_right_环保码_1">
+                                    <div class="part_dis_box_right" id="part_dis_box_right_环保码_1">
+                                        <div id="part_code_right_环保码_1" class="part_code_right">Environmental Code</div>
+                                        <div id="part_name_right_环保码_1" class="part_name_right">环保码(大于45位小于60位)</div>
+                                    </div>
+                                    <div class="part_btn_box_right" id="part_btn_box_right_环保码">
+                                        <input id="part_btn_right_环保码_1" class="part_btn_right" type="button" value="PASS" onclick="byPass(this)">
+                                    </div>
+                                </div>`;
+                    $.each(data.Parts, function (i, item) {
+                        if (item.isscan == 1 || item.isscan == "1") {
+                            for (var i = 1; i < item.matnum + 1; i++) {
+                                right += `  <div class="part_box_right" id="part_box_right_${item.matid}_${i}">
+                                    <div class="part_dis_box_right" id="part_dis_box_right_${item.matid}_${i}">
+                                        <div id="part_code_right_${item.matid}_${i}" class="part_code_right">${item.matcd}</div>
+                                        <div id="part_name_right_${item.matid}_${i}" class="part_name_right">${item.matnm}</div>
+                                    </div>
+                                    <div class="part_btn_box_right" id="part_btn_box_right_${item.matid}">
+                                        <input id="part_btn_right_${item.matid}_${i}" class="part_btn_right" type="button" value="PASS" onclick="byPass(this)">
+                                    </div>
+                                </div>`;
+                            }
+                        }
+                    });
+                    $("#in_main_box_right").append(right);//为扫码添加div
+                }
+                for (var j = 0; j < data.PartBond.length; j++) {
+                    var matcd = data.PartBond[j].matcd;
+                    $.each(data.Parts, function (i, item) {
+                        if (item.matcd == matcd) {
+                            partDeal(item.matid, item.matnum, "green")
+                            return false;
+                        }
+                    });
+                }
+                return true;
+            } catch (e) {
+                uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
+                return false;
+            }
+        }
+                //4.2.1根据回车触发关重件绑定
+        function partBind() {
+            BarCode = $("#part_input").val().trim();
+            $("#part_input").val("");
+            let matno;
+            if (BarCode.length > 45 && BarCode.length <60) {
+                AjaxJson('@Url.Content("~/OT/EnvironmentalCodeBind")', { VIN: allStaticInfo.VIN, strCode: BarCode }, function (date) {
+                    if (date.code == 1) {
+                        partDeal("环保码", "1", "green");
+                        updateLog("环保码绑定: 【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【环保码：" + BarCode + "】");
+                    }
+                    else {
+                        uperrorLog("环保码绑定异常: 【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【环保码：" + BarCode + "】【异常信息：" + date.msg  + "】");
+                    }
+                });
+                return;
+            } else {
+            $.each(barcodeRule, function (i, RuleItem) {
+                var tuhao;
+                if (RuleItem["barlength"] != null && BarCode.length != RuleItem["barlength"]) return;
+                if (RuleItem["clength"] == null) tuhao = BarCode.substring(RuleItem["cstart"] - 1);
+                else tuhao = BarCode.substring(RuleItem["cstart"] - 1, RuleItem["cstart"] + RuleItem["clength"]-1);
+                $.each(parts, function (j, PartItem) {
+                    if (PartItem.matcd == tuhao) {
+                        allStaticInfo["MatId"] = PartItem.matid;
+                        allStaticInfo["MatCd"] = PartItem.matcd;
+                        allStaticInfo["MatNm"] = PartItem.matnm;
+                        matno = PartItem.matnum;
+                        allStaticInfo["BarCode"] = BarCode;
+                        allStaticInfo["SupplierCd"] = BarCode.substring(RuleItem["bstart"] - 1, RuleItem["bstart"] + RuleItem["blength"]-1);
+                        allStaticInfo["RsvFld1"] = BarCode.substring(RuleItem["astart"] - 1, RuleItem["astart"] + RuleItem["alength"]-1);//批次号
+                        return false;
+                    }
+                });
+            })
+            }
+            if (!!allStaticInfo.MatId) {
+                if (matno <= 0) {
+                    $("#matfinish").show();
+                    setTimeout(finishhide, 30000);
+                    uperrorLog("物料完成输入:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + BarCode + "】");
+                } else {
+                    AjaxJson('@Url.Content("~/OT/PartBind")', { KeyPartsBind: allStaticInfo, MatNo: matno, plineType: "辅线"}, function (data) {
+                        if (data.code == 1 || data.code == "1") {
+                            updateLog("物料绑定提醒:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + BarCode + "】");
+                            partDeal(allStaticInfo.MatId, Number(matno), "green");
+                        }
+                        else {
+                            uperrorLog("物料绑定异常:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + BarCode + "】【异常信息：" + data.msg + "】");
+                        }
+                    });
+                }
+            } else {
+                $("#materro").show();
+                setTimeout(errohide, 30000);
+                uperrorLog("物料解析异常:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件条码：" + BarCode + "】【异常信息：未解析到对应物料，请查看条码是否正确】");
+            }
+            delete allStaticInfo.MatId;
+        }
+        //4.3.2ByPass
+        function byPass(obj) {
+            let mat = obj.id.substring(15).split('_');
+            let matid = mat[0];
+            if (matid == "环保码") {
+                partDeal("环保码", "1", "orange");
+                return;
+            }
+            let matno;
+            $.each(parts, function (i, item) {
+                if (item.matid == matid) {
+                    allStaticInfo["MatId"] = item.matid;
+                    allStaticInfo["MatCd"] = item.matcd;
+                    allStaticInfo["MatNm"] = item.matnm;
+                    matno = item.matnum;
+                    return false;
+                }
+            });
+            if (matno == 0) {
+                $("#matfinish").show();
+                setTimeout(finishhide, 30 * 1000);
+                uperrorLog("物料完成输入:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + BarCode + "】");
+            } else {
+                allStaticInfo["BarCode"] = "ByPass";
+                AjaxJson('@Url.Content("~/OT/PassBind")', { KeyByPass: allStaticInfo, MatNo: matno, plineType: "辅线"}, function (data) {
+                    if (data.code == 1) {
+                        updateLog("物料Pass提醒:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】");
+                        partDeal(matid, Number(matno), "orange");
+                    } else {
+                        uperrorLog("物料Pass异常:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【异常信息：" + data.msg + "】");
+                    }
+                });
+            }
+        }
+        //4.2.3绑定/ByPass成功处理函数
+        function partDeal(matId, matNo,color) {
+            try {
+                $("#part_dis_box_right_" + matId + "_" + matNo).attr("class", "part_dis_box_right_select");
+                $("#part_dis_box_right_" + matId + "_" + matNo).css("background-color", color);
+                $("#part_btn_right_" + matId + "_" + matNo).css("background-color", color);
+                $("#part_btn_right_" + matId + "_" + matNo).attr("onclick", "");
+                $.each(parts, function (i, item) {
+                    if (item.matid == matId) {
+                        item.matnum = matNo - 1;
+                    }
+                });
+                if ($(".part_dis_box_right").length == 0) {
+                    $("#in_main_box_left")[0].innerhtml = "";
+                    $("#in_main_box_right")[0].innerhtml = "";
+                    updateLog("车身完成扫码:【VIN：" + $("#vin").html() + "】【工位：" + allStaticInfo.WcNm + "】");
+                    setTimeout(function () {
+                        swal(
+                            {
+                                title: allStaticInfo.VIN,
+                                text: "当前车身完成作业，将在3s后自动加载后续车身",
+                                confirmButtonText: "提前结束",
+                                type: "success",
+                                timer: 2000,
+                            },
+                            function (a) {
+                                swal.close();
+                                setTimeout(getnewCar, 1000);
+                            });
+                    }, 0);
+                } else {
+                    $("#in_main_box_right").append($("#part_box_right_" + matId + "_" + matNo));
+                }
+                return true;
+            } catch (e) {
+                uperrorLog("物料界面异常：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
+                return false;
+            }
+        }
+
+        function errohide() {
+            $("#materro").hide();
+        }
+        function finishhide() {
+            $("#matfinish").hide();
+        }
+        //更新日志信息
+        function updateLog(data) {
+            let html = $("#bottom_text")[0].innerHTML;
+            $("#bottom_text")[0].innerHTML = `<p style='color:green;font-size:22px;float:left;margin-left:20px;text-align: left;' >${data}-【时间：${$("#localtime").html()}】</p><br/>` + html;
+            AjaxJson("/OT/WriteLog", { PlineCd: allStaticInfo.PlineCd, text: data }, function (data) {
+                return false; })
+        }
+        //更新异常日志信息
+        function uperrorLog(data) {
+            let html = $("#bottom_text")[0].innerHTML;
+            $("#bottom_text")[0].innerHTML = `<p style='color:red;font-size:22px;float:left;margin-left:20px;text-align: left;' >${data}-【时间：${$("#localtime").html()}】</p><br/>` + html;
+            if (allStaticInfo == undefined) {
+                return false;
+            }
+            AjaxJson("/OT/WriteLog", { PlineCd: allStaticInfo.PlineCd + "Error", text: data }, function (data) {
+                return false;})
+        }
+
+        //工艺指导文件
+        function getVideo() {
+            Dialog("/VideoModule/BBdbR_GuidanceFile/File", "Form", "工艺指导文件", 1000, 600);
+        }
+        //左侧车身照片
+        function CarPicture(name) {
+            AjaxJson("/VideoModule/BBdbR_GuidanceFile/GetPicture?name=" + name, {}, function (data) {
+                $("#productpicture").attr("src", 'data:image/' + data.name + ';base64,' + data.file);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="all" id="all" style="position:relative">
+        <div id="materro" style="width: 1000px; line-height: 150px; height: 150px; position: absolute; top: 300px; left: 500px; background-color: red; color: white; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料输入异常
+        </div>
+        <div id="matfinish" style="width: 1000px; line-height: 150px; height: 150px; position: absolute; top: 300px; left: 500px; background-color: yellow; color: black; font-size: 100px; z-index: 100;" hidden="hidden">
+            物料完成绑定
+        </div>
+        <div class="up" id="up">
+            <div id="logo_img" class="logo_img">
+                <img id="refinelogo" src="~/Content/Images/LOGO/logoRefine.png" alt="refineLogo" align="middle" />
+            </div>
+            <div class="up_box baclground" id="up_localtime">
+                <div id="localtime" class="p_in_upbox" style="font-size: 15px;"></div>
+                <p id="localtime_dis" class="p_mark_in_upbox">时间</p>
+            </div>
+            <div class="up_box baclground" id="up_station">
+                <div id="station" class="p_in_upbox" style="font-size: 20px;">工位</div>
+                <p id="station_dis" class="p_mark_in_upbox">工位</p>
+            </div>
+            <div class="up_box baclground" id="up_people" title="人员等级">
+                <div id="people" class="p_in_upbox" style="font-size: 20px;">人员</div>
+                <p id="people_dis" class="p_mark_in_upbox">人员</p>
+            </div>
+            <div class="up_box baclground" id="up_button">
+                <div class="up_button" id="videoButton" onclick="getVideo()">
+                    <img src="../Content/Images/Icon32/file_manager.png" />
+                    <br />
+                    工艺指导文件
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="down" id="down">
+            <div class="left" id="left">
+                <div id="car_img" class="car_img">
+                    <img id='productpicture' src="~/Content/Images/LOGO/logoM5.jpg" alt="车身照片" onclick="imgShow(this)" />
+                </div>
+                <div class="left_box" id="vin_box">
+                    <div id="vin" class="in_left_box baclground">
+                        VIN码
+                    </div>
+                </div>
+                <div class="left_box" id="sequence_box">
+                    <div id="sequence" class="in_left_box baclground">
+                        流水号
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="color_box">
+                    <div id="color" class="in_left_box in_left_box_small baclground">
+                        颜色
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="cartype_box">
+                    <div id="cartype" class="in_left_box in_left_box_small baclground">
+                        车型
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="left_box" id="car_dis_box" style="height:15%">
+                    <div class="in_left_box baclground">
+                        <div id="car_dis" class="in_left_box baclground">
+                            车身描述
+                        </div>
+                    </div>
+                </div>
+                <div class="left_box" id="engintype_box">
+                    <div id="engintype" class="in_left_box" style="background-color:inherit">
+
+                    </div>
+                </div>
+                <div class="left_box" id="vin_input_box">
+                    <input id="vin_input" class="input_text" type="text" value="请输入VIN码" onfocus="InputOnFocus(this)" onblur="InputOnBlur(this)">
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="main" id="main">
+                <div class="main_box main_box_left" id="main_left">
+                    <div class="main_title" id="instruction_dis">
+                        装配指示
+                    </div>
+                    <div class="in_main_box_left" id="in_main_box_left">
+                    </div>
+                </div>
+                <div class="main_box main_box_right" id="main_right">
+                    <div class="main_title" id="instruction_dis">
+                        关重件扫码指示
+                    </div>
+                    <div class="in_main_box_right" id="in_main_box_right"></div>
+                    <div class="part_manual_box">
+                        <div class="part_input_box">
+                            <input id="part_input" class="part_input" type="text" value="请输入物料码" onfocus="InputOnFocus(this)" onblur="InputOnBlur(this)">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="clear"></div>
+            </div>
+
+            <div class="bottom" id="bottom">
+                <div id="bottem_dis">
+                    日志信息
+                </div>
+                <div id="bottom_text">
+
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+    </div>
+    <!-- 图片放大时使用 -->
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="max_img" style="border:5px solid #fff;" src="" />
+        </div>
+    </div>
+</body>
+
+</html>
+

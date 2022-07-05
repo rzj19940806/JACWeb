@@ -34,8 +34,8 @@ namespace HfutIE.Entity
         /// 工厂主键
         /// </summary>
         /// <returns></returns>
-        [DisplayName("工厂主键")]
-        public string FacId { get; set; }
+        [DisplayName("公司主键")]
+        public string CompanyId { get; set; }
         /// <summary>
         /// 部门编号
         /// </summary>
@@ -47,12 +47,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("部门名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DepartmentName { get; set; }
         /// <summary>
         /// 父部门主键
         /// </summary>
         /// <returns></returns>
         [DisplayName("父部门主键")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string ParentDepartmentID { get; set; }
         /// <summary>
         /// 部门类别
@@ -65,30 +67,35 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员主键")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfId { get; set; }
         /// <summary>
         /// 负责人员编号
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员编号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfCd { get; set; }
         /// <summary>
         /// 负责人员姓名
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人员姓名")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string StfNm { get; set; }
         /// <summary>
         /// 负责人手机号
         /// </summary>
         /// <returns></returns>
         [DisplayName("负责人手机号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Phn { get; set; }
         /// <summary>
         /// 部门描述
         /// </summary>
         /// <returns></returns>
         [DisplayName("部门描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string DepartmentDescription { get; set; }
         /// <summary>
         /// 版本号
@@ -143,6 +150,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1

@@ -66,6 +66,16 @@ namespace HfutIE.Business
                 }
             }
         }
+
+        public BFacR_ClassBase GetEntityByCondition(string ClassId)
+        {
+            string sql = "";
+            if (ClassId!="")
+            {
+                sql = @"select * from " + tableName + " where Enabled=1 and ClassId='"+ ClassId+"'";
+            }
+            return Repository().FindEntityBySql(sql.ToString());
+        }
         #endregion
 
         #region 2.±à¼­

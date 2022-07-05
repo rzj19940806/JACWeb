@@ -1,0 +1,257 @@
+@{
+    ViewBag.Title = "产品基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        CellItem_CarType('CarType');//加载车型下拉框
+        BindDropItem("#CarType", "CarType", "==全部==");
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_ProductBase/GridPage")",
+        datatype: "json",//从服务器端返回的数据类型
+        height: $(window).height() - 149,
+        autowidth: true,
+            colModel: [
+                { label: '车身物料主键《物料主键', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '产品编号', name: 'MatCd', index: 'MatCd', width: 200, align: 'center',sortable: true  },
+                { label: '产品名称', name: 'MatNm', index: 'MatNm', width: 200, align: 'center',sortable: true  },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 80, align: 'center',sortable: true  },
+                { label: '颜色', name: 'CarColor1', index: 'CarColor1', width: 80, align: 'center', sortable: true },
+                { label: '整车型号(公告号)', name: 'Notification', index: 'Notification', width: 150, align: 'center', sortable: true },
+                { label: '发动机排量', name: 'EngineOut', index: 'EngineOut', width: 100, align: 'center', sortable: true },
+                { label: '发动机型号', name: 'EngineModel', index: 'EngineModel', width: 100, align: 'center', sortable: true },
+                { label: '发动机最大净功率/转速', name: 'EngineMaxPower', index: 'EngineMaxPower', width: 150, align: 'center', sortable: true },
+                { label: '最大允许总质量', name: 'TOTAL_WEIGHT', index: 'TOTAL_WEIGHT', width: 150, align: 'center',sortable: true  },
+                { label: '载客人数', name: 'CAPACITY', index: 'CAPACITY', width: 80, align: 'center', sortable: true },
+                { label: '整车整备质量', name: 'BodyWeight', index: 'BodyWeight', width: 80, align: 'center', sortable: true },
+                { label: '用途', name: 'Purpose', index: 'Purpose', width: 150, align: 'center', sortable: true },
+                { label: '特殊车辆名称', name: 'SpecialCarNm', index: 'SpecialCarNm', width: 150, align: 'center', sortable: true },
+                { label: '发动机额定功率', name: 'MAX_POWER_SPEED', index: 'MAX_POWER_SPEED', width: 150, align: 'center', sortable: true },
+                { label: '燃油标识主键', name: 'Oil', index: 'Oil', width: 150, align: 'center', sortable: true },
+                { label: '描述', name: 'DIS', index: 'DIS', width: 200, align: 'center', sortable: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    }
+                },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager",//定义翻页用的导航栏，必须是有效的html元素
+            sortname: '',
+            sortorder: 'desc',
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            loadonce: true,//排序
+            rownumbers: true,//如果为ture则会在表格左边新增一列，显示行顺序号，从1开始递增。此列名为'rn'.
+            shrinkToFit: false,//此属性用来说明当初始化列宽度时候的计算类型，如果为ture，则按比例初始化列宽度。如果为false，则列宽度使用colModel指定的宽度
+            gridview: true,//构造一行数据后添加到grid中，如果设为true则是将整个表格的数据都构造完成后再添加到grid中，但treeGrid, subGrid, or afterInsertRow 不能用
+            ondblClickRow: function (row) {//双击行时触发
+            var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
+            var KeyValue = rowData.MatId;
+            var image1, filename1;
+            AjaxJson("/BaseModule/BBdbR_ProductBase/SetMatForm", { KeyValue: KeyValue }, function (data) {
+                    image1 = data.rows[0].matimg;
+                    filename1 = data.rows[0].filename;//空的
+                });
+            var test = document.getElementById('picture');
+            test.src = 'data:image/' + filename1 + ';base64,' + image1;
+            test.style.width = "300px";
+            test.style.height = "300px";
+            repeat();
+            }
+    });
+    }
+    //fadeIn() 方法使用淡入效果来显示被选元素，假如该元素是隐藏的。不适用于 visibility:hidden 的元素
+    function repeat() {
+        $('#modal_volume').fadeIn();
+    }
+
+    //加载搜索框
+    //function Show() {
+    //    var Condition = $("#Condition").val();
+    //    if (Condition == "all") {
+    //        $("#keywords").hide();
+    //    } else {
+    //        $("#keywords").show();
+    //    }
+    //}
+
+    //搜索
+    function btn_Search() {
+        var MatCd = $("#MatCd").val();              //产品编号
+        var MatNm = $("#MatNm").val();              //产品名称
+        var CarType = $("#CarType").val();          //车型
+        var CarColor1 = $("#CarColor1").val();      //颜色
+        var TOTAL_WEIGHT = $("#TOTAL_WEIGHT").val();//最大允许总质量
+        var CAPACITY = $("#CAPACITY").val();        //载客人数
+        $("#gridTable").jqGrid('setGridParam', {//设置grid的参数。有些参数的修改必须要重新加载grid才可以生效，这个方法可以覆盖事件
+            //url:设置一个grid的ajax url，可配合trigger("reloadGrid")使用;page:设置翻到第几页;datatype:设置新的datatype(xml,json)
+            url: "@Url.Content("~/BaseModule/BBdbR_ProductBase/GridPageByCondition")?MatCd=" + escape(MatCd) + "&MatNm=" + escape(MatNm) + "&CarType=" + escape(CarType) + "&CarColor1=" + escape(CarColor1) + "&TOTAL_WEIGHT=" + escape(TOTAL_WEIGHT) + "&CAPACITY=" + escape(CAPACITY), page:1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+    //回车事件
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "MatId");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_ProductBase/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑产品基础信息表", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+
+    }
+
+    //根据数据字典显示车型
+    var CarTypeCellItem = "";
+    function CellItem_CarType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                CarTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                CarTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var MatCd = $("#MatCd").val();              //产品编号
+        var MatNm = $("#MatNm").val();              //产品名称
+        var CarType = $("#CarType").val();          //车型
+        var CarColor1 = $("#CarColor1").val();      //颜色
+        var TOTAL_WEIGHT = $("#TOTAL_WEIGHT").val();//最大允许总质量
+        var CAPACITY = $("#CAPACITY").val();        //载客人数
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            btn_Search();
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_ProductBase/GetExcel_Data?MatCd=" + escape(MatCd) + "&MatNm=" + escape(MatNm) + "&CarType=" + escape(CarType) + "&CarColor1=" + escape(CarColor1) + "&TOTAL_WEIGHT=" + escape(TOTAL_WEIGHT) + "&CAPACITY=" + escape(CAPACITY);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            @*<th>关键字：</th>
+            <td>
+                <select id="Condition" style=" width:150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="MatCd">编号</option>
+                    <option value="MatNm">名称</option>
+                    <option value="CarType">车型</option>
+                    <option value="CarColor1">颜色</option>
+                    <option value="TOTAL_WEIGHT">车重</option>
+                    <option value="CAPACITY">容量</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style=" width:200px" />
+            </td>*@
+
+            <th>产品编号：</th>
+            <td>
+                <input id="MatCd" type="text" class="txt" style="width: 120px" />
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <th>产品名称：</th>
+            <td>
+                <input id="MatNm" type="text" class="txt" style="width: 120px" />
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <th>车型：</th>
+            <td>
+                <select id="CarType" class="txt" style="height: 28px;width: 150px"></select>
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <th>颜色：</th>
+            <td>
+                <input id="CarColor1" type="text" class="txt" style="width: 120px" />
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <th>最大允许总质量：</th>
+            <td>
+                <input id="TOTAL_WEIGHT" type="text" class="txt" style="width: 120px" />
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <th>载客人数：</th>
+            <td>
+                <input id="CAPACITY" type="text" class="txt" style="width: 120px" />
+            </td>
+
+
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+            <th style="text-align:right;width:100%;color:red;font-size:12px">
+                *注：双击查看产品图片
+            </th>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+    <div id="modal_volume" style="position: fixed; text-align: center;  top: 120px;left:300px; z-index: 9999; display: none;background-color:white;">
+        <div id="showimg" style="width: 400px; position: relative">
+            @*href(hypertext, 超文本引用),建立元素和外部文档的链接。 src(source 资源引入), 是页面内容的一部分。
+                href 指向网络资源所在位置，建立和当前元素（锚点）或当前文档（链接）之间的联系。
+                在请求 src 资源时会将其指向的资源下载并应用到文档中，比如 JavaScript 脚本，img 图片；*@
+            <img src="" id="picture" /> <a href="javascript:$('#modal_volume').fadeOut();" style="display: block; width: 50px; height: 50px; position: absolute; right: -5px; top: -8px; z-index: 2;font-size:30px ">x</a>
+        </div>
+    </div>
+</div>

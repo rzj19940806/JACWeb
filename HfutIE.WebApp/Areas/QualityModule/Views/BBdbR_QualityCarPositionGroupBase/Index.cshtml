@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Title = "检验项目基本表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetTree();
+        GetGrid();
+       
+    })
+    var areaId, area_name = "";
+    var selectnodeishaschild = "";//选中树节点是否有子节点
+    var parentId = "";//父节点编号
+    var sort = "";//层级编号
+    //var CellItem = "";
+
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                selectnodeishaschild = item.hasChildren;
+                areaId = item.id;               //ID
+                area_name = item.text;         //名称
+                parentId = item.parentnodes;   //父节点编号
+                sort = item.Type;    //层级编号
+                var CarPositionGroupCd = $("#CarPositionGroupCd").val();
+                var CarPositionGroupNm = $("#CarPositionGroupNm").val();
+                //2.点击树展示表格
+                $("#gridTable").jqGrid('setGridParam',
+                    {
+                        url: "@Url.Content("~/QualityModule/BBdbR_QualityCarPositionGroupBase/GridListJson")?areaId="
+                            + areaId + "&parentId=" + parentId + "&CarPositionGroupCd=" + CarPositionGroupCd + "&CarPositionGroupNm=" + CarPositionGroupNm, datatype: 'json'
+                    }).trigger('reloadGrid');
+        },
+        url: "@Url.Content("~/QualityModule/BBdbR_QualityCarPositionGroupBase/TreeJson")"    //1.获取树
+        };
+      $("#ItemsTree").treeview(itemtree);
+    }
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/QualityModule/BBdbR_QualityCarPositionGroupBase/GridListJson?areaId=''&parentId=''")",
+            datatype: "json",
+            height: $(window).height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '检验项目主键', name: 'CarPositionGroupId', index: 'CarPositionGroupId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '检验岗主键', name: 'CarPositionId', index: 'CarPositionId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '检验项目编码', name: 'CarPositionGroupCd', index: 'CarPositionGroupCd', width: 0, align: 'center', sortable: true },
+                { label: '检验项目名称', name: 'CarPositionGroupNm', index: 'CarPositionGroupNm', width: 0, align: 'center', sortable: true },
+                { label: '检验岗编码', name: 'CarPositionCd', index: 'CarPositionCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '检验岗名称', name: 'CarPositionNm', index: 'CarPositionNm', width: 0, align: 'center', sortable: true },
+                { label: '检验项目描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true ,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                    } },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true},
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true},
+                {
+                    label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            ],
+            pager: "#gridPager",
+            sortname: 'CarPositionGroupNm',
+            sortorder: 'asc',
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+        });
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //新增
+    function btn_add() {
+        //var CarPositionId = areaId;
+        if (sort == "0") {
+            if (areaId == "all") {
+                tipDialog('无法选中全部进行添加,请您选中具体项后再操作。', 4, 'warning');
+            }
+            else {
+                var url = "/QualityModule/BBdbR_QualityCarPositionGroupBase/Form?areaId=" + areaId;
+                openDialog(url, "Form", "新增检验项目基本信息", 770, 395, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+        else {
+            alertDialog("请选择左边项目信息", 0);
+        }
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarPositionGroupId");
+        if (IsChecked(KeyValue)) {
+            var url = "/QualityModule/BBdbR_QualityCarPositionGroupBase/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑检验项目基本信息", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarPositionGroupId");
+        if (IsDelData(KeyValue)) {
+            var delPoatData = {
+                KeyValue: KeyValue,
+                DeleteMark: 1
+            }
+            delConfig('/QualityModule/BBdbR_QualityCarPositionGroupBase/Delete', delPoatData, KeyValue.split(",").length);
+        }
+    }
+    //Excel导入
+    function btn_import() {
+        if (sort == "0") {
+            openDialog("/CommonModule/ExcelImport/ExcelImportDialog?areaId=" + areaId,
+                "ExcelImportDialog", "检验项目信息导入", 750, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+        else {
+            alertDialog("请选择左边项目信息", 0);
+        }
+
+    }
+    ////导出Excel
+    //function btn_export() {
+    //    SetDeriveExcel("#gridTable", "检验项目信息");
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog",
+    //        "DeriveDialog", "检验项目信息导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var CarPositionGroupCd = $("#CarPositionGroupCd").val();
+        var CarPositionGroupNm = $("#CarPositionGroupNm").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/QualityModule/BBdbR_QualityCarPositionGroupBase/GetExcel_Data?CarPositionGroupCd=" + escape(CarPositionGroupCd) + "&CarPositionGroupNm=" + escape(CarPositionGroupNm) + "&areaId=" + escape(areaId);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+     //搜索
+    function btn_Search() {
+        var CarPositionGroupCd = $("#CarPositionGroupCd").val();
+        var CarPositionGroupNm = $("#CarPositionGroupNm").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityModule/BBdbR_QualityCarPositionGroupBase/GridPageByCondition")?CarPositionGroupCd="
+                + escape(CarPositionGroupCd) + "&CarPositionGroupNm=" + escape(CarPositionGroupNm) + "&areaId=" + escape(areaId), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+
+   
+
+
+</script>
+<div id="layout" class="layout">
+    @*树区域*@
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                检验岗索引
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <div class="layoutPanel layout-center">
+        <!--工具栏-->
+        <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        @*搜索框区域*@
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                @*<td>
+            搜索条件：
+        </td>
+        <td>
+            <select id="Condition" onchange="Show()" class="txt" style="height: 28px;width: 150px">
+                <option value="all">==全部==</option>
+                <option value="CarPositionGroupCd">检验项目编码</option>
+                <option value="CarPositionGroupNm">检验项目名称</option>
+            </select>
+        </td>
+        <td>
+            <input id="Keywords" type="text" class="txt" style="width: 120px" />
+        </td>*@
+
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <th>检验项目编码：</th>
+                <td>
+                    <input id="CarPositionGroupCd" type="text" class="txt" style="width: 120px" />
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <th>检验项目名称：</th>
+                <td>
+                    <input id="CarPositionGroupNm" type="text" class="txt" style="width: 120px" />
+                </td>
+
+
+
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        @*表格区域*@
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+  </div>

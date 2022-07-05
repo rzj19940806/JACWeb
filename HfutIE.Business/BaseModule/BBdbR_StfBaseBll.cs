@@ -6,6 +6,7 @@
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -215,6 +216,23 @@ namespace HfutIE.Business
         }
         #endregion
 
+        #region 8.弹框负责人员
+        //11.获取所有人员
+        public DataTable GetPlineNm(string StfId)
+        {
+            string sql = "";
+            if (StfId==null)
+            {
+                sql = @"select StfId as id, StfNm,Phn,Wechat,Email,StfPosn,StfTitl from BBdbR_StfBase where Enabled='1'";
+            }
+            else
+            {
+                sql = @"select StfId as id, StfNm,Phn,Wechat,Email,StfPosn,StfTitl from BBdbR_StfBase where Enabled='1' and StfId=" + "'" + StfId + "'";
+            }
+            return Repository().FindTableBySql(sql,false);
+        }     
+        #endregion
+
         #region 系统管理
 
         #region  点击推送信息获取用户信息
@@ -286,15 +304,10 @@ namespace HfutIE.Business
             StringBuilder strSql = new StringBuilder();
             //List<DbParameter> parameter = new List<DbParameter>();
             //parameter.Add(DbFactory.CreateDbParameter("@RoleId", RoleId));
-            strSql.Append(@"SELECT  r.StfId ,				
-                                    r.DeptCd ,				
-                                    r.StfNm ,			
-                                    r.StfCd ,	
-                                    r.StfGndr ,
-                                    r.Account ,	
+            strSql.Append(@"SELECT  r.*,
                                     ou.RoleId			
-                            FROM    BBdbR_StfBase r
-                                    LEFT JOIN Base_StfRoleConf ou ON ou.StfId = r.StfId
+                            FROM    Base_User r
+                                    LEFT JOIN Base_StfRoleConf ou ON ou.StfId = r.UserId
                                                                             AND ou.RoleId = '" + RoleId + "'");
             strSql.Append(" WHERE 1 = 1");
 
@@ -365,5 +378,90 @@ namespace HfutIE.Business
         #endregion
 
         #endregion
+
+        #region 8.获得导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
+        }
+        #endregion
+
+        #region 9.获取人员信息
+        /// <summary>
+        /// 获取全部人员信息
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetStaffList(string keywords, string Condition, JqGridParam jqgridparam)
+        {
+            string sql = "";
+            if (keywords=="all")
+            {
+                sql = @"select a.*,b.DepartmentCode as DepartmentCode,b.DepartmentName as DepartmentName from BBdbR_StfBase a left join BBdbR_DepartmentBase b on a.DepartmentID=b.DepartmentID where a.Enabled='1'";
+            }
+            else
+            {
+                if (Condition == "all")
+                {
+                    sql = @"select a.*,b.DepartmentCode as DepartmentCode,b.DepartmentName as DepartmentName from BBdbR_StfBase a left join BBdbR_DepartmentBase b on a.DepartmentID=b.DepartmentID where a.Enabled='1'";
+                }
+                else
+                {
+                    sql = @"select a.*,b.DepartmentCode as DepartmentCode,b.DepartmentName as DepartmentName from BBdbR_StfBase a left join BBdbR_DepartmentBase b on a.DepartmentID=b.DepartmentID where a.Enabled='1' and a." + Condition + " like  '%" + keywords + "%'";   //===复制时需要修改===       
+                }
+            }       
+            return Repository().FindTableBySql(sql, false);
+        }
+        #endregion
+
     }
 }

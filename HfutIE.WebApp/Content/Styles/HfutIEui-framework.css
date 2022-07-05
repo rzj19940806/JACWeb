@@ -1,4 +1,4 @@
-﻿::-webkit-scrollbar{width: 7px; height: 7px;}
+﻿::-webkit-scrollbar{width: 12px; height: 12px;}
 ::-webkit-scrollbar-track{/*border-radius: 10px;*/ -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);}
 ::-webkit-scrollbar-track:hover{-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.4); background-color: rgba(0,0,0,0.01);}
 ::-webkit-scrollbar-track:active{-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.4); background-color: rgba(0,0,0,0.05);}
@@ -100,7 +100,7 @@ input[type="checkbox"]{vertical-align:middle;border:1px solid #F7F7F7; margin-bo
 .sys_spec_text li a{cursor:pointer;vertical-align:middle;text-align:center;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:5px 5px 5px 5px;height:39px;line-height:39px;width:98px;text-align:center;padding:0px 0px;border:1px solid #ccc;background:#fff;display:inline-block;outline:none;}
 .sys_spec_text li a:hover{border:1px solid #4A5B79;padding:0 0px;text-decoration:none;}
 .sys_spec_text li i{position:absolute;width:10px;height:10px;font-size:0;line-height:0;right:1px;bottom:2px;background:url(../Images/sys_item_selected.gif) no-repeat right bottom;z-index:99;display:none;}
-.sys_spec_text li.selected a{border:1px solid #4A5B79;padding:0 0px;}
+.sys_spec_text li.selected a {border: 1px solid #4A5B79;padding: 0 0px;background-color: skyblue}
 .sys_spec_text li.selected i{display:block;}
 .sys_spec_text li img{vertical-align:middle;border:0px solid #fff;padding-right:5px;margin-top:-2px;}
 .sys_spec_text a.disabled{cursor:not-allowed;display:block;overflow:hidden;color:#a9a6a6;}
@@ -260,3 +260,51 @@ input.disabled{cursor:not-allowed;display:block;overflow:hidden;color:#666;backg
 .optionTag span{left: 25px; /* 三角形居中显示 */ margin-left: -10px; /* 三角形居中显示 */ top: -19px; width: 0px; height: 0px; font-size: 0px; border-top-color: transparent; border-right-color: transparent; border-bottom-color: rgb(255,255,255); border-left-color: transparent; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-style: dashed; border-right-style: dashed; border-bottom-style: solid; border-left-style: dashed; position: absolute;}
 .optionTag b{display: block; width:24px; height:24px; background:url(../images/ui_close.png) repeat-x; top: -12px; right:-12px; position: absolute; cursor: pointer;}
 /*选择标签*/
+/*高级检索页面样式*/
+.c7 {
+    font-weight: bold;
+    color: rgb(85, 85, 85);
+    font-size: 15px
+}
+
+.aomBtn {
+    color: #053597;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.divsearch {
+    position: relative;
+    z-index: 0;
+    width:700px;
+    padding-left:80px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-left:300px;
+    background: #f8f8f8;
+    border: #e2e2e2 solid 1px;
+}
+.buttOther {
+    width: 76px;
+    height: 30px;
+    padding-bottom: 1px;
+    font-size: 0;
+    line-height: 0;
+    text-indent: -999em;
+    vertical-align: text-bottom;
+    background: url(/Content/Images/btn-search.png) no-repeat 0 0 transparent;
+    border: 0 none #fff;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.searchCol {
+    zoom: 1;
+    position: relative;
+}
+
+.c6 {
+    font-weight: bold;
+    color: rgb(85, 85, 85);
+    font-size: 15px
+}

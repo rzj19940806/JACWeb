@@ -1,0 +1,153 @@
+@{
+    ViewBag.Title = "冲焊涂装质量检查销项过程表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/Q_HTCarQualityOutput_Pro/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>车身质检销项主键：</th>
+            <td class='formValue'>
+                <label id="CarInspectionOutputId" />
+            </td>
+            <th class='formTitle'>车身部位质检结果主键：</th>
+            <td class='formValue'>
+                <label id="CarQualityResultId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN：</th>
+            <td class='formValue'>
+                <label id="VIN" />
+            </td>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <label id="CarType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>转序日期：</th>
+            <td class='formValue'>
+                <label id="TransitionTm" />
+            </td>
+            <th class='formTitle'>质控点组主键：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointGroupId" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点组编号：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointGroupCd" />
+            </td>
+            <th class='formTitle'>质控点组名称（工段）：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointGroupNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点主键：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointId" />
+            </td>
+            <th class='formTitle'>质控点编号：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>质控点名称：</th>
+            <td class='formValue'>
+                <label id="QualityCheckPointNm" />
+            </td>
+            <th class='formTitle'>缺陷名称：</th>
+            <td class='formValue'>
+                <label id="DefectNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷分析：</th>
+            <td class='formValue'>
+                <label id="DefectAnalysis" />
+            </td>
+            <th class='formTitle'>录入人员编号：</th>
+            <td class='formValue'>
+                <label id="StfCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入人员姓名：</th>
+            <td class='formValue'>
+                <label id="StfNm" />
+            </td>
+            <th class='formTitle'>质检录入时间：</th>
+            <td class='formValue'>
+                <label id="QualityInspectTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <label id="Enabled" />
+            </td>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <label id="CreCd" />
+            </td>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <label id="CreNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="MdfTm" />
+            </td>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <label id="MdfCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <label id="MdfNm" />
+            </td>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

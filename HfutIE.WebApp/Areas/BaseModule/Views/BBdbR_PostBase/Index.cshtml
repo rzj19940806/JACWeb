@@ -54,7 +54,7 @@
                 { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 0, align: 'center', sortable: true },
                 { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 0, align: 'center', sortable: true},
                 {
-                    label: '工位类型', name: 'WcTyp', index: 'WcTyp', width: 0, align: 'center', sortable: true,
+                    label: '工位类型', name: 'WcTyp', index: 'WcTyp', width: 0, align: 'center', sortable: true, hidden: true,
                     formatter: function (cellvalue, options, rowObject) {
                         return CellItem('WcTyp', cellvalue);
                     }
@@ -70,12 +70,12 @@
                         else if (cellvalue == '1') { return "<img src='../../Content/Images/checkokmark.gif'/>"; }
                     }
                 },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true ,hidden: true },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true},
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true},
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true },
                 { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center',sortable: true ,hidden: true },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center',sortable: true ,hidden: true },
@@ -145,7 +145,47 @@
             });
         }
     }
+
+    //导出
+    //function btn_derive() {
+    //    count = $("#gridTable").getGridParam("records");
+    //    if (count == 0) {
+    //        tipDialog("没有要导出的信息！", 1.5, 0);
+    //        return;
+    //    } else {
+    //        SetDeriveExcel("#gridTable", "岗位基本信息" + formatDate(CurrentTime(), 'yyyyMMdd'));
+    //        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "岗位信息导出", 600, 300, function (iframe) {
+    //            top.frames[iframe].AcceptClick();
+    //        });
+    //    }
+    //}
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var type = $("#Condition").val();
+        window.setTimeout(function () {
+            location.href = "/BaseModule/BBdbR_PostBase/GetExcel_Data?type=" + escape(type);
+            Loading(false);
+        }, 200);
+    }
+
+    // 导入
+    function btn_import() {
+        if (sort == 2) {
+            console.log(areaId);
+            //var WcId = areaId;
+            openDialog("/BaseModule/BBdbR_PostBase/ExcelImportDialog?areaId=" + areaId, "ExcelImportDialog", "岗位信息导入", 750, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+        else {
+            alertDialog("请选择左边工位信息", 0);
+        }
+    }
+
     
+
      //加载搜索框
     function Show() {
         var Condition = $("#Condition").val();

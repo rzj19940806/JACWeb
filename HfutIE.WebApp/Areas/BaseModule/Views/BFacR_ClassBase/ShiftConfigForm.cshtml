@@ -18,20 +18,20 @@
             height: 160,
             colModel: [
                 { label: '主键', name: 'ShiftId', index: 'ShiftId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '班次编号', name: 'ShiftCd', index: 'ShiftCd', width: 0, align: 'center', sortable: true },
+                { label: '班次编号', name: 'ShiftCd', index: 'ShiftCd', width: 80, align: 'center', sortable: true },
                 { label: '班次名称', name: 'ShiftNm', index: 'ShiftNm', width: 0, align: 'center', sortable: true },
                 {
-                    label: '时间类型', name: 'RestTm', index: 'RestTm', width: 0, align: 'center', sortable: true,
+                    label: '时间类型', name: 'RestTm', index: 'RestTm', width: 100, align: 'center', sortable: true,
                     formatter: function (cellvalue, options, rowObject) {
                         return CellItem('RestTm', cellvalue);
                     }
                 },
                 { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true },
                 { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true
-                },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true
+                //},
                 
             ],
             viewrecords: true,//显示总的记录条数
@@ -76,7 +76,7 @@
     //检查项目已配置表格
     function GetGrid_down() {
         $("#gridTable_down").jqGrid({
-            url: "/BaseModule/BFacR_ClassBase/GridListJson_Down?KeyValue=" + KeyValue,
+            url: "/BaseModule/BFacR_ClassBase/GridListJson_Down?KeyValue=" + KeyValue + "&Type=1",
             datatype: "json",
             //height: $(window).height()/2-140,
             //width: 850,
@@ -94,10 +94,10 @@
                 },
                 { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true },
                 { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true                   
-                },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true                   
+                //},
             ],
             viewrecords: true,//显示总的记录条数
             rowNum: 10,
@@ -161,6 +161,10 @@
                 alertDialog("提交成功！")
                 $("#gridTable_down").trigger('reloadGrid');
                 top.frames[tabiframeId()].windowload();
+                closeDialog();
+            }
+            else if (t.Code == "0") {
+                alertDialog(t.Message, '-1');
                 closeDialog();
             }
             else {

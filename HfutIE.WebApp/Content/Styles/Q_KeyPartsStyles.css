@@ -1,0 +1,398 @@
+﻿@charset "utf-8";
+/* CSS Document */
+* {
+    padding: 0;
+    margin: 0;
+    text-align:center;
+}
+
+div {
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+p {
+    font-size: 15px;
+}
+
+.clear {
+    clear: both;
+}
+
+.all {
+    width: 100%;
+    background-color: #D6E9FF;
+    overflow: hidden;
+}
+
+
+.up {
+    width: 100%;
+    height: 10%;
+    min-height: 75px;
+    margin-bottom: 1%;
+    background-color: white;
+}
+
+#logo_img {
+    float: left;
+    margin-left: 20px;
+    width: 25%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#refinelogo {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.up_box {
+    float: right;
+    width: 9%;
+    min-width: 90px;
+    height: 90%;
+    background-color: #EEF3FC;
+    margin: 0 0.5%;
+}
+
+.up_button {
+    padding-top:13px;
+    text-align:center;
+}
+
+.p_in_upbox {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+
+.p_mark_in_upbox {
+    font-size: 15px;
+    color: blue;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.down {
+    text-align: left;
+    width: 100%;
+    height: 89%;
+}
+
+.left {
+    float: left;
+    width: 20%;
+    height: 100%;
+    background-color: white;
+    margin-right: 1%;
+}
+
+#left_table {
+    width: 100%;
+}
+
+#car_img {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#productpicture {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 15px;
+}
+
+.left_box {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left_box_small {
+    float: left;
+    width: 50%;
+}
+
+.in_left_box {
+    width: 90%;
+    height: 80%;
+    background-color: #F2F5F9;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.in_left_box_small {
+    width: 80%;
+}
+
+#car_dis {
+    display: initial;
+    font-size: 20px;
+    font-weight: normal;
+}
+#vin_input {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+#vin_input_left {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+#vin_input_right {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#vin_sure {
+    width: 75%;
+    height: 50%;
+    background-color: #5176A3;
+}
+
+
+.main {
+    float: right;
+    width: 79%;
+    height: 70%;
+}
+
+.baclground {
+    background-image: url(../Images/LOGO/background.png);
+}
+
+.main_box {
+    width: 49.5%;
+    height: 100%;
+    background-color: #F8F2F2;
+    border-radius: 15px 15px 5px 5px;
+}
+
+.main_box_left {
+    float: left;
+}
+
+.main_box_right {
+    float: right;
+}
+
+.main_title {
+    background-color: #5176A3;
+    width: 100%;
+    height: 7%;
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.in_main_box_left {
+    padding-top:5px;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 93%;
+    width: 100%;
+}
+
+.part_box_left {
+    width: 100%;
+    height: 20%;
+}
+
+.part_dis_box_left {
+    float: left;
+    height: 90%;
+    width: 60%;
+    transform: translateY(5%);
+    margin: 0 2% 0 5%;
+}
+
+.part_code_left {
+    height: 45%;
+    font-size: 20px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.part_name_left {
+    height: 45%;
+    font-size: 20px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.part_img_box_left {
+    width: 33%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.part_img_left {
+    width: 100%;
+    height: 95%;
+    border-radius: 5px;
+}
+
+
+.in_main_box_right {
+    padding-top:5px;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 83%;
+    width: 100%;
+}
+
+.part_box_right {
+    width: 100%;
+    height: 20%;
+}
+
+.part_dis_box_right {
+    background-color: #CBD1F6;
+    float: left;
+    height: 90%;
+    width: 70%;
+    transform: translateY(5%);
+    margin: 0 1% 0 5%;
+}
+
+.part_code_right {
+    height: 47%;
+    font-size: 20px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.part_name_right {
+    height: 45%;
+    font-size: 20px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.part_btn_box_right {
+    float: left;
+    width: 24%;
+    height: 90%;
+    transform: translateY(5%);
+}
+
+.part_btn_right {
+    width: 98%;
+    height: 98%;
+    background-color: #CBD1F6;
+    color: black;
+    font-size: 20px;
+    border: 1px #5176A3;
+    border-radius: 15px;
+}
+
+.part_dis_box_right_select {
+    background-color: green;
+    color: black;
+    float: left;
+    height: 90%;
+    width: 70%;
+    transform: translateY(5%);
+    margin: 0 1% 0 5%;
+}
+
+.part_manual_box {
+    height: 10%;
+    width: 100%;
+}
+
+.part_input_box {
+    height: 100%;
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F8F2F2;
+}
+
+.part_sure_box {
+    float: left;
+    height: 100%;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.part_input {
+    width: 70%;
+    height: 70%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.part_sure {
+    width: 60%;
+    height: 55%;
+    background-color: #5176A3;
+}
+
+.bottom {
+    float: left;
+    width: 79%;
+    height: 29%;
+    margin-top: 1%;
+    background-color: white;
+    border-radius: 15px 15px 5px 5px;
+}
+
+#bottem_dis {
+    background-color: #5176A3;
+    width: 100%;
+    height: 15%;
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+#bottom_text {
+    overflow: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    height: 78%;
+    background-color: #F8F2F2;
+}

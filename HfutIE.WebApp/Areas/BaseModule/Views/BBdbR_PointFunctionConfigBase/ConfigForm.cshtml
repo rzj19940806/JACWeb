@@ -1,0 +1,242 @@
+@{
+    ViewBag.Title = "点位功能模块配置";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid_up();
+        GetGrid_down();
+        BindDropItem("#PointCatg", "PointCatg", "==全部==");
+    })
+
+    var KeyValue = GetQuery('PointId');
+    var PointCatg = GetQuery('PointCatg');
+    function GetGrid_up() {
+        $("#gridTable_up").jqGrid({
+            url: "/BaseModule/BBdbR_PointFunctionConfigBase/GridListJson_Up?KeyValue=" + KeyValue,
+            datatype: "json",
+            autowidth: false,
+            //width: 850,
+            height: 160,
+            colModel: [
+                { label: '功能主键', name: 'FunctionId', index: 'FunctionId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '功能编号', name: 'FunctionCd', index: 'FunctionCd', width: 0, align: 'center', sortable: true },
+                { label: '功能名称', name: 'FunctionNm', index: 'FunctionNm', width: 0, align: 'center', sortable: true },
+                { label: '功能类型', name: 'FunctionType', index: 'FunctionType', width: 0, align: 'center', sortable: true},
+                {
+                    label: '有效性', name: 'Enable', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "有效";
+                        if (cellvalue == '0') return "无效";
+                    }
+                },               
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 10,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager_up",
+            sortname: '',
+            sortorder: 'desc',
+            sortname: '',
+            rownumbers: true,
+            shrinkToFit: true,
+            loadonce: true,
+            gridview: true,
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            ondblClickRow: function (RowId) {
+                var id = GetJqGridRowValue("#gridTable_up", "FunctionId");
+                var code = GetJqGridRowValue("#gridTable_up", "FunctionCd");
+                var fullname = GetJqGridRowValue("#gridTable_up", "FunctionNm");
+                var type = GetJqGridRowValue("#gridTable_up", "FunctionType");
+                var Enable = GetJqGridRowValue("#gridTable_up", "Enable");
+                var point = KeyValue;//获取grid1选中行的数据
+                if (KeyValue != "") {
+                    $("#gridTable_down").jqGrid("addRowData", RowId, point, "last");//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_down").jqGrid("setRowData", RowId, {
+                        FunctionId: id, FunctionCd: code, FunctionNm: fullname, FunctionType: type,
+                        Enable: 1
+                    });//将grid选中行数据复制给grid1中新增的行
+                        $("#gridTable_up").jqGrid("delRowData", RowId);//删除grid选中行的数据                   
+                }
+                else {
+                    alertDialog("请先选择功能模块，再进行配置！")
+                }          
+            }
+        });
+    }
+
+    //检查项目已配置表格
+    function GetGrid_down() {
+        $("#gridTable_down").jqGrid({
+            url: "/BaseModule/BBdbR_PointFunctionConfigBase/GridListJson_Down?KeyValue=" + KeyValue,
+            datatype: "json",
+            height: 170,
+            autowidth: false,
+            colModel: [
+                { label: '功能主键', name: 'FunctionId', index: 'FunctionId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '功能编号', name: 'FunctionCd', index: 'FunctionCd', width: 0, align: 'center', sortable: true },
+                { label: '功能名称', name: 'FunctionNm', index: 'FunctionNm', width: 0, align: 'center', sortable: true },
+                { label: '功能类型', name: 'FunctionType', index: 'FunctionType', width: 0, align: 'center', sortable: true },
+                {
+                    label: '有效性', name: 'Enable', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "有效";
+                        if (cellvalue == '0') return "无效";
+                    }
+                },
+            ],
+            viewrecords: true,//显示总的记录条数
+            rowNum: 10,
+            rowList: [30, 50, 100, 500, 1000],
+            pager: "#gridPager_down",
+            sortname: '',
+            sortorder: 'desc',
+            sortname: '',
+            rownumbers: true,
+            shrinkToFit: true,
+            loadonce: true,
+            gridview: true,
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+
+            ondblClickRow: function (RowId) {            
+                var id = GetJqGridRowValue("#gridTable_down", "FunctionId");
+                var code = GetJqGridRowValue("#gridTable_down", "FunctionCd");
+                var fullname = GetJqGridRowValue("#gridTable_down", "FunctionNm");
+                var type = GetJqGridRowValue("#gridTable_down", "FunctionType");
+                var Enable = GetJqGridRowValue("#gridTable_down", "Enable");
+                var point = KeyValue;//获取grid1选中行的数据
+                if (KeyValue != "") {
+                    $("#gridTable_up").jqGrid("addRowData", RowId, point, "last");//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_up").jqGrid("setRowData", RowId, {
+                        FunctionId: id, FunctionCd: code, FunctionNm: fullname, FunctionType: type,
+                        Enable: 1
+                    });//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable_down").jqGrid("delRowData", RowId);//删除grid选中行的数据
+                }
+                else {
+                    alertDialog("请先选择功能模块，再进行配置！")
+                }
+            },
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                lastrow = iRow;//行号
+                lastcell = iCol;//列号
+            }
+        });
+        jQuery("#gridTable_down").jqGrid('navGrid', '#pgwidth', { edit: false, add: false, del: false });
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable_up").trigger("reloadGrid"); //重新载入
+        $("#gridTable_down").trigger("reloadGrid"); //重新载入
+    }
+
+    //确认配置检查项目
+    function btn_accept() {     
+        var ids = $("#gridTable_down").jqGrid("getRowData"); //获取gridSelectTable表中多行数据
+        AjaxJson('/BaseModule/BBdbR_PointFunctionConfigBase/SubmitConfig?', { listdto: ids, PointId: KeyValue, PointCatg: PointCatg }, function (data) {
+            var t = data;
+            if (t.Code == "1")//提交成功
+            {
+                alertDialog("提交成功！")
+                $("#gridTable_down").trigger('reloadGrid');
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            }
+            else {
+                alertDialog("提交失败！", '-1');
+                closeDialog();
+            }
+        });
+    }
+    
+    //搜索条件
+    function GetCondition() {
+        var Condition = $("#Condition").val();
+        if (Condition == "") {
+            $("#tdsearch").hide();
+        }
+        else {
+            $("#tdsearch").show();
+        }
+    }
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/BaseModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+
+<div id="message" style="display: none; padding: 1px; padding-bottom: 0px;"></div>
+<div class="bd" style="border-bottom: none; margin: 1px;">
+    <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+        <div class="tab_list_top" style="position: absolute">
+            <div id="Tabbasic" class="tab_list bd actived">配置功能模块信息</div>
+        </div>
+    </div>
+</div>
+<div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+    <!--配置功能模块-->
+    <div id="Staff" class="tabPanel">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+            <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+                <div class="note-prompt" style="margin: 1px;">
+                    温馨提示：双击上表增加配置功能模块信息；双击下表删除功能模块信息。
+                </div>
+                <div style="background-color:gainsboro ;color:#27a4aB;font-size:medium;width:100%;font-weight: bold">
+                    &nbsp操作按钮<span class="ModuleName"></span>
+                </div>
+                <div class="tools_bar leftline rightline" style="margin-bottom: 0px; margin: 1px;">
+                    <div class="PartialButton">
+                        <a id="lr-replace" ids="lr-replace" title="刷新当前" onclick="Replace()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b>
+                            </span>
+                        </a>
+                        <div class="tools_separator"></div>
+                        <a id="lr-add" ids="lr-add" title="确认此项配置" onclick="btn_accept()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/accept.png') 50% 4px no-repeat;">确认配置</b>
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="layout">
+
+            <div>
+                <div class="btnbartitle">
+                    <div>
+                        未配置功能模块信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_up"></table>
+                    <div id="gridPager_up" @*style="height:50px;background-color:transparent;position:relative"*@></div>
+                </div>
+                <div class="btnbartitle">
+                    <div>
+                        已配置功能模块信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_down"></table>
+                    <div id="gridPager_down"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -33,24 +33,7 @@ namespace HfutIE.Business
 
         #region 方法区
 
-
-        #region 1.页面表格
-        /// <summary>
-        /// 联合查询，展示页面表格
-        /// </summary>
-        /// <param name="CheckId"></param>
-        /// <returns></returns>
-        public DataTable GetPlanList()
-        {
-            StringBuilder strSql = new StringBuilder();
-            DataTable dt;
-            strSql.Append(@"SELECT * FROM  " + tableName + " where AVIId is NULL and Enabled=1 ");
-            dt = Repository().FindTableBySql(strSql.ToString(), false);
-            return dt;
-        }
-        #endregion
-
-        #region 2.AVI分组配置信息表格-未在该组
+        #region 1.AVI分组配置信息表格-未在该组
         /// <summary>
         /// 点击AVI站点基础信息，查询AVI去向配置信息表
         /// 查询的时候传递了keywords
@@ -61,12 +44,12 @@ namespace HfutIE.Business
         public DataTable ReGetConfigList(string keywords, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
-            sql = @"select AviId as AVIId,AviCd as AVICd,AviNm as AVINm from BBdbR_AVIBase where Enabled=1 and AviId not in (select ISNULL(AVIId,'') from BBdbR_AVIGroupConfig where Enabled=1 and AVIGroupCd in (select AVIGroupCd from BBdbR_AVIGroupConfig where Enabled=1 and AVIGroupId='" + keywords + "'))";
+            sql = @"select AviId as AVIId,AviCd as AVICd,AviNm as AVINm from BBdbR_AVIBase where Enabled=1 and AviId not in (select ISNULL(AVIId,'') from BBdbR_AVIGroupConfig where Enabled=1 and AVIGroupId='" + keywords + "')";
             return (Repository().FindTableBySql(sql.ToString(), false));
         }
         #endregion
 
-        #region 3.AVI分组配置信息表格-已在该组
+        #region 2.AVI分组配置信息表格-已在该组
         /// <summary>
         /// 点击AVI站点基础信息，查询AVI去向配置信息表
         /// 查询的时候传递了keywords
@@ -79,7 +62,7 @@ namespace HfutIE.Business
             string sql = "";
             if (keywords != "")
             {
-                sql = @"select * from " + tableName + " where AVIId is not null and Enabled=1 and AVIGroupCd in (select AVIGroupCd from " + tableName + " where AVIGroupId='" + keywords + "')";
+                sql = @"select * from " + tableName + " where AVIId is not null and Enabled=1 and AVIGroupId='" + keywords + "')";
                 return (Repository().FindTableBySql(sql.ToString(), false));
             }
             else
@@ -87,10 +70,9 @@ namespace HfutIE.Business
                 return null;
             }
         }
-
         #endregion
 
-        #region 4.删除
+        #region 3.删除
         //array 需要删除的信息的主键的数组
         //删除表中某一条数据表示将表中该条数据的Enabled设置为0，并不是真的删除该数据
         //返回值为1，或者0
@@ -98,29 +80,17 @@ namespace HfutIE.Business
         public int Delete(string keyvalue)//删除组内站点dt.Rows[0]["AVIGroupCd"]
         {
             BBdbR_AVIGroupConfig entity = Repository().FindEntity(keyvalue);
-            entity.AVIGroupCount = "0";
-            Repository().Update(entity);
-            StringBuilder deletesql = new StringBuilder();
-            deletesql.Append(@"update " + tableName + " set Enabled = 0 where AVIId is not null and AVIGroupCd='" + entity.AVIGroupCd + "'");
-            return Repository().ExecuteBySql(deletesql);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-         public int Delete1(string keyvalue)//删整个组
-        {
-            DataTable dt = new DataTable();
-            string sql = @"select * from "+tableName+" where Enabled=1 and AVIGroupId='"+keyvalue+"'";
-            dt = Repository().FindTableBySql(sql);
-            StringBuilder deletesql = new StringBuilder();
-            deletesql.Append(@"update " + tableName + " set Enabled = 0 where AVIGroupCd='" + dt.Rows[0]["AVIGroupCd"] + "'");
-            return Repository().ExecuteBySql(deletesql);
-        }
+            if (entity.AviId != null )
+            {
+                StringBuilder deletesql = new StringBuilder();
+                deletesql.Append(@"update " + tableName + " set Enabled = 0 where AVIId is not null and AVIGroupId='" + entity.AVIGroupId + "'");
+                return Repository().ExecuteBySql(deletesql);
+            }
+            return 1;
+        }      
         #endregion
 
-        #region 5.新增方法
+        #region 4.新增方法
         //entity实体中的数据是从页面中传来的，它是用户填写的数据
         //entity实体中只有部分字段有值，因为页面中只提供给部分字段赋值
         //将页面中填写的数据以实体（entity）的方式新增到数据库
@@ -131,22 +101,13 @@ namespace HfutIE.Business
         //在新增时将实体的IsAvailable字段的值修改为true
         //返回值为1，或者0
         //1表示操作成功，0表示操作失败
-        public int Insert(BBdbR_AVIGroupConfig entity,string keyvalue,int i) //===复制时需要修改===
-        {
-            List<BBdbR_AVIGroupConfig> listEntity = new List<BBdbR_AVIGroupConfig>(); //===复制时需要修改===
-            //i = i + 1;
-            //BBdbR_AVIGroupConfig entity1 = Repository().FindEntity(keyvalue);//根据主键（keyValue）在数据库中查找实体 //===复制时需要修改===
-            //entity1.AVICount = i.ToString();//将该实体的IsAvailable属性改为false
-            //Repository().Update(entity1);
-            return Repository().Insert(entity);
-        }
-        public int Insert1(BBdbR_AVIGroupConfig entity, int i) //===复制时需要修改===
+        public int Insert(BBdbR_AVIGroupConfig entity) //===复制时需要修改===
         {
             return Repository().Insert(entity);
-        }
+        }      
         #endregion
 
-        #region 6.检查字段是否唯一
+        #region 5.检查字段是否唯一
         public int CheckCount(string KeyName, string KeyValue)
         {
             string sql = @"select * from " + tableName + " where Enabled='1' and " + KeyName + " = '" + KeyValue + "'";
@@ -174,58 +135,21 @@ namespace HfutIE.Business
         }
         #endregion
 
-        #region 7.编辑方法
-        //将修改后的实体跟新到数据库中
-        //返回值为1，或者0
-        //1表示操作成功，0表示操作失败
-        public int Update(BBdbR_AVIGroupConfig entity,string KeyValue) //===复制时需要修改===
-        {
-            StringBuilder updatesql = new StringBuilder();
-            DataTable dt = new DataTable();
-            string sql=@"select AVIGroupCd from "+tableName+" where AVIGroupId='"+ KeyValue + "'";
-            dt = Repository().FindTableBySql(sql.ToString(), false);
-             updatesql.Append(@"update " + tableName + " set AVIGroupCd='" + entity.AVIGroupCd + "',AVIGroupNm='" + entity.AVIGroupNm + "' where AVIGroupCd='" + dt.Rows[0][0] + "' and Enabled=1");
-             int a=Repository().ExecuteBySql(updatesql);
-            
-             return Repository().Update(entity);  //将修改后的实体跟新到数据库中
-           
-        }
-        #endregion
-
-        #region 8.查询方法，需要修改sql语句
+        #region 6.获取AVI站点组已配置AVI站点
         /// <summary>
-        ///     查询时提供了两个关键字，一个是Condition，另一个是keywords
-        ///     
-        ///     Condition是关键字，即查询条件，对应数据库中的一个字段
-        ///     keywords是查询值，即查询条件的具体值，对应数据库中查询条件字段的值
-        ///     查询的时候传递了Condition和keywords
-        /// 
+        /// 获取AVI站点组已配置AVI站点
+        /// 查询的时候传递了keywords
         /// </summary>
         /// <param name="keywords">查询值</param>
-        /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
-        /// <returns>查询的数据（列表）</returns>
-        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
+        /// <returns></returns>
+        public DataTable GetAviGroupConfigList(string keywords, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
-            DataTable dt;
-            if (Condition == "all")
-            {
-                sql = @"SELECT * FROM  " + tableName + " where AVIId is NULL and Enabled=1 ";
-                dt = Repository().FindTableBySql(sql.ToString(), false);
-            }
-            
-            else 
-            {
-                //根据条件查询
-                //string sql1 = @"select ";
-                sql = @"SELECT * FROM  " + tableName + " where AVIId is NULL and Enabled = '1' and " + Condition + " like  '%" + keywords + "%'";
-                dt = Repository().FindTableBySql(sql.ToString(), false);
-            }
-            return dt;
+            sql = @"select a.*,b.AVIGroupCd,b.AVIGroupNm,b.AVIGroupCount from BBdbR_AviGroupConfig a join BBdbR_AviGroupBase b on a.AVIGroupId=b.AVIGroupId where a.Enabled=1 and b.Enabled=1 and a.AVIGroupId='" + keywords + "'";
+            return (Repository().FindTableBySql(sql.ToString(), false));
         }
         #endregion
-
 
         #endregion
     }

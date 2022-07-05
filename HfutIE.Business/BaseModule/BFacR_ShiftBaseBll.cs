@@ -43,28 +43,42 @@ namespace HfutIE.Business
         /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public List<BFacR_ShiftBase> GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
             if (Condition == "all")
             {
-                sql = @"select * from " + tableName + " where 1 = 1 and Enabled=1";
-                return Repository().FindListBySql(sql);
+                sql = @"select * from " + tableName + " where RestTm = '总时间' and Enabled=1 order by ShiftCd asc";
+                return Repository().FindTableBySql(sql.ToString(),false);
             }
             else
             {
                 if (keywords != "all")
                 {
                     //根据条件查询
-                    sql = @"select * from " + tableName + " where  " + Condition + " like  '%" + keywords + "%' and Enabled=1";
-                    return Repository().FindListPageBySql(sql.ToString(), ref jqgridparam);
+                    sql = @"select * from " + tableName + " where  " + Condition + " like  '%" + keywords + "%' and RestTm = '总时间' and Enabled=1 order by ShiftCd asc";
+                    return Repository().FindTableBySql(sql.ToString(), false);
                 }
                 else
                 {
-                    sql = @"select * from " + tableName + " where 1 = 1 and Enabled=1";
-                    return Repository().FindListPageBySql(sql.ToString(), ref jqgridparam);
+                    sql = @"select * from " + tableName + " where RestTm = '总时间' and Enabled=1  order by ShiftCd asc";
+                    return Repository().FindTableBySql(sql.ToString(), false);
                 }
             }
+        }
+        /// <summary>
+        /// 拿到班次时间配置信息
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="Condition"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public DataTable GetListJson_TimeConfig(string KeyValue, JqGridParam jqgridparam) //===复制时需要修改===
+        {
+            
+             //string sql = @"select * from BFacR_ShiftTimeConfig where ShiftId = '"+ KeyValue + "' and Enabled=1";
+             string sql = @"select * from BFacR_ShiftBase where ShiftCd in (select ShiftCd from BFacR_ShiftBase where ShiftId = '" + KeyValue + "' and Enabled = 1)and Enabled = 1 order by StrtRestTm ";
+             return Repository().FindTableBySql(sql.ToString(), false);
         }
         #endregion
 
@@ -116,17 +130,14 @@ namespace HfutIE.Business
         //删除表中某一条数据表示将表中该条数据的Enabled设置为0，并不是真的删除该数据
         //返回值为1，或者0
         //1表示操作成功，0表示操作失败
-        public int Delete(string[] array)
+        public int Delete(string id)
         {
             //创建一个表格的list，用于存储通过主键查询到的信息
             List<BFacR_ShiftBase> listEntity = new List<BFacR_ShiftBase>(); //===复制时需要修改===
-            foreach (string keyValue in array)
-            {
-                //===复制时需要修改===
-                BFacR_ShiftBase entity = Repository().FindEntity(keyValue);//根据主键（keyValue）在数据库中查找实体 //===复制时需要修改===
-                entity.Enabled = "0";//将该实体的IsAvailable属性改为false
-                listEntity.Add(entity);
-            }
+            //===复制时需要修改===
+            BFacR_ShiftBase entity = Repository().FindEntity(id);//根据主键（keyValue）在数据库中查找实体 //===复制时需要修改===
+            entity.Enabled = "0";//将该实体的IsAvailable属性改为false
+            listEntity.Add(entity);
             return Repository().Update(listEntity);//修改数据库
         }
         #endregion
@@ -404,7 +415,7 @@ namespace HfutIE.Business
             string sql = "";
             if (keywords != "")
             {
-                sql = @"select * from " + tableName + " where Enabled=1 and ShiftId not in (select Distinct(ShiftId) from BFacR_ClassConfig where Enabled=1 and ClassId='"+ keywords + "')";
+                sql = @"select * from " + tableName + " where Enabled=1 and RestTm = '总时间' and ShiftId not in (select Distinct(ShiftId) from BFacR_ClassConfig where Enabled=1 and ClassId='" + keywords + "')";
                 return Repository().FindListPageBySql(sql.ToString(), ref jqgridparam);
             }
             else
@@ -420,12 +431,19 @@ namespace HfutIE.Business
         /// <param name="keywords">查询值</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public List<BFacR_ShiftBase> GetConfigList(string keywords, JqGridParam jqgridparam) //===复制时需要修改===
+        public List<BFacR_ShiftBase> GetConfigList(string keywords,string Type, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
             if (keywords != "")
             {
-                sql = @"select a.* from " + tableName + " a join BFacR_ClassConfig b on a.ShiftId=b.ShiftId where a.Enabled=1 and b.Enabled=1 and b.ClassId='" + keywords+"'";
+                if (Type == "1")//班组班次配置时展示信息不同
+                {
+                    sql = @"select a.* from " + tableName + " a join BFacR_ClassConfig b on a.ShiftId=b.ShiftId where a.Enabled=1 and b.Enabled=1 and b.ClassId='" + keywords+"'";
+                }
+                else
+                {
+                    sql = @"select * from " + tableName + "  where ShiftCd in(select a.ShiftCd from " + tableName + " a join BFacR_ClassConfig b on a.ShiftId=b.ShiftId where a.Enabled=1 and b.Enabled=1 and b.ClassId='" + keywords + "') order by StrtRestTm";
+                }
                 return Repository().FindListBySql(sql.ToString());
             }
             else

@@ -2,6 +2,13 @@
     ViewBag.Title = "分配用户";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+<style>
+
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+</style>
 <script>
     var CompanyId = GetQuery('CompanyId');                //公司主键
     var CompanyName = unescape(GetQuery('CompanyName'));  //公司名称

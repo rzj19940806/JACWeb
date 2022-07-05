@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "PrintPage";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>打印</title>
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <script src="~/Content/Scripts/jqprint/jquery.jqprint-0.3.js"></script>
+    <script>
+        var productMatId = GetQuery('productMatId');
+        var PlineCd = GetQuery('PlineCd');
+        var plinetype = '';
+        var plinename = '';
+        var datasource = '';
+        var dataModel = ''; //表单头
+        //var dataMode2 = JSON.parse(JsonData.dataMode2); //明细 转换成 json型
+        //var List = JsonData.List;
+        $(function () {
+            PrintDataSource();
+        })
+
+        //打印数据查询
+        function PrintDataSource() {
+            AjaxJson('/BaseModule/BBdbR_ProductWcConfig/PrintDataSource?', { productMatId: productMatId, PlineCd: PlineCd }, function (data) {
+                plinetype = data.plinetype;
+                plinename = data.plinename;//表单头
+                if (data.rows != null) {
+                    datasource = data.rows;
+                    dataModel = plinename + "装配单";
+                    GetGrid1();
+                }
+                if (plinetype != "生产主线" && data.rows != null) {
+                    datasource = data.rows1;
+                    dataModel = plinename + "扫码单";
+                    GetGrid2();
+                }
+            })    
+        }
+
+        //打印主体--(主线)
+        function GetGrid1() {
+            html = "<div style=\"page-break-before: always\"><table border=\"1\" width=\"90%\" style=\"border:1px solid black;border-collapse:collapse;TABLE-LAYOUT: fixed;page-break-after: always;algin:center;margin:auto\"><tr><td colspan=\"14\" style=\"width:1400px;height:60px;font-family:华文楷体;font-size:28px;text-align:center;\">"
+                + dataModel +"</td></tr>";
+
+            for (var j = 0; j < datasource.length; ) {            
+                html += "<tr>";
+                for (var i = 0; i<7; i++) {
+                    if (j < datasource.length) {
+                        html += "<td colspan=2 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + datasource[j].MatNm.substring(0,8) + "</td>";
+                    } else {
+                        html += "<td colspan=2 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">"+"   "+ "</td>";
+                    }
+                    j++;
+                }
+                html += "</tr><tr>";
+                j = j - 7;
+                for (var i = 0; i < 7; i++) {
+                    if (j < datasource.length) {
+                        html += "<td colspan=2 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + datasource[j].MatCd + "</td>";
+                    } else {
+                        html += "<td colspan=2 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + "   " + "</td>";
+                    }
+                    j++;
+                }
+                html += "</tr>";
+            }
+            html += "</tr>";
+            html += "</table>";
+            html += "</div>";
+            document.getElementById("my_area").innerHTML += html;
+        }
+        //打印主体--(辅线)
+        function GetGrid2() {
+            html = "<div style=\"page-break-before: always\"><table border=\"1\" width=\"90%\" style=\"border:1px solid black;border-collapse:collapse;TABLE-LAYOUT: fixed;page-break-after: always;algin:center;margin:auto\"><tr><td colspan=\"14\" style=\"width:1400px;height:60px;font-family:华文楷体;font-size:28px;text-align:center;\">"
+                + dataModel + "</td></tr>";
+
+            for (var j = 0; j < datasource.length;) {
+                html += "<tr>";
+                for (var i = 0; i < 2; i++) {
+                    if (j < datasource.length) {
+                        html += "<td colspan=7 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + datasource[j].MatCd + "    " + datasource[j].MatNm + "</td>";
+                    } else {
+                        html += "<td colspan=7 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + "   " + "</td>";
+                    }
+                    j++;
+                }
+                html += "</tr><tr>";
+                j = j - 2;
+                for (var i = 0; i < 2; i++) {
+                    html += "<td colspan=7 style=\"WORD-WRAP: break-word;width:500px;height:20px;text-align:center;font-size:18px\">" + "   " + "</td>";
+                    j++;
+                }
+                html += "</tr>";
+            }
+            html += "</tr>";
+            html += "</table>";
+            html += "</div>";
+            document.getElementById("my_area").innerHTML += html;
+            //end打印主体  
+        }
+        //提交打印
+        //function SubmitPrint() {
+        //    $("#my_area").jqprint();
+        //}
+
+        function SubmitPrint() {
+            var printStr = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body >";
+            var content = "";
+            var objName = document.getElementById("my_area").getElementsByTagName("div");//获取指定区域内div的个数
+            for (var i = 0; i < objName.length; i++) {
+                var str = document.getElementById('page' + i).innerHTML;     //获取需要打印的页面元素 ，page1元素设置样式page-break-after:always，意思是从下一行开始分割。
+                content = content + str;
+            }
+            printStr = printStr + content + "</body></html>";
+            var pwin = window.open("Print.htm", "print"); //如果是本地测试，需要先新建Print.htm，如果是在域中使用，则不需要
+            pwin.document.write(printStr);
+            pwin.document.close();                   //这句很重要，没有就无法实现
+            pwin.print();
+        }
+    </script>
+    <style type="text/css">
+        body {
+            margin: 1px;
+            font-size: 12px;
+        }
+
+        td {
+            border: 1px solid #000;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="my_area">
+        @*<table id="tablePrint" border="1"  style="border:1px solid black;border-collapse:collapse;TABLE-LAYOUT: fixed">
+            <tr>
+                <td style="border:none"></td>
+            </tr>
+        </table>*@
+    </div>
+
+</body>
+</html>

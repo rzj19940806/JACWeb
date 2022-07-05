@@ -1,0 +1,233 @@
+@{
+    ViewBag.Title = "燃油标识信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        Show();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/AUEX_NEW_FUELOIL_ID/GridPage")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+            { label: '主键', name: 'GID', index: 'GID', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '标识编码', name: 'IDCODE', index: 'IDCODE', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '生产企业', name: 'MANUFACTURER', index: 'MANUFACTURER', width: 200, align: 'center',sortable: true  },
+            { label: '变速器类型', name: 'TRANSMISSION_TYPE', index: 'TRANSMISSION_TYPE', width: 80, align: 'center',sortable: true  },
+            { label: '能源种类', name: 'FUEL_TYPE', index: 'FUEL_TYPE', width: 80, align: 'center',sortable: true  },
+            { label: '整车整备质量', name: 'ENTIRE_QUALITY', index: 'ENTIRE_QUALITY', width: 80, align: 'center',sortable: true  },
+            { label: '排量', name: 'DISPLACEMENT', index: 'DISPLACEMENT', width: 80, align: 'center',sortable: true  },
+            { label: '最大设计总质量', name: 'DESIGN_QUALITY', index: 'DESIGN_QUALITY', width: 100, align: 'center',sortable: true  },
+            { label: '最大净功率', name: 'MAX_POWERS', index: 'MAX_POWERS', width: 80, align: 'center',sortable: true  },
+            { label: '驱动型式', name: 'DRIVE_TYPE', index: 'DRIVE_TYPE', width: 80, align: 'center',sortable: true  },
+            { label: '其他信息', name: 'ADDTIONAL_INFORMATION', index: 'ADDTIONAL_INFORMATION', width: 200, align: 'center', sortable: true },
+            { label: '驱动电机峰值功率', name: 'POWER_DRIVE_MOTOR', index: 'POWER_DRIVE_MOTOR', width: 0, align: 'center', sortable: true },
+            { label: '市区工况', name: 'URBAN_OPERATING_MODE', index: 'URBAN_OPERATING_MODE', width: 80, align: 'center',sortable: true  },
+            { label: '综合工况', name: 'INTEGRATED_OPERATING_MODE', index: 'INTEGRATED_OPERATING_MODE', width: 80, align: 'center', sortable: true },
+            { label: '综合工况电能消耗量', name: 'INTEGRATED_CONSUMPTION', index: 'INTEGRATED_CONSUMPTION', width: 0, align: 'center', sortable: true },
+            { label: '电能当量燃料消耗量', name: 'ELECTRI_CONSUMPTION', index: 'ELECTRI_CONSUMPTION', width: 0, align: 'center', sortable: true },
+            { label: '市郊工况', name: 'SUBURBAN_OPERATING_MODE', index: 'SUBURBAN_OPERATING_MODE', width: 80, align: 'center',sortable: true  },
+            { label: '领跑值', name: 'LEADVALUE', index: 'LEADVALUE', width: 80, align: 'center',sortable: true  },
+            { label: '限值', name: 'LIMIT', index: 'LIMIT', width: 80, align: 'center',sortable: true  },
+            { label: '备案号', name: 'RECORD_NUMBER', index: 'RECORD_NUMBER', width: 0, align: 'center',sortable: true  },          
+                {
+                    label: '启用日期', name: 'OPENING_DATE', index: 'OPENING_DATE', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue != '合计')
+                            return formatDate(cellvalue, 'yyyy-MM-dd');
+                        else
+                            return "";
+                    },
+                },
+            { label: '国标编号', name: 'GB_NO', index: 'GB_NO', width: 0, align: 'center', sortable: true },
+            { label: '车辆型号', name: 'PRODUCT_VEHICLE_CODE', index: 'PRODUCT_VEHICLE_CODE', width: 0, align: 'center',sortable: true  },
+            { label: '发动机型号', name: 'ENGINE_MODEL', index: 'ENGINE_MODEL', width: 0, align: 'center', sortable: true },
+            { label: '续航里程', name: 'RANGE', index: 'RANGE', width: 0, align: 'center', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 100, align: 'center', hidden: true,
+                    formatter: function (cellvalue, options, rowobject) {
+                    if (cellvalue == '1') return "<img src='../../content/images/checkokmark.gif'/>";
+                    if (cellvalue == '0') return "<img src='../../content/images/checknomark.gif'/>";
+                    }
+                },
+            { label: '创建人', name: 'CREATE_ID', index: 'CREATE_ID', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '创建时间', name: 'CREATE_DATE', index: 'CREATE_DATE', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '修改人', name: 'MODIFY_ID', index: 'MODIFY_ID', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '修改时间', name: 'MODIFY_DATE', index: 'MODIFY_DATE', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true  },
+            { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true  },
+        ],
+            pager: "#gridPager",
+            sortname: 'OPENING_DATE',
+            sortorder: 'desc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#Keywords").hide();
+        }
+        else {
+            $("#Keywords").show();
+        }
+    }
+
+    //新增
+    function btn_add() {
+        var url = "/BaseModule/AUEX_NEW_FUELOIL_ID/Form"
+        openDialog(url, "Form", "新增燃油标识信息", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+            top.frames[tabiframeId()].windowload()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "GID");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/AUEX_NEW_FUELOIL_ID/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑燃油标识信息", 500, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+
+    //打印
+    function PrintDataSource() {
+        var rowId = $('#gridTable').jqGrid("getGridParam", "selrow");
+        var dataMode2 = GetTableDataJson("#gridTable");   
+        var List = $('#gridTable').jqGrid("getRowData",rowId);
+        var JsonData = {
+            dataMode2: dataMode2,
+            List: List,
+        }
+        console.log(JsonData);
+        return JsonData;
+    }
+
+    function btn_print() {                                                                  //点击打印按钮跳转到打印界面
+        var KeyValue = GetJqGridRowValue("#gridTable", "GID");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var EnergeType = GetJqGridRowValue("#gridTable", "FUEL_TYPE");
+        if (EnergeType == "纯电动") {
+            Dialog("/BaseModule/AUEX_NEW_FUELOIL_ID/PrintPage2", "PrintPage2", "打印当前页", 1010, 560, function (iframe) {
+                top.frames[iframe].SubmitPrint();
+            });
+        } else {
+            Dialog("/BaseModule/AUEX_NEW_FUELOIL_ID/PrintPage1", "PrintPage1", "打印当前页", 1010, 560, function (iframe) {
+                top.frames[iframe].SubmitPrint();
+            });
+        }        
+    } 
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "GID");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/AUEX_NEW_FUELOIL_ID/Delete', delparm, KeyValue.split(",").length);
+        }
+    }
+
+    //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#Keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/AUEX_NEW_FUELOIL_ID/GridPageJsonFAS")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#Keywords").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/AUEX_NEW_FUELOIL_ID/GetExcel_Data?keywords=" + escape(keywords) + "&Condition=" + escape(Condition);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>
+                关键字：
+            </th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="MANUFACTURER">生产企业</option>
+                    <option value="TRANSMISSION_TYPE">变速器类型</option>
+                    <option value="FUEL_TYPE">能源种类</option>
+                    <option value="ENTIRE_QUALITY">整车装备质量</option>
+                    <option value="DISPLACEMENT">排量</option>
+                    <option value="DESIGN_QUALITY">最大设计总质量</option>
+                    <option value="MAX_POWERS">最大净功率</option>
+                    <option value="DRIVE_TYPE">驱动型式</option>
+                    <option value="LEADVALUE">领跑值</option>
+                    <option value="LIMIT">限值</option>
+                    <option value="RECORD_NUMBER">备案号</option>
+                    <option value="PRODUCT_VEHICLE_CODE">车辆型号</option>
+                    <option value="ENGINE_MODEL">发动机型号</option>
+                    <option value="URBAN_OPERATING_MODE">市区工况</option>
+                    <option value="SUBURBAN_OPERATING_MODE">市郊工况</option>
+                    <option value="INTEGRATED_OPERATING_MODE">综合工况</option>
+                </select>
+            </td>
+            <td>
+                <input id="Keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

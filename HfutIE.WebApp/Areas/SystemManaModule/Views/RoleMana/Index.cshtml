@@ -12,6 +12,7 @@
     function GetTree() {
         var itemtree = {
             onnodeclick: function (item) {
+                //console.log(item);
                 RoleId = item.id;            //ID
                 RoleName = item.text;        //名称
                 $("#CenterTitle").html(" - " + RoleName);
@@ -32,10 +33,11 @@
             autowidth: true,
             colModel: [
                 { label: '主键', name: 'roleid', index: 'roleid', width: 80, hidden: true },
+                { label: '角色编号', name: 'rolecd', index: 'rolecd', width: 100, align: 'center', sortable: true },
+                { label: '角色名称', name: 'rolenm', index: 'rolenm', width: 100, align: 'center', sortable: true },
                 { label: '角色类别', name: 'rolecatg', index: 'rolecatg', width: 80, align: 'center', sortable: true},
                 { label: '角色类型', name: 'roletyp', index: 'roletyp', width: 100, align: 'center', sortable: true },
-                { label: '角色编号', name: 'rolecd', index: 'rolecd', width: 100, align: 'center', sortable: true },
-                { label: '角色名称', name: 'rolenm', index: 'rolenm', width: 100, align: 'center', sortable: true},              
+                              
                 { label: '排序码', name: 'sortcode', index: 'sortcode', width: 80, align: 'center', hidden: true },                
                 {
                     label: '有效', name: 'enabled', index: 'enabled', width: 45, align: 'center',
@@ -45,15 +47,17 @@
                     }
                 },
             ],
-            viewrecords: true,
             rowNum: 200,
-            rowList: [200, 500, 1000,10000],
             pager: "#gridPager",
             sortname: 'SortCode',
             sortorder: 'desc',
             //multiselect: true,
-            rownumbers: true,
-            shrinkToFit: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
             gridview: true
         });
         columnModelData("#gridTable");
@@ -93,17 +97,18 @@
         var RoleCatg = GetJqGridRowValue("#gridTable", "rolecatg");
         var RoleNm = GetJqGridRowValue("#gridTable", "rolenm");
         if (IsChecked(RoleId)) {
-            var url = "/SystemManaModule/RoleMana/AllotRoleMember?RoleId=" + RoleId + '&RoleNm=' + escape(RoleNm) + '&RoleCatg=' + escape(RoleCatg);
-            openDialog(url, "AllotRoleMember", "角色用户" , 820, 400, function (iframe) {
+            var url = "/SystemManaModule/RoleMana/AllotRoleMember?RoleId=" + RoleId + '&RoleNm=' + escape(RoleNm) + '&Category=2';
+            openDialog(url, "AllotRoleMember", "角色用户", 820, 400, function (iframe) {
                 top.frames[iframe].AcceptClick();
             });
         }
+       
     }
    
     //角色权限：不确定怎么改
     function btn_AllotPermission() {
         var RoleId = GetJqGridRowValue("#gridTable", "roleid");
-        var RoleName = GetJqGridRowValue("#gridTable", "fullname");
+        var RoleName = GetJqGridRowValue("#gridTable", "rolenm");
         if (IsChecked(RoleId)) {
             var url = "/CommonModule/Permission/AllotPermission?ObjectId=" + RoleId + '&Category=2';
             openDialog(url, "AllotPermission", "角色权限 - " + RoleName, 830, 480, function (iframe) {
@@ -124,7 +129,7 @@
     }
     //刷新
     function windowload() {
-        $("#gridTable").trigger("reloadGrid"); //重新载入  
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
     }
 </script>
 <div id="layout" class="layout">

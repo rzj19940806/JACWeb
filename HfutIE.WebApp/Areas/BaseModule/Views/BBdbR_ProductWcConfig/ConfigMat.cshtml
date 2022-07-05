@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewBag.Title = "ConfigMat";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+
+<script type="text/javascript">
+    var productclassid = GetQuery('productclassid');
+    var WcId = GetQuery('wcid');
+    var WcCd = GetQuery('wccd');
+    var WcNm = GetQuery('wcnm');
+    var lastrow = "";
+    var lastcell = "";
+    $(function () {
+        Show();
+        GetGrid();
+        GetGrid1();
+    })
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        } else {
+            $("#keywords").show();
+        }
+    }
+     //加载未配置物料
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridNotConfigJson")?productclassid=" + escape(productclassid),
+        datatype: "json",
+        height:125, //$(window).height() - 149,
+        width:770,
+            colModel: [
+                { label: '物料主键', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: true, key: true,hidden: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+                { label: '规格型号', name: 'MatSpec', index: 'MatSpec', width: 0, align: 'center', sortable: true },
+                { label: '物料图片', name: 'MatImg', index: 'MatImg', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+        ],
+        pager: "#gridPager",
+        gridview: true,
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: true,
+        loadonce: true,
+            ondblClickRow: function (RowId) {//双击时，得到选中行的数据           
+                var id = GetJqGridRowValue("#gridTable", "MatId");
+                var code = GetJqGridRowValue("#gridTable", "MatCd");
+                var fullname = GetJqGridRowValue("#gridTable", "MatNm");
+                var type = GetJqGridRowValue("#gridTable", "MatSpec");
+                var picture = GetJqGridRowValue("#gridTable", "MatImg");
+                var VersionNumber = GetJqGridRowValue("#gridTable", "VersionNumber");
+                var Enabled = GetJqGridRowValue("#gridTable", "Enabled");
+                var Rem = GetJqGridRowValue("#gridTable", "Rem");
+                var id_down = "";
+                var list = $("#gridTable1").jqGrid("getRowData");
+                //将已配置产品表格中共所有的物料主键拼接，判断选中的产品是否已经存在
+                $.each(list, function (i, item) {
+                    id_down += item.MatId;
+                })
+                if (id_down.search(id) == -1) {
+                    $("#gridTable1").jqGrid("addRowData", RowId, "last");//将grid选中行数据复制给grid1中新增的行
+                    $("#gridTable1").jqGrid("setRowData", RowId, {
+                        MatId: id, MatCd: code, MatNm: fullname, MatSpec: type, 
+                        VersionNumber: VersionNumber, Enabled: Enabled
+                    });//将grid选中行数据复制给grid1中新增的行
+                }             
+            }
+    });
+    }
+    //加载已配置物料
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+            datatype: "json",
+            height: 125,
+            width: 770,
+            colModel: [
+                { label: '物料主键', name: 'MatId', index: 'MatId', width: 0, align: 'center', key: true, sortable: true, hidden: true },
+                { label: '物料编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '物料名称', name: 'MatNm', index: 'MatNm', width: 0, align: 'center', sortable: true },
+                { label: '规格型号', name: 'MatSpec', index: 'MatSpec', width: 0, align: 'center', sortable: true },
+                { label: '物料数量', name: 'MatNum', index: 'MatNum', width: 0, align: 'center', sortable: true, editable: true },//设定数量最小为1,为数字类型且为必输字段editrules: {required:true,number:true,minValue:1}   
+                { label: '是否安全件', name: 'IsSafe', index: 'IsSafe', width: 0, align: 'center', sortable: true, editable: true, edittype: "select", editoptions: { value: "一:是;二:否" } },
+                { label: '是否展示图片', name: 'IsShow', index: 'IsShow', width: 0, align: 'center', sortable: true, editable: true, edittype: "select", editoptions: { value: "一:是;二:否" } },
+                { label: '是否关重件', name: 'IsScan', index: 'IsScan', width: 0, align: 'center', sortable: true, editable: true, edittype: "select", editoptions:{value:"一:是;二:否"} },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true,hidden:true  },
+            ],
+            pager: "#gridPager1",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            gridview: true,
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            loadonce: true,
+            ondblClickRow: function (RowId) {
+                   $("#gridTable1").jqGrid("delRowData", RowId);//删除grid选中的行
+            },
+            beforeEditCell: function (rowid, cellname, v, iRow, iCol) {
+                lastrow = iRow;//行号
+                lastcell = iCol;//列号
+            }
+        });
+    }
+     //搜索事件
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {//设置grid的参数。有些参数的修改必须要重新加载grid才可以生效，这个方法可以覆盖事件
+            //url:设置一个grid的ajax url，可配合trigger("reloadGrid")使用;page:设置翻到第几页;datatype:设置新的datatype(xml,json...)
+            url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/NotConfigMatByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition) + "&productclassid=" + escape(productclassid), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+    //回车事件
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //保存事件
+    function AcceptClick() {
+        $("#gridTable1").jqGrid("saveCell", lastrow, lastcell)//对单元格数据进行保存
+        var gridData = $("#gridTable1").jqGrid("getRowData");
+        var a = "";//用来标志数量
+        var b = "";//标识是否关重件
+        var c = "";//标识是否安全件
+        var d = "";//表示是否展示图片
+        var alerta = "0";
+        var alertb = "0";
+        var alertc = "0";
+        var alertd = "0";
+        if (gridData.length > 0) {
+            $.each(gridData, function (i, item) {
+                var re = /^[1-9]+[0-9]*]*$/;
+                a = item.MatNum;
+                b = item.IsScan;
+                c = item.IsSafe;
+                d = item.IsShow;
+                if (!re.test(a)) {
+                    alerta = "1";
+                }
+                if (b != "是" && b != "否") {
+                    alertb = "1";
+                }
+                if (b == "是") {
+                    item.IsScan = 1;
+                }
+                if (b == "否") {
+                    item.IsScan = 0;
+                }
+                if (c != "是" && c != "否") {
+                    alertc = "1";
+                }
+                if (c == "是") {
+                    item.IsSafe = 1;
+                }
+                if (c == "否") {
+                    item.IsSafe = 0;
+                }
+                if (d != "是" && d != "否") {
+                    alertd = "1";
+                }
+                if (d == "是") {
+                    item.IsShow = 1;
+                }
+                if (d == "否") {
+                    item.IsShow = 0;
+                }
+            });
+
+            if (alerta == "1") {
+                tipDialog("请输入正确的物料数量", 2, -2);
+            }
+            if (alertb == "1") {
+                tipDialog("请选择配置的物料是否为关重件", 2, -2);
+            }
+            if (alertc == "1") {
+                tipDialog("请选择配置的物料是否为安全件", 2, -2);
+            }
+            if (alertd == "1") {
+                tipDialog("请选择配置的物料是否为展示图片", 2, -2);
+            }
+            if (alerta == "0" && alertb == "0") {      
+                AjaxJson('/BaseModule/BBdbR_ProductWcConfig/MatSubmit?', { productclassid: productclassid, WcId: WcId, WcCd: WcCd, WcNm: WcNm, tabledata: gridData }, function (data) {
+                    //在控制器判断，传回message会变成乱码
+                    if (data.Code == "1")//提交成功
+                    {
+                        tipDialog("配置成功", 2, 1);
+                        top.frames[tabiframeId()].windowload();
+                        closeDialog();
+                    }
+                    else {
+                        tipDialog("配置失败", 2, 0);
+                    }
+                })
+            }       
+        }
+        else {
+            tipDialog("请选择需要配置的物料", 2, -2);
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
+                    <option value="MatCd">物料编号</option>
+                    <option value="MatNm">物料名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    <div style="overflow: auto;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:7px">
+                    <span class="ModuleName">未配置物料</span>
+                </div>
+            </div>
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+    <div style="overflow: auto;">
+        <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+            <div class="btnbartitle">
+                <div style="float: left;margin-left:7px">
+                    <span class="ModuleName">已配置物料</span>
+                </div>
+            </div>
+            <table id="gridTable1"></table>
+            <div id="gridPager1"></div>
+        </div>
+    </div>
+</form>

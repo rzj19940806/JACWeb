@@ -1,0 +1,140 @@
+@{
+    ViewBag.Title = "功能基础信息表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#FunctionType", "FunctionType", "==全部==");
+        Show();
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/BBdbR_FunctionBase/GridPage")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '主键', name: 'FunctionId', index: 'FunctionId', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '功能编号', name: 'FunctionCd', index: 'FunctionCd', width: 0, align: 'center',sortable: true  },
+                { label: '功能名称', name: 'FunctionNm', index: 'FunctionNm', width: 0, align: 'center',sortable: true  },
+                { label: '功能描述', name: 'FunctionDsc', index: 'FunctionDsc', width: 0, align: 'center',sortable: true  },
+            {
+                label: '功能类型', name: 'FunctionType', index: 'FunctionType', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return CellItem('FunctionType', cellvalue);
+                }  },
+                { label: '备注', name: 'Remark', index: 'Remark', width: 0, align: 'center',sortable: true  },
+                { label: '有效性', name: 'Enable', index: 'Enable', width: 0, align: 'center',sortable: true  },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true  },
+                { label: '创建人编号', name: 'CreatorCode', index: 'CreatorCode', width: 0, align: 'center',sortable: true  },
+                { label: '创建人名称', name: 'CreatorName', index: 'CreatorName', width: 0, align: 'center',sortable: true  },
+                { label: '创建时间', name: 'CreateTime', index: 'CreateTime', width: 0, align: 'center',sortable: true  },
+                { label: '修改人编号', name: 'ModifierCode', index: 'ModifierCode', width: 0, align: 'center',sortable: true  },
+                { label: '修改人名称', name: 'ModifierName', index: 'ModifierName', width: 0, align: 'center',sortable: true  },
+                { label: '修改时间', name: 'ModifyTime', index: 'ModifyTime', width: 0, align: 'center',sortable: true  },
+                { label: '预留字段1', name: 'ReserveFiled1', index: 'ReserveFiled1', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: '预留字段2', name: 'ReserveFiled2', index: 'ReserveFiled2', width: 0, align: 'center',sortable: true ,hidden: true },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //新增
+    function btn_add() {
+        var url = "/BaseModule/BBdbR_FunctionBase/Form"
+        openDialog(url, "Form", "新增功能基础信息表", 770, 395, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FunctionId");
+        if (IsChecked(KeyValue)) {
+            var url = "/BaseModule/BBdbR_FunctionBase/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑功能基础信息表", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "FunctionId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_FunctionBase/Delete1', delparm, KeyValue.split(",").length);
+        }
+    }
+   //搜索
+    function btn_Search() {
+        var Condition = $("#Condition").val();
+        var keywords;
+            keywords = $("#keywords").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/BBdbR_FunctionBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
+    }).trigger('reloadGrid');
+    }
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/BaseModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
+                    <option value="all">==全部==</option>
+                    <option value="FunctionCd">功能编号</option>
+                    <option value="FunctionNm">功能名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

@@ -128,17 +128,18 @@ namespace HfutIE.Business
             string sql = "";
             if (classv == "车间")
             {
-                 sql = @"select WorkshopId as id, WorkshopNm as name from BBdbR_WorkshopBase where Enabled=1";
+                 sql = @"select WorkshopId as id, WorkshopNm as name from BBdbR_WorkshopBase where Enabled=1 order by sort asc";
                 
             } else if(classv == "工位")
             {
-                sql = @"select WcId as id, WcNm as name from BBdbR_WcBase where Enabled=1";
+                sql = @"select WcId as id, WcNm as name from BBdbR_WcBase where Enabled=1 order by WcCd asc";
             } else if(classv == "产线")
             {
-                sql = @"select PlineId as id, PlineNm as name from BBdbR_PlineBase where Enabled=1";
-            } else if(classv == "岗位")
+                sql = @"select PlineId as id, PlineNm as name from BBdbR_PlineBase where Enabled=1 order by PlineCd asc";
+            } 
+            else if (classv == "AVI设备")
             {
-                sql = @"select PostId as id, PostNm as name from BBdbR_PostBase where 1=1";
+                sql = @"select AviId as id, AviNm as name from BBdbR_AVIBase where Enabled=1 and OP_CODE is not null  order by OP_CODE,AviCd asc";
             }
             return Repository().FindTableBySql(sql);
         }
@@ -206,7 +207,7 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (Condition == "all" || Condition == null)
             {
-                sql = @"select * from " + tableName +" where Enabled=1 ";
+                sql = @"select * from " + tableName +" where Enabled=1 order by "+ jqgridparam.sidx+" "+ jqgridparam.sord;
                 dt = Repository().FindTableBySql(sql.ToString(), false);
                 dt.Columns.Add("ClassNm");
                 for(int i = 0; i < dt.Rows.Count; i++)
@@ -215,31 +216,52 @@ namespace HfutIE.Business
                     {
                         sql = @"select WorkshopNm from BBdbR_WorkshopBase where WorkshopId='" + dt.Rows[i]["ClassId"].ToString() + "'and Enabled=1 ";
                         DataTable dt1 = Repository().FindTableBySql(sql.ToString(), false);
-                        dt.Rows[i]["ClassNm"] = dt1.Rows[0][0];
+                        if (dt1.Rows.Count>0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt1.Rows[0][0];
+                        }
                     }
                     else if(dt.Rows[i]["Class"].ToString() == "工位")
                     {
                         sql = @"select WcNm from BBdbR_WcBase where WcId='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
                         DataTable dt2 = Repository().FindTableBySql(sql.ToString(), false);
-                        dt.Rows[i]["ClassNm"] = dt2.Rows[0][0];
+                        if (dt2.Rows.Count > 0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt2.Rows[0][0];
+                        }
                     }
                     else if(dt.Rows[i]["Class"].ToString() == "产线")
                     {
                         sql = @"select PlineNm from BBdbR_PlineBase where PlineId='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
                         DataTable dt3 = Repository().FindTableBySql(sql.ToString(), false);
-                        dt.Rows[i]["ClassNm"] = dt3.Rows[0][0];
+                        if (dt3.Rows.Count > 0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt3.Rows[0][0];
+                        }
                     }
                     else if(dt.Rows[i]["Class"].ToString() == "岗位")
                     {
                         sql = @"select PostNm from BBdbR_PostBase where PostId='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
                         DataTable dt4 = Repository().FindTableBySql(sql.ToString(), false);
-                        dt.Rows[i]["ClassNm"] = dt4.Rows[0][0];
+                        if (dt4.Rows.Count > 0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt4.Rows[0][0];
+                        }
+                    }
+                    else if (dt.Rows[i]["Class"].ToString() == "AVI设备")
+                    {
+                        sql = @"select AviNm from BBdbR_AVIBase where AviId ='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
+                        DataTable dt5 = Repository().FindTableBySql(sql.ToString(), false);
+                        if (dt5.Rows.Count > 0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt5.Rows[0][0];
+                        }
                     }
                 }
             }
             else
             {
-                sql = @"select * from " + tableName + " where Enabled = 1 and " + Condition + " like  '%" + keywords + "%'";
+                sql = @"select * from " + tableName + " where Enabled = 1 and " + Condition + " like  '%" + keywords + "%'" + jqgridparam.sidx + " " + jqgridparam.sord;
                 dt = Repository().FindTableBySql(sql.ToString(), false);
                 dt.Columns.Add("ClassNm");
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -267,6 +289,15 @@ namespace HfutIE.Business
                         sql = @"select PostNm from BBdbR_PostBase where PostId='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
                         DataTable dt4 = Repository().FindTableBySql(sql.ToString(), false);
                         dt.Rows[i]["ClassNm"] = dt4.Rows[0][0];
+                    }
+                    else if (dt.Rows[i]["Class"].ToString() == "AVI设备")
+                    {
+                        sql = @"select AviNm from BBdbR_AVIBase where AviId ='" + dt.Rows[i]["ClassId"].ToString() + "' and Enabled=1 ";
+                        DataTable dt5 = Repository().FindTableBySql(sql.ToString(), false);
+                        if (dt5.Rows.Count > 0)
+                        {
+                            dt.Rows[i]["ClassNm"] = dt5.Rows[0][0];
+                        }
                     }
                 }
             }
@@ -575,6 +606,47 @@ namespace HfutIE.Business
             }
             Result = Newdt;
             return IsOk;
+        }
+        #endregion
+
+        #region 导出时的机构信息
+        public DataTable searchClass(string dvcClass, string devClassICd)
+        {
+            try
+            {
+                string sql = "";
+                DataTable dt = new DataTable();
+                if (dvcClass == "车间")
+                {
+                    sql = @"select WorkshopId as id from BBdbR_WorkshopBase where WorkshopCd = '" + devClassICd + "'Enabled=1";
+                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                else if (dvcClass == "工位")
+                {
+                    sql = @"select WcId  as id from BBdbR_WcBase where WcCd = '" + devClassICd + "'Enabled=1";
+                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                else if (dvcClass == "产线")
+                {
+                    sql = @"select PlineId as id from BBdbR_PlineBase wherre PlineCd = '" + devClassICd + "'Enabled=1";
+                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                else if (dvcClass == "岗位")
+                {
+                    sql = @"select PostId as id from BBdbR_PostBase where PostCd = '" + devClassICd + "'Enabled=1";
+                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                else if (dvcClass == "AVI设备")
+                {
+                    sql = @"select AviId as id from BBdbR_AVIBase where AviCd = '" + devClassICd + "'Enabled=1";
+                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                }
+                return dt != null?dt:null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         #endregion
 

@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "解码规则》规则工位";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script>
+    var BarId = GetQuery('BarId');                //公司主键
+    $(function () {
+        GetList();
+    })
+    //加载角色
+    function GetList() {
+        getAjax("/BaseModule/BBdbR_BarCodeBase/CodeWcList", { BarId: BarId }, function (data) {
+            $(".sys_spec_text").html(data);
+        });
+        $("#RoleList li").click(function () {
+            if (!$(this).attr('disabled')) {
+                if (!!$(this).hasClass("selected")) {
+                    $(this).removeClass("selected");
+                } else {
+                    $(this).addClass("selected").siblings("li");
+                }
+            }
+        });
+        //自定义复选框 全选/反选
+        $("#CheckButton").click(function () {
+            if (!!$(this).hasClass("checkAllOff")) {
+                $(this).attr('title', '反选');
+                $(this).text('反选');
+                $(this).attr('class', 'checkAllOn');
+                $('.sys_spec_text li').addClass('selected');
+            } else {
+                $(this).attr('title', '全选');
+                $(this).text('全选');
+                $(this).attr('class', 'checkAllOff');
+                $('.sys_spec_text li').removeClass('selected');
+            }
+        });
+    }
+    //保存事件
+    function AcceptClick() {
+        Loading(true, "正在提交数据...");
+        window.setTimeout(function () {
+            var WcId = "";
+            $('.sys_spec_text .selected a').each(function () { WcId += $(this).attr('id') + ","; });
+            var postData = { CodeId: BarId, WcId: WcId }
+            AjaxJson("/BaseModule/BBdbR_BarCodeBase/SubmitCodeWcList", postData, function (data) {
+                Loading(false);
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+</script>
+<div class="border" style="margin: 1px;">
+    <div class="btnbartitle">
+        <div style="float: left">
+            温馨提示：选中复选框即可授予相应权限，取消选中则回收相应权限。
+        </div>
+        <div style="float: right">
+            <label id="CheckButton" class="checkAllOff" title="全选">全选</label>
+        </div>
+    </div>
+    <div class="ScrollBar" id="RoleList" style="height: 275px;">
+        <ul class="sys_spec_text">
+        </ul>
+    </div>
+</div>

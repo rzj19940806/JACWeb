@@ -25,7 +25,7 @@ namespace HfutIE.Business
     public class Base_ButtonPermissionBll : RepositoryFactory<Base_ButtonPermission>
     {
         /// <summary>
-        /// 按钮权限列表
+        /// 按钮权限列表——分配权限时使用
         /// </summary>
         /// <param name="ObjectId">对象主键</param>
         /// <param name="Category">对象分类:1-部门2-角色3-岗位4-群组</param>
@@ -34,41 +34,46 @@ namespace HfutIE.Business
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(@"SELECT  b.ButtonId ,				
-                                        b.ModuleId ,				
-                                        b.Code ,					
-                                        b.FullName ,				
-                                        b.Category ,				
-                                        b.Icon ,					
-                                        b.SortCode ,				
-                                        cp.ModuleButtonId AS ObjectId					
-                                FROM    Base_Button b INNER JOIN ( SELECT DISTINCT ModuleButtonId  FROM   Base_ButtonPermission");
-                strSql.Append(" WHERE  ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "')) bp ON B.ButtonId = bp.ModuleButtonId");
-                strSql.Append(" LEFT JOIN ( SELECT DISTINCT ModuleButtonId  FROM  Base_ButtonPermission");
-                strSql.Append(" WHERE  ObjectId = @ObjectId ) cp ON cp.ModuleButtonId = b.ButtonId");
-            }
-            else
-            {
-                strSql.Append(@"SELECT  b.ButtonId ,			
+            strSql.Append(@"select * from(SELECT  b.ButtonId ,			
                                     b.ModuleId ,			
                                     b.Code ,					
                                     b.FullName ,				
                                     b.Category ,				
                                     b.Icon ,					
                                     b.SortCode ,				
-                                    bp.ObjectId					
+                                    bp.ObjectId,
+                                    ROW_NUMBER() OVER(PARTITION BY b.ButtonId ORDER BY b.SortCode ASC) as RepeatNum		
                             FROM    Base_Button b
                                     LEFT JOIN Base_ButtonPermission bp ON bp.ModuleButtonId = b.ButtonId
-                                                                          AND bp.ObjectId = @ObjectId");
-            }
-            strSql.Append(" order by b.SortCode ASC");
+                                                                          AND bp.ObjectId  IN ('" + ObjectId.Replace(",", "','") + "')) a ");//@ObjectId——2021.11.29修改
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(@"SELECT  b.ButtonId ,				
+            //                            b.ModuleId ,				
+            //                            b.Code ,					
+            //                            b.FullName ,				
+            //                            b.Category ,				
+            //                            b.Icon ,					
+            //                            b.SortCode ,				
+            //                            cp.ModuleButtonId AS ObjectId					
+            //                    FROM    Base_Button b INNER JOIN ( SELECT DISTINCT ModuleButtonId  FROM   Base_ButtonPermission");
+            //    strSql.Append(" WHERE  ObjectId IN ('" + ObjectId.Replace(",", "','") + "')) bp ON B.ButtonId = bp.ModuleButtonId");
+            //    strSql.Append(" LEFT JOIN ( SELECT DISTINCT ModuleButtonId  FROM  Base_ButtonPermission");
+            //    strSql.Append(" WHERE  ObjectId IN ('" + ObjectId.Replace(",", "','") + "') ) cp ON cp.ModuleButtonId = b.ButtonId");//= @ObjectId——2021.11.29修改
+            //}
+            //else
+            //{
+                
+            //}
+            //2021.11.28新增
+            strSql.Append(@" where   RepeatNum = '1'");//2021.11.28新增  Enabled = '1' and 
+
+            strSql.Append(" order by SortCode ASC");
             parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
         /// <summary>
-        /// 加载按钮权限
+        /// 加载按钮权限——用户登录模块界面时调用
         /// </summary>
         /// <param name="ObjectId">对象主键</param>
         /// <param name="ModuleId"模块主键</param>
@@ -92,7 +97,24 @@ namespace HfutIE.Business
             return DataFactory.Database().FindListBySql<Base_Button>(strSql.ToString(), parameter.ToArray());
         }
         /// <summary>
-        /// 根据对象Id获取模块按钮权限列表
+        /// 加载终端界面按钮权限——2021.11.30新增终端界面使用
+        /// </summary>
+        /// <param name="ObjectId">对象主键</param>
+        /// <param name="ModuleId"模块主键</param>
+        /// <returns></returns>
+        public List<Base_Button> GetButtonList1(string ObjectId, string ModuleId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            List<DbParameter> parameter = new List<DbParameter>();
+            strSql.Append(@"SELECT DISTINCT B.* FROM Base_Button B");
+            strSql.Append(" INNER JOIN Base_ButtonPermission BP ON B.ButtonId = BP.ModuleButtonId WHERE ObjectId IN ('" + ObjectId.Replace(",", "','") + "')");
+            strSql.Append(" AND B.ModuleId = @ModuleId");
+            strSql.Append(" ORDER BY B.SortCode ASC ");
+            parameter.Add(DbFactory.CreateDbParameter("@ModuleId", ModuleId));
+            return DataFactory.Database().FindListBySql<Base_Button>(strSql.ToString(), parameter.ToArray());
+        }
+        /// <summary>
+        /// 根据对象Id获取模块按钮权限列表——用户登录个人中心时调用
         /// </summary>
         /// <param name="ObjectId">对象ID</param>
         /// <returns></returns>

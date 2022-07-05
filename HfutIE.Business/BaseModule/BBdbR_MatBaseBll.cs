@@ -44,7 +44,7 @@ namespace HfutIE.Business
             List<BBdbR_MatBase> dt;
             if (KeyValue == "")
             {
-                strSql.Append(@"SELECT  * FROM  BBdbR_MatBase where Enabled = 1 ");
+                strSql.Append(@"SELECT  * FROM  BBdbR_MatBase where Enabled = 1 order by IsScan,WcCd");
                 dt = Repository().FindListBySql(strSql.ToString());
             }
             else
@@ -171,13 +171,13 @@ namespace HfutIE.Business
             List<BBdbR_MatBase> dt;
             if (Condition == "all")
             {
-                sql = @"select * from " + tableName + " where 1 = 1";
+                sql = @"select * from " + tableName + " where Enabled = '1'";
                 dt = Repository().FindListBySql(sql.ToString());
             }
             else
             {
                 //根据条件查询
-                sql = @"select * from " + tableName + " where  " + Condition + " like  '%" + keywords + "%'";
+                sql = @"select * from " + tableName + " where Enabled = '1' and " + Condition + " like  '%" + keywords + "%'";
                 dt = Repository().FindListBySql(sql.ToString());
             }
             return dt;
@@ -228,6 +228,13 @@ namespace HfutIE.Business
             StringBuilder strSql = new StringBuilder();
             strSql.Append(@"select * from BBdbR_MatBase where MatId='" + KeyValue + "'");
             return Repository().FindTableBySql(strSql.ToString(),false);
+
+        }
+        public DataTable GetPartMatInfor(string KeyValue)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append($@"select * from BBdbR_PartMatConfig where Id='{KeyValue}'");
+            return Repository().FindTableBySql(strSql.ToString(), false);
 
         }
         #endregion

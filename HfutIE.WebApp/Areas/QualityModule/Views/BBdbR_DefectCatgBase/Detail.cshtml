@@ -1,0 +1,97 @@
+@{
+    ViewBag.Title = "缺陷类别基本信息表》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/BBdbR_DefectCatgBase/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>缺陷分组主键：</th>
+            <td class='formValue'>
+                <label id="DefectCatgId" />
+            </td>
+            <th class='formTitle'>缺陷分组编号：</th>
+            <td class='formValue'>
+                <label id="DefectCatgCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷分组称：</th>
+            <td class='formValue'>
+                <label id="DefectCatgNm" />
+            </td>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <label id="Dsc" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>有效性：</th>
+            <td class='formValue'>
+                <label id="Enabled" />
+            </td>
+            <th class='formTitle'>版本号：</th>
+            <td class='formValue'>
+                <label id="VersionNumber" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <label id="CreTm" />
+            </td>
+            <th class='formTitle'>创建人编号：</th>
+            <td class='formValue'>
+                <label id="CreCd" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建人名称：</th>
+            <td class='formValue'>
+                <label id="CreNm" />
+            </td>
+            <th class='formTitle'>修改时间：</th>
+            <td class='formValue'>
+                <label id="MdfTm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>修改人编号：</th>
+            <td class='formValue'>
+                <label id="MdfCd" />
+            </td>
+            <th class='formTitle'>修改人名称：</th>
+            <td class='formValue'>
+                <label id="MdfNm" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <label id="Rem" />
+            </td>
+            <th class='formTitle'>RsvFld1：</th>
+            <td class='formValue'>
+                <label id="RsvFld1" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RsvFld2：</th>
+            <td class='formValue'>
+                <label id="RsvFld2" />
+            </td>
+        </tr>
+    </table>
+</form>

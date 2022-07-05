@@ -29,6 +29,10 @@
             postData.WcId = WcId;
         }
         AjaxJson("/BaseModule/BBdbR_PostBase/SubmitForm?KeyValue=" + escape(KeyValue), postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("WcCd", data.Message);
+                return;
+            }
             tipDialog(data.Message, 3, data.Code);
             top.frames[tabiframeId()].windowload();
             closeDialog();
@@ -82,18 +86,20 @@
                 <input id="WcId" maxlength=50 type="text" class="txt" />
             </td>
         </tr>
-        <tr style=" display:none">
-            <th class='formTitle'>开始：</th>
+        <tr>
+            <th class='formTitle'>开始位：</th>
             <td class='formValue'>
                 <input id="StartPoint" maxlength=10 type="text" class="txt" />
-            </td>
-            <th class='formTitle'>预警：</th>
+            </td>         
+        </tr>
+        <tr>
+            <th class='formTitle'>预警位：</th>
             <td class='formValue'>
                 <input id="PreAlarmPoint" maxlength=10 type="text" class="txt" />
             </td>
         </tr>
-        <tr style=" display:none">
-            <th class='formTitle'>结束：</th>
+        <tr>
+            <th class='formTitle'>结束位：</th>
             <td class='formValue'>
                 <input id="EndPoint" maxlength=10 type="text" class="txt" />
             </td>

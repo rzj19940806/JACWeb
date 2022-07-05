@@ -9,9 +9,12 @@
         Show();
         BindDropItem("#DepartmentType", "DepartmentType", "==全部==");
     })
-    var areaId, area_name = "";
+    var areaId = "";
+    var area_name = "";
+    var companyid = "";
     var selectnodeishaschild = "";//选中树节点是否有子节点
     var parentId = "";//父节点编号
+    let Type = '';
     //加载左边树
     function GetTree() {
         var itemtree = {
@@ -20,8 +23,20 @@
                 areaId = item.id;            //ID
                 area_name = item.text;         //名称
                 parentId = item.parentnodes;   //父节点编号
+                companyid = item.CompanyId;//所属公司主键
+                Type = item.Type;
+
+                var Condition = $("#Condition").val();
+                var keywords = "";
+                if (Condition == "DepartmentType") {
+                    keywords = $("#DepartmentType").val();
+                }
+                else {
+                    keywords = $("#keywords").val();
+                }
+                
                 //2.点击树展示表格
-                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridListJson")?areaId=" + areaId + "&parentId=" + parentId, datatype: 'json'}).trigger('reloadGrid');
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridListJson")?areaId=" + areaId + "&parentId=" + parentId + "&Condition=" + Condition + "&keywords=" + keywords, datatype: 'json'}).trigger('reloadGrid');
             },
             url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/TreeJson")"    //1.获取树
         };
@@ -30,9 +45,16 @@
 
     //加载表格
     function GetGrid() {
-         
+        var Condition = $("#Condition").val();
+        var keywords = "";
+        if (Condition == "DepartmentType") {
+            keywords = $("#DepartmentType").val();
+        }
+        else {
+            keywords = $("#keywords").val();
+        }
         $("#gridTable").jqGrid({
-            url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridListJson?areaId='' && parentId=''")",
+            url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridListJson")?areaId=" + areaId + "&parentId=" + parentId + "&Condition=" + Condition + "&keywords=" + keywords,
         datatype: "json",
         height: $(window).height() - 149,
         autowidth: true,
@@ -40,36 +62,36 @@
             { label: '部门主键', name: 'DepartmentID', index: 'DepartmentID', width: 0, align: 'center', sortable: true, hidden: true },
             { label: '部门编号', name: 'DepartmentCode', index: 'DepartmentCode', width: 0, align: 'center', sortable: true },
             { label: '部门名称', name: 'DepartmentName', index: 'DepartmentName', width: 0, align: 'center', sortable: true },
-            { label: '工厂主键', name: 'FacId', index: 'FacId', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '工厂编号', name: 'FacCd', index: 'FacCd', width: 0, align: 'center', sortable: true},
-            { label: '工厂名称', name: 'FacNm', index: 'FacNm', width: 0, align: 'center', sortable: true },
+            { label: '公司主键', name: 'CompanyId', index: 'CompanyId', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '公司编号', name: 'CompanyCd', index: 'CompanyCd', width: 0, align: 'center', sortable: true},
+            { label: '公司名称', name: 'CompanyNm', index: 'CompanyNm', width: 0, align: 'center', sortable: true },
             { label: '父部门主键', name: 'ParentDepartmentID', index: 'ParentDepartmentID', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '父部门编号', name: 'ParentDepartmentCode', index: 'ParentDepartmentCode', width: 0, align: 'center', sortable: true },
-            { label: '父部门名称', name: 'ParentDepartmentName', index: 'ParentDepartmentName', width: 0, align: 'center', sortable: true },
-            {
-                label: '部门类型', name: 'DepartmentType', index: 'DepartmentType', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    return CellItem('DepartmentType', cellvalue);
-                }
-            },
+            //{ label: '父部门编号', name: 'ParentDepartmentCode', index: 'ParentDepartmentCode', width: 0, align: 'center', sortable: true },
+            //{ label: '父部门名称', name: 'ParentDepartmentName', index: 'ParentDepartmentName', width: 0, align: 'center', sortable: true },
+            //{
+            //    label: '部门类型', name: 'DepartmentType', index: 'DepartmentType', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        return CellItem('DepartmentType', cellvalue);
+            //    }
+            //},
             { label: '负责人员主键', name: 'StfId', index: 'StfId', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '负责人员编号', name: 'StfCd', index: 'StfCd', width: 0, align: 'center',sortable: true  },
+            { label: '负责人员编号', name: 'StfCd', index: 'StfCd', width: 0, align: 'center', sortable: true, hidden: true   },
             { label: '负责人员姓名', name: 'StfNm', index: 'StfNm', width: 0, align: 'center',sortable: true  },
             { label: '负责人手机号', name: 'Phn', index: 'Phn', width: 0, align: 'center',sortable: true  },
             { label: '部门描述', name: 'DepartmentDescription', index: 'DepartmentDescription', width: 0, align: 'center',sortable: true  },
-            { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true  },
-                {
-                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 100, align: 'center',
-                   formatter: function (cellvalue, options, rowObject) {
-                       if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                    }
-                },
-            { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true  },
-            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true  },
+            //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center',sortable: true  },
+            
+            {
+                label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true
+                , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                 },
+            //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true  },
             { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center',sortable: true  },
-            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true  },
-            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true  },
+            {
+                label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true
+                , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                 },
+            //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center',sortable: true  },
             { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center',sortable: true  },
             { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
             { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true  },
@@ -78,9 +100,13 @@
         pager: "#gridPager",
         sortname: 'DepartmentCode',
         sortorder: 'asc',
-        rownumbers: true,
-        shrinkToFit: false,
-        gridview: true,
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
     });
     }
 
@@ -104,34 +130,30 @@
  //刷新
     function windowload() {
         $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
+        GetTree();
     }
 
  //新增
     function btn_add() {        
         if (!!areaId) {
-            if (parentId != "0") {
-                var url = "/BaseModule/BBdbR_DepartmentBase/Form?FacId=" + escape(areaId);
-                openDialog(url, "Form", "新增部门信息", 500, 300, function (iframe) {
-                    top.frames[iframe].AcceptClick()
-                });
-            }
-            else {
-                alertDialog("请选择工厂节点，为工厂添加部门！", 0);
-            }
+            var url = "/BaseModule/BBdbR_DepartmentBase/Form?areaId=" + escape(areaId) + "&CompanyId=" + escape(companyid);
+            openDialog(url, "Form", "新增部门信息", 500, 300, function (iframe) {
+                top.frames[iframe].AcceptClick()
+            });           
         }
         else {
-            alertDialog("请选择工厂节点！", 0);
+            alertDialog("请选择左侧树节点！", 0);
         }
     }
        //编辑
     function btn_edit() {
         var KeyValue = GetJqGridRowValue("#gridTable", "DepartmentID");
-        var FacId = GetJqGridRowValue("#gridTable", "FacId");
+        var CompanyId = GetJqGridRowValue("#gridTable", "CompanyId");
             if (KeyValue == undefined) {
                 tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
                 return;
             }
-        var url = "/BaseModule/BBdbR_DepartmentBase/Form?KeyValue=" + KeyValue + "&&FacId=" + escape(FacId);
+        var url = "/BaseModule/BBdbR_DepartmentBase/Form?KeyValue=" + KeyValue + "&&CompanyId=" + escape(CompanyId);
             openDialog(url, "Form", "编辑部门信息", 500, 300, function (iframe) {
                 top.frames[iframe].AcceptClick()
             });
@@ -156,8 +178,49 @@
             keywords = $("#keywords").val();
         }
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_DepartmentBase/GridPageByCondition")?areaId=" + areaId + "&parentId=" + parentId + "&Condition=" + Condition + "&keywords=" + keywords, page: 1, datatype: 'json'
     }).trigger('reloadGrid');
+    }
+
+    
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var Condition = $("#Condition").val();
+        var keywords = "";
+        if (Condition == "DepartmentType") {
+            keywords = $("#DepartmentType").val();
+        }
+        else {
+            keywords = $("#keywords").val();
+        }
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_DepartmentBase/GetExcel_Data?areaId=" + areaId + "&parentId=" + parentId + "&Condition=" + Condition + "&keywords=" + keywords;
+                Loading(false);
+            }, 200);
+        }
+    }
+    // 导入
+    function btn_import() {
+        if (Type == 1) {
+            openDialog("/BaseModule/BBdbR_DepartmentBase/ExcelImportDialog?areaId=" + areaId, "ExcelImportDialog", "部门信息导入", 750, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+        else {
+            alertDialog("请选择左边公司信息", 0);
+        }
     }
 
     //根据数据字典显示内容
@@ -191,16 +254,7 @@
             <!--按钮工具栏 -->
             <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
                 <div class="PartialButton">
-                    <a id="Ir_replace" ids="repalce" onclick="windowload()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b></span></a>
-                    <div class="tools_separator"></div>
-                    <a id="Ir_add" ids="add" onclick="btn_add()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/add.png') 50% 4px no-repeat;">新增</b></span></a>
-                    <div class="tools_separator"></div>
-                    <a id="Ir_edit" ids="edit" onclick="btn_edit()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/edit.gif') 50% 4px no-repeat;">编辑</b></span></a>
-                    <div class="tools_separator"></div>
-                    <a id="Ir_delete" ids="delete" onclick="btn_delete()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/DeleteRed.png') 50% 4px no-repeat;">删除</b></span></a>
-                    <div class="tools_separator"></div>
-                    <a id="Ir_back" ids="back" onclick="btn_back()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">离开</b></span></a>
-                    <div class="tools_separator"></div>
+                    @Html.Partial("_PartialButton")
                 </div>
             </div>
                 <!--搜索栏-->
@@ -212,7 +266,6 @@
                             <option value="all">==全部==</option>
                             <option value="DepartmentCode">部门编号</option>
                             <option value="DepartmentName">部门名称</option>
-                            <option value="DepartmentType">部门类别</option>
                         </select>
                     </td>
                     <td>

@@ -43,7 +43,6 @@
         if (!CheckDataValid('#form1')) {
             return false;
         }
-
         var postData = GetWebControls("#form1");
         AjaxJson("/BaseModule/BBdbR_DvcBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
             if (data.Message == "该编号已经存在！") {
@@ -78,11 +77,12 @@
                     <option value="工位">工位</option>
                     <option value="产线">产线</option>
                     <option value="岗位">岗位</option>
+                    <option value="AVI设备">AVI设备</option>
                 </select>
             </td>
             <th class='formTitle'>机构名称：</th>
             <td class='formValue'>
-                <select id="ClassId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onchange="RateGrade()">
+                <select id="ClassId" maxlength=50 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onchange="">
                 </select>
             </td>
         </tr>
@@ -126,11 +126,11 @@
         <tr>
             <th class='formTitle'>维保周期(天)：</th>
             <td class='formValue'>
-                <input id="MaintCycle" maxlength=10 type="text" class="txt" />
+                <input id="MaintCycle" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
             <th class='formTitle'>提前期（天）：</th>
             <td class='formValue'>
-                <input id="LeadTm" maxlength=10 type="text" class="txt" />
+                <input id="LeadTm" maxlength=10 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
         </tr>
         <tr>

@@ -47,12 +47,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工段名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WorkSectionNm { get; set; }
         /// <summary>
         /// 工段类型
         /// </summary>
         /// <returns></returns>
         [DisplayName("工段类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WorkSectionTy { get; set; }
         /// <summary>
         /// JPH
@@ -113,7 +115,15 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工段描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WorkSecDsc { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -167,6 +177,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1

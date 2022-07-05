@@ -424,11 +424,20 @@ namespace HfutIE.DataAccess
             StringBuilder sbColumns = new StringBuilder();
             foreach (PropertyInfo prop in props)
             {
+
                 string propertytype = prop.PropertyType.ToString();
                 sbColumns.Append(prop.Name + ",");
             }
             if (sbColumns.Length > 0) sbColumns.Remove(sbColumns.ToString().Length - 1, 1);
-            string strSql = "SELECT {0} FROM {1} WHERE 1=1 and Enabled=1";
+            string strSql;
+            if (props.ToList().Exists(s=>s.Name=="Enabled"))
+            {
+                strSql = "SELECT {0} FROM {1} WHERE 1=1 and Enabled=1";
+            }
+            else
+            {
+                strSql = "SELECT {0} FROM {1} WHERE 1=1";
+            }
             strSql = string.Format(strSql, sbColumns.ToString(), tableName + " ");
             return new StringBuilder(strSql);
         }

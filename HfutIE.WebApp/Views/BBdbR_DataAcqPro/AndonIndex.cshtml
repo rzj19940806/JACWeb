@@ -1,0 +1,768 @@
+﻿
+@{
+    ViewBag.Title = "Andon补录";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+    <title>Andon补录</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/Styles/base2.css">
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <style type="text/css">
+        /* 背景 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #F8F9FF;
+            /*height: 100%;*/
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            /*竖直滚动条*/
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        /* 标题 */
+        #title {
+            height: 15%;
+            line-height: 60px;
+            position: relative;
+            width: 100%;
+            background: #2E75B6;
+            /*background:red;*/
+            display: flex;
+        }
+
+        /* logo */
+        #logo {
+            height: 100%;
+            width: 15%;
+            background: #2E75B6;
+            display: flex;
+            flex-direction: column;
+            /*justify-content: space-evenly;*/
+        }
+
+            #logo img {
+                margin-top:5%;
+                width: 100%;
+                height: 50%;
+            }
+        /* 搜索栏 */
+        #searchBar {
+            margin: 0;
+            /*height: 70px;*/
+            height: 30%;
+            line-height: 70px;
+            position: relative;
+            width: 100%;
+            background: #F0F0F0;
+            font-size: 14px;
+        }
+
+        .search {
+            margin-left: 10px;
+        }
+        /* 展示部分 */
+        .exhibitRow {
+            /*height: 250px;*/
+            height:70%;
+            width: 100%;
+            /* background: #FFFAE8; */
+            display: flex;
+            justify-content: space-evenly;
+        }
+        /* 展示标签块 */
+        .Labelblock {
+            height: 80%;
+            width: 25%;
+            background: #F2F2F2;
+            margin-top: 2.5%;
+            /* border:1px solid #555659; */
+            /* border-radius: 6px; */
+        }
+
+        .LabelblockTop {
+            height: 20%;
+            width: 100%;
+            /*background: #34495E;*/
+            background-color:coral;
+        }
+        .LabelblockTop2 {
+            height: 20%;
+            width: 100%;
+            background: #34495E;
+            /*background-color: coral;*/
+        }
+
+        .LabelblockBottom {
+            height: 80%;
+            width: 100%;
+            /* background: #00D8FF; */
+        }
+
+        .LabelblockTable {
+            /* border:0; */
+            height: 100%;
+            width: 100%;
+            /* border="1"; align="center"; cellpadding="4" ;cellspacing="0"; bordercolor="#000000"; */
+            font-size: 16px;
+            font-family: "微软雅黑";
+        }
+
+        #zhanshi {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            /*overflow-y:scroll;overflow-x:hidden;height:100% ;*/
+            /*border:solid #A8A8A8;*/
+            /* background-color:#061537; */
+        }
+
+        /* vs复制部分 */
+        .form-find {
+            width: auto;
+            padding-bottom: 1px;
+            height: 100%;
+        }
+
+            .form-find th {
+                background-color: #F0F0F0;
+                height: 100%;
+                line-height: 25px;
+                white-space: nowrap;
+                width: 70px;
+                font-weight: normal;
+                text-align: right;
+                padding-right: 2px;
+            }
+
+            .form-find td {
+                width: auto;
+                background-color: #F0F0F0;
+                height: 25px;
+                line-height: 25px;
+                padding: 2px;
+                padding-right: 5px;
+            }
+
+                .form-find td .txt {
+                    border: 1px solid #A8A8A8;
+                    padding: 3px 3px 4px 2px;
+                    height: 15px;
+                    line-height: 15px;
+                    border-radius: 6px;
+                }
+
+                .form-find td .select {
+                    padding-top: 0px;
+                    border: 1px solid #A8A8A8;
+                    height: 23px;
+                    line-height: 21px;
+                    border-radius: 6px;
+                }
+
+        .btnSearch {
+            margin-left: 20px;
+            padding: 0 15px;
+            height: 35px;
+            width: 80px;
+            font-size: 18px;
+            background: #E8E8E8;
+            line-height: 20px;
+            border-radius: 6px;
+            border: 1px solid #A8A8A8;
+            /*repeat-x;*/
+            cursor: pointer;
+            vertical-align: middle;
+            overflow: hidden;
+            box-shadow: 0 16px 32px rgba(90,100,130,0.1);
+        }
+
+
+            .btnSearch:hover {
+                background-position: 0 -2px;
+            }
+
+            .btnSearch:hover {
+                background: #F4F4F4;
+                transform: scale(1.1);
+            }
+
+
+        /* 模板复制部分 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height:60%;
+            /*border:solid #646b8a ;*/
+             /*background:#6B5BFD;*/ 
+        }
+
+            .container .content {
+                display: flex;
+                /*justify-content: space-evenly;*/
+                flex-wrap: wrap;
+                /*border:solid #2E75B6;*/
+                width:90%;
+                height:60%;
+                /*background:#6B5BFD;*/
+            }
+
+
+                .container .content li {
+                    margin-left: 6%;
+                    margin-top: 2%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: center;
+                    /*width: 400px;*/
+                    height: 230px;
+                    width: 25%;
+                    background: #F8F9FE;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                    box-shadow: 0 16px 32px rgba(90,100,130,0.1);
+                    /*border: solid #2E75B6;*/
+                }
+
+                    .container .content li:hover {
+                        transform: scale(1.1);
+                    }
+
+                    .container .content li i {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width:100%;
+                        height: 100%;
+                        border-radius: 8px;
+                        font-size: 15px;
+                        font-style: normal;
+                        color: #646b8a;
+                        background-color: #fff;
+                        cursor: pointer;
+                        transition: all .3s;
+                        box-shadow: 0 16px 32px rgba(90,100,130,0.1);
+                       
+                       
+                    }
+
+                        .container .content li i:hover {
+                            color: #6b5bfd;
+                            transform: scale(1.2)
+                        }
+
+                    .container .content li p {
+                        font-size: 13px;
+                        color: #555555;
+                        background-color: #F8F9FE;
+                    }
+
+            .container .pagination {
+                display: flex;
+                align-items: center;
+                height: 30%;
+                margin: 30px;
+                border-radius: 8px;
+                background-color: #fff;
+                border: solid #cdd5f7;
+                box-shadow: 0 16px 32px rgba(90,100,130,0.1)
+            }
+
+                .container .pagination li {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 40px;
+                    height: 40px;
+                    margin: 15px;
+                    font-size: 18px;
+                    border-radius: 5px;
+                    transition: all .3s
+                }
+
+                    .container .pagination li.page-btn {
+                        color: #cdd5f7;
+                        font-size: 22px
+                    }
+
+                        .container .pagination li.page-btn.isClick {
+                            color: #646b8a;
+                            cursor: pointer
+                        }
+
+                            .container .pagination li.page-btn.isClick:hover {
+                                color: #fff;
+                                background-color: #6b5bfd
+                            }
+
+                    .container .pagination li.page-number {
+                        color: #646b8a;
+                        cursor: pointer
+                    }
+
+                        .container .pagination li.page-number:hover {
+                            color: #fff;
+                            font-weight: bold;
+                            background-color: #6b5bfd
+                        }
+
+                        .container .pagination li.page-number.active {
+                            color: #fff;
+                            font-weight: bold;
+                            background-color: #6b5bfd;
+                            cursor: default
+                        }
+
+                    .container .pagination li.page-dot {
+                        color: #cdd5f7;
+                        font-size: 18px;
+                        cursor: pointer
+                    }
+
+                        .container .pagination li.page-dot:hover {
+                            color: #6b5bfd
+                        }
+
+                        .container .pagination li.page-dot::after {
+                            /*content: "more_horiz"*/ 
+                                content: "..."
+                        }
+
+                        .container .pagination li.page-dot.page-dot-prev:hover::after {
+                            /*content: "first_page"*/ 
+                                content: "..."
+                        }
+
+                        .container .pagination li.page-dot.page-dot-next:hover::after {
+                            /*content: "last_page"*/ 
+                                content: "..."
+                        }
+    </style>
+
+</head>
+
+<body>
+    <!-- 标题栏 -->
+    <div id="title">
+        <div id=logo>
+            <img src="~/Content/Images/LOGO/logo1.0.png" />
+        </div>
+        <div style="height:100%;width:20%;display:flex;flex-direction:column; color:white;margin-left:2%;">
+            <div style="margin-top: 1%; height: 99%;width: 100%; display: flex;flex-direction: column;">
+                <div style="height: 59%;width: 100%;line-height: 59%;font-size: 15px;font-weight:bold;margin-top: 10px;">江淮安驰FAS系统</div>
+                <div style="height: 40%;width: 100%;line-height: 40%;font-size: 10px;margin-top: 3%;">JAC-ANCHI FAS</div>
+            </div>
+        </div>
+    </div>
+    <div style="height:85%;width:100%;">
+        <!-- 搜索栏 -->
+        <div id="searchBar" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+            <table border="0" class="form-find" style="height: 100%;margin-left:5%">
+                <tr>
+                    <th style="font-size:30px;">查询条件：</th>
+                    <td>
+                        @*<select id="Condition" style="width: 200px;height:60%;font-size:15px" onclick="setType()">
+                            <option value="all">==全部==</option>
+                            <option value="PlineNm">产线</option>
+                            <option value="AcqTm">停线时间</option>
+                        </select>*@
+                        <select id="PlineSearch" style="width: 200px;height:80%;font-size:15px" onclick="setType()" >
+                            <option value="全部">==全部==</option>
+                            <option value="内饰A线">内饰A线</option>
+                            <option value="内饰B线">内饰B线</option>
+                            <option value="底盘A线">底盘A线</option>
+                            <option value="底盘B线">底盘B线</option>
+                            <option value="合装线">合装线</option>
+                            <option value="OK线">OK线</option>
+                        </select>
+                    </td>
+                    @*<td>
+                        <input id="keywords" type="text" style="width: 200px;height:55%;font-size:15px;" />
+                    </td>*@
+                    @*<th id="starttime" style="display: none; font-size:15px;">停线时间：</th>*@
+                    <td>
+                        <input id="start_time" type="text" class="txt Wdate" style='text-align:center;transform:scale(1.2);margin-left:10px;' onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd' }) " />
+                    </td>
+                    <td>
+                        <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <!-- 展示界面 -->
+        <div id="zhanshi">
+            <div class="container">
+                <ul class="content"></ul>
+                <ul class="pagination"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+    var item = {};
+    var objarray = [];
+    var IP;
+    var PADPlineId;//根据IP查找到的产线ID，根据产线ID默认加载标签块
+
+    $(function () {
+        GetIP();//得到设备IP
+        GetPlineIdByIp();//得到产线Id
+        GetLabel();
+    })
+    
+
+    //获取设备IP
+    function GetIP() {
+        AjaxJson("/BBdbR_DataAcqPro/GetIpAddress", {}, function (data) {
+            IP = data;
+        });
+    }
+
+    //根据本机IP获取产线Id和产线名称
+    function GetPlineIdByIp() {
+        AjaxJson("/BBdbR_DataAcqPro/GetPlineIdByIp?IP=" + escape(IP), {}, function (data) {
+            PADPlineId = data.rows[0]["PlineId"];
+        });
+    }
+
+
+    //搜索形式
+    function setType() {
+        $("#start_time").val("");
+    }
+
+
+
+    //加载标签
+    function GetLabel() {
+        AjaxJson("/BBdbR_DataAcqPro/GridPageJson1?PADPlineId=" + escape(PADPlineId), {}, function (data) {
+            objarray.length = 0;
+            for (var i = 0; i < data.rows.length; i++) {
+                var WcNm = data.rows[i]["WcNm"];
+                if (data.rows[i]["WcNm"] == null) {
+                    WcNm = "";
+                }
+                item = {
+                    "RecId": data.rows[i]["RecId"],
+                    "AcqTm": data.rows[i]["AcqTm"],
+                    "PlineNm": data.rows[i]["PlineNm"],
+                    "WcNm": WcNm,
+                    "SignalSource": data.rows[i]["SignalSource"],
+                    "SignalDetail": data.rows[i]["SignalDetail"],
+                    "CurValue": data.rows[i]["CurValue"],
+                }
+
+                objarray.push(item);
+            }
+            DisplayLabel();
+        });
+    }
+
+
+    //搜索按钮
+    function btn_Search() {
+        var KeyValue = $("#PlineSearch").val();
+        var SearchTime = $("#start_time").val().toString();
+        AjaxJson("/BBdbR_DataAcqPro/GridPageJson2?KeyValue=" + escape(KeyValue) + "&SearchTime=" + escape(SearchTime), {}, function (data) {
+                objarray.length = 0;
+                for (var i = 0; i < data.rows.length; i++) {
+                    var WcNm = data.rows[i]["WcNm"];
+                    if (data.rows[i]["WcNm"] == null) {
+                        WcNm = "";
+                    }
+                    item = {
+                        "RecId": data.rows[i]["RecId"],
+                        "AcqTm": data.rows[i]["AcqTm"],
+                        "PlineNm": data.rows[i]["PlineNm"],
+                        "WcNm": WcNm,
+                        "SignalSource": data.rows[i]["SignalSource"],
+                        "SignalDetail": data.rows[i]["SignalDetail"],
+                        "CurValue": data.rows[i]["CurValue"],
+                        
+                    }
+
+                    objarray.push(item);
+                }
+                DisplayLabel();
+            });
+        
+    }
+
+    //编辑
+    function btn_edit(id) {
+
+       
+        var KeyValue = id;
+        var url = "/BBdbR_DataAcqPro/Form?KeyValue=" + KeyValue;
+        openDialog(url, "Form", "Andon信息补录", 1000, 520, function (iframe) {
+            top.frames[iframe].AcceptClick();
+            windowload();
+        });
+       
+    }
+
+   
+
+
+    //刷新
+    function windowload() {
+        btn_Search();
+    }
+
+ 
+
+    //展示Andon块
+    function DisplayLabel() {
+
+        size = 6,
+            page = Math.ceil(objarray.length / size),
+            pagerCount = 5;
+
+        // 当前选中的页数
+        let current = 1;
+
+        // 显示内容列表
+        const _content = document.querySelector(".content");
+        const showContent = () => {
+            // 每次遍历新内容 首先清空
+            _content.innerHTML = "";
+            objarray.forEach((item, index) => {
+                // 遍历计算方法 当前为第1页 一页10个 第一页的数据就是 0 - 10(不包含) 第二页为 10 - 20(不包含) 以此类推
+                if (index >= (current - 1) * size && index < current * size) {
+                    // 每遍历一个创建一个li元素
+                    const li = document.createElement("li");
+                    if (item.CurValue == "未补录") {
+                        li.innerHTML = `
+                        <div class="LabelblockTop" id="${item.RecId}"  onclick="btn_edit($(this).attr('id'))" ></div>
+                        <div class="LabelblockBottom" value="${item.RecId}" onclick="btn_edit($(this).attr('value'))">
+                            <table  class="LabelblockTable">
+                               
+                                <tr>
+                                    <td align="right" >故障产线：</td>
+                                    <td>${item.PlineNm}</td>
+                                </tr>
+                                <tr>
+                                   <td width=40% align="right";>故障工位：</td>
+                                   <td>${item.WcNm}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">信号详情：</td>
+                                    <td>${item.SignalDetail}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">停线时间：</td>
+                                    <td>${item.AcqTm}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">补录状态：</td>
+                                    <td>${item.CurValue}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                            <p>${index + 1}</p>
+                            `;
+                        // 添加到列表元素中
+                        _content.appendChild(li);
+                    }
+                    if (item.CurValue == "已补录") {
+                        li.innerHTML = `
+                        <div class="LabelblockTop2" id="${item.RecId}"  onclick="btn_edit($(this).attr('id'))" ></div>
+                        <div class="LabelblockBottom" value="${item.RecId}" onclick="btn_edit($(this).attr('value'))">
+                            <table  class="LabelblockTable">
+                               
+                                <tr>
+                                    <td align="right" >故障产线：</td>
+                                    <td>${item.PlineNm}</td>
+                                </tr>
+                                <tr>
+                                   <td width=40% align="right";>故障工位：</td>
+                                   <td>${item.WcNm}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">信号详情：</td>
+                                    <td>${item.SignalDetail}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">停线时间：</td>
+                                    <td>${item.AcqTm}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">补录状态：</td>
+                                    <td>${item.CurValue}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                            <p>${index + 1}</p>
+                            `;
+                        // 添加到列表元素中
+                        _content.appendChild(li);
+                    }
+
+                }
+            });
+        };
+
+        // 创建分页列表
+        const _pagination = document.querySelector(".pagination");
+        const createPagination = () => {
+            showContent();
+
+            // 刚开始就要有左按钮
+            // 当前页数不为1就为可点击态
+            let lis = `
+            <li class="material-icons page-btn page-btn-prev ${
+                current !== 1 ? "isClick" : ""
+                }">
+              <
+          </li>`;
+
+            if (current < 1 || current > page) {
+                throw `current 参数最小值为1 最大值为${page}`;
+                // 当当前页数小于1或者大于总页数了就抛出错误
+            } else if (pagerCount < 5) {
+                throw "pagerCount 参数最小值为5";
+                // 小于5 分页无意义
+            } else if (page <= pagerCount) {
+                // 如果总页数小于了要显示的数字按钮个数 就直接遍历了 不需要显示省略按钮
+                for (let i = 1; i <= page; i++) {
+                    lis += `<li class="page-number ${
+                        i == current ? "active" : ""
+                        }">${i}</li>`;
+                }
+            } else {
+                // 定义两个参数
+                // 用来保存当前选中分页前后的显示数字按钮(不包括省略前后的和选中的) 刚好是以下计算方法
+                // 有问题 pagerCount 为偶数 显示小数点 将beforeNumber向下取整就可以了
+                let beforeNumber = Math.floor(current - (pagerCount - 3) / 2),
+                    afterNumber = current + (pagerCount - 3) / 2;
+                // 显示左省略按钮
+                if (current >= pagerCount - 1) {
+                    lis += `<li class="page-number">1</li>
+                    <li class="material-icons page-dot page-dot-prev"></li>`;
+                }
+                // 提出问题: 选中页数为1 显示了0
+                // 解决 当页数为1 将beforeNumber改为1 afterNumber为除去省略号后面的一个按钮
+                // 同理解决current == page
+                // 又有问题 点击前三个应该不分页 到 4(针对pagerCount参数来说) 了该分页 同理求得current == page
+                if (current >= 1 && current < pagerCount - 1) {
+                    beforeNumber = 1;
+                    afterNumber = pagerCount - 1;
+                } else if (current <= page && current > page - (pagerCount - 2)) {
+                    beforeNumber = page - (pagerCount - 2);
+                    afterNumber = page;
+                }
+
+                for (let i = beforeNumber; i <= afterNumber; i++) {
+                    lis += `<li class="page-number ${
+                        i == current ? "active" : ""
+                        }">${i}</li>`;
+                }
+            }
+            // 显示右省略按钮
+            if (current <= page - (pagerCount - 2)) {
+                lis += `
+                <li class="material-icons page-dot page-dot-next"></li>
+                <li class="page-number">${page}</li>`;
+            }
+
+            // 最后拼接右按钮
+            // 当前页数不是总页数就为可点击态
+            lis += `
+            <li class="material-icons page-btn page-btn-next ${
+                current !== page ? "isClick" : ""
+                }">
+              >
+          </li>`;
+            _pagination.innerHTML = lis;
+
+            // OK 分页已经没问题了 改变参数均没问题 随意修改
+
+            // 点击数字按钮
+            const _pageNumbers = document.querySelectorAll(".page-number");
+            _pageNumbers.forEach((item) => {
+                item.addEventListener("click", () => {
+                    // item.innerHTML为字符串 需要转为数字
+                    current = parseInt(item.innerHTML);
+                    createPagination();
+                });
+            });
+
+            // 下一页
+            const _pageBtnNext = document.querySelector(".page-btn-next");
+            _pageBtnNext.addEventListener("click", () => {
+                if (current !== page) {
+                    current++;
+                    createPagination();
+                }
+            });
+
+            // 上一页
+            const _pageBtnPrev = document.querySelector(".page-btn-prev");
+            _pageBtnPrev.addEventListener("click", () => {
+                if (current !== 1) {
+                    current--;
+                    createPagination();
+                }
+            });
+
+            // 前进 pagerCount - 2 格
+            const _pageDotNext = document.querySelector(".page-dot-next");
+            // 因为省略按钮会时隐时现 直接绑定会报找不到元素错误
+            // ?. 就可以了 只有元素存在再去绑定后面的事件
+            _pageDotNext ?.addEventListener("click", () => {
+                current += pagerCount - 2;
+                createPagination();
+            });
+
+            // 后退 pagerCount - 2 格
+            const _pageDotPrev = document.querySelector(".page-dot-prev");
+            _pageDotPrev ?.addEventListener("click", () => {
+                current -= pagerCount - 2;
+                createPagination();
+            });
+        };
+        createPagination();
+    }
+
+
+
+
+</script>

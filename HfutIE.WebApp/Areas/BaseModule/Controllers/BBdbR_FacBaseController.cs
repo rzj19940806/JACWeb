@@ -1,4 +1,5 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
@@ -6,8 +7,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -47,6 +51,22 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 DataTable dt = MyBll.GetTree();//获取树所需数据
                 List<TreeJsonEntity> TreeList = new List<TreeJsonEntity>();
+
+                #region 加一个全部的分支
+                TreeJsonEntity treeALL = new TreeJsonEntity();
+                treeALL.id = "all";
+                treeALL.text = "全部";
+                treeALL.value = "all";
+                treeALL.parentId = "0";
+                treeALL.Attribute = "Type";
+                treeALL.AttributeValue = "0";
+                treeALL.isexpand = true;
+                treeALL.complete = true;
+                treeALL.hasChildren = false;
+                treeALL.img = "/Content/Images/Icon16/house.png";
+                TreeList.Add(treeALL);
+                #endregion
+
                 if (DataHelper.IsExistRows(dt))
                 {
                     foreach (DataRow row in dt.Rows)
@@ -97,21 +117,78 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GridListJson(string areaId, string parentId, string sort, JqGridParam jqgridparam)
+        public ActionResult GridListJson(string areaId, string Nodesort, string FacCd, string FacNm, string FacTyp, JqGridParam jqgridparam)
         {
             try
             {
+                #region 查询原方法-不考虑搜索条件
+                //Stopwatch watch = CommonHelper.TimerStart();//获取点击节点对应的数据（列表）
+                //DataTable ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑搜索条件
                 Stopwatch watch = CommonHelper.TimerStart();//获取点击节点对应的数据（列表）
-                DataTable ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId)||areaId=="all")
+                {
+                    strSql.Append(@"select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1  ");
+                }
+                else
+                {
+                    strSql.Append(@"select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.CompanyId='" + areaId + "' ");
+                }
+
+                //工厂编号模糊搜索
+                if (FacCd != "" && FacCd != null)
+                {
+                    //strSql.Append(" and a.FacCd like '%" + FacCd + "%' ");
+                    strSql.Append(" and a.FacCd like @FacCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacCd", "%" + FacCd + "%"));
+                }
+                else { }
+                //工厂名称模糊搜索
+                if (FacNm != "" && FacNm != null)
+                {
+                    //strSql.Append(" and a.FacNm like '%" + FacNm + "%' ");
+                    strSql.Append(" and a.FacNm like @FacNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacNm", "%" + FacNm + "%"));
+                }
+                else { }
+
+                //工厂类型搜索
+                if (FacTyp != "" && FacTyp != null)
+                {
+                    strSql.Append(" and a.FacTyp = @FacTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacTyp", FacTyp));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc");
+                
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                return Content(JsonData.ToJson());
+                #endregion
+
+
             }
             catch (Exception ex)
             {
@@ -143,7 +220,10 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 string Name = "FacCd";        //页面中的编号字段名，如：公司编号   //===复制时需要修改===
                 string Value = entity.FacCd;  //页面中的编号字段值                 //===复制时需要修改===
                 string Message = KeyValue == "" ? "新增成功。" : "编辑成功。";
-
+                if (entity.StfNm == "[object HTMLInputElement]")
+                {
+                    entity.StfNm = "";
+                }
                 if (!string.IsNullOrEmpty(KeyValue))//编辑操作
                 {  
                     //===复制时需要修改===
@@ -220,27 +300,81 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #endregion
 
         #region 5.查询方法
-        //查询方法，本方法为单条件查询，即根据一个条件进行查询
-        //查询条件为Condition，也是数据库表_CompanyBaseInformation中的一个字段名
-        //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
-        //本查询采用近似查询（like）
-
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+       
+        public ActionResult GridPageByCondition(string areaId, string Nodesort, string FacCd, string FacNm, string FacTyp, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
-                Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                #region 查询原方法-不考虑树节点
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑树节点
+                Stopwatch watch = CommonHelper.TimerStart();//获取点击节点对应的数据（列表）
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) || areaId == "all")
+                {
+                    strSql.Append(@"select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1  ");
+                }
+                else
+                {
+                    strSql.Append(@"select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.CompanyId='" + areaId + "' ");
+                }
+
+                //工厂编号模糊搜索
+                if (FacCd != "" && FacCd != null)
+                {
+                    //strSql.Append(" and a.FacCd like '%" + FacCd + "%' ");
+                    strSql.Append(" and a.FacCd like @FacCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacCd", "%" + FacCd + "%"));
+                }
+                else { }
+                //工厂名称模糊搜索
+                if (FacNm != "" && FacNm != null)
+                {
+                    //strSql.Append(" and a.FacNm like '%" + FacNm + "%' ");
+                    strSql.Append(" and a.FacNm like @FacNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacNm", "%" + FacNm + "%"));
+                }
+                else { }
+
+                //工厂类型搜索
+                if (FacTyp != "" && FacTyp != null)
+                {
+                    strSql.Append(" and a.FacTyp = @FacTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacTyp", FacTyp));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "工厂基础信息查询成功");
+                return Content(JsonData.ToJson());
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -310,11 +444,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// 人员下拉框
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetPlineNm()
+        public ActionResult GetPlineNm(string StfId)
         {
             try
             {
-                DataTable dataTable = MyBll.GetPlineNm();
+                BBdbR_StfBaseBll StfBll = new BBdbR_StfBaseBll();
+                DataTable dataTable = StfBll.GetPlineNm(StfId);
                 var JsonData = new
                 {
                     rows = dataTable,
@@ -326,28 +461,6 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 throw;
             }
         }
-        /// <summary>
-        /// 人员信息
-        /// </summary>
-        /// <param name="StfId"></param>
-        /// <returns></returns>
-        public ActionResult GetPlineNm2(string StfId)
-        {
-            try
-            {
-                DataTable dataTable = MyBll.GetPlineNm2(StfId);
-                var JsonData = new
-                {
-                    rows = dataTable,
-                };
-                return Content(JsonData.ToJson());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         #endregion
 
         #region 9.加载全部工厂列表      
@@ -393,6 +506,75 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
             }
+        }
+        #endregion
+
+        #region 10.重构导出
+        public ActionResult GetExcel_Data(string areaId, string Nodesort, string FacCd, string FacNm, string FacTyp, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 根据当前搜索条件查出数据并导出
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) || areaId == "all")
+                {
+                    strSql.Append(@"select a.FacCd,a.FacNm,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm,a.FacTyp,a.Addr,a.Dsc,a.FacTelephone,a.FacFax,a.Phn,a.FacEmail,a.sort,a.CreTm,a.CreNm,a.MdfCd,a.MdfNm,a.Rem from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1  ");
+                }
+                else
+                {
+                    strSql.Append(@"select a.FacCd,a.FacNm,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm,a.FacTyp,a.Addr,a.Dsc,a.FacTelephone,a.FacFax,a.Phn,a.FacEmail,a.sort,a.CreTm,a.CreNm,a.MdfCd,a.MdfNm,a.Rem from BBdbR_FacBase a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.CompanyId='" + areaId + "' ");
+                }
+
+                //工厂编号模糊搜索
+                if (FacCd != "" && FacCd != null)
+                {
+                    //strSql.Append(" and a.FacCd like '%" + FacCd + "%' ");
+                    strSql.Append(" and a.FacCd like @FacCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacCd", "%" + FacCd + "%"));
+                }
+                else { }
+                //工厂名称模糊搜索
+                if (FacNm != "" && FacNm != null)
+                {
+                    //strSql.Append(" and a.FacNm like '%" + FacNm + "%' ");
+                    strSql.Append(" and a.FacNm like @FacNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacNm", "%" + FacNm + "%"));
+                }
+                else { }
+
+                //工厂类型搜索
+                if (FacTyp != "" && FacTyp != null)
+                {
+                    strSql.Append(" and a.FacTyp = @FacTyp ");
+                    parameter.Add(DbFactory.CreateDbParameter("@FacTyp", FacTyp));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc");
+                
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                #endregion
+
+
+
+                string fileName = "工厂基础信息表";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_FacBase(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "工厂基础信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "工厂基础信息导出操作失败：" + ex.Message);
+                return null;
+            }
+
         }
         #endregion
 

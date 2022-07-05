@@ -1,4 +1,5 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
@@ -7,7 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -83,6 +86,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
                     }
                     entity.SchedulRuleId = System.Guid.NewGuid().ToString();
+                    entity.Create();
                     IsOk = MyBll.Insert(entity);//将实体插入数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志
                 }
@@ -214,6 +218,225 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //        return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
         //    }
         //}
+        #endregion
+
+        #region 5.导入
+        /// <summary>
+        /// 导入Excel弹出框页面
+        /// </summary>
+        /// <returns></returns>
+        [ManagerPermission(PermissionMode.Enforce)]
+        public ActionResult ExcelImportDialog()
+        {
+            string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
+            //模板主表
+            Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
+            if (base_excellimport.ModuleId != null)
+            {
+                ViewBag.ModuleId = moduleId;
+                ViewBag.ImportFileName = base_excellimport.ImportFileName;
+                ViewBag.ImportName = base_excellimport.ImportName;
+                ViewBag.ImportId = base_excellimport.ImportId;
+            }
+            else
+            {
+                ViewBag.ModuleId = "0";
+            }
+            return View();
+        }
+        /// <summary>
+        /// 导入Excell数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ImportExel()
+        {
+            int IsOk = 0;//导入状态
+            int IsCheck = 1;//用作检验重复地址的标识
+            DataTable Result = new DataTable();//导入错误记录表
+            IDatabase database = DataFactory.Database();
+            List<BBdbR_SchedulRuleBase> BFacRShiftBaseList = new List<BBdbR_SchedulRuleBase>();
+
+            //构造导入返回结果表
+            DataTable Newdt = new DataTable("Result");
+            Newdt.Columns.Add("rowid", typeof(System.String));                 //行号
+            Newdt.Columns.Add("locate", typeof(System.String));                 //位置
+            Newdt.Columns.Add("reason", typeof(System.String));                 //原因
+            int errorNum = 1;
+            try
+            {
+                string moduleId = Request["moduleId"]; //表名
+                StringBuilder sb_table = new StringBuilder();
+                HttpFileCollectionBase files = Request.Files;
+                HttpPostedFileBase file = files["filePath"];//获取上传的文件
+                if (file != null)
+                {
+                    string fullname = file.FileName;
+                    string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtension获得文件的扩展名
+                    if (!IsXls.EndsWith(".xls") && !IsXls.EndsWith(".xlsx"))
+                    {
+                        IsOk = 0;
+                    }
+                    else
+                    {
+
+                        string filename = Guid.NewGuid().ToString() + ".xls";
+                        if (fullname.EndsWith(".xlsx"))
+                        {
+                            filename = Guid.NewGuid().ToString() + ".xlsx";
+                        }
+                        if (file != null && file.FileName != "")
+                        {
+                            string msg = UploadHelper.FileUpload(file, Server.MapPath("~/Resource/UploadFile/ImportExcel/"), filename);
+                        }
+
+                        DataTable dt = ImportExcel.ExcelToDataTable(Server.MapPath("~/Resource/UploadFile/ImportExcel/") + filename);
+
+                        RemoveEmpty(dt);//清除空行。???=>20210712注：方法是否真的有用？void返回对dt未生效
+                        dt.Columns.Add("rowid", typeof(System.String));//用来标识excell行ID
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            dt.Rows[i]["rowid"] = i + 1;
+                        }
+                        #region 调度规则基本信息导入
+                        //校验
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+
+                            IsCheck = 1;//重置标识
+                            DataRow dr = Newdt.NewRow();
+
+                            if (dt.Rows[i]["规则编号"].ToString().Trim() != "" && dt.Rows[i]["规则名称"].ToString().Trim() != "" && dt.Rows[i]["规则内容"].ToString().Trim() != "")
+                            {
+                                BBdbR_SchedulRuleBase Entity = new BBdbR_SchedulRuleBase();
+
+                                Entity.SchedulRuleId = System.Guid.NewGuid().ToString(); //主键
+                                Entity.SchedulRuleCd = dt.Rows[i]["规则编号"].ToString().Trim();
+                                Entity.SchedulRuleNm = dt.Rows[i]["规则名称"].ToString().Trim();
+                                Entity.SchedulRuleContent = dt.Rows[i]["规则内容"].ToString().Trim();
+                                Entity.SchedulRuleGrade = dt.Rows[i]["规则等级"].ToString().Trim();
+
+                                Entity.Rem = dt.Rows[i]["备注"].ToString().Trim();
+                                Entity.VersionNumber = "V1.0";
+                                Entity.Enabled = "1";
+                                Entity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                Entity.CreCd = ManageProvider.Provider.Current().UserId;
+                                Entity.CreNm = ManageProvider.Provider.Current().UserName;
+
+                                BFacRShiftBaseList.Add(Entity);
+
+                                int b = database.Insert(BFacRShiftBaseList);
+                                if (b > 0)
+                                {
+                                    IsOk = IsOk + b;
+                                    BFacRShiftBaseList.Clear();
+                                }
+                                else
+                                {
+                                    dr = Newdt.NewRow();
+                                    dr[0] = errorNum;
+                                    dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                    dr[2] = "调度规则信息插入失败";
+                                    Newdt.Rows.Add(dr);
+                                    IsCheck = 0;
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                dr = Newdt.NewRow();
+                                dr[0] = errorNum;
+                                dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
+                                dr[2] = "调度规则信息不能为空";
+                                Newdt.Rows.Add(dr);
+                                errorNum++;
+                                IsCheck = 0;
+                                continue;
+                            }
+                        }
+                        if (IsCheck == 0)
+                        {
+                            IsOk = 0;
+                        }
+                        #endregion
+
+                    }
+                    Result = Newdt;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "异常错误：" + ex.Message);
+                IsOk = 0;
+            }
+            if (Result.Rows.Count > 0)
+            {
+                IsOk = 0;
+            }
+            var JsonData = new
+            {
+                Status = IsOk > 0 ? "true" : "false",
+                ResultData = Result
+            };
+            return Content(JsonData.ToJson());
+        }
+        #endregion
+
+        #region 6.导出模板
+        /// <summary>
+        /// 下载Excell模板
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExcellTemperature(string ImportId)
+        {
+            if (!string.IsNullOrEmpty(ImportId))
+            {
+                DataSet ds = new DataSet();
+                DataTable data = new DataTable(); string DataColumn = ""; string fileName;
+                MyBll.GetExcellTemperature(ImportId, out data, out DataColumn, out fileName);
+                ds.Tables.Add(data);
+                MemoryStream ms = DeriveExcel.ExportToExcel(ds, "xls", DataColumn.Split('|'));
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// 清除Datatable空行
+        /// </summary>
+        /// <param name="dt"></param>
+        public void RemoveEmpty(DataTable dt)
+        {
+            List<DataRow> removelist = new List<DataRow>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                bool rowdataisnull = true;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
+                    {
+
+                        rowdataisnull = false;
+                    }
+                }
+                if (rowdataisnull)
+                {
+                    removelist.Add(dt.Rows[i]);
+                }
+
+            }
+            for (int i = 0; i < removelist.Count; i++)
+            {
+                dt.Rows.Remove(removelist[i]);
+            }
+        }
+
         #endregion
 
         #endregion

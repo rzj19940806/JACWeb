@@ -59,7 +59,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -77,7 +77,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -117,7 +117,12 @@ namespace HfutIE.Entity
         public override void Create()
         {
             this.CarPartQuaCheckItemConfigId = CommonHelper.GetGuid;
-                                            }
+            this.VersionNumber = "V1.0";
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            this.Enabled = "1";
+            this.CreCd = ManageProvider.Provider.Current().UserId;
+            this.CreNm = ManageProvider.Provider.Current().UserName;
+        }
         /// <summary>
         /// 编辑调用
         /// </summary>
@@ -125,7 +130,12 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.CarPartQuaCheckItemConfigId = KeyValue;
-                                            }
+            this.VersionNumber = "V1.0";
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            this.Enabled = "1";
+            this.CreCd = ManageProvider.Provider.Current().UserId;
+            this.CreNm = ManageProvider.Provider.Current().UserName;
+        }
         #endregion
     }
 }

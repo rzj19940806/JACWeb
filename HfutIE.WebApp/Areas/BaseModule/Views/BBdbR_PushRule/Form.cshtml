@@ -4,29 +4,29 @@
 }
 <script type="text/javascript">
     var KeyValue = GetQuery('KeyValue');//主键
+    var ClassType = GetQuery('ClassType');//机构级别
     $(function () {
         BindDropItem("#PushType", "PushType");
         InitControl();
-        RateGradeList();
     })
 
     //区域名称下拉框
     function RateGradeList() {
-        qyID = $("#qvY").val();
+        qyID = $("#ClassType").val();
         if (qyID == 'PlineId') {
-            document.getElementById("city").options.length = 0;
+            document.getElementById("RsvFld1").options.length = 0;
             AjaxJson("/BaseModule/BBdbR_PushRule/GetPlineNm", {}, function (data) {
                 for (var i = 0; i < data.rows.length; i++) {
-                    $("#city").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["plinenm"] + "</option>");
+                    $("#RsvFld1").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["plinenm"] + "</option>");
                 }
             });
         }
         else
         {
-            document.getElementById("city").options.length = 0;
+            document.getElementById("RsvFld1").options.length = 0;
             AjaxJson("/BaseModule/BBdbR_PushRule/GetWcNm?", {}, function (data) {
                 for (var i = 0; i < data.rows.length; i++) {
-                    $("#city").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["wcnm"] + "</option>");
+                    $("#RsvFld1").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["wcnm"] + "</option>");
                 }
             });
         }
@@ -35,19 +35,30 @@
     //得到一个对象实体
     function InitControl() {
         if (!!GetQuery('KeyValue')) {
-            AjaxJson("/BaseModule/BBdbR_PushRule/SetForm", { KeyValue: KeyValue }, function (data) {
+            AjaxJson("/BaseModule/BBdbR_PushRule/SetForm1", { KeyValue: KeyValue, ClassType: ClassType }, function (data) {
                 SetWebControls(data);
                 document.getElementById("AreaCd").readOnly = true;
+                $("#RsvFld1").append("<option value='" + data.RsvFld1 + "' >" + data.RsvFld1 + "</option>");
+                /*                document.getElementById("RsvFld1").Text = data.RsvFld1;*/
+                //if (data.ClassType == "PlineId") {
+                //    document.getElementById("city").val = data.PlineNm;
+                //    document.getElementById("PlineId").val = data.PlineId;
+                //}
+                //else {
+                //    document.getElementById("city").val = data.WcNm;
+                //    document.getElementById("WcId").val = data.WcId;
+                //}
             });
         }
+        else {
+            RateGradeList();
+        }
     }
+
     //保存事件
     function AcceptClick() {
-        if (!CheckDataValid('#form1')) {
-            return false;
-        }
-        let idvalue = $('#city option:selected').val();
-        qyID = $("#qvY").val();
+        let idvalue = $('#RsvFld1 option:selected').val();
+        qyID = $("#ClassType").val();
         var postData = GetWebControls("#form1");
         AjaxJson("/BaseModule/BBdbR_PushRule/SubmitPushRule?KeyValue=" + KeyValue + '&idvalue=' + idvalue + '&qyID=' + qyID, postData, function (data) {
             tipDialog(data.Message, 3, data.Code);
@@ -60,24 +71,37 @@
     <div id="message" style="display: none"></div>
     <table class="form">
         <tr>
-            <th class='formTitle' >区域编号：</th>
+            <th class='formTitle' style=" width :100px">区域编号：</th>
             <td class='formValue'>
-                <input id="AreaCd" maxlength=50 type="text" class="txt"   />
+                <input id="AreaCd" maxlength=50 type="text" class="txt" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>区域：</th>
             <td class='formValue'>
-                <select id="qvY" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onchange="RateGradeList()">
+                <select id="ClassType" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" onchange="RateGradeList()">
                     <option value="PlineId">产线</option>
                     <option value="WcId">工位</option>
                 </select>
             </td>
         </tr>
+        <tr style="display :none">
+            <th class='formTitle'>产线主键：</th>
+            <td class='formValue'>
+                <select id="PlineId" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="区域名称" onclick=""></select>
+            </td>
+        </tr>
+        <tr style="display :none">
+            <th class='formTitle'>工位主键：</th>
+            <td class='formValue'>
+                <select id="WcId" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="区域名称" onclick=""></select>
+            </td>
+        </tr>
         <tr>
+            
             <th class='formTitle'>区域名称：</th>
             <td class='formValue'>
-                <select id="city" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="区域名称" onclick="" ></select>
+                <select id="RsvFld1" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="区域名称" onclick=""></select>
             </td>
         </tr>
         <tr>
@@ -87,15 +111,15 @@
             </td>
         </tr>
         <tr>
-            <th class='formTitle'>推送时间临界值：</th>
+            <th class='formTitle'>时间临界值(min)：</th>
             <td class='formValue'>
-                <input id="PushTm" maxlength=18 type="text" class="txt"   />
+                <input id="PushTm" maxlength=18 type="text" class="txt" />
             </td>
         </tr>
         <tr>
             <th class='formTitle'>异常日志存放路径：</th>
             <td class='formValue'>
-                <input id="AndonFile" maxlength=50 type="text" class="txt"   />
+                <input id="AndonFile" maxlength=50 type="text" class="txt" />
             </td>
         </tr>
         <tr>
@@ -106,14 +130,14 @@
                     <option value="0">无效</option>
                 </select>
             </td>
-        </tr>    
+        </tr>
         <tr>
             <th class='formTitle' style="height :50px">备注：</th>
             <td class='formValue'>
-                <input id="Rem" maxlength=200 type="text" class="txt"   />
+                <input id="Rem" maxlength=200 type="text" class="txt" />
             </td>
         </tr>
-        
+
         <tr>
         </tr>
     </table>

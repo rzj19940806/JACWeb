@@ -47,12 +47,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WcNm { get; set; }
         /// <summary>
         /// 工位类型
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WcTyp { get; set; }
         /// <summary>
         /// 工位顺序
@@ -71,36 +73,42 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位开始")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? StartPoint { get; set; }
         /// <summary>
         /// 预警
         /// </summary>
         /// <returns></returns>
         [DisplayName("预警")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? PreAlarmPoint { get; set; }
         /// <summary>
         /// 结束
         /// </summary>
         /// <returns></returns>
         [DisplayName("结束")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? EndPoint { get; set; }
         /// <summary>
         /// 停止
         /// </summary>
         /// <returns></returns>
         [DisplayName("停止")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? StopPoint { get; set; }
         /// <summary>
         /// 排序号
         /// </summary>
         /// <returns></returns>
-        [DisplayName("排序号")]
+        [DisplayName("Pass次数")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? Seq { get; set; }
         /// <summary>
         /// 工位描述
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// 版本号
@@ -108,6 +116,13 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("版本号")]
         public string VersionNumber { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -119,7 +134,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -137,7 +152,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -155,6 +170,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1
@@ -179,7 +195,7 @@ namespace HfutIE.Entity
             this.WcId = CommonHelper.GetGuid;
             this.VersionNumber = "V1.0";
             this.Enabled = "1";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -192,9 +208,9 @@ namespace HfutIE.Entity
             this.WcId = KeyValue;
             this.VersionNumber = "V1.0";
             this.Enabled = "1";
-            this.CreTm = DateTime.Now;
-            this.CreCd = ManageProvider.Provider.Current().UserId;
-            this.CreNm = ManageProvider.Provider.Current().UserName;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            this.MdfCd = ManageProvider.Provider.Current().UserId;
+            this.MdfNm = ManageProvider.Provider.Current().UserName;
         }
         #endregion
     }

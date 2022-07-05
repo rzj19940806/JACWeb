@@ -1,4 +1,4 @@
-using HfutIE.Business;
+ï»¿using HfutIE.Business;
 using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
@@ -7,147 +7,163 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
 namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 {
     /// <summary>
-    /// ¹©Ó¦ÉÌ»ù´¡ĞÅÏ¢±í¿ØÖÆÆ÷
+    /// ä¾›åº”å•†åŸºç¡€ä¿¡æ¯è¡¨æ§åˆ¶å™¨
     /// </summary>
     public class BBdbR_SupplierBaseController : PublicController<BBdbR_SupplierBase>
     {
-        #region ´´½¨Êı¾İ¿â²Ù×÷¶ÔÏóÇøÓò
-        //´´½¨Êı¾İ¿â·ÃÎÊ¶ÔÏó£¬ÓÃÒÔ·ÃÎÊÆäÖĞ²Ù×÷Êı¾İ¿âµÄ·½·¨
-        BBdbR_SupplierBaseBll MyBll = new BBdbR_SupplierBaseBll(); //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
+        #region åˆ›å»ºæ•°æ®åº“æ“ä½œå¯¹è±¡åŒºåŸŸ
+        //åˆ›å»ºæ•°æ®åº“è®¿é—®å¯¹è±¡ï¼Œç”¨ä»¥è®¿é—®å…¶ä¸­æ“ä½œæ•°æ®åº“çš„æ–¹æ³•
+        BBdbR_SupplierBaseBll MyBll = new BBdbR_SupplierBaseBll(); //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
         public readonly RepositoryFactory<BBdbR_SupplierBase> repository_avibase = new RepositoryFactory<BBdbR_SupplierBase>();
         #endregion
 
-        #region ·½·¨Çø   
-        #region 1.Õ¹Ê¾Ò³Ãæ±í¸ñ
+        #region æ–¹æ³•åŒº   
+        #region 1.å±•ç¤ºé¡µé¢è¡¨æ ¼
         /// <summary>
-        /// ËÑË÷±í¸ñÖĞËùÓĞµÄÊı¾İ£¬²¢ÒÔjsonµÄĞÎÊ½·µ»Ø
+        /// æœç´¢è¡¨æ ¼ä¸­æ‰€æœ‰çš„æ•°æ®ï¼Œå¹¶ä»¥jsonçš„å½¢å¼è¿”å›
         /// </summary>
-        /// <param name="jqgridparam">·ÖÒ³²ÎÊı</param>
+        /// <param name="jqgridparam">åˆ†é¡µå‚æ•°</param>
         /// <returns></returns>
         public ActionResult GridPage(JqGridParam jqgridparam)
         {
             try
             {
-                Stopwatch watch = CommonHelper.TimerStart();
-                List<BBdbR_SupplierBase> ListData = MyBll.GetPageList(jqgridparam);    //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
+                #region åŸæ–¹æ³•
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //List<BBdbR_SupplierBase> ListData = MyBll.GetPageList(jqgridparam);    //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region ä¿®æ”¹åæŸ¥è¯¢
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select * from  BBdbR_SupplierBase  where Enabled = '1' order by SupplierCd ");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
-                    costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                return Content(JsonData.ToJson());
+                #endregion
+
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "Òì³£´íÎó£º" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "å¼‚å¸¸é”™è¯¯ï¼š" + ex.Message);
                 return null;
             }
         }
         #endregion
 
-        #region 2.ĞÂÔö±à¼­·½·¨
-        //entity±íÊ¾Ò³ÃæÖĞ´«ÈëµÄÊµÌå£¬KeyValue±íÊ¾´«ÈëµÄÖ÷¼ü
-        //²»¹ÜÊÇĞÂÔö»¹ÊÇ±à¼­£¬Ò³ÃæÖĞ¶¼»á´«ÈëÊµÌå£¨entity£©
-        //ĞÂÔöÊ±ÊµÌåÊÇÒ»¸öÈ«ĞÂµÄÊµÌå
-        //±à¼­Ê±ÊµÌåÊÇĞŞ¸ÄºóµÄÊµÌå
-        //Ö»ÓĞÔÚ±à¼­Ê±Ò³ÃæÖĞ²Å»á´«ÈëÖ÷¼üentity£¨KeyValue£©£¬¸ÃÖ÷¼üÊÇĞèÒª±à¼­ÄÇ¸öÊµÌåµÄÖ÷¼ü
+        #region 2.æ–°å¢ç¼–è¾‘æ–¹æ³•
+        //entityè¡¨ç¤ºé¡µé¢ä¸­ä¼ å…¥çš„å®ä½“ï¼ŒKeyValueè¡¨ç¤ºä¼ å…¥çš„ä¸»é”®
+        //ä¸ç®¡æ˜¯æ–°å¢è¿˜æ˜¯ç¼–è¾‘ï¼Œé¡µé¢ä¸­éƒ½ä¼šä¼ å…¥å®ä½“ï¼ˆentityï¼‰
+        //æ–°å¢æ—¶å®ä½“æ˜¯ä¸€ä¸ªå…¨æ–°çš„å®ä½“
+        //ç¼–è¾‘æ—¶å®ä½“æ˜¯ä¿®æ”¹åçš„å®ä½“
+        //åªæœ‰åœ¨ç¼–è¾‘æ—¶é¡µé¢ä¸­æ‰ä¼šä¼ å…¥ä¸»é”®entityï¼ˆKeyValueï¼‰ï¼Œè¯¥ä¸»é”®æ˜¯éœ€è¦ç¼–è¾‘é‚£ä¸ªå®ä½“çš„ä¸»é”®
         //
-        //±à¼­·½·¨Ê×ÏÈ¸ù¾İKeyValueÊÇ·ñÓĞÖµÅĞ¶ÏÊÇĞèÒª±à¼­»¹ÊÇĞèÒªĞÂÔö
-        //Èç¹ûÊÇĞÂÔö¾Í½«¸ÃÊµÌåĞÂÔöµ½Êı¾İ¿âÖĞ
-        //Èç¹ûÊÇ±à¼­¾Í½«¸ÃÊµÌå¸üĞÂµ½Êı¾İÖĞ
+        //ç¼–è¾‘æ–¹æ³•é¦–å…ˆæ ¹æ®KeyValueæ˜¯å¦æœ‰å€¼åˆ¤æ–­æ˜¯éœ€è¦ç¼–è¾‘è¿˜æ˜¯éœ€è¦æ–°å¢
+        //å¦‚æœæ˜¯æ–°å¢å°±å°†è¯¥å®ä½“æ–°å¢åˆ°æ•°æ®åº“ä¸­
+        //å¦‚æœæ˜¯ç¼–è¾‘å°±å°†è¯¥å®ä½“æ›´æ–°åˆ°æ•°æ®ä¸­
         //
-        //²»¹ÜÊÇĞÂÔö»¹ÊÇ±à¼­Ê×ÏÈÅĞ¶ÏÒ³ÃæÊäÈëµÄ±àºÅÊÇ·ñÒÑ¾­´æÔÚ
-        //Èç¹ûÒÑ¾­´æÔÚ¾ÍÖ±½Ó·µ»Ø¡°¸Ã±àºÅÒÑ¾­´æÔÚ£¡¡±µÄĞÅÏ¢
-        //²»´æÔÚÔÙ½øĞĞÏÂÒ»²½
-        public override ActionResult SubmitForm(BBdbR_SupplierBase entity, string KeyValue)//===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
+        //ä¸ç®¡æ˜¯æ–°å¢è¿˜æ˜¯ç¼–è¾‘é¦–å…ˆåˆ¤æ–­é¡µé¢è¾“å…¥çš„ç¼–å·æ˜¯å¦å·²ç»å­˜åœ¨
+        //å¦‚æœå·²ç»å­˜åœ¨å°±ç›´æ¥è¿”å›â€œè¯¥ç¼–å·å·²ç»å­˜åœ¨ï¼â€çš„ä¿¡æ¯
+        //ä¸å­˜åœ¨å†è¿›è¡Œä¸‹ä¸€æ­¥
+        public override ActionResult SubmitForm(BBdbR_SupplierBase entity, string KeyValue)//===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
         {
             try
             {
                 //IDatabase database = DataFactory.Database();
-                int IsOk = 0;//ÓÃÓÚÅĞ¶Ï
-                string Name = "SupplierCd";        //Ò³ÃæÖĞµÄ±àºÅ×Ö¶ÎÃû£¬Èç£º¹«Ë¾±àºÅ   //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
-                string Value = entity.SupplierCd;  //Ò³ÃæÖĞµÄ±àºÅ×Ö¶ÎÖµ                 //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===\
+                int IsOk = 0;//ç”¨äºåˆ¤æ–­
+                string Name = "SupplierCd";        //é¡µé¢ä¸­çš„ç¼–å·å­—æ®µåï¼Œå¦‚ï¼šå…¬å¸ç¼–å·   //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                string Value = entity.SupplierCd;  //é¡µé¢ä¸­çš„ç¼–å·å­—æ®µå€¼                 //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===\
                 string Message = "";
                 if (KeyValue == "")
                 {
-                    Message = "ĞÂÔö³É¹¦¡£";
+                    Message = "æ–°å¢æˆåŠŸã€‚";
                 }
                 else
                 {
-                    Message = "±à¼­³É¹¦¡£";
+                    Message = "ç¼–è¾‘æˆåŠŸã€‚";
                 }
 
-                if (!string.IsNullOrEmpty(KeyValue))//±à¼­²Ù×÷
+                if (!string.IsNullOrEmpty(KeyValue))//ç¼–è¾‘æ“ä½œ
                 {
-                    //===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
-                    BBdbR_SupplierBase Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//»ñÈ¡Ã»¸üĞÂÖ®Ç°ÊµÌå¶ÔÏó
+                    //===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                    BBdbR_SupplierBase Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//è·å–æ²¡æ›´æ–°ä¹‹å‰å®ä½“å¯¹è±¡
 
                     entity.Modify(KeyValue);
                     //IsOk = database.Update(entity);
-                    IsOk = MyBll.Update(entity);//½«ĞŞ¸ÄºóµÄÊµÌå¸üĞÂµ½Êı¾İ¿â£¬²åÈë³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0£»
-                    this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//¼ÇÂ¼ÈÕÖ¾
+                    IsOk = MyBll.Update(entity);//å°†ä¿®æ”¹åçš„å®ä½“æ›´æ–°åˆ°æ•°æ®åº“ï¼Œæ’å…¥æˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0ï¼›
+                    this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//è®°å½•æ—¥å¿—
 
                 }
-                else//ĞÂÔö²Ù×÷
+                else//æ–°å¢æ“ä½œ
                 {
-                    IsOk = MyBll.CheckCount(Name, Value);//ÅĞ¶ÏÒ³ÃæÖĞÌîĞ´µÄÊı¾İµÄ±àºÅ×Ö¶ÎµÄÖµÊÇ·ñ´æÔÚ
-                    if (IsOk > 0)//´æÔÚ
+                    IsOk = MyBll.CheckCount(Name, Value);//åˆ¤æ–­é¡µé¢ä¸­å¡«å†™çš„æ•°æ®çš„ç¼–å·å­—æ®µçš„å€¼æ˜¯å¦å­˜åœ¨
+                    if (IsOk > 0)//å­˜åœ¨
                     {
-                        Message = "¸Ã±àºÅÒÑ¾­´æÔÚ£¡";
+                        Message = "è¯¥ç¼–å·å·²ç»å­˜åœ¨ï¼";
                         return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
                     }
                     entity.Create();
                     //IsOk = database.Insert(entity);
-                    IsOk = MyBll.Insert(entity);//½«ÊµÌå²åÈëÊı¾İ¿â£¬²åÈë³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0£»
-                    this.WriteLog(IsOk, entity, null, KeyValue, Message);//¼ÇÂ¼ÈÕÖ¾
+                    IsOk = MyBll.Insert(entity);//å°†å®ä½“æ’å…¥æ•°æ®åº“ï¼Œæ’å…¥æˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0ï¼›
+                    this.WriteLog(IsOk, entity, null, KeyValue, Message);//è®°å½•æ—¥å¿—
 
                 }
                 return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = Message }.ToString());
             }
             catch (Exception ex)
             {
-                this.WriteLog(-1, entity, null, KeyValue, "²Ù×÷Ê§°Ü£º" + ex.Message);//¼ÇÂ¼ÈÕÖ¾
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "²Ù×÷Ê§°Ü£º" + ex.Message }.ToString());
+                this.WriteLog(-1, entity, null, KeyValue, "æ“ä½œå¤±è´¥ï¼š" + ex.Message);//è®°å½•æ—¥å¿—
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "æ“ä½œå¤±è´¥ï¼š" + ex.Message }.ToString());
             }
         }
         #endregion
 
-        #region 3.É¾³ı·½·¨
+        #region 3.åˆ é™¤æ–¹æ³•
         /// <summary>
-        /// Ê×ÏÈÅĞ¶ÏĞèÒªÉ¾³ıµÄĞÅÏ¢ÊÇ·ñ°ó¶¨ÁËÆäËûĞÅÏ¢
-        ///     Èç£ºÉ¾³ıÒ»Ìõ¹«Ë¾ĞÅÏ¢ÏÈÒªÅĞ¶Ï¸ÃÌõ¹«Ë¾ĞÅÏ¢ÏÂÃæÊÇ·ñ°ó¶¨ÁË¹¤³§ĞÅÏ¢
-        ///         Èç¹û°ó¶¨ÁËĞÅÏ¢£¬ÔòÌáÊ¾¡°µ±Ç°ËùÑ¡ÓĞ×Ó½ÚµãÊı¾İ£¬²»ÄÜÉ¾³ı¡£¡±²¢½áÊø
-        ///  ÔÚÈ·¶¨Ã»°ó¶¨Êı¾İµÄÇé¿öÏÂ£¬É¾³ı¸ÃÊı¾İ
-        ///     É¾³ı±íÊ¾½«¸ÃÊı¾İµÄIsAvailableÊôĞÔÉèÎªfalse£¬²¢²»ÕæµÄÉ¾³ı¸Ã¼ÇÂ¼
+        /// é¦–å…ˆåˆ¤æ–­éœ€è¦åˆ é™¤çš„ä¿¡æ¯æ˜¯å¦ç»‘å®šäº†å…¶ä»–ä¿¡æ¯
+        ///     å¦‚ï¼šåˆ é™¤ä¸€æ¡å…¬å¸ä¿¡æ¯å…ˆè¦åˆ¤æ–­è¯¥æ¡å…¬å¸ä¿¡æ¯ä¸‹é¢æ˜¯å¦ç»‘å®šäº†å·¥å‚ä¿¡æ¯
+        ///         å¦‚æœç»‘å®šäº†ä¿¡æ¯ï¼Œåˆ™æç¤ºâ€œå½“å‰æ‰€é€‰æœ‰å­èŠ‚ç‚¹æ•°æ®ï¼Œä¸èƒ½åˆ é™¤ã€‚â€å¹¶ç»“æŸ
+        ///  åœ¨ç¡®å®šæ²¡ç»‘å®šæ•°æ®çš„æƒ…å†µä¸‹ï¼Œåˆ é™¤è¯¥æ•°æ®
+        ///     åˆ é™¤è¡¨ç¤ºå°†è¯¥æ•°æ®çš„IsAvailableå±æ€§è®¾ä¸ºfalseï¼Œå¹¶ä¸çœŸçš„åˆ é™¤è¯¥è®°å½•
         /// </summary>
-        /// <param name="KeyValue">Ò³ÃæÖĞÌá¹©µÄĞèÒªÉ¾³ıµÄÊı¾İµÄÖ÷¼ü,¿ÉÄÜÊÇ¶àÌõÊı¾İµÄÖ÷¼ü£¬¼´¶à¸öÖ÷¼ü</param>
-        /// <param name="ParentId">²»ĞèÒª</param>
-        /// <param name="DeleteMark">²»ĞèÒª</param>
+        /// <param name="KeyValue">é¡µé¢ä¸­æä¾›çš„éœ€è¦åˆ é™¤çš„æ•°æ®çš„ä¸»é”®,å¯èƒ½æ˜¯å¤šæ¡æ•°æ®çš„ä¸»é”®ï¼Œå³å¤šä¸ªä¸»é”®</param>
+        /// <param name="ParentId">ä¸éœ€è¦</param>
+        /// <param name="DeleteMark">ä¸éœ€è¦</param>
         /// <returns></returns>
         public override ActionResult Delete(string KeyValue, string ParentId, string DeleteMark)
         {
-            //²»¹ÜÊÇ¶à¸öÖ÷¼ü»¹ÊÇµ¥¸öÖ÷¼ü£¬½«Ö÷¼ü²ğ·Ö³öÀ´£¬·ÅÔÚÊı×éÖĞ
+            //ä¸ç®¡æ˜¯å¤šä¸ªä¸»é”®è¿˜æ˜¯å•ä¸ªä¸»é”®ï¼Œå°†ä¸»é”®æ‹†åˆ†å‡ºæ¥ï¼Œæ”¾åœ¨æ•°ç»„ä¸­
             string[] array = KeyValue.Split(',');
             try
             {
-                var Message = "É¾³ıÊ§°Ü¡£";//¶¨Òå·µ»ØĞÅÏ¢£¬¸ÃĞÅÏ¢½«·µ»Øµ½½çÃæÉÏ£¬¸øÓÃ»§¹Û¿´
-                int IsOk = 0;//ÅĞ¶ÏÉ¾³ı·½·¨ÊÇ·ñ³É£¬0±íÊ¾²»³É¹¦£¬´óÓÚ0±íÊ¾³É¹¦   
-                IsOk = MyBll.Delete(array);//Ö´ĞĞÉ¾³ı²Ù×÷
+                var Message = "åˆ é™¤å¤±è´¥ã€‚";//å®šä¹‰è¿”å›ä¿¡æ¯ï¼Œè¯¥ä¿¡æ¯å°†è¿”å›åˆ°ç•Œé¢ä¸Šï¼Œç»™ç”¨æˆ·è§‚çœ‹
+                int IsOk = 0;//åˆ¤æ–­åˆ é™¤æ–¹æ³•æ˜¯å¦æˆï¼Œ0è¡¨ç¤ºä¸æˆåŠŸï¼Œå¤§äº0è¡¨ç¤ºæˆåŠŸ   
+                IsOk = MyBll.Delete(array);//æ‰§è¡Œåˆ é™¤æ“ä½œ
                 if (IsOk > 0)
                 {
-                    Message = "É¾³ı³É¹¦";
+                    Message = "åˆ é™¤æˆåŠŸ";
                 }
                 WriteLog(IsOk, array, Message);
                 return Content(new JsonMessage { Success = true, Code = "1", Message = Message }.ToString());
@@ -155,57 +171,101 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
             catch (Exception ex)
             {
-                WriteLog(-1, array, "²Ù×÷Ê§°Ü£º" + ex.Message);
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "²Ù×÷Ê§°Ü£º" + ex.Message }.ToString());
+                WriteLog(-1, array, "æ“ä½œå¤±è´¥ï¼š" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "æ“ä½œå¤±è´¥ï¼š" + ex.Message }.ToString());
             }
         }
         #endregion
 
-        #region 6.²éÑ¯·½·¨
-        //²éÑ¯·½·¨£¬±¾·½·¨Îªµ¥Ìõ¼ş²éÑ¯£¬¼´¸ù¾İÒ»¸öÌõ¼ş½øĞĞ²éÑ¯
-        //²éÑ¯Ìõ¼şÎªCondition£¬Ò²ÊÇÊı¾İ¿â±í_CompanyBaseInformationÖĞµÄÒ»¸ö×Ö¶ÎÃû
-        //²éÑ¯ÖµÎªkeywords£¬Ò²ÊÇÊı¾İ¿â±í_CompanyBaseInformationÖĞµÄ×Ö¶ÎÃûµÄ×Ö¶ÎÖµ
-        //±¾²éÑ¯²ÉÓÃ½üËÆ²éÑ¯£¨like£©
+        #region 6.æŸ¥è¯¢æ–¹æ³•
+        //æŸ¥è¯¢æ–¹æ³•ï¼Œæœ¬æ–¹æ³•ä¸ºå•æ¡ä»¶æŸ¥è¯¢ï¼Œå³æ ¹æ®ä¸€ä¸ªæ¡ä»¶è¿›è¡ŒæŸ¥è¯¢
+        //æŸ¥è¯¢æ¡ä»¶ä¸ºConditionï¼Œä¹Ÿæ˜¯æ•°æ®åº“è¡¨_CompanyBaseInformationä¸­çš„ä¸€ä¸ªå­—æ®µå
+        //æŸ¥è¯¢å€¼ä¸ºkeywordsï¼Œä¹Ÿæ˜¯æ•°æ®åº“è¡¨_CompanyBaseInformationä¸­çš„å­—æ®µåçš„å­—æ®µå€¼
+        //æœ¬æŸ¥è¯¢é‡‡ç”¨è¿‘ä¼¼æŸ¥è¯¢ï¼ˆlikeï¼‰
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string SupplierCd, string SupplierNm, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region åŸæœç´¢æ–¹æ³•
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //List<BBdbR_SupplierBase> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===å¤åˆ¶æ—¶éœ€è¦ä¿®æ”¹===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region ä¿®æ”¹åæŸ¥è¯¢
                 Stopwatch watch = CommonHelper.TimerStart();
-                List<BBdbR_SupplierBase> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===¸´ÖÆÊ±ĞèÒªĞŞ¸Ä===
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select * from  BBdbR_SupplierBase  where Enabled = '1' ");
+
+                List<DbParameter> parameter = new List<DbParameter>();
+                #region åˆ¤æ–­è¾“å…¥æ¡†å†…å®¹æ·»åŠ æ£€ç´¢æ¡ä»¶
+                //æ˜¯å¦åŠ ä¾›åº”å•†ç¼–å·æ¨¡ç³Šæœç´¢
+                if (SupplierCd != "" && SupplierCd != null)
+                {
+                    //strSql.Append(" and SupplierCd like '%" + SupplierCd + "%'");
+                    strSql.Append(" and SupplierCd like @SupplierCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@SupplierCd", "%" + SupplierCd + "%"));
+                }
+                else { }
+
+                //æ˜¯å¦åŠ ä¾›åº”å•†åç§°æ¨¡ç³Šæœç´¢
+                if (SupplierNm != "" && SupplierNm != null)
+                {
+                    //strSql.Append(" and SupplierNm like '%" + SupplierNm + "%'");
+                    strSql.Append(" and SupplierNm like @SupplierNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@SupplierNm", "%" + SupplierNm + "%"));
+                }
+                else { }
+                #endregion
+
+                //æŒ‰ç…§ä¾›åº”å•†ç¼–å·æ’åº
+                strSql.Append(" order by SupplierCd ");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
                     total = jqgridparam.total,
                     page = jqgridparam.page,
                     records = jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "ä¾›åº”å•†ä¿¡æ¯æŸ¥è¯¢æˆåŠŸ");
+                return Content(JsonData.ToJson());
+                #endregion
             }
             catch (Exception ex)
             {
                 //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "Òì³£´íÎó£º" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "ä¾›åº”å•†ä¿¡æ¯æŸ¥è¯¢å‘ç”Ÿå¼‚å¸¸é”™è¯¯ï¼š" + ex.Message);
                 return null;
             }
         }
         #endregion
 
-        #region 7.¼ì²é×Ö¶ÎÊÇ·ñÎ¨Ò»
+        #region 7.æ£€æŸ¥å­—æ®µæ˜¯å¦å”¯ä¸€
         /// <summary>
-        /// ¸ù¾İ´«ÈëµÄ×Ö¶ÎÃûºÍ×Ö¶ÎÖµÅĞ¶Ï¸Ã×Ö¶ÎÊÇ·ñ´æÔÚ
+        /// æ ¹æ®ä¼ å…¥çš„å­—æ®µåå’Œå­—æ®µå€¼åˆ¤æ–­è¯¥å­—æ®µæ˜¯å¦å­˜åœ¨
         /// </summary>
-        /// <param name="KeyName">×Ö¶ÎÃû</param>
-        /// <param name="KeyValue">×Ö¶ÎÖµ</param>
-        /// <returns>·µ»Ø¸ÃÅĞ¶Ï½á¹û</returns>
+        /// <param name="KeyName">å­—æ®µå</param>
+        /// <param name="KeyValue">å­—æ®µå€¼</param>
+        /// <returns>è¿”å›è¯¥åˆ¤æ–­ç»“æœ</returns>
         public ActionResult ChectOnlyOne(string KeyName, string KeyValue)
         {
             try
             {
                 int IsOk = 0;
-                string Message = "¸Ã×Ö¶ÎÒÑ¾­´æÔÚ£¡";
+                string Message = "è¯¥å­—æ®µå·²ç»å­˜åœ¨ï¼";
 
                 if (!string.IsNullOrEmpty(KeyValue))
                 {
@@ -222,22 +282,22 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
             catch (Exception ex)
             {
-                return Content(new JsonMessage { Success = false, Code = "-1", Message = "²Ù×÷Ê§°Ü£º" + ex.Message }.ToString());
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "æ“ä½œå¤±è´¥ï¼š" + ex.Message }.ToString());
             }
         }
 
         #endregion
 
-        #region 10.µ¼Èë
+        #region 10.å¯¼å…¥
         /// <summary>
-        /// µ¼ÈëExcelµ¯³ö¿òÒ³Ãæ
+        /// å¯¼å…¥Excelå¼¹å‡ºæ¡†é¡µé¢
         /// </summary>
         /// <returns></returns>
         [ManagerPermission(PermissionMode.Enforce)]
         public ActionResult ExcelImportDialog()
         {
             string moduleId = DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId"));
-            //Ä£°åÖ÷±í
+            //æ¨¡æ¿ä¸»è¡¨
             Base_ExcelImport base_excellimport = DataFactory.Database().FindEntity<Base_ExcelImport>("ModuleId", moduleId);
             if (base_excellimport.ModuleId != null)
             {
@@ -256,9 +316,9 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             //OrderID1 = ViewBag.OrderID;
             return View();
         }
-        #region µ¼³öÄ£°å
+        #region å¯¼å‡ºæ¨¡æ¿
         /// <summary>
-        /// ÏÂÔØExcellÄ£°å
+        /// ä¸‹è½½Excellæ¨¡æ¿
         /// </summary>
         /// <returns></returns>
         public ActionResult GetExcellTemperature(string ImportId)
@@ -283,7 +343,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
         #endregion
         /// <summary>
-        /// Çå³ıDatatable¿ÕĞĞ
+        /// æ¸…é™¤Datatableç©ºè¡Œ
         /// </summary>
         /// <param name="dt"></param>
         public void RemoveEmpty(DataTable dt)
@@ -313,31 +373,31 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
 
         /// <summary>
-        /// µ¼ÈëExcellÊı¾İ
+        /// å¯¼å…¥Excellæ•°æ®
         /// </summary>
         /// <returns></returns>
         public ActionResult ImportExel()
         {
-            int IsOk = 0;//µ¼Èë×´Ì¬
-            int IsCheck = 1;//ÓÃ×÷¼ìÑéÖØ¸´µØÖ·µÄ±êÊ¶
-            DataTable Result = new DataTable();//µ¼Èë´íÎó¼ÇÂ¼±í
+            int IsOk = 0;//å¯¼å…¥çŠ¶æ€
+            int IsCheck = 1;//ç”¨ä½œæ£€éªŒé‡å¤åœ°å€çš„æ ‡è¯†
+            DataTable Result = new DataTable();//å¯¼å…¥é”™è¯¯è®°å½•è¡¨
             IDatabase database = DataFactory.Database();
             List<BBdbR_SupplierBase> EntityList = new List<BBdbR_SupplierBase>();
 
-            //¹¹Ôìµ¼Èë·µ»Ø½á¹û±í
+            //æ„é€ å¯¼å…¥è¿”å›ç»“æœè¡¨
             DataTable Newdt = new DataTable("Result");
-            Newdt.Columns.Add("rowid", typeof(System.String));                 //ĞĞºÅ
-            Newdt.Columns.Add("locate", typeof(System.String));                 //Î»ÖÃ
-            Newdt.Columns.Add("reason", typeof(System.String));                 //Ô­Òò
+            Newdt.Columns.Add("rowid", typeof(System.String));                 //è¡Œå·
+            Newdt.Columns.Add("locate", typeof(System.String));                 //ä½ç½®
+            Newdt.Columns.Add("reason", typeof(System.String));                 //åŸå› 
             int errorNum = 1;
             try
             {
-                string moduleId = Request["moduleId"]; //±íÃû
+                string moduleId = Request["moduleId"]; //è¡¨å
                 //StringBuilder sb_table = new StringBuilder();
                 HttpFileCollectionBase files = Request.Files;
-                HttpPostedFileBase file = files["filePath"];//»ñÈ¡ÉÏ´«µÄÎÄ¼ş
+                HttpPostedFileBase file = files["filePath"];//è·å–ä¸Šä¼ çš„æ–‡ä»¶
                 string fullname = file.FileName;
-                string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtension»ñµÃÎÄ¼şµÄÀ©Õ¹Ãû
+                string IsXls = System.IO.Path.GetExtension(fullname).ToString().ToLower();//System.IO.Path.GetExtensionè·å¾—æ–‡ä»¶çš„æ‰©å±•å
                 if (!IsXls.EndsWith(".xls") && !IsXls.EndsWith(".xlsx"))
                 {
                     IsOk = 0;
@@ -357,27 +417,27 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
                     DataTable dt = ImportExcel.ExcelToDataTable(Server.MapPath("~/Resource/UploadFile/ImportExcel/") + filename);
 
-                    RemoveEmpty(dt);//Çå³ı¿ÕĞĞ
-                    dt.Columns.Add("rowid", typeof(System.String));//ÓÃÀ´±êÊ¶excellĞĞID
+                    RemoveEmpty(dt);//æ¸…é™¤ç©ºè¡Œ
+                    dt.Columns.Add("rowid", typeof(System.String));//ç”¨æ¥æ ‡è¯†excellè¡ŒID
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         dt.Rows[i]["rowid"] = i + 1;
                     }
-                    #region ¼ì²éÏîÄ¿ĞÅÏ¢µ¼Èë
-                    //Ğ£Ñé
+                    #region æ£€æŸ¥é¡¹ç›®ä¿¡æ¯å¯¼å…¥
+                    //æ ¡éªŒ
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        IsCheck = 1;//ÖØÖÃ±êÊ¶
+                        IsCheck = 1;//é‡ç½®æ ‡è¯†
                         DataRow dr = Newdt.NewRow();
 
-                        //¹©Ó¦ÉÌÀàĞÍ
+                        //ä¾›åº”å•†ç±»å‹
                         Base_DataDictionary SupplyType = database.FindEntity<Base_DataDictionary>("Code", "SupplierCatg");
                         List<Base_DataDictionaryDetail> SupplyType1 = database.FindList<Base_DataDictionaryDetail>("DataDictionaryId", SupplyType.DataDictionaryId);
                         foreach (var item in SupplyType1)
                         {
                             
                             IsCheck = 0;
-                            if (item.FullName == dt.Rows[i]["¹©Ó¦ÉÌÀàĞÍ"].ToString().Trim())
+                            if (item.FullName == dt.Rows[i]["ä¾›åº”å•†ç±»å‹"].ToString().Trim())
                             {
                                 IsCheck = 1;
                                 break;
@@ -387,19 +447,19 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         {
                             dr = Newdt.NewRow();
                             dr[0] = errorNum;
-                            dr[1] = "µÚ[" + dt.Rows[i]["rowid"].ToString() + "]ĞĞ[¹©Ó¦ÉÌÀàĞÍ]";
-                            dr[2] = "ÔÚÏµÍ³ÖĞ²»´æÔÚ´Ë¹©Ó¦ÉÌÀàĞÍ»òÊäÈëÓĞÎó";
+                            dr[1] = "ç¬¬[" + dt.Rows[i]["rowid"].ToString() + "]è¡Œ[ä¾›åº”å•†ç±»å‹]";
+                            dr[2] = "åœ¨ç³»ç»Ÿä¸­ä¸å­˜åœ¨æ­¤ä¾›åº”å•†ç±»å‹æˆ–è¾“å…¥æœ‰è¯¯";
                             Newdt.Rows.Add(dr);
                             errorNum++;
                             IsCheck = 0;
                         }
-                        //¹©Ó¦ÉÌµÈ¼¶
+                        //ä¾›åº”å•†ç­‰çº§
                         Base_DataDictionary SupplyGrade = database.FindEntity<Base_DataDictionary>("Code", "SupplierGrade");
                         List<Base_DataDictionaryDetail> SupplyGrade1 = database.FindList<Base_DataDictionaryDetail>("DataDictionaryId", SupplyGrade.DataDictionaryId);
                         foreach (var item in SupplyGrade1)
                         {
                             IsCheck = 0;
-                            if (item.FullName == dt.Rows[i]["¹©Ó¦ÉÌµÈ¼¶"].ToString().Trim())
+                            if (item.FullName == dt.Rows[i]["ä¾›åº”å•†ç­‰çº§"].ToString().Trim())
                             {
                                 IsCheck = 1;
                                 break;
@@ -409,23 +469,23 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         {
                             dr = Newdt.NewRow();
                             dr[0] = errorNum;
-                            dr[1] = "µÚ[" + dt.Rows[i]["rowid"].ToString() + "]ĞĞ[¹©Ó¦ÉÌµÈ¼¶]";
-                            dr[2] = "ÔÚÏµÍ³ÖĞ²»´æÔÚ´Ë¹©Ó¦ÉÌµÈ¼¶»òÊäÈëÓĞÎó";
+                            dr[1] = "ç¬¬[" + dt.Rows[i]["rowid"].ToString() + "]è¡Œ[ä¾›åº”å•†ç­‰çº§]";
+                            dr[2] = "åœ¨ç³»ç»Ÿä¸­ä¸å­˜åœ¨æ­¤ä¾›åº”å•†ç­‰çº§æˆ–è¾“å…¥æœ‰è¯¯";
                             Newdt.Rows.Add(dr);
                             errorNum++;
                             IsCheck = 0;
                         }
 
 
-                        if (dt.Rows[i]["¹©Ó¦ÉÌ´úÂë"].ToString().Trim() != "")
+                        if (dt.Rows[i]["ä¾›åº”å•†ä»£ç "].ToString().Trim() != "")
                         {
-                            int Count = MyBll.CheckCount("SupplierCd", dt.Rows[i]["¹©Ó¦ÉÌ´úÂë"].ToString().Trim());//ÊÇ·ñÓĞÏàÍ¬±àºÅ
+                            int Count = MyBll.CheckCount("SupplierCd", dt.Rows[i]["ä¾›åº”å•†ä»£ç "].ToString().Trim());//æ˜¯å¦æœ‰ç›¸åŒç¼–å·
                             if (Count > 0)
                             {
                                 dr = Newdt.NewRow();
                                 dr[0] = errorNum;
-                                dr[1] = "µÚ[" + dt.Rows[i]["rowid"].ToString() + "]ĞĞ[¹©Ó¦ÉÌ´úÂë]";
-                                dr[2] = "ÔÚÏµÍ³ÖĞÒÑ´æÔÚ²»ÄÜÖØ¸´²åÈë";
+                                dr[1] = "ç¬¬[" + dt.Rows[i]["rowid"].ToString() + "]è¡Œ[ä¾›åº”å•†ä»£ç ]";
+                                dr[2] = "åœ¨ç³»ç»Ÿä¸­å·²å­˜åœ¨ä¸èƒ½é‡å¤æ’å…¥";
                                 Newdt.Rows.Add(dr);
                                 errorNum++;
                                 IsCheck = 0;
@@ -433,23 +493,23 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                             }
                             else
                             {
-                                if (IsCheck == 0)//·µ»ØËùÓĞÊäÈë¸ñÊ½ÎÊÌâ
+                                if (IsCheck == 0)//è¿”å›æ‰€æœ‰è¾“å…¥æ ¼å¼é—®é¢˜
                                 {
                                     continue;
                                 }
                                 BBdbR_SupplierBase entity = new BBdbR_SupplierBase();
-                                entity.SupplierCd = dt.Rows[i]["¹©Ó¦ÉÌ´úÂë"].ToString().Trim();
-                                entity.SupplierNm = dt.Rows[i]["¹©Ó¦ÉÌÃû³Æ"].ToString().Trim();
-                                entity.SupplierCatg = dt.Rows[i]["¹©Ó¦ÉÌÀàĞÍ"].ToString().Trim();
-                                entity.SupplierGrade = dt.Rows[i]["¹©Ó¦ÉÌµÈ¼¶"].ToString().Trim();
-                                entity.SupplierTeleph = dt.Rows[i]["¹©Ó¦ÉÌÁªÏµµç»°"].ToString().Trim();
-                                entity.Mgr = dt.Rows[i]["¸ºÔğÈË"].ToString().Trim();
-                                entity.SupplierEmail = dt.Rows[i]["¹©Ó¦ÉÌÓÊÏä"].ToString().Trim();
-                                entity.SupplierAddress = dt.Rows[i]["¹©Ó¦ÉÌµØÖ·"].ToString().Trim();
-                                entity.SupplierWebsite = dt.Rows[i]["¹©Ó¦ÉÌÍøÖ·"].ToString().Trim();
+                                entity.SupplierCd = dt.Rows[i]["ä¾›åº”å•†ä»£ç "].ToString().Trim();
+                                entity.SupplierNm = dt.Rows[i]["ä¾›åº”å•†åç§°"].ToString().Trim();
+                                entity.SupplierCatg = dt.Rows[i]["ä¾›åº”å•†ç±»å‹"].ToString().Trim();
+                                entity.SupplierGrade = dt.Rows[i]["ä¾›åº”å•†ç­‰çº§"].ToString().Trim();
+                                entity.SupplierTeleph = dt.Rows[i]["ä¾›åº”å•†è”ç³»ç”µè¯"].ToString().Trim();
+                                entity.Mgr = dt.Rows[i]["è´Ÿè´£äºº"].ToString().Trim();
+                                entity.SupplierEmail = dt.Rows[i]["ä¾›åº”å•†é‚®ç®±"].ToString().Trim();
+                                entity.SupplierAddress = dt.Rows[i]["ä¾›åº”å•†åœ°å€"].ToString().Trim();
+                                entity.SupplierWebsite = dt.Rows[i]["ä¾›åº”å•†ç½‘å€"].ToString().Trim();
 
-                                entity.Description = dt.Rows[i]["¹©Ó¦ÉÌÃèÊö"].ToString().Trim();
-                                entity.Remark = dt.Rows[i]["±¸×¢"].ToString().Trim();
+                                entity.Description = dt.Rows[i]["ä¾›åº”å•†æè¿°"].ToString().Trim();
+                                entity.Remark = dt.Rows[i]["å¤‡æ³¨"].ToString().Trim();
 
                                 entity.Create();
                                 
@@ -464,8 +524,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                 {
                                     dr = Newdt.NewRow();
                                     dr[0] = errorNum;
-                                    dr[1] = "µÚ[" + dt.Rows[i]["rowid"].ToString() + "]ĞĞ";
-                                    dr[2] = "¹©Ó¦ÉÌĞÅÏ¢²åÈëÊ§°Ü";
+                                    dr[1] = "ç¬¬[" + dt.Rows[i]["rowid"].ToString() + "]è¡Œ";
+                                    dr[2] = "ä¾›åº”å•†ä¿¡æ¯æ’å…¥å¤±è´¥";
                                     Newdt.Rows.Add(dr);
                                     IsCheck = 0;
                                     continue;
@@ -476,8 +536,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         {
                             dr = Newdt.NewRow();
                             dr[0] = errorNum;
-                            dr[1] = "µÚ[" + dt.Rows[i]["rowid"].ToString() + "]ĞĞ";
-                            dr[2] = "¹©Ó¦ÉÌ´úÂë²»ÄÜÎª¿Õ";
+                            dr[1] = "ç¬¬[" + dt.Rows[i]["rowid"].ToString() + "]è¡Œ";
+                            dr[2] = "ä¾›åº”å•†ä»£ç ä¸èƒ½ä¸ºç©º";
                             Newdt.Rows.Add(dr);
                             errorNum++;
                             IsCheck = 0;
@@ -495,7 +555,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "Òì³£´íÎó£º" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Add, "-1", "å¼‚å¸¸é”™è¯¯ï¼š" + ex.Message);
                 IsOk = 0;
             }
             if (Result.Rows.Count > 0)
@@ -508,6 +568,60 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 ResultData = Result
             };
             return Content(JsonData.ToJson());
+        }
+        #endregion
+
+        #region é‡æ„å¯¼å‡º
+        public ActionResult GetExcel_Data(string SupplierCd, string SupplierNm, JqGridParam jqgridparam)
+        {
+            try
+            {
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select SupplierCd,SupplierNm,SupplierCatg,SupplierGrade,SupplierTeleph,Mgr,SupplierAddress,SupplierEmail,SupplierWebsite,Description,Remark from  BBdbR_SupplierBase  where Enabled = '1' ");
+
+
+                List<DbParameter> parameter = new List<DbParameter>();
+                #region åˆ¤æ–­è¾“å…¥æ¡†å†…å®¹æ·»åŠ æ£€ç´¢æ¡ä»¶
+                //æ˜¯å¦åŠ ä¾›åº”å•†ç¼–å·æ¨¡ç³Šæœç´¢
+                if (SupplierCd != "" && SupplierCd != null)
+                {
+                    //strSql.Append(" and SupplierCd like '%" + SupplierCd + "%'");
+                    strSql.Append(" and SupplierCd like @SupplierCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@SupplierCd", "%" + SupplierCd + "%"));
+                }
+                else { }
+
+                //æ˜¯å¦åŠ ä¾›åº”å•†åç§°æ¨¡ç³Šæœç´¢
+                if (SupplierNm != "" && SupplierNm != null)
+                {
+                    //strSql.Append(" and SupplierNm like '%" + SupplierNm + "%'");
+                    strSql.Append(" and SupplierNm like @SupplierNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@SupplierNm", "%" + SupplierNm + "%"));
+                }
+                else { }
+                #endregion
+
+                //æŒ‰ç…§ä¾›åº”å•†ç¼–å·æ’åº
+                strSql.Append(" order by SupplierCd ");
+
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                string fileName = "ä¾›åº”å•†æ•°æ®";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_SupplierBase(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "ä¾›åº”å•†æ•°æ®å¯¼å‡ºæˆåŠŸ");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "ä¾›åº”å•†æ•°æ®å¯¼å‡ºæ“ä½œå¤±è´¥ï¼š" + ex.Message);
+                return null;
+            }
+
         }
         #endregion
 

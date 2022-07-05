@@ -39,7 +39,7 @@ namespace HfutIE.Business
             }
         }
         /// <summary>
-        /// 模块权限列表
+        /// 模块权限列表————分配权限时使用
         /// </summary>
         /// <param name="ObjectId">对象主键</param>
         /// <param name="Category">对象分类:1-部门2-角色3-岗位4-群组</param>
@@ -48,35 +48,47 @@ namespace HfutIE.Business
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            if (!ManageProvider.Provider.Current().IsSystem)
-            {
-                strSql.Append(@"SELECT  m.ModuleId ,				
+            strSql.Append(@"select * from (SELECT  m.ModuleId ,				
                                         m.ParentId ,				
                                         m.Code ,					
                                         m.FullName ,				
                                         m.Icon ,					
                                         m.SortCode ,				
-                                        cp.ModuleId AS ObjectId     
-                                FROM    Base_Module M INNER JOIN ( SELECT DISTINCT ModuleId  FROM   Base_ModulePermission");
-                strSql.Append(" WHERE  ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "')) MP ON M.ModuleId = mp.ModuleId");
-                strSql.Append(" LEFT JOIN ( SELECT DISTINCT ModuleId  FROM  Base_ModulePermission");
-                strSql.Append(" WHERE  ObjectId = @ObjectId ) CP ON cp.ModuleId = M.ModuleId");
-            }
-            else
-            {
-                strSql.Append(@"SELECT  m.ModuleId ,				
-                                        m.ParentId ,				
-                                        m.Code ,					
-                                        m.FullName ,				
-                                        m.Icon ,					
-                                        m.SortCode ,				
-                                        mp.ObjectId					
+                                        mp.ObjectId	,
+                                        m.Enabled,
+                                        ROW_NUMBER() OVER(PARTITION BY m.ModuleId ORDER BY m.SortCode ASC) as RepeatNum
                                 FROM    Base_Module m
                                         LEFT JOIN Base_ModulePermission mp ON mp.ModuleId = m.ModuleId
-                                                                          AND mp.ObjectId = @ObjectId");
-            }
-            parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
-            strSql.Append(" ORDER BY  m.SortCode ASC ");
+                                                                          AND mp.ObjectId IN ('" + ObjectId.Replace(",", "','") + "') ");//@ObjectId
+
+            //if (!ManageProvider.Provider.Current().IsSystem)
+            //{
+            //    strSql.Append(@"SELECT  m.ModuleId ,				
+            //                            m.ParentId ,				
+            //                            m.Code ,					
+            //                            m.FullName ,				
+            //                            m.Icon ,					
+            //                            m.SortCode ,	
+            //                            m.Enabled,
+            //                            cp.ModuleId AS ObjectId     
+            //                    FROM    Base_Module M INNER JOIN ( SELECT DISTINCT ModuleId  FROM   Base_ModulePermission");
+            //    strSql.Append(" WHERE  ObjectId IN ('" + ObjectId.Replace(",", "','") + "')) MP ON M.ModuleId = mp.ModuleId");//ManageProvider.Provider.Current().
+            //    strSql.Append(" LEFT JOIN ( SELECT DISTINCT ModuleId  FROM  Base_ModulePermission");
+            //    //2021.11.29修改
+            //    //strSql.Append(" WHERE  ObjectId = @ObjectId ) CP ON cp.ModuleId = M.ModuleId");
+            //    strSql.Append(" WHERE  ObjectId IN ('" + ObjectId.Replace(",", "','") + "') ) CP ON cp.ModuleId = M.ModuleId");//ManageProvider.Provider.Current().
+
+            //}
+            //else
+            //{
+
+
+            //}
+            //2021.11.28新增
+            strSql.Append(@" where  m.Enabled = '1' ) a where RepeatNum = '1'");//2021.11.28新增
+
+            //parameter.Add(DbFactory.CreateDbParameter("@ObjectId", ObjectId));
+            strSql.Append(" ORDER BY  SortCode ASC ");
             return Repository().FindTableBySql(strSql.ToString(), parameter.ToArray());
         }
         /// <summary>
@@ -89,6 +101,8 @@ namespace HfutIE.Business
             StringBuilder strSql = new StringBuilder();
             if (!ManageProvider.Provider.Current().IsSystem)
             {
+                //strSql.Append($"SELECT DISTINCT  M.* FROM Base_Module M INNER JOIN Base_ModulePermission MP ON M.ModuleId = MP.ModuleId WHERE ObjectId IN (select RoleId from Base_StfRoleConf where StfId='{ManageProvider.Provider.Current().ObjectId}') or ObjectId='{ManageProvider.Provider.Current().ObjectId}' ORDER BY  M.SortCode ASC ");
+                //strSql.Append($" INNER JOIN Base_ModulePermission MP ON M.ModuleId = MP.ModuleId WHERE ObjectId IN ('{ManageProvider.Provider.Current().ObjectId.Replace(",", "','")}')");
                 strSql.Append(@"SELECT DISTINCT  M.* FROM Base_Module M");
                 strSql.Append(" INNER JOIN Base_ModulePermission MP ON M.ModuleId = MP.ModuleId WHERE   ObjectId IN ('" + ManageProvider.Provider.Current().ObjectId.Replace(",", "','") + "')");
             }
@@ -100,21 +114,31 @@ namespace HfutIE.Business
             return DataFactory.Database().FindListBySql<Base_Module>(strSql.ToString());
         }
         /// <summary>
-        /// 根据对象Id获取模块权限列表
+        /// 根据对象Id获取模块权限列表——用户登录个人中心时调用
         /// </summary>
         /// <param name="ObjectId">对象ID</param>
         /// <returns></returns>
         public DataTable GetModulePermission(string ObjectId)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT  m.ModuleId ,
+            //strSql.Append(@"(SELECT  m.ModuleId ,
+            //                        m.ParentId ,
+            //                        m.FullName ,
+            //                        m.Icon
+            //                FROM    Base_Module m
+            //                        LEFT JOIN Base_ModulePermission mp ON mp.ModuleId = m.ModuleId");
+            //strSql.Append(" WHERE   mp.ObjectId IN ('" + ObjectId.Replace(",", "','") + "')");
+            //strSql.Append(" ORDER BY  m.SortCode ASC ");
+
+            //2021.11.28 修改
+            strSql.Append(@"select * from(SELECT  m.ModuleId ,
                                     m.ParentId ,
                                     m.FullName ,
-                                    m.Icon
+                                    m.Icon,
+                                    ROW_NUMBER() OVER(PARTITION BY m.ModuleId ORDER BY m.SortCode ASC) as RepeatNum
                             FROM    Base_Module m
                                     LEFT JOIN Base_ModulePermission mp ON mp.ModuleId = m.ModuleId");
-            strSql.Append(" WHERE   mp.ObjectId IN ('" + ObjectId.Replace(",", "','") + "')");
-            strSql.Append(" ORDER BY  m.SortCode ASC ");
+            strSql.Append(" WHERE   mp.ObjectId IN ('" + ObjectId.Replace(",", "','") + "')) as a where a.RepeatNum = 1 ");
             return Repository().FindTableBySql(strSql.ToString());
         }
 

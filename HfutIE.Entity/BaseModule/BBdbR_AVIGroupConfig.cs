@@ -13,17 +13,23 @@ using System.Text;
 namespace HfutIE.Entity
 {
     /// <summary>
-    /// AVI去向配置信息表
+    /// AVI站点组数据采集配置信息表
     /// <author>
     ///		<name>she</name>
     ///		<date>2021.08.31 12:49</date>
     /// </author>
     /// </summary>
     [Description("AVI站点组数据采集配置信息表")]
-    [PrimaryKey("AVIGroupId")]
+    [PrimaryKey("AviGroupId")]
     public class BBdbR_AVIGroupConfig : BaseEntity
     {
         #region 获取/设置 字段值
+        /// <summary>
+        /// 配置主键
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("配置主键")]
+        public string ConfigId { get; set; }
         /// <summary>
         /// AVI站点组主键
         /// </summary>
@@ -31,41 +37,23 @@ namespace HfutIE.Entity
         [DisplayName("AVI站点组主键")]
         public string AVIGroupId { get; set; }
         /// <summary>
-        /// AVI站点组编号
-        /// </summary>
-        /// <returns></returns>
-        [DisplayName("AVI站点组编号")]
-        public string AVIGroupCd { get; set; }
-        /// <summary>
-        /// AVI站点组名称
-        /// </summary>
-        /// <returns></returns>
-        [DisplayName("AVI站点组名称")]
-        public string AVIGroupNm { get; set; }
-        /// <summary>
-        /// AVI站点数量
-        /// </summary>
-        /// <returns></returns>
-        [DisplayName("AVI站点数量")]
-        public string AVIGroupCount { get; set; }
-        /// <summary>
         /// AVI站点主键
         /// </summary>
         /// <returns></returns>
-        [DisplayName("AVI站点主键")]
-        public string AVIId { get; set; }
+        [DisplayName("Avi站点主键")]
+        public string AviId { get; set; }
         /// <summary>
         /// AVI站点编号
         /// </summary>
         /// <returns></returns>
-        [DisplayName("AVI站点编号")]
-        public string AVICd { get; set; }
+        [DisplayName("Avi站点编号")]
+        public string AviCd { get; set; }
         /// <summary>
         /// AVI站点名称
         /// </summary>
         /// <returns></returns>
         [DisplayName("AVI站点名称")]
-        public string AVINm { get; set; }
+        public string AviNm { get; set; }
         
         /// <summary>
         /// 版本号
@@ -141,7 +129,7 @@ namespace HfutIE.Entity
         /// </summary>
         public override void Create()
         {
-            this.AVIGroupId = CommonHelper.GetGuid;
+            this.ConfigId = CommonHelper.GetGuid;
             this.VersionNumber = "V1.0";
             this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.Enabled = "1";
@@ -154,7 +142,7 @@ namespace HfutIE.Entity
         /// <param name="KeyValue"></param>
         public override void Modify(string KeyValue)
         {
-            this.AVIGroupId = KeyValue;
+            this.ConfigId = KeyValue;
             this.VersionNumber = "V1.0";
             this.Enabled = "1";
             this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");

@@ -1,63 +1,106 @@
 @{
-    ViewBag.Title = "缺陷类别表";
+    ViewBag.Title = "缺陷类别基本信息表";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
 <script type="text/javascript">
     $(function () {
-        Show();
-        BindDropItem("#DefectCatgLevel", "DefectCatgLevel");
         GetGrid();
+        Show();
     })
-    var condition = {
-        ParamName: "",
-        Operation: "",
-        ParamValue: ""
-    };
-
     //加载表格
     function GetGrid() {
         $("#gridTable").jqGrid({
-            url: "@Url.Content("~/QualityModule/BBdbR_DefectCatgBase/GridPageJsonFAS")",
-            datatype: "json",
-            height: $(window).height() - 149,
-            autowidth: true,
-            colModel: [
-                { label: '缺陷类型主键', name: 'DefectCatgId', index: 'DefectCatgId', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '缺陷类型编号', name: 'DefectCatgCd', index: 'DefectCatgCd', width: 0, align: 'left', sortable: true },
-                { label: '缺陷类型名称', name: 'DefectCatgNm', index: 'DefectCatgNm', width: 0, align: 'left', sortable: true },
-                {
-                    label: '缺陷级别', name: 'DefectCatgLevel', index: 'DefectCatgLevel', width: 0, align: 'left', sortable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        return CellItem("DefectCatgLevel",cellvalue);
-                    }
-                },
-                { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'left', sortable: true },
-                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left', sortable: false, hidden: true },
-                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'left', sortable: true },
-            ],
-            pager: "#gridPager",
+        url: "@Url.Content("~/QualityModule/BBdbR_DefectCatgBase/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: '缺陷类型主键', name: 'DefectCatgId', index: 'DefectCatgId', width: 0, align: 'center',sortable: true,hidden:true  },
+                { label: '缺陷类型编号', name: 'DefectCatgCd', index: 'DefectCatgCd', width: 0, align: 'center',sortable: true  },
+                { label: '缺陷类型名称', name: 'DefectCatgNm', index: 'DefectCatgNm', width: 0, align: 'center',sortable: true  },
+                { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center',sortable: true  },
+            { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true   },
+            { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true   },
+            {
+                label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                }
+            },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 100, align: 'center', sortable: true },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 100, align: 'center', sortable: true },
+            {
+                label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                } },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 100, align: 'center', sortable: true},
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 100, align: 'center', sortable: true},
+            { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true},
+            { label: 'RsvFld1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: 'RsvFld2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+        ],
+        pager: "#gridPager",
             sortname: 'DefectCatgCd',
-            sortorder: 'desc',
+            sortorder: 'asc',
+            loadonce: true,
             rownumbers: true,
             shrinkToFit: false,
             gridview: true,
-        });
+            multiselect: true,
+            multiboxonly: true,
+            rowNum: 22,
+            rowList: [22, 50, 100, 500],
+    });
     }
-    //刷新
-    function windowload() {
-        $("#gridTable").trigger("reloadGrid"); //重新载入
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#Keywords").hide();
+        } else {
+            $("#Keywords").show();
+        }
+    }
+    var condition = {
+        ParamName: "",
+        Operation: "",//这里没用到
+        ParamValue: "",
+    };
+     //搜索
+    function btn_Search() {
+        var conditions = new Array();
+        if ($("#Condition").val() == "all") {//判断如果选中的是全部，刷新表格
+            $("#gridTable").jqGrid('setGridParam', {
+                url: "@Url.Content("~/QualityModule/BBdbR_DefectCatgBase/GridPageJson")?ParameterJson=" + JSON.stringify(conditions),
+                datatype: 'json'
+            }).trigger('reloadGrid');
+        }else {//选中的是其他
+                condition.ParamName = $("#Condition").val();
+                if ($("#Condition").val() == "DefectCatgLevel") {//没用到
+                    condition.Operation = 'Equal';
+                    condition.ParamValue = $("#DefectCatgLevel").val();
+                } else {//直接走这里
+                    condition.Operation = 'Like';
+                    condition.ParamValue = $("#Keywords").val();
+                }
+                conditions.push(condition);
+                $("#gridTable").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/QualityModule/BBdbR_DefectCatgBase/GridPageJson")?ParameterJson=" + JSON.stringify(conditions),
+                    datatype: 'json'
+                }).trigger('reloadGrid');
+            }
+       
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                btn_Search();
+            }
+        });
     }
     //新增
     function btn_add() {
         var url = "/QualityModule/BBdbR_DefectCatgBase/Form"
-        openDialog(url, "Form", "新增缺陷类别表", 770, 395, function (iframe) {
+        openDialog(url, "Form", "新增缺陷类别基本信息表", 770, 395, function (iframe) {
             top.frames[iframe].AcceptClick()
         });
     }
@@ -66,7 +109,7 @@
         var KeyValue = GetJqGridRowValue("#gridTable", "DefectCatgId");
         if (IsChecked(KeyValue)) {
             var url = "/QualityModule/BBdbR_DefectCatgBase/Form?KeyValue=" + KeyValue;
-            openDialog(url, "Form", "编辑缺陷类别表", 770, 395, function (iframe) {
+            openDialog(url, "Form", "编辑缺陷类别基本信息表", 770, 395, function (iframe) {
                 top.frames[iframe].AcceptClick();
             });
         }
@@ -75,69 +118,15 @@
     function btn_delete() {
         var KeyValue = GetJqGridRowValue("#gridTable", "DefectCatgId");
         if (IsDelData(KeyValue)) {
-            var delPoatData = {
-                KeyValue: KeyValue,
-                DeleteMark: 1
-            }
-            delConfig('/QualityModule/BBdbR_DefectCatgBase/DeleteFAS', delPoatData, KeyValue.split(",").length);
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/QualityModule/BBdbR_DefectCatgBase/DeleteCatg', delparm, KeyValue.split(",").length);
         }
     }
-    //Excel导入
-    function btn_import() {
-        var DefectCatgCd = GetJqGridRowValue("#gridTable", "DefectCatgCd");
-        openDialog("/CommonModule/ExcelImport/ExcelImportDialog", "ExcelImportDialog", "缺陷类别信息导入", 750, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
-    }
-    //导出Excel
-    function btn_export() {
-        SetDeriveExcel("#gridTable", "缺陷类别");
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "缺陷类别信息导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
-    }
-    //搜索
-    function btn_Search() {
-        var conditions = new Array();
-        condition.ParamName = $("#Condition").val();
-        if ($("#Condition").val() == "DefectCatgLevel") {
-            condition.Operation = 'Equal';
-            condition.ParamValue = $("#DefectCatgLevel").val();
-        } else {
-            condition.Operation = 'Like';
-            condition.ParamValue = $("#Keywords").val();
-        }
-        conditions.push(condition);
-        $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/QualityModule/BBdbR_DefectCatgBase/GridPageJsonFAS")?ParameterJson=" + JSON.stringify(conditions),
-            datatype: 'json'
-        }).trigger('reloadGrid');
-    }
-
-    //搜索栏
-    function Show() {
-        var Condition = $("#Condition").val();
-        if (Condition == "DefectCatgLevel") {
-            $("#DefectCatgLevel").show();
-            $("#Keywords").hide();
-        }
-        else {
-            $("#DefectCatgLevel").hide();
-            $("#Keywords").show();
-        }
-    }
-    //根据数据字典显示jqgrid表单内容
-    function CellItem(Code, cellvalue) {
-        var value = "";
-        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
-            var itemjson = eval("(" + data + ")");
-            $.each(itemjson, function (i) {
-                if (itemjson[i].Code == cellvalue) {
-                    value = itemjson[i].FullName;
-                }
-            });
-        })
-        return value;
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        
     }
 </script>
 <!--工具栏-->
@@ -149,22 +138,17 @@
 <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
     <table border="0" class="form-find" style="height: 45px;">
         <tr>
+            <th>关键字：</th>
             <td>
-                搜索条件：
-            </td>
-            <td>
-                <select id="Condition" onchange="Show()" class="txt" style="height: 28px;width: 150px">
+                <select id="Condition" style=" width:150px;height:25px" onclick="Show()">
+                    <option value="all">==全部==</option>
                     <option value="DefectCatgCd">缺陷类型编号</option>
-                    <option value="DefectCatgNm">缺陷类型名称</option>
-                    <option value="DefectCatgLevel">缺陷级别</option>
+                    <option value="DefectCatgNm">缺陷类型名称</option>              
                 </select>
             </td>
             <td>
-                <select id="DefectCatgLevel" name="State" type="text" class="txt" style="height:auto"></select>
-            </td>
-            <td>
-                <input id="Keywords" type="text" class="txt" style="width: 120px" />
-            </td>
+                <input id="Keywords" type="text" class="txt" style="width: 200px" />
+            </td>          
             <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
             </td>

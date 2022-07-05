@@ -1,40 +1,41 @@
 ﻿@{
-    ViewBag.Title = "系统日志";
+    ViewBag.Title = "登录日志";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
 <script type="text/javascript">
     $(document).ready(function () {
         //GetTree();
-        setType();
+        //setType();
         GetGrid("");
-        BindCombobox();
+        btn_Search();
+        //BindCombobox();
     });
 
-    function BindCombobox() {
-        BindDropItem("#LogType", "FASLogType", "==请选择=");
-    }
+    //function BindCombobox() {
+    //    BindDropItem("#LogType", "FASLogType", "==请选择=");
+    //}
    
     //加载表格
     function GetGrid(ParameterJson) {
         $("#gridTable").jqGrid({
-            url: "@Url.Content("~/SystemManaModule/LoginLogMana/GridPageListJson")",//联合查询
+            @*url: "@Url.Content("~/SystemManaModule/LoginLogMana/GridPageListJson")",//联合查询*@
             datatype: "json",
-            height: $(window).height() - 152,
+            height: $(window).height() - 160,
             autowidth: true,
             colModel: [
                 { label: "主键", name: "syslogid", index: "syslogid", hidden: true },
                 {
-                    label: '操作时间', name: "cretm", width: 200, sortable: true, align: 'center',
-                    formatter: function (cellvalue, options, rowobject) {
-                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm');
+                    label: "操作时间", name: "createdate", index: "createdate", width: 120, align: "center",
+                    formatter: function (value, options, rowObject) {
+                        return formatDate(value, 'yyyy-MM-dd hh:mm:ss');
                     }
                 },
                 //{ label: "操作模块", name: "modulename", index: "modulename", width: 120 },
-                { label: "操作类型", name: "logtype", index: "logtype", width: 120, hidden: true },
+                { label: "操作类型", name: "logtype", index: "logtype", width: 65, hidden: true },
                 {
                     label: "操作类型", name: "logtypename", width: 65, align: "center",
                     formatter: function (value, options, rowObject) {
-                        if (rowObject.logtype == '0') { return "登陆"; }
+                        if (rowObject.logtype == '0') { return "登录"; }
                         if (rowObject.logtype == '1') { return "新增"; }
                         if (rowObject.logtype == '2') { return "修改"; }
                         if (rowObject.logtype == '3') { return "删除"; }
@@ -45,93 +46,53 @@
                         if (rowObject.logtype == '8') { return "安全退出"; }
                     }
                 },
-                { label: "ip地址", name: "ipaddress", index: "ipaddress", width: 120 },
-                { label: "操作用户", name: "crenm", index: "crenm", width: 120 },
-                { label: "操作人编号", name: "crecd", index: "crecd", width: 120, hidden: true },
+                { label: "ip地址", name: "ipaddress", index: "ipaddress", width: 100 , align: "center"},
+                { label: "操作用户", name: "createusername", index: "createusername", width: 80 , align: "center"},
+                //{ label: "操作人编号", name: "crecd", index: "crecd", width: 0, hidden: true },
                 {
-                    label: "操作状态", name: "status", index: "status", width: 120, align: "center",
+                    label: "操作状态", name: "status", index: "status", width: 50, align: "center",
                     formatter: function (value, options, rowobject) {
                         if (value == '1') {
-                            return "<span style='color:green'>成功</span>";
+                            //return "<span style='color:green'>成功</span>";
+                            return "成功";
                         } else if (value == '0'){
-                            return "<span style='color:red'>失败</span>";
+                            //return "<span style='color:red'>失败</span>";
+                            return "失败";
                         } else {
-                            return "<span style='color:blue'>异常</span>";
+                            //return "<span style='color:blue'>异常</span>";
+                            return "异常";
                         }
                     }
                 },
-                { label: "操作描述", name: "remark", index: "remark", width: 1000 },
+                { label: "操作描述", name: "remark", index: "remark", width: 0, align: "center" },
             ],
-            viewrecords: true,
             rowNum: 200,
-            rowList: [200, 500, 1000,10000],
             pager: "#gridPager",
             sortname: 'CreateDate',
             sortorder: 'desc',
-            rownumbers: true,
-            shrinkToFit: true,
-            gridview: true
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true//排序
         });
         columnModelData("#gridTable");
     }
 
-    function setType() {
-        var searchtype = $("#Condition").val();
-        if (searchtype == "1") {//查询所有
-            $("#StartTime").hide();
-            $("#STime_s").hide();
-            $("#EndTime").hide();
-            $("#ETime_s").hide();
-            $("#LogType").hide();
-            $("#LogType_s").hide();
-            $("#StartTime").val("");
-            $("#EndTime").val("");
-            $("#LogType").val("");
-        }
-        else if (searchtype == "Time") {
-            $("#StartTime").show();
-            $("#STime_s").show();
-            $("#EndTime").show();
-            $("#ETime_s").show();
-            $("#LogType").hide();
-            $("#LogType_s").hide();          
-            $("#LogType").val("");
-        }
-        else if (searchtype == "LogType") {
-            $("#StartTime").hide();
-            $("#STime_s").hide();
-            $("#EndTime").hide();
-            $("#ETime_s").hide();
-            $("#LogType").show();
-            $("#LogType_s").show();
-            $("#StartTime").val("");
-            $("#EndTime").val("");
-        }
-    }
+    
 
     //搜索
-    function btn_Search() {
-        var condition = $("#Condition").val();
-        var keywords = "";        
-        if (condition =="Time") {
+    function btn_Search() { 
+            var CreateUserName = $("#CreateUserName").val();//操作用户
+            var IPAddress = $("#IPAddress").val();//IP地址
             var StartTime = $("#StartTime").val();
             var EndTime = $("#EndTime").val();       
             $("#gridTable").jqGrid('setGridParam', {
-                url: "@Url.Content("~/SystemManaModule/LoginLogMana/GetLogList")?StartTime=" + StartTime + '&EndTime=' + EndTime, page: 1, datatype: 'json'
+                url: "@Url.Content("~/SystemManaModule/LoginLogMana/GetLogList")?StartTime=" + StartTime + '&EndTime=' + EndTime + '&CreateUserName=' + CreateUserName + '&IPAddress=' + IPAddress, page: 1, datatype: 'json'
             }).trigger('reloadGrid');
-        }
-        else {
-            if ($("#LogType").val() != "" && $("#LogType").val() != null) {
-                keywords = $("#LogType").val();
-            }            
-            else {
-                keywords = "";
-            }
-            $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/SystemManaModule/LoginLogMana/GridLogInfor")?condition=" + escape(condition) + "&keywords=" + escape(keywords) , page: 1, datatype: 'json'
-        }).trigger('reloadGrid');
-        }
-    } 
+    }
     $(document).keypress(function (e) {
         // 回车键事件
         if (e.which == 13) {
@@ -156,12 +117,39 @@
         });
     }
     //导出Excel
+    //function btn_derive() {
+    //    SetDeriveExcel("#gridTable", "登录日志-" + formatDate(CurrentTime(), 'yyyyMMdd'));
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "登录日志导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
-        SetDeriveExcel("#gridTable", "系统日志-" + formatDate(CurrentTime(), 'yyyyMMdd'));
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "系统日志导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
+        var CreateUserName = $("#CreateUserName").val();//操作用户
+        var IPAddress = $("#IPAddress").val();//IP地址
+        var StartTime = $("#StartTime").val();
+        var EndTime = $("#EndTime").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/SystemManaModule/LoginLogMana/GetExcel_Data?StartTime=" + StartTime + '&EndTime=' + EndTime + '&CreateUserName=' + CreateUserName + '&IPAddress=' + IPAddress;
+                Loading(false);
+            }, 200);
+        }
     }
+
+
     //刷新表格
     function windowload() {
         $("#gridTable").trigger("reloadGrid"); //重新载入
@@ -175,26 +163,27 @@
 <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
     <table border="0" class="form-find" style="height: 45px;">
         <tr>
-            <th>搜索条件：</th>
+            <th id="LogType_s">操作用户：</th>
             <td>
-                <select id="Condition" onchange="setType()" class="txt" style="height: 28px;width: 150px">
-                    <option value="1">全部</option>
-                    <option value="Time">日志时间</option>
-                    <option value="LogType">日志类型</option>
-                </select>
+                <input id="CreateUserName" type="text" class="txt" style="width: 150px" />
             </td>
-            <th id="STime_s" style="display:none">开始时间：</th>
+            <th>IP地址：</th>
             <td>
-                <input id="StartTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetToday()" style="width: 120px" onfocus="var endDate=$dp.$('EndTime');WdatePicker({onpicked:function(){EndTime.focus();},maxDate:'#F{$dp.$D(\'EndTime\')}'})" />
+                <input id="IPAddress" type="text" class="txt" style="width: 150px" />
             </td>
-            <th id="ETime_s" style="display:none">结束时间：</th>
+            
+            <th id="STime_s">开始时间：</th>
             <td>
-                <input id="EndTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetToday()" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTime\')}'})" />
+                <input id="StartTime" type="text" class="txt Wdate" value="@DateTime.Today.AddDays(-7).AddHours(00).AddMinutes(00).AddSeconds(00).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'EndTime\')||\'%y-%M-%d\'}'}); blur();" readonly style="width: 150px" />
             </td>
-            <th id="LogType_s" style="display:none">日志类型：</th>
+            <th id="ETime_s">结束时间：</th>
             <td>
-                <select id="LogType" name="FASLogType" type="text" class="txt" style="height:auto" />
+                <input id="EndTime" type="text" class="txt Wdate" value="@DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'StartTime\')}'}); blur();" readonly style="width: 150px;" />
             </td>
+            @*<th id="LogType_s" style="display:none">日志类型：</th>
+        <td>
+            <select id="LogType" name="FASLogType" type="text" class="txt" style="height:auto" />
+        </td>*@
             <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
             </td>

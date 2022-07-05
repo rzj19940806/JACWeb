@@ -127,6 +127,21 @@
         }
     }
 
+
+    //导入
+    function btn_import() {
+        openDialog("/BaseModule/BBdbR_SchedulRuleBase/ExcelImportDialog", "ExcelImportDialog", "物料基本信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+    //导出Excel
+    function btn_derive() {
+        SetDeriveExcel("#gridTable", "物料基本信息");
+        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "物料基本信息导出", 600, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        });
+    }
+
     //根据数据字典显示内容
     function CellItem(Code, cellvalue) {
         var value = "";
@@ -151,6 +166,10 @@
             <a id="Ir_edit" ids="edit" onclick="btn_edit()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/edit.gif') 50% 4px no-repeat;">编辑</b></span></a>
             <div class="tools_separator"></div>
             <a id="Ir_delete" ids="delete" onclick="btn_delete()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/DeleteRed.png') 50% 4px no-repeat;">删除</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_back" ids="back" onclick="btn_import()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">导入</b></span></a>
+            <div class="tools_separator"></div>
+            <a id="Ir_back" ids="back" onclick="btn_derive()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">导出</b></span></a>
             <div class="tools_separator"></div>
             <a id="Ir_back" ids="back" onclick="btn_back()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">离开</b></span></a>
             <div class="tools_separator"></div>

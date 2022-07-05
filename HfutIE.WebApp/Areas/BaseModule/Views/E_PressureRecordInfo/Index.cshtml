@@ -1,0 +1,90 @@
+@{
+    ViewBag.Title = "加注机检测数据展示界面";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        url: "@Url.Content("~/BaseModule/E_PressureRecordInfo/GridPageJson")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+        colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'left',sortable: true,hidden:true },
+                { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'left',sortable: true  },
+            { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'left', sortable: true },
+            { label: '加注机编号', name: 'RFTireID', index: 'RFTireID', width: 0, align: 'left', sortable: true },
+            { label: '加注机名称', name: 'SensorNm', index: 'SensorNm', width: 0, align: 'left',sortable: true  },
+
+            { label: '压力机数据上限', name: 'RFTirePressureLimit', index: 'RFTirePressureLimit', width: 0, align: 'left',sortable: true  },
+            { label: '压力机数据下限', name: 'RFTirePressureLowerLimit', index: 'RFTirePressureLowerLimit', width: 0, align: 'left',sortable: true  },
+            { label: '压力机数据检测值', name: 'RFTirePressureValue', index: 'RFTirePressureValue', width: 0, align: 'left',sortable: true  },
+            { label: '压力机数据检测结果', name: 'RFTirePressureResult', index: 'RFTirePressureResult', width: 0, align: 'left',sortable: true  },
+            //{ label: 'LFTireID', name: 'LFTireID', index: 'LFTireID', width: 0, align: 'left', sortable: true, hidden: true },
+            //{ label: '左前轮胎压上限', name: 'LFTirePressureLimit', index: 'LFTirePressureLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '左前轮胎压下限', name: 'FTirePressureLowerLimit', index: 'FTirePressureLowerLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '左前轮胎压检测值', name: 'LFTirePressureValue', index: 'LFTirePressureValue', width: 0, align: 'left',sortable: true  },
+            //{ label: '左前轮胎压检测结果', name: 'LFTirePressureResult', index: 'LFTirePressureResult', width: 0, align: 'left',sortable: true  },
+            //{ label: 'RBTireID', name: 'RBTireID', index: 'RBTireID', width: 0, align: 'left', sortable: true, hidden: true },
+            //{ label: '右后轮胎压上限', name: 'RBTirePressureLimit', index: 'RBTirePressureLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '右后轮胎压下限', name: 'RBTirePressureLowerLimit', index: 'RBTirePressureLowerLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '右后轮胎压检测值', name: 'RBTirePressureValue', index: 'RBTirePressureValue', width: 0, align: 'left',sortable: true  },
+            //{ label: '右后轮胎压检测结果', name: 'RBTirePressureResult', index: 'RBTirePressureResult', width: 0, align: 'left',sortable: true  },
+            //{ label: 'LBTireID', name: 'LBTireID', index: 'LBTireID', width: 0, align: 'left', sortable: true, hidden: true },
+            //{ label: '左后轮胎压上限', name: 'LBTirePressureLimit', index: 'LBTirePressureLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '左后轮胎压下限', name: 'LBTirePressureLowerLimit', index: 'LBTirePressureLowerLimit', width: 0, align: 'left',sortable: true  },
+            //{ label: '左后轮胎压检测值', name: 'LBTirePressureValue', index: 'LBTirePressureValue', width: 0, align: 'left',sortable: true  },
+            //{ label: '左后轮胎压检测结果', name: 'LBTirePressureResult', index: 'LBTirePressureResult', width: 0, align: 'left',sortable: true  },
+            //{ label: '胎压检测单位', name: 'TirePressureUnit', index: 'TirePressureUnit', width: 0, align: 'left',sortable: true  },
+            { label: '检测路径', name: 'DetectionSource', index: 'DetectionSource', width: 0, align: 'left',sortable: true  },
+            { label: '检测时间', name: 'DetectionTime', index: 'DetectionTime', width: 0, align: 'left',sortable: true  },
+        ],
+        pager: "#gridPager",
+        sortname: '',
+        sortorder: 'desc',
+        rownumbers: true,
+        shrinkToFit: false,
+        gridview: true,
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+        
+    }
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 40px;">
+        <tr>
+            <th>关键字：</th>
+            <td>
+                <select id="Condition" style="width: 150px;height:25px" onclick=" Show()">
+                    <option value="">==全部==</option>
+                    <option value="CompanyCd">胎压类别</option>
+                    <option value="CompanyNm">公司名称</option>
+                </select>
+            </td>
+            <td>
+                <input id="keywords" type="text" class="txt" style="width: 200px;display: none" />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

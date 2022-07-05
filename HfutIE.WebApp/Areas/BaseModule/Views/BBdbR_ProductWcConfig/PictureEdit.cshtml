@@ -1,0 +1,95 @@
+@{
+    ViewBag.Title = "产品图片编辑页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var productclassid = GetQuery('productclassid');//传入产品工位配置主键
+    var matid = GetQuery('matid');
+    var filecd = GetQuery('filecd');
+    var newfilecd = '';
+    var newfilenm = '';
+    var newconfigid = '';
+    $(function () {
+        FileCd();
+    })
+    //图片编号下拉框
+    function FileCd() {
+        $("#FileCd").html("<option value=''>==待选图片编号==</option>");      
+        AjaxJson("/BaseModule//BBdbR_ProductWcConfig/get_filecd", { matid: matid }, function (data) {
+            
+            $("#FileCd").append("<option value='默认图片'>默认图片</option>");
+            for (var i = 0; i < data.rows.length; i++) {
+                    $("#FileCd").append("<option value='" + data.rows[i]["FileCd"] + "'>" + data.rows[i]["FileCd"] + "</option>");
+            }          
+        });
+    }
+    //保存事件
+    function AcceptClick() {
+        newfilecd = $("#FileCd").val();
+        newfilenm = $("#FileNm").html();
+        newconfigid = newconfigid;
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        else {       
+        if (newfilecd == "默认图片") {
+            newfilenm = newfilecd;
+            newfilecd = "";
+        }
+            AjaxJson("/BaseModule//BBdbR_ProductWcConfig/SubmitPicture?", { newfilecd: newfilecd, newfilenm: newfilenm, newconfigid: newconfigid, productclassid: productclassid }, function (data) {
+                var code = data.rows;
+                if (code == "1")//提交成功
+                {
+                    tipDialog("修改成功", 2, 1);
+                    top.frames[tabiframeId()].windowload();
+                    closeDialog();
+                }
+                else if (Code == "0") {
+                    closeDialog();
+                }
+            });
+        }      
+    }
+    //根据选择的编号动态加载
+    function Onchange() {
+        var cd = $("#FileCd").val();//得到编号值      
+        var test = document.getElementById('picture');
+        if (cd == "" || cd=="默认图片") {
+            $("#FileNm").empty();
+            test.src = '';
+        }
+        else {
+            AjaxJson("/BaseModule//BBdbR_ProductWcConfig/get_filedata", { filecd: cd, matid: matid }, function (data) {//通过产品编号去物料文档表中查找文档信息
+                var filename = data.rows[0].FileNm;
+                newconfigid = data.rows[0].ConfigId;
+                //document.getElementById("FileNm").innerHTML = bb;//JS写法
+                $("#FileNm").html(filename);//JQuery写法
+                var image = data.rows[0].FileContent;
+                test.src = 'data:image/' + filename + ';base64,' + image;               
+            })
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>图片编号：</th>
+            <td class='formValue'>
+                <select id="FileCd" class="txt required" datacol="yes" err="图片编号" checkexpession="NotNull" onchange="Onchange()"></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>图片名称：</th>
+            <td class='formValue' >
+                <label id="FileNm"  />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>图片内容：</th>
+            <td class='formValue'>
+                <img  src=""  id="picture" height="145" width="145">
+            </td>
+        </tr>
+    </table>
+</form>

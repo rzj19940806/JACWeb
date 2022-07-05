@@ -311,10 +311,11 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                             IsCheck = 1;//重置标识
                             DataRow dr = Newdt.NewRow();
 
-                            if (dt.Rows[i]["故障编号"].ToString().Trim() != "" && dt.Rows[i]["故障名称"].ToString().Trim() != "")//&& dt.Rows[i]["时间类型"].ToString().Trim() != "" && dt.Rows[i]["开始时间"].ToString().Trim() != "" && dt.Rows[i]["结束时间"].ToString().Trim() != ""
+                            if (dt.Rows[i]["故障编号"].ToString().Trim() != "" && dt.Rows[i]["故障名称"].ToString().Trim() != "")
                             {
                                 BBdbR_FaultBase ShiftBaseEntity = new BBdbR_FaultBase();
-                                ShiftBaseEntity.FaultId = System.Guid.NewGuid().ToString();
+
+                                ShiftBaseEntity.FaultId = System.Guid.NewGuid().ToString();//主键
 
                                 int DeviceCount = MyBll.CheckCount("FaultCd", dt.Rows[i]["故障编号"].ToString().Trim());//是否有相同故障编号
                                 if (DeviceCount > 0)
@@ -329,11 +330,9 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                     continue;
                                 }
                                 else
-                                { 
+                                {
                                     ShiftBaseEntity.FaultCd = dt.Rows[i]["故障编号"].ToString().Trim();
                                 }
-
-
                                 DeviceCount = MyBll.CheckCount("FaultNm", dt.Rows[i]["故障名称"].ToString().Trim());//是否有相同故障名称
                                 if (DeviceCount > 0)
                                 {
@@ -351,38 +350,19 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                     ShiftBaseEntity.FaultNm = dt.Rows[i]["故障名称"].ToString().Trim();
                                 }
 
-                                switch (dt.Rows[i]["故障类别"].ToString().Trim())
-                                {
-                                    case "供应商设备故障" :
-                                        ShiftBaseEntity.FaultCatg = "0";
-                                        break;
-                                    case "供应商产品瑕疵":
-                                        ShiftBaseEntity.FaultCatg = "1";
-                                        break;
-                                    case "内部设备故障":
-                                        ShiftBaseEntity.FaultCatg = "2";
-                                        break;
-                                }
-                                //ShiftBaseEntity.FaultCatg = dt.Rows[i]["故障类别"].ToString().Trim();
-                                switch (dt.Rows[i]["故障类型"].ToString().Trim())
-                                {
-                                    case "底盘装配线故障":
-                                        ShiftBaseEntity.FaultType = "0";
-                                        break;
-                                    case "前桥装配故障":
-                                        ShiftBaseEntity.FaultType = "1";
-                                        break;
-                                    
-                                }
-                                //ShiftBaseEntity.FaultType = dt.Rows[i]["故障类型"].ToString().Trim();
+                                ShiftBaseEntity.FaultType = dt.Rows[i]["故障类型"].ToString().Trim();
+                                ShiftBaseEntity.FaultCatg = dt.Rows[i]["故障类别"].ToString().Trim();
                                 ShiftBaseEntity.FaultCode = dt.Rows[i]["故障代码"].ToString().Trim();
                                 ShiftBaseEntity.Dsc = dt.Rows[i]["描述"].ToString().Trim();
+
                                 ShiftBaseEntity.VersionNumber = "V1.0";
                                 ShiftBaseEntity.Enabled = "1";
-                                //ShiftBaseEntity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                ShiftBaseEntity.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                 ShiftBaseEntity.CreCd = ManageProvider.Provider.Current().UserId;
                                 ShiftBaseEntity.CreNm = ManageProvider.Provider.Current().UserName;
+
                                 BFacRShiftBaseList.Add(ShiftBaseEntity);
+
                                 int b = database.Insert(BFacRShiftBaseList);
                                 if (b > 0)
                                 {
@@ -405,7 +385,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                                 dr = Newdt.NewRow();
                                 dr[0] = errorNum;
                                 dr[1] = "第[" + dt.Rows[i]["rowid"].ToString() + "]行";
-                                dr[2] = "故障信息不能为空";
+                                dr[2] = "信息不能为空";
                                 Newdt.Rows.Add(dr);
                                 errorNum++;
                                 IsCheck = 0;

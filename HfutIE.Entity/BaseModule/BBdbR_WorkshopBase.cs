@@ -47,12 +47,14 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("车间名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WorkshopNm { get; set; }
         /// <summary>
         /// 车间类型
         /// </summary>
         /// <returns></returns>
         [DisplayName("车间类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string WorkshopTyp { get; set; }
         /// <summary>
         /// 标准在制
@@ -125,6 +127,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("车间描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// 版本号
@@ -132,6 +135,13 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("版本号")]
         public string VersionNumber { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -179,6 +189,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1

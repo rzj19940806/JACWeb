@@ -1,0 +1,1032 @@
+——————————————08:40:08-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————08:40:08-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A236M2221050】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————09:15:19-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:15:19-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A236M2221050】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————16:53:58-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————16:55:48-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————18:05:16-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————18:06:15-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————18:06:39-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:10:04-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:10:05-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:10:29-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:10:39-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:10:51-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:11:22-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:11:26-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:12:02-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:13:29-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:14:27-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:14:55-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:15:04-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————17:15:37-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————17:18:02-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A337M2245789】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————08:34:50-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————08:42:52-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:08:37-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:09:46-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:16:27-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:57:04-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————15:44:30-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————15:47:41-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:50:37-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————09:50:37-————————————————
+车身入站异常：【工位：门线9工位】【VIN：LJ166A236M2221050】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————09:51:23-————————————————
+车身入站错误：【工位：门线9工位】【VIN：LJ166A335M2221488】【错误信息：获取车身BOM信息、更新扫码状态时发生错误:列“ProductId”不属于表 Table。】
+
+——————————————10:05:51-————————————————
+车身入站错误：【工位：门线9工位】【VIN：LJ166A335M2221488】【错误信息：获取车身BOM信息、更新扫码状态时发生错误:列“ProductId”不属于表 Table。】
+
+——————————————10:06:08-————————————————
+车身入站错误：【工位：门线9工位】【错误信息：TypeError: Cannot read properties of null (reading '0')】
+
+——————————————10:07:45-————————————————
+车身入站错误：【工位：门线9工位】【错误信息：TypeError: Cannot read properties of null (reading '0')】
+
+——————————————10:07:52-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————10:18:23-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————11:14:58-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————11:14:59-————————————————
+车身入站错误：【工位：门线9工位】【VIN：LJ166A237M2220988】【错误信息：获取VIN码信息时发生异常：列“ProductId”不属于表 Table。】
+
+——————————————11:14:59-————————————————
+物料界面异常：【工位：门线9工位】【错误信息：TypeError: Cannot read properties of undefined (reading 'Parts')】
+
+——————————————11:15:10-————————————————
+车身入站异常：【工位：门线9工位】【VIN：2243】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————11:15:14-————————————————
+车身入站异常：【工位：门线9工位】【VIN：2248】【异常信息：对应AVI站点车身队列中未找到该VIN！】
+
+——————————————11:15:18-————————————————
+车身入站错误：【工位：门线9工位】【VIN：3】【错误信息：获取VIN码信息时发生异常：列“ProductId”不属于表 Table。】
+
+——————————————11:16:07-————————————————
+车身入站错误：【工位：门线9工位】【VIN：3】【错误信息：获取VIN码信息时发生异常：列“ProductId”不属于表 Table。】
+
+——————————————11:30:05-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————11:30:20-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————11:30:44-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————11:31:01-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确校核数据！】
+
+——————————————11:38:54-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————11:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:55-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:56-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:57-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:58-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:38:59-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:00-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:01-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:02-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:03-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:04-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:05-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:07-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:08-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:09-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:10-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:11-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:12-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:13-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:14-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:15-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:16-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:17-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:18-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:19-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:20-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:21-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:22-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:23-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:24-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:25-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:26-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:27-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:28-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:29-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:30-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:31-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:32-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:33-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:34-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:35-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:36-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:37-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:38-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:39-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:40-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:41-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:42-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:43-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:44-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:45-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:46-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:47-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:48-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:49-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:50-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:51-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:52-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:53-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:39:54-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————11:39:54-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:40:06-————————————————
+车身入站错误：【工位：轮胎上线指示终端】【错误信息：TypeError: Cannot read properties of undefined (reading '0')】
+
+——————————————11:40:29-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————11:41:02-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————14:20:49-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————14:23:45-————————————————
+设备登陆异常:【工位：轮胎上线指示终端】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————08:23:33-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————08:27:58-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:25:10-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:30:34-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:39:27-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:39:56-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:40:36-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————22:41:26-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:39:02-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:39:31-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:47:31-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:49:44-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:54:41-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:54:57-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:55:41-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:58:05-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:58:19-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:59:09-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————23:59:44-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:00:06-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:00:14-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:03:53-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:03:59-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：123456123456789】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:05:48-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:06:22-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：123456123456789】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:06:40-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：123456123456789】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:07:02-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：123456123456789】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:07:34-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：123456123456789】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:08:06-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:08:09-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：$("#materro").hide()】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:08:22-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:08:24-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：$("#materro").hide()】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:09:00-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：$("#materro").hide()】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:09:08-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：$("#materro").hide()】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:09:27-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：$("#materro").hide()】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:12:58-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:13:02-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:13:12-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：12345678901346105210U8510】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:13:30-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————00:13:51-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————00:13:53-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————00:14:02-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————00:14:17-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————08:41:31-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————08:41:43-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————08:41:46-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————08:46:11-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————08:46:16-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+
+——————————————08:46:50-————————————————
+设备登陆异常:【工位：门线9工位】【异常信息：获取班组及负责人时发生错误:在位置 0 处没有任何行。无法正确绑定数据！】
+
+——————————————08:47:14-————————————————
+物料重复输入:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件物料码：6105210U8510】【关重件名称：右前侧面车门锁体及闭锁器总成】【关重件条码：123456789012346105210U8510】
+
+——————————————08:47:19-————————————————
+物料解析异常:【工位：门线9工位】【VIN：LJ166A331M2245853】【关重件条码：VIN：LJ166A331M2245853】【异常信息：未解析到对应物料，请查看条码是否正确】
+

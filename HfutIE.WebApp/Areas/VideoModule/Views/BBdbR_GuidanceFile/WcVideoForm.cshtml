@@ -1,0 +1,168 @@
+@{
+    ViewBag.Title = "指导文件";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+    })
+    var wcId = GetQuery('wcId');//工位
+    //获取当前工位工艺指导视频文件
+    function GetGrid() {
+        let condition = {
+            ParamName: "WcId",
+            Operation: "Equal",
+            ParamValue: wcId
+        }
+        let conditions = new Array();
+        conditions.push(condition);
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/VideoModule/BBdbR_GuidanceFile/GridPageJsonNew")?ParameterJson=" + JSON.stringify(conditions),
+            datatype: "json",
+            width: 600,
+            height: 450,
+            colModel: [
+                { label: '指导文件主键', name: 'GuidanceFileID', index: 'GuidanceFileID', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '产线ID', name: 'PlineId', index: 'PlineId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '工位ID', name: 'WcId', index: 'WcId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '名称', name: 'WcNm', index: 'WcNm', width: 100, align: 'center', sortable: true },
+                { label: '指导文件编号', name: 'GuidanceFileCode', index: 'GuidanceFileCode', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '指导文件名称', name: 'GuidanceFileName', index: 'GuidanceFileName', width: 0, align: 'center', sortable: true },
+                { label: '指导文件类型', name: 'GuidanceFileType', index: 'GuidanceFileType', width: 75, align: 'center', sortable: true },
+                { label: '指导文件路径', name: 'GuidanceFilePath', index: 'GuidanceFilePath', width: 350, align: 'center', sortable: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager",
+            sortname: 'GuidanceFileCode',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            //multiselect: true,
+            //multiboxonly: true,
+            gridview: true,
+        });
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable_up").trigger("reloadGrid"); //重新载入
+        $("#gridTable_down").trigger("reloadGrid"); //重新载入
+    }
+    //下载
+    function down() {
+        var path = GetJqGridRowValue("#gridTable", "GuidanceFilePath");
+        if (IsChecked(path)) {
+            var name = GetJqGridRowValue("#gridTable", "GuidanceFileName");
+            $("#href").attr("href", "/VideoModule/BBdbR_GuidanceFile/download?path=" + path + "&name=" + name);
+            $("#a_click").click();
+        }
+    }
+    //预览
+    function preview() {
+        let FileType = GetJqGridRowValue("#gridTable", "GuidanceFileType");
+        if (FileType == ".mp4" || FileType == ".avi" || FileType == ".flv" || FileType == ".rmvb" || FileType == ".wmv") {
+            var KeyValue = GetJqGridRowValue("#gridTable", "GuidanceFilePath");
+            if (IsChecked(KeyValue)) {
+                Dialog("/VideoModule/BBdbR_GuidanceFile/VideoForm?KeyValue=" + KeyValue, "Form", "工艺指导视频预览", 806, 606);
+            }
+        } else {
+            tipDialog("该数据格式暂不支持预览，请下载后查看", 3, 0);
+        }
+    }
+    function videoShow() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "GuidanceFilePath");
+        if (KeyValue == undefined) {
+            tipDialog("未选择任何行", 3, -2);
+            return false;
+        }
+        outerdiv = $("#outerdiv");
+        innerdiv = $("#innerdiv");
+        max_img = $("#max_img");
+        $("#max_video").attr("src", KeyValue.substring(1));//设置#max_img元素的src属性
+
+        var windowW = $(window).width();//获取当前窗口宽度
+        var windowH = $(window).height();//获取当前窗口高度
+            var w = (windowW - 800) / 2;//计算图片与窗口左边距
+            var h = (windowH - 600) / 2;//计算图片与窗口上边距
+            $(innerdiv).css({ "top": h, "left": w });//设置#innerdiv的top和left属性
+            $(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg
+        $(outerdiv).click(function () {//再次点击淡出消失弹出层
+            $(this).fadeOut("fast");
+        });
+    }
+</script>
+
+<div id="message" style="display: none; padding: 1px; padding-bottom: 0px;"></div>
+<div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+    <!---->
+    <div id="Staff" class="tabPanel">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+            <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+                @*<div class="note-prompt" style="margin: 1px;">
+                        温馨提示：
+                    </div>*@
+                <div style="background-color:gainsboro ;color:#27a4aB;font-size:medium;width:100%;font-weight: bold">
+                    &nbsp操作按钮<span class="ModuleName"></span>
+                </div>
+                <div class="tools_bar leftline rightline" style="margin-bottom: 0px; margin: 1px;">
+                    <div class="PartialButton">
+                        <a id="lr-replace" ids="lr-replace" title="刷新当前" onclick="Replace()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b>
+                            </span>
+                        </a>
+                        <div class="tools_separator"></div>
+                        <a id="lr-download" ids="lr-download" title="下载文件" onclick="down()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/download.png') 50% 4px no-repeat;">下载</b>
+                            </span>
+                        </a>
+                        <a id="href" href="" hidden="hidden"><span id="a_click"></span>content</a>
+                        <a id="lr-preview" ids="lr-preview" title="预览视频文件" onclick="videoShow()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/preview_results.png') 50% 4px no-repeat;">预览</b>
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="layout">
+
+            <div>
+                <div class="btnbartitle">
+                    <div>
+                        文件信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="max_img" style="border:5px solid #fff;" src="" />   
+            <video id="max_video" controls="controls" width="800" height="600">
+                <source src="file.mp4" type="video/mp4" />
+                <source src="file.webm" type="video/webm" />
+                <source src="file.ogv" type="video/ogg" />
+                <source src="file.avi" type="video/avi" />
+                您的浏览器不支持 HTML5 video 标签或未适配当前视频格式，请联系华元智控。
+            </video>
+        </div>
+    </div>
+</div>

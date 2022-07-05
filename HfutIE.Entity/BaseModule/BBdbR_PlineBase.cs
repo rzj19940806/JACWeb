@@ -53,24 +53,28 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("产线类型")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string PlineTyp { get; set; }
         /// <summary>
         /// 工位数量
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位数量")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public int? WcQuantity { get; set; }
         /// <summary>
         /// 工位默认长度
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位默认长度")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public decimal? WcLength { get; set; }
         /// <summary>
         /// 工位默认截距
         /// </summary>
         /// <returns></returns>
         [DisplayName("工位默认截距")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public decimal? WcIntercept { get; set; }
         /// <summary>
         /// JPH
@@ -185,6 +189,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("产线描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Dsc { get; set; }
         /// <summary>
         /// 版本号
@@ -192,6 +197,13 @@ namespace HfutIE.Entity
         /// <returns></returns>
         [DisplayName("版本号")]
         public string VersionNumber { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -203,7 +215,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("创建时间")]
-        public DateTime? CreTm { get; set; }
+        public string CreTm { get; set; }
         /// <summary>
         /// 创建人编号
         /// </summary>
@@ -221,7 +233,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("修改时间")]
-        public DateTime? MdfTm { get; set; }
+        public string MdfTm { get; set; }
         /// <summary>
         /// 修改人编号
         /// </summary>
@@ -239,6 +251,7 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
         /// <summary>
         /// 预留字段1
@@ -263,7 +276,7 @@ namespace HfutIE.Entity
             this.PlineId = CommonHelper.GetGuid;
             this.Enabled = "1";
             this.VersionNumber = "V1.0";
-            this.CreTm = DateTime.Now;
+            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.CreCd = ManageProvider.Provider.Current().UserId;
             this.CreNm = ManageProvider.Provider.Current().UserName;
         }
@@ -274,7 +287,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.PlineId = KeyValue;
-            this.MdfTm = DateTime.Now;
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

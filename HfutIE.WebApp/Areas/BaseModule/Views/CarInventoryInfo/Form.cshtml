@@ -1,0 +1,217 @@
+@{
+    ViewBag.Title = "车身过点记录信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/P_CarPastRecordInfo/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/P_CarPastRecordInfo/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>过点信息记录主键：</th>
+            <td class='formValue'>
+                <input id="CarPastRecordId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点主键：</th>
+            <td class='formValue'>
+                <input id="AviId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点编号：</th>
+            <td class='formValue'>
+                <input id="AviCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点名称：</th>
+            <td class='formValue'>
+                <input id="AviNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点类别：</th>
+            <td class='formValue'>
+                <input id="AviCatg" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>AVI站点类型：</th>
+            <td class='formValue'>
+                <input id="AviType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身号：</th>
+            <td class='formValue'>
+                <input id="BodyNo" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身物料号：</th>
+            <td class='formValue'>
+                <input id="MatCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身面漆颜色：</th>
+            <td class='formValue'>
+                <input id="CarColor1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身罩光颜色：</th>
+            <td class='formValue'>
+                <input id="CarColor2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>SequenceNo：</th>
+            <td class='formValue'>
+                <input id="SequenceNo" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>涂装生产计划编号：</th>
+            <td class='formValue'>
+                <input id="ProducePlanCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向：</th>
+            <td class='formValue'>
+                <input id="CarRoute" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向产线主键：</th>
+            <td class='formValue'>
+                <input id="PlineId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向产线编号：</th>
+            <td class='formValue'>
+                <input id="PlineCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身去向产线名称：</th>
+            <td class='formValue'>
+                <input id="PlineNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>过点类型：</th>
+            <td class='formValue'>
+                <input id="PastType" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>PastDate：</th>
+            <td class='formValue'>
+                <input id="PastDate" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>过点时间：</th>
+            <td class='formValue'>
+                <input id="PastTime" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>过点顺序：</th>
+            <td class='formValue'>
+                <input id="PastNo" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入类型：</th>
+            <td class='formValue'>
+                <input id="RecordType" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>特殊标识：</th>
+            <td class='formValue'>
+                <input id="SpecialTag" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入时间：</th>
+            <td class='formValue'>
+                <input id="CreTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>录入人员：</th>
+            <td class='formValue'>
+                <input id="CreStaff" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>是否反馈至工厂FAS系统：</th>
+            <td class='formValue'>
+                <input id="IsBack" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <input id="RsvFld1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <input id="RsvFld2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

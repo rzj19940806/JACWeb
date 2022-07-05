@@ -1,0 +1,247 @@
+@{
+    ViewBag.Title = "S_PlanBoardInfo》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+        Show();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/VisualizationModule/S_PlanBoardInfo/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/VisualizationModule/S_PlanBoardInfo/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+    //展示数据
+    function Show() {
+        var Type = $("#Type").val();
+        if (Type == "手动") {
+            document.getElementById("dayinnumber").style.display = "";
+            document.getElementById("mouthinnumber").style.display = "";
+            document.getElementById("dayoutnumber").style.display = "";
+            document.getElementById("mouthoutnumber").style.display = "";
+            document.getElementById("daywherehousenumber").style.display = "";
+            document.getElementById("mouthwherehousenumber").style.display = "";
+        }
+        else {
+
+            document.getElementById("dayinnumber").style.display = "none";
+            document.getElementById("mouthinnumber").style.display = "none";
+            document.getElementById("dayoutnumber").style.display = "none";
+            document.getElementById("mouthoutnumber").style.display = "none";
+            document.getElementById("daywherehousenumber").style.display = "none";
+            document.getElementById("mouthwherehousenumber").style.display = "none";
+        }
+
+        if (Type == "欢迎") {
+            document.getElementById("WelcomeLabeltr").style.display = "";
+            document.getElementById("backgroundcolortr").style.display = "";
+            document.getElementById("alignTypetr").style.display = "";
+            document.getElementById("colortr").style.display = "";
+            document.getElementById("fontfamilytr").style.display = "";
+            document.getElementById("ifShadowtr").style.display = "";
+            document.getElementById("Shadowcolortr").style.display = "";
+            document.getElementById("PlanBoardTmtr").style.display = "none";
+            document.getElementById("WelcomeTmtr").style.display = "none";
+        }
+        else if (Type == "轮播") {
+            document.getElementById("WelcomeLabeltr").style.display = "";
+            document.getElementById("backgroundcolortr").style.display = "";
+            document.getElementById("alignTypetr").style.display = "";
+            document.getElementById("colortr").style.display = "";
+            document.getElementById("fontfamilytr").style.display = "";
+            document.getElementById("ifShadowtr").style.display = "";
+            document.getElementById("Shadowcolortr").style.display = "";
+            document.getElementById("PlanBoardTmtr").style.display = "";
+            document.getElementById("WelcomeTmtr").style.display = "";
+        }
+        else {
+            document.getElementById("WelcomeLabeltr").style.display = "none";
+            document.getElementById("backgroundcolortr").style.display = "none";
+            document.getElementById("alignTypetr").style.display = "none";
+            document.getElementById("colortr").style.display = "none";
+            document.getElementById("fontfamilytr").style.display = "none";
+            document.getElementById("ifShadowtr").style.display = "none";
+            document.getElementById("Shadowcolortr").style.display = "none";
+            document.getElementById("PlanBoardTmtr").style.display = "none";
+            document.getElementById("WelcomeTmtr").style.display = "none";
+        }
+
+
+
+
+
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>日  期：</th>
+            <td class='formValue'>
+                <input id="Date" maxlength=500 type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(0)" onfocus="WdatePicker()" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>计划UPH：</th>
+            <td class='formValue' style="height:32px">
+                <input id="DayPlanUph" maxlength=50 type="number" class="txt required" datacol="yes" err="计划UPH" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>日排产数量：</th>
+            <td class='formValue' style="height:32px">
+                <input id="DayPlanNo" maxlength=50 type="number" class="txt required" datacol="yes" err="日排产数量" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>月排产数量：</th>
+            <td class='formValue' style="height:32px">
+                <input id="MouthPlanNo" maxlength=50 type="number" class="txt required" datacol="yes" err="月排产数量" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>类型：</th>
+            <td class='formValue'>
+                <select id="Type" maxlength=100 type="text" class="txt" onclick="Show()">
+                    <option value="自动">自动获取</option>
+                    <option value="手动">手动输入</option>
+                    <option value="欢迎">欢迎界面</option>
+                    <option value="轮播">轮播</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr style="display:none" id="dayinnumber">
+            <th class='formTitle'>日上线数量：</th>
+            <td class='formValue'>
+                <input id="DayActualNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+
+        <tr style="display:none" id="mouthinnumber">
+            <th class='formTitle'>月上线数量：</th>
+            <td class='formValue'>
+                <input id="MouthActualNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+        <tr style="display:none" id="dayoutnumber">
+            <th class='formTitle'>日下线数量：</th>
+            <td class='formValue'>
+                <input id="DayOutNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+
+        <tr style="display:none" id="mouthoutnumber">
+            <th class='formTitle'>月下线数量：</th>
+            <td class='formValue'>
+                <input id="MouthOutNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+        <tr style="display:none" id="daywherehousenumber">
+            <th class='formTitle'>日入库数量：</th>
+            <td class='formValue'>
+                <input id="DayWherehouseNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+
+        <tr style="display:none" id="mouthwherehousenumber">
+            <th class='formTitle'>月入库数量：</th>
+            <td class='formValue'>
+                <input id="MouthWherehouseNo" maxlength=50 type="number" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>生产看板标语：</th>
+            <td class='formValue' style="height:60px">
+                <input id="Label" maxlength=500 type="text" class="txtArea" value="夯实质量基础   筑牢发展根基" />
+                @*<textarea id="Label" cols="25" rows="10">夯实质量基础   筑牢发展根基</textarea>*@
+            </td>
+        </tr>
+        <tr style="display:none" id="WelcomeLabeltr">
+            <th class='formTitle'>欢迎界面标语：</th>
+            <td class='formValue' style="height:60px">
+                <input id="WelcomeLabel" maxlength=500 type="text" class="txtArea" value="热烈欢迎领导莅临指导" />
+            </td>
+        </tr>
+        <tr style="display:none" id="backgroundcolortr">
+            <th class='formTitle'>背景颜色：</th>
+            <td class='formValue'>
+                <input id="backgroundcolor" maxlength=50 type="color" class="color" />
+            </td>
+        </tr>
+        <tr style="display:none" id="alignTypetr">
+            <th class='formTitle'>对齐方式：</th>
+            <td class='formValue'>
+                <select id="alignType" maxlength=50 type="text" class="txt">
+                    <option value="center">居中</option>
+                    <option value="flex-start">左对齐</option>
+                    <option value="flex-end">右对齐</option>
+                </select>
+            </td>
+        </tr>
+        <tr style="display:none" id="colortr">
+            <th class='formTitle'>字体颜色：</th>
+            <td class='formValue'>
+                <input id="color" maxlength=500 type="color" class="color" />
+            </td>
+        </tr>
+        <tr style="display:none" id="fontfamilytr">
+            <th class='formTitle'>字体类型：</th>
+            <td class='formValue'>
+                <input id="fontfamily" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr style="display:none" id="ifShadowtr">
+            <th class='formTitle'>字体是否有阴影：</th>
+            <td class='formValue'>
+                <select id="ifShadow" maxlength=50 type="text" class="txt">
+                    <option value="有">有</option>
+                    <option value="无">无</option>
+                </select>
+            </td>
+        </tr>
+        <tr style="display:none" id="Shadowcolortr">
+            <th class='formTitle'>阴影颜色：</th>
+            <td class='formValue'>
+                <input id="Shadowcolor" maxlength=500 type="color" class="color" />
+            </td>
+        </tr>
+        <tr style="display:none" id="PlanBoardTmtr">
+            <th class='formTitle'>看板界面时间(s)：</th>
+            <td class='formValue'>
+                <input id="PlanBoardTm" maxlength=500 type="number" class="txt" value="20" />
+            </td>
+        </tr>
+        <tr style="display:none" id="WelcomeTmtr">
+            <th class='formTitle'>欢迎界面时间(s)：</th>
+            <td class='formValue'>
+                <input id="WelcomeTm" maxlength=500 type="number" class="txt" value="20" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' style="height:60px">
+                <input id="Rem" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>

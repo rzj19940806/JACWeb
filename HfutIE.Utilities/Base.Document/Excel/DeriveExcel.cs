@@ -4274,5 +4274,5409 @@ namespace HfutIE.Utilities
         #endregion
 
 
+        #region 总装系统导出
+        #region 1.AVI站点信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_AVI(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "AVI站点信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("AVI站点编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("AVI站点名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("AVI站点类型");
+
+            ICell cell301 = row2.CreateCell(3);
+            cell301.SetCellValue("工序编号");
+
+            ICell cell302 = row2.CreateCell(4);
+            cell302.SetCellValue("工序名称");
+
+            ICell cell303 = row2.CreateCell(5);
+            cell303.SetCellValue("AVI站点顺序");
+
+            ICell cell305 = row2.CreateCell(6);
+            cell305.SetCellValue("是否报工");
+
+            ICell cell306 = row2.CreateCell(7);
+            cell306.SetCellValue("AVI描述");
+
+            ICell cell307 = row2.CreateCell(8);
+            cell307.SetCellValue("创建时间");
+
+            ICell cell308 = row2.CreateCell(9);
+            cell308.SetCellValue("创建人名称");
+
+            ICell cell401 = row2.CreateCell(10);
+            cell401.SetCellValue("修改时间");
+
+            ICell cell203 = row2.CreateCell(11);
+            cell203.SetCellValue("修改人名称");
+
+            ICell cell309 = row2.CreateCell(12);
+            cell309.SetCellValue("备注");
+            
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (j == 2)
+                    {
+                        if (dt.Rows[k][j].ToString() == "PaintFinalTransPoint")
+                        {
+                            dgvValue = "涂总转接点";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "StrongInteraction")
+                        {
+                            dgvValue = "强交互站点";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "WeakInteraction")
+                        {
+                            dgvValue = "弱交互站点";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "QualityMonitoring")
+                        {
+                            dgvValue = "质量校核AVI站点";
+                        }
+                        else
+                        {
+                            dgvValue = "车身调度AVI站点";
+                        }
+                    }
+                    else if (j == 6)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "否";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "是";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 2.工位信息导出-质控点
+        /// <summary>
+        /// 质控点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Wc2(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "质控点信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("质控点编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("质控点名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("产线编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("产线名称");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("质控点描述");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("创建人编号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("创建人名称");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("修改时间");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("修改人编号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("修改人名称");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 3.岗位信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Post(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "岗位信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("岗位编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("岗位名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("岗位类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("工位编号");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("工位名称");
+
+            ICell cell302 = row2.CreateCell(5);
+            cell302.SetCellValue("工位类型");
+
+            ICell cell303 = row2.CreateCell(6);
+            cell303.SetCellValue("岗位位置");
+
+            ICell cell305 = row2.CreateCell(7);
+            cell305.SetCellValue("创建时间");
+
+            ICell cell306 = row2.CreateCell(8);
+            cell306.SetCellValue("创建人编号");
+
+            ICell cell307 = row2.CreateCell(9);
+            cell307.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (j == 6)
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 4.设备信息导出
+        /// <summary>
+        /// 设备信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Dvc(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "设备信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+
+            ICell cell201 = row2.CreateCell(0);
+            cell201.SetCellValue("设备编号");
+
+            ICell cell202 = row2.CreateCell(1);
+            cell202.SetCellValue("设备名称");
+
+            ICell cell200 = row2.CreateCell(2);
+            cell200.SetCellValue("机构级别");
+
+            ICell cell204 = row2.CreateCell(3);
+            cell204.SetCellValue("机构名称");
+
+            ICell cell205 = row2.CreateCell(4);
+            cell205.SetCellValue("设备位置");
+
+            ICell cell203 = row2.CreateCell(5);
+            cell203.SetCellValue("IP地址");
+
+            ICell cell301 = row2.CreateCell(6);
+            cell301.SetCellValue("设备类别");
+
+            ICell cell303 = row2.CreateCell(7);
+            cell303.SetCellValue("设备类型");
+
+            ICell cell305 = row2.CreateCell(8);
+            cell305.SetCellValue("创建时间");
+
+            ICell cell306 = row2.CreateCell(9);
+            cell306.SetCellValue("创建人名称");
+
+            ICell cell307 = row2.CreateCell(10);
+            cell307.SetCellValue("修改时间");
+
+            ICell cell302 = row2.CreateCell(11);
+            cell302.SetCellValue("修改人名称");
+
+            ICell cell401 = row2.CreateCell(12);
+            cell401.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 5.部门信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Department(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "部门信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("部门编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("部门名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("公司编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("公司名称");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("负责人员姓名");
+
+            ICell cell302 = row2.CreateCell(5);
+            cell302.SetCellValue("负责人手机号");
+
+            ICell cell303 = row2.CreateCell(6);
+            cell303.SetCellValue("部门描述");
+
+            ICell cell305 = row2.CreateCell(7);
+            cell305.SetCellValue("创建时间");
+
+            ICell cell306 = row2.CreateCell(8);
+            cell306.SetCellValue("创建人名称");
+
+            ICell cell307 = row2.CreateCell(9);
+            cell307.SetCellValue("修改时间");
+
+            ICell cell308 = row2.CreateCell(10);
+            cell308.SetCellValue("修改人名称");
+
+            ICell cell309 = row2.CreateCell(11);
+            cell309.SetCellValue("备注");
+            
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 6.人员信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Stf(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "人员信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("人员编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("人员姓名");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("部门编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("部门名称");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("性别");
+
+            ICell cell302 = row2.CreateCell(5);
+            cell302.SetCellValue("手机号");
+
+            ICell cell303 = row2.CreateCell(6);
+            cell303.SetCellValue("企业微信号");
+
+            ICell cell305 = row2.CreateCell(7);
+            cell305.SetCellValue("邮箱");
+
+            ICell cell306 = row2.CreateCell(8);
+            cell306.SetCellValue("人员职位");
+
+            ICell cell314 = row2.CreateCell(9);
+            cell314.SetCellValue("创建时间");
+
+            ICell cell315 = row2.CreateCell(10);
+            cell315.SetCellValue("创建人编号");
+
+            ICell cell316 = row2.CreateCell(11);
+            cell316.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 7.班制信息导出
+        /// <summary>
+        /// 班制信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Class(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "班制信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("班制编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("班制名称");
+
+            ICell cell211 = row2.CreateCell(2);
+            cell211.SetCellValue("班制类型");
+
+            ICell cell212 = row2.CreateCell(3);
+            cell212.SetCellValue("班制开始时间");
+
+            ICell cell213 = row2.CreateCell(4);
+            cell213.SetCellValue("班制总时长");
+
+            ICell cell202 = row2.CreateCell(5);
+            cell202.SetCellValue("创建时间");
+
+            ICell cell203 = row2.CreateCell(6);
+            cell203.SetCellValue("创建人编号");
+
+            ICell cell301 = row2.CreateCell(7);
+            cell301.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 8.班次信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Shift(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "班次信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("班次编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("班次名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("创建时间");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("创建人编号");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 9.滞留区域信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_CarStranded(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "滞留区域信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("区域编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("区域名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("区域类别");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("起始AVI站点");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("结束AVI站点");
+
+            ICell cell302 = row2.CreateCell(5);
+            cell302.SetCellValue("滞留等级");
+
+            ICell cell303 = row2.CreateCell(6);
+            cell303.SetCellValue("滞留时间临界值");
+
+            ICell cell305 = row2.CreateCell(7);
+            cell305.SetCellValue("滞留报警规则");
+
+            ICell cell308 = row2.CreateCell(8);
+            cell308.SetCellValue("创建时间");
+
+            ICell cell309 = row2.CreateCell(9);
+            cell309.SetCellValue("创建人编号");
+
+            ICell cell310 = row2.CreateCell(10);
+            cell310.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (j == 2)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "车间";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "区域";
+                        }
+
+                        else
+                        {
+                            dgvValue = "产线";
+                        }
+                    }
+                    else if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 10.设备报警信息导出
+        /// <summary>
+        /// AVI站点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_AlarmAddress(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "设备报警信息数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("设备名称");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("报警地址");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("报警位数");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("路径");
+
+            ICell cell301 = row2.CreateCell(4);
+            cell301.SetCellValue("报警等级");
+
+            ICell cell302 = row2.CreateCell(5);
+            cell302.SetCellValue("描述");
+
+            ICell cell308 = row2.CreateCell(6);
+            cell308.SetCellValue("创建时间");
+
+            ICell cell309 = row2.CreateCell(7);
+            cell309.SetCellValue("创建人编号");
+
+            ICell cell310 = row2.CreateCell(8);
+            cell310.SetCellValue("创建人名称");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 11.车身质量检查销项过程表导出
+        /// <summary>
+        /// 车身质量检查销项过程表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_CarQualityOutput(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "质量录入数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("工段");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("质控点");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("VIN");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车型");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车身组件名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("缺陷名称");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("备注");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("状态");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("复检次数");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("录入人员编号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("录入人员姓名");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("录入时间");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("维修人员编号");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("维修人员姓名");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("维修时间");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("复检人员编号");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("复检人员姓名");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("复检时间");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 21)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "否";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "是";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 12.日计划表导出
+        /// <summary>
+        /// 日计划表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_ProducePlan(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "日计划表导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("计划编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("订单号");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("VIN码");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车身物料号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车型");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("颜色");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("预计生产时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("计划状态");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("接收时间");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 7) //计划执行状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "未上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "执行中";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "已上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "3")
+                        {
+                            dgvValue = "已完成";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 13.小时计划表导出
+        /// <summary>
+        /// 小时计划表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_HourProducePlan(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "小时计划表导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("计划编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("订单号");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("VIN码");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车身物料号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车型");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("颜色");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("预计生产时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("计划状态");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("接收时间");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 7) //计划执行状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "未上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "执行中";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "已上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "3")
+                        {
+                            dgvValue = "已完成";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 14.计划信息录入表导出
+        /// <summary>
+        /// 计划信息录入表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_PlanBoard(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "计划信息录入表导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("日期");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("计划UPH");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("日排产数量");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("月排产数量");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("标语");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("数据来源");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("日上线数量");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("日下线数量");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("日入库数量");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("月上线数量");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("月下线数量");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("月入库数量");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("创建人名称");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改时间");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("修改人名称");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("备注");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 15.Andon补录数据导出
+        /// <summary>
+        /// Andon补录数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_DataAcqPro(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "Andon补录数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("产线名称");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("工位名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("信号来源");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("信号详情");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("补录状态");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("处理状态");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("采集时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("结束时间");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("处理时间");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("处理人编号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("处理人姓名");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("异常类型");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("异常描述");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("处理结果");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改时间");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("修改人名称");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("备注");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 5) //计划执行状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "异常中";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "已恢复";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 16.物料基础信息导出
+        /// <summary>
+        /// 物料基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_MatBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "物料基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("物料编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("物料名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("关重件工位编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("是否关重件");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("数量");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("是否打印");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("打印工位编号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("存在下级件");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("安全件");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("简码");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("物料类别");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("禁止重复");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("修改时间");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("备注");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 3 || j == 5) //是否关重件
+                    {
+                        if (dt.Rows[k][j].ToString() == "0" || dt.Rows[k][j].ToString() == "")
+                        {
+                            dgvValue = "0";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "1";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j == 7)//是否有下级件
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "无";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "有";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j == 10)//物料类别
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "零部件";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "产品";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j == 11)//禁止重复
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "允许";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "禁止";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 17.AVI过点信息导出
+        /// <summary>
+        /// AVI过点信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_CarPastRecord(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "AVI过点信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("AVI站点编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("AVI站点名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("车型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车身物料号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车身颜色");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("VIN码");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("流水号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("计划编号");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("过点方式");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("车身去向产线编号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("车身去向产线名称");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("过点类型");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("过点时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("PBS过点顺序");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("录入人员");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("备注");
+
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 8) //过点方式
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "正常";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "拉出";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "3")
+                        {
+                            dgvValue = "拉入";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "4")
+                        {
+                            dgvValue = "插车";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "5")
+                        {
+                            dgvValue = "补扫";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j == 11)//过点类型
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "自动";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "后台补录数据";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 18.区间查询信息导出
+        /// <summary>
+        /// 区间查询信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_CarInventoryInfo(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "区间查询信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("订单编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("工单号");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("底盘号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("VIN码");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车型");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("车型编码");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("车型名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("颜色");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("当前AVI站点名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("采集时间");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 19.产品基础信息导出
+        /// <summary>
+        /// 产品基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_ProductBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "产品基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("产品编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("产品名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("车型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("颜色");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("整车型号(公告号)");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("发动机排量");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("发动机型号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("发动机最大净功率/转速");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("最大允许总质量");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("载客人数");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("整车整备质量");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("用途");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("特殊车辆名称");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("发动机额定功率");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("燃油标识主键");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("描述");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("备注");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 20.关重件录入数据导出
+        /// <summary>
+        /// 关重件录入数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_KeyPartsBind(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "关重件录入数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN码");     
+                                               
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("产品名称");    
+                                               
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("订单号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车型");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车身编号");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("颜色");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("关重件条码");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("批次号");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("供应商编号");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("供应商名称");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("关重件物料编号");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("关重件物料名称");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("工厂名称");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("车间名称");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("工段名称");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("产线名称");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("工位编号");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("人员名称");
+
+            ICell cell218 = row2.CreateCell(18);
+            cell218.SetCellValue("采集时间");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 21.关重件ByPass数据导出
+        /// <summary>
+        /// 关重件ByPass数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_KeyByPass(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "关重件ByPass数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("产品名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("订单号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车型");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车身编号");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("颜色");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("物料编号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("物料名称");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("工厂名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("车间名称");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("工段名称");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("产线名称");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("工位编号");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("人员名称");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("采集时间");
+
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 22.供应商数据导出
+        /// <summary>
+        /// 供应商数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_SupplierBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "供应商数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("供应商代码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("供应商名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("供应商类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("供应商等级");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("供应商联系电话");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("负责人");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("供应商地址");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("供应商邮箱");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("供应商网址");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("供应商描述");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("备注");
+
+
+
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 23.检验岗数据导出
+        /// <summary>
+        /// 检验岗数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_QualityCarPosition(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "检验岗数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("检验岗编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("检验岗名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("检验岗描述");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("创建时间");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("创建人名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("修改时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("修改人名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 24.检验项目数据导出
+        /// <summary>
+        /// 检验项目数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_QualityCarPositionGroup(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "检验项目数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("检验项目编码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("检验项目名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("检验岗名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("检验项目描述");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("创建时间");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建人名称");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("修改时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改人名称");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("备注");
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 25.检验部件数据导出
+        /// <summary>
+        /// 检验部件数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_QualityCarComponent(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "检验部件数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("部件编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("部件名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("检验岗名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("检验项目名称");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("部件描述");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("创建人名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改时间");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("修改人名称 ");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("备注");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 26.缺陷类型数据导出
+        /// <summary>
+        /// 检验岗数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_DefectCatgBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "缺陷类型数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("缺陷类型编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("缺陷类型名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("描述");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("创建时间");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("创建人名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("修改时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("修改人名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 27.缺陷分组数据导出
+        /// <summary>
+        /// 缺陷分组数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_DefectCatgGroupBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "缺陷分组数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("缺陷分组编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("缺陷分组名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("缺陷类别名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("描述");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("检验项目描述");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("创建人名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改时间");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("修改人名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 28.缺陷详情数据导出
+        /// <summary>
+        /// 缺陷详情数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_DefectCatgDeTail(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "缺陷详情数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("缺陷编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("缺陷名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("缺陷类型名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("缺陷分组名称");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("描述");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建时间");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("创建人名称");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改时间");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("修改人名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("备注");
+            
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 29.EOL检测数据导出
+        /// <summary>
+        /// EOL检测数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_EOL(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "EOL检测数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("车型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("车辆名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("站点");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("时间");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("检测次数");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("检测结果");
+
+            
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 30.检测线数据导出
+        /// <summary>
+        /// 检测线数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_TestLine(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "检测线数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("车型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("颜色");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("ABS检测结果");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("四轮定位检测结果");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("转角检测结果");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("制动检测结果");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("灯光检测结果");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("喇叭检测结果");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("速度检测结果");
+
+            
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 31.加注数据导出
+        /// <summary>
+        /// 检测线数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_JZ(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "加注数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN码");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("车型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("颜色");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("防冻液加注结果");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("转向液加注结果");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("制动液加注结果");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("冷媒加注结果");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("洗涤液加注结果");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("正压CL检测结果");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("正压BR检测结果");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("正压AC检测结果");
+
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 32.胎压数据导出
+        /// <summary>
+        /// 检测线数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_TY(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "胎压数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("VIN");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("车型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("传感器名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("右前轮ID");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("右前轮胎压上限");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("右前轮胎压下限");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("右前轮胎压检测值");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("右前轮胎压检测结果");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("左前轮ID");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("左前轮胎压上限");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("左前轮胎压下限");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("左前轮胎压检测值");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("左前轮胎压检测结果");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("右后轮ID");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("右后轮胎压上限");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("右后轮胎压下限");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("右后轮胎压检测值");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("右后轮胎压检测结果");
+
+            ICell cell218 = row2.CreateCell(18);
+            cell218.SetCellValue("左后轮ID");
+
+            ICell cell219 = row2.CreateCell(19);
+            cell219.SetCellValue("左后轮胎压上限");
+
+            ICell cell220 = row2.CreateCell(20);
+            cell220.SetCellValue("左后轮胎压下限");
+
+            ICell cell221 = row2.CreateCell(21);
+            cell221.SetCellValue("左后轮胎压检测值");
+
+            ICell cell222 = row2.CreateCell(22);
+            cell222.SetCellValue("左后轮胎压检测结果");
+
+            ICell cell223 = row2.CreateCell(23);
+            cell223.SetCellValue("胎压检测单位");
+
+            ICell cell224 = row2.CreateCell(24);
+            cell224.SetCellValue("检测路径");
+
+            ICell cell225 = row2.CreateCell(25);
+            cell222.SetCellValue("检测时间");
+
+            ICell cell226 = row2.CreateCell(26);
+            cell226.SetCellValue("总结果");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 33.公司数据导出
+        /// <summary>
+        /// 检测线数据导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_CompanyBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "公司数据导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("公司编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("公司名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("法人");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("联系电话");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("传真");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("邮箱");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("公司地址");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("公司描述");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("顺序号");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("创建人编号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("创建人名称");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("创建时间");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("修改人编号");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("修改人名称");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改时间");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("备注");
+            
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 34.工厂基础信息导出
+        /// <summary>
+        /// 工厂基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_FacBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "工厂基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("工厂编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("工厂名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("公司编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("公司名称");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("工厂类型");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("工厂地址");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("工厂描述");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("工厂联系电话");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("工厂传真");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("负责人手机号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("邮箱");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("顺序号");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("创建人名称");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改时间");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("修改人名称");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("备注");
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 35.车间基础信息导出
+        /// <summary>
+        /// 车间基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_WorkshopBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "车间基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("车间编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("车间名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("车间类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("工厂编号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("工厂名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("车间描述");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("顺序号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("创建时间");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("创建人名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("修改时间");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("修改人编号");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("备注");
+            
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 36.工段基础信息导出
+        /// <summary>
+        /// 工段基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_WorkSectionBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "工段基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("工段编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("工段名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("工段类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车间编号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车间名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("车间类型");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("顺序号");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("工段描述");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("创建时间");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("创建人名称");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("修改时间");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("修改人名称");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("备注");
+
+          
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 37.产线基础信息导出
+        /// <summary>
+        /// 产线基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_PlineBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "产线基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("产线编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("产线名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("工段编号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("工段名称");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("顺序号");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("产线类型");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("工位数量");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("工位默认长度");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("工位默认截距");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("产线描述");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("创建时间");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("创建人名称");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("修改时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("修改人编号");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("备注");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 38.工位基础信息导出
+        /// <summary>
+        /// 工位基础信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Wc(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "工位基础信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("工位编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("工位名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("工位类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("产线编号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("产线名称");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("顺序号");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("开始");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("预警");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("停线");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("结束");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("工位描述");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("创建时间");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建人名称");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("修改时间");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改人名称");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("备注");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 39.生产日历信息导出
+        /// <summary>
+        /// 生产日历信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_BPdb_Dt(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "生产日历信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("机构级别");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("机构名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("班制名称");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("日期");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("工作时间(h)");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("早上开始");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("早上结束");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("下午开始");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("下午结束");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("晚上开始");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("晚上结束");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("日期类型");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建人名称");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("创建时间");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改人名称");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("修改时间");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("备注");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 11) //过点方式
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "工作";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "休息";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 39.燃油标识信息导出
+        /// <summary>
+        /// 燃油标识信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_FUELOIL(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "燃油标识信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("生产企业");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("变速器类型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("能源种类");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("整车整备质量");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("排量");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("最大设计总质量");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("最大净功率");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("驱动型式");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("其他信息");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("驱动电机峰值功率");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("市区工况");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("综合工况");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("综合工况电能消耗量");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("电能当量燃料消耗量");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("市郊工况");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("领跑值");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("限值");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("备案号");
+
+            ICell cell218 = row2.CreateCell(18);
+            cell218.SetCellValue("启用日期");
+
+            ICell cell219 = row2.CreateCell(19);
+            cell219.SetCellValue("国标编号");
+
+            ICell cell220 = row2.CreateCell(20);
+            cell220.SetCellValue("车辆型号");
+
+            ICell cell221 = row2.CreateCell(21);
+            cell221.SetCellValue("发动机型号");
+
+            ICell cell222 = row2.CreateCell(22);
+            cell222.SetCellValue("续航里程");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 11) //过点方式
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "工作";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "休息";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 40.条码解析导出
+        /// <summary>
+        /// 条码解析导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_BarCodeBase(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "条码解析导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("条码编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("条码名称");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("条码长度");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("优先级");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("创建时间");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建人名称");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("修改时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改人名称");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("备注");
+
+           
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 11) //过点方式
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "工作";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "休息";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 41.拧紧信息导出
+        /// <summary>
+        /// 拧紧信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_NJ(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "拧紧信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("车型");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("VIN");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("JOB号");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("批次号");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("批次大小");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("批次号");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("批次状态");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("拧紧状态");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("扭矩最小值");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("扭矩最大值");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("扭矩目标值");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("扭矩");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("角度状态");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("角度最小值");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("角度最大值");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("角度目标值");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("角度");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("拧紧号");
+
+            ICell cell218 = row2.CreateCell(18);
+            cell218.SetCellValue("拧紧状态");
+
+            ICell cell219 = row2.CreateCell(19);
+            cell219.SetCellValue("执行时间");
+
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 11) //过点方式
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "工作";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "休息";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 42.系统日志信息导出
+        /// <summary>
+        /// 拧紧信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_SysLog(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "系统日志信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("操作时间");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("操作模块");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("操作类型");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("ip地址");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("操作用户");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("操作状态");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("操作描述");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("字段");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("字段中文名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("修改后");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("修改前");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 2) //操作类型
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "登录";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "新增";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "修改";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "3")
+                        {
+                            dgvValue = "删除";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "4")
+                        {
+                            dgvValue = "其他";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "5")
+                        {
+                            dgvValue = "访问";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "6")
+                        {
+                            dgvValue = "离开";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "7")
+                        {
+                            dgvValue = "查询";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "8")
+                        {
+                            dgvValue = "安全退出";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j==5)//操作状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "成功";
+                        }
+                        else
+                        {
+                            dgvValue = "失败";
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 43.登录日志信息导出
+        /// <summary>
+        /// 拧紧信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_LoginLogMana(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "登录日志信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("操作时间");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("操作类型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("IP地址");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("操作用户");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("操作状态");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("操作描述");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 1) //操作类型
+                    {
+                        dgvValue = "登录";
+                    }
+                    else if (j == 4)//操作状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "成功";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "失败";
+                        }
+                        else
+                        {
+                            dgvValue = "异常";
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 44.接口日志信息导出
+        /// <summary>
+        /// 拧紧信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_P_ProductionLog(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "接口日志信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("项目");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("模块");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("主对象");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("辅对象");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("操作");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("结果");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("备注");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("时间");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 45.账号信息导出
+        /// <summary>
+        /// 拧紧信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_UserMana(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "账号信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("工号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("登录账户");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("姓名");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("性别");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("出生日期");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("手机");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("电子邮件");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("登录次数");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("最后访问时间");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("IP地址");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("上一次修改密码时间");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("创建时间");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("创建人");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("修改时间");
+
+            ICell cell214 = row2.CreateCell(14);
+            cell214.SetCellValue("修改人");
+
+            ICell cell215 = row2.CreateCell(15);
+            cell215.SetCellValue("备注");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 46.发布序列导出
+        /// <summary>
+        /// 日计划表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_PublishPlan(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "发布序列导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("计划编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("订单号");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("VIN码");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("车身编码");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("车型");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("颜色");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("预计生产时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("序列是否校核");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("铭牌是否打印");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("顺序号");
+
+            ICell cell210 = row2.CreateCell(10);
+            cell210.SetCellValue("铭牌打印顺序");
+
+            ICell cell211 = row2.CreateCell(11);
+            cell211.SetCellValue("计划状态");
+
+            ICell cell212 = row2.CreateCell(12);
+            cell212.SetCellValue("计划发布时间");
+
+            ICell cell213 = row2.CreateCell(13);
+            cell213.SetCellValue("备注");
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 11) //计划执行状态
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "未上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "执行中";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "已上线";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "3")
+                        {
+                            dgvValue = "已完成";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j==7)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "未校核";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "已校核";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "2")
+                        {
+                            dgvValue = "冻结";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else if (j == 8)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "未打印";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "已打印";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 47.物料加注配置信息导出
+        /// <summary>
+        /// 日计划表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_MatJZConfig(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "物料加注配置信息导出";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+            ICell cell200 = row2.CreateCell(0);
+            cell200.SetCellValue("物料编号");
+
+            ICell cell201 = row2.CreateCell(1);
+            cell201.SetCellValue("加注类型");
+
+            ICell cell202 = row2.CreateCell(2);
+            cell202.SetCellValue("加注量");
+
+            ICell cell203 = row2.CreateCell(3);
+            cell203.SetCellValue("创建时间");
+
+            ICell cell204 = row2.CreateCell(4);
+            cell204.SetCellValue("创建人编号");
+
+            ICell cell205 = row2.CreateCell(5);
+            cell205.SetCellValue("创建人名称");
+
+            ICell cell206 = row2.CreateCell(6);
+            cell206.SetCellValue("修改时间");
+
+            ICell cell207 = row2.CreateCell(7);
+            cell207.SetCellValue("修改人编号");
+
+            ICell cell208 = row2.CreateCell(8);
+            cell208.SetCellValue("修改人名称");
+
+            ICell cell209 = row2.CreateCell(9);
+            cell209.SetCellValue("备注");
+            
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #region 100.产品上下线导出
+        /// <summary>
+        /// 设备信息导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_Online(DataTable dt, DataTable dtname, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "产品上下线数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+            for (int i = 0; i < dtname.Rows.Count; i++)
+            {
+                row2.CreateCell(i).SetCellValue(dtname.Rows[i]["names"].ToString());
+            }
+
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    {
+                        dgvValue = "";
+                    }
+                    else
+                    {
+                        dgvValue = dt.Rows[k][j].ToString();
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+        #endregion
     }
 }

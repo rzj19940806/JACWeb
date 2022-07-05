@@ -1,0 +1,74 @@
+@{
+    ViewBag.Title = "功能基本信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        BindDropItem("#FunctionType", "FunctionType", "==全部==");
+        InitControl();
+        
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_FunctionBase/SetForm1", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+            $("#FunctionCd").attr("readonly", "readonly");
+            $("#FunctionNm").attr("readonly", "readonly");
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_FunctionBase/SubmitForm1?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+
+        <tr>
+            <th class='formTitle'>功能编号：</th>
+            <td class='formValue'>
+                <input id="FunctionCd" maxlength=50 type="text" class="txt required" datacol="yes" err="功能编号" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>功能名称：</th>
+            <td class='formValue'>
+                <input id="FunctionNm" maxlength=50 type="text" class="txt required" datacol="yes" err="功能名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>功能类型：</th>
+            <td class='formValue'>
+                <select id="FunctionType" maxlength=50 type="text" class="txt required" datacol="yes" err="功能类型" checkexpession="NotNull" checkdata="hasOne">
+                    
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="FunctionDsc" maxlength=500 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Remark" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

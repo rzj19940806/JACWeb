@@ -135,6 +135,7 @@ namespace HfutIE.DataAccess
                     num = cmd.ExecuteNonQuery();
                 }
                 cmd.Parameters.Clear();
+
             }
             catch (Exception ex)
             {

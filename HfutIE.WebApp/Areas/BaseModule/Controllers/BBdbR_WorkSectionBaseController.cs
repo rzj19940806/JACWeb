@@ -1,4 +1,5 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
@@ -6,7 +7,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -81,23 +84,86 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GridListJson(string areaId, string parentId, JqGridParam jqgridparam)
+        public ActionResult GridListJson(string areaId, string parentId, string Nodesort, string WorkSectionCd, string WorkSectionNm, string WorkSectionTy, JqGridParam jqgridparam)
         {
             try
             {
+                #region 查询原方法-不考虑搜索条件
+                //Stopwatch watch = CommonHelper.TimerStart();
+                ////获取点击节点对应的数据（列表）
+                //DataTable ListData = MyBll.GetWorkSectionList(areaId,parentId, ref jqgridparam);//===复制时需要修改===
+                ////List<BBdbR_WorkSectionBase> ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑搜索条件
                 Stopwatch watch = CommonHelper.TimerStart();
-                //获取点击节点对应的数据（列表）
-                DataTable ListData = MyBll.GetWorkSectionList(areaId,parentId, ref jqgridparam);//===复制时需要修改===
-                //List<BBdbR_WorkSectionBase> ListData = MyBll.GetList(areaId, parentId, ref jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 ");
+                }
+                else
+                {
+                    //车间
+                    if (parentId != "0")
+                    {
+                        strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and a.WorkshopId ='" + areaId + "' ");
+                    }
+                    //工厂
+                    else
+                    {
+                        strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and c.FacId='" + areaId + "' ");                  
+                    }
+                }
+                //是否加WorkSectionCd模糊搜索
+                if (WorkSectionCd != "" && WorkSectionCd != null)
+                {
+                    //strSql.Append(" and WorkSectionCd like '%" + WorkSectionCd + "%'");
+                    strSql.Append(" and WorkSectionCd like @WorkSectionCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionCd", "%" + WorkSectionCd + "%"));
+                }
+                else { }
+                //是否加WorkSectionNm模糊搜索
+                if (WorkSectionNm != "" && WorkSectionNm != null)
+                {
+                    //strSql.Append(" and WorkSectionNm like '%" + WorkSectionNm + "%'");
+                    strSql.Append(" and WorkSectionNm like @WorkSectionNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionNm", "%" + WorkSectionNm + "%"));
+                }
+                else { }
+                //是否加WorkSectionTy模糊搜索
+                if (WorkSectionTy != "" && WorkSectionTy != null)
+                {
+                    //strSql.Append(" and WorkSectionTy like '%" + WorkSectionTy + "%'");
+                    strSql.Append(" and WorkSectionTy like @WorkSectionTy ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionTy", "%" + WorkSectionTy + "%"));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc ");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                return Content(JsonData.ToJson());
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -129,6 +195,17 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 string Name = "WorkSectionCd";        //页面中的编号字段名，如：公司编号   //===复制时需要修改===
                 string Value = entity.WorkSectionCd;  //页面中的编号字段值                 //===复制时需要修改===\
                 string Message = KeyValue == "" ? "新增成功。" : "编辑成功。";
+
+                if (entity.WorkSecDsc == null)
+                {
+                    entity.WorkSecDsc = "";
+                }
+                else { }
+                if (entity.Rem == null)
+                {
+                    entity.Rem = "";
+                }
+                else { }
 
                 if (!string.IsNullOrEmpty(KeyValue))//编辑操作
                 {
@@ -213,26 +290,90 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string areaId, string parentId, string Nodesort, string WorkSectionCd, string WorkSectionNm, string WorkSectionTy, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                #region 查询原方法-不考虑树节点
+                //string keyword = keywords.Trim();
+                //Stopwatch watch = CommonHelper.TimerStart();
+                //DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                //var JsonData = new
+                //{
+                //    total = jqgridparam.total,
+                //    page = jqgridparam.page,
+                //    records = jqgridparam.records,
+                //    costtime = CommonHelper.TimerEnd(watch),
+                //    rows = ListData,
+                //};
+                //return Content(ListData.ToJson());
+                #endregion
+
+                #region 查询修改-考虑树节点
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 ");
+                }
+                else
+                {
+                    //车间
+                    if (parentId != "0")
+                    {
+                        strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and a.WorkshopId ='" + areaId + "' ");
+                    }
+                    //工厂
+                    else
+                    {
+                        strSql.Append(@"select a.*,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and c.FacId='" + areaId + "' ");
+                    }
+                }
+                //是否加WorkSectionCd模糊搜索
+                if (WorkSectionCd != "" && WorkSectionCd != null)
+                {
+                    //strSql.Append(" and WorkSectionCd like '%" + WorkSectionCd + "%'");
+                    strSql.Append(" and WorkSectionCd like @WorkSectionCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionCd", "%" + WorkSectionCd + "%"));
+                }
+                else { }
+                //是否加WorkSectionNm模糊搜索
+                if (WorkSectionNm != "" && WorkSectionNm != null)
+                {
+                    //strSql.Append(" and WorkSectionNm like '%" + WorkSectionNm + "%'");
+                    strSql.Append(" and WorkSectionNm like @WorkSectionNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionNm", "%" + WorkSectionNm + "%"));
+                }
+                else { }
+                //是否加WorkSectionTy模糊搜索
+                if (WorkSectionTy != "" && WorkSectionTy != null)
+                {
+                    //strSql.Append(" and WorkSectionTy like '%" + WorkSectionTy + "%'");
+                    strSql.Append(" and WorkSectionTy like @WorkSectionTy ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionTy", "%" + WorkSectionTy + "%"));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc ");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "工段基础信息查询成功");
+                return Content(JsonData.ToJson());
+                #endregion
+
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "工段基础信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -296,11 +437,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
         #region 8.调取人员
         //人员下拉框
-        public ActionResult GetWorkSectionNm()
+        public ActionResult GetPlineNm(string StfId)
         {
             try
             {
-                DataTable dataTable = MyBll.GetWorkSectionNm();
+                BBdbR_StfBaseBll StfBll = new BBdbR_StfBaseBll();
+                DataTable dataTable = StfBll.GetPlineNm(StfId);
                 var JsonData = new
                 {
                     rows = dataTable,
@@ -312,24 +454,83 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 throw;
             }
         }
-        //人员信息
-        public ActionResult GetWorkSectionNm2(string StfId)
-        {
-            try
-            {
-                DataTable dataTable = MyBll.GetWorkSectionNm2(StfId);
-                var JsonData = new
-                {
-                    rows = dataTable,
-                };
-                return Content(JsonData.ToJson());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        #endregion
 
+        #region 9.重构导出
+        public ActionResult GetExcel_Data(string areaId, string parentId, string Nodesort, string WorkSectionCd, string WorkSectionNm, string WorkSectionTy, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 根据当前搜索条件查出数据并导出
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+                {
+                    strSql.Append(@"select a.WorkSectionCd,a.WorkSectionNm,a.WorkSectionTy,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp,a.sort,a.WorkSecDsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 ");
+                }
+                else
+                {
+                    //车间
+                    if (parentId != "0")
+                    {
+                        strSql.Append(@"select a.WorkSectionCd,a.WorkSectionNm,a.WorkSectionTy,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp,a.sort,a.WorkSecDsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and a.WorkshopId ='" + areaId + "' ");
+                    }
+                    //工厂
+                    else
+                    {
+                        strSql.Append(@"select a.WorkSectionCd,a.WorkSectionNm,a.WorkSectionTy,b.WorkshopCd as WorkshopCd,b.WorkshopNm as WorkshopNm,b.WorkshopTyp as WorkshopTyp,a.sort,a.WorkSecDsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_WorkSectionBase a left join BBdbR_WorkshopBase b on a.WorkshopId=b.WorkshopId left join BBdbR_FacBase c on b.FacId=c.FacId where a.Enabled=1 and b.Enabled =1 and c.Enabled=1 and c.FacId='" + areaId + "' ");
+                    }
+                }
+                //是否加WorkSectionCd模糊搜索
+                if (WorkSectionCd != "" && WorkSectionCd != null)
+                {
+                    //strSql.Append(" and WorkSectionCd like '%" + WorkSectionCd + "%'");
+                    strSql.Append(" and WorkSectionCd like @WorkSectionCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionCd", "%" + WorkSectionCd + "%"));
+                }
+                else { }
+                //是否加WorkSectionNm模糊搜索
+                if (WorkSectionNm != "" && WorkSectionNm != null)
+                {
+                    //strSql.Append(" and WorkSectionNm like '%" + WorkSectionNm + "%'");
+                    strSql.Append(" and WorkSectionNm like @WorkSectionNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionNm", "%" + WorkSectionNm + "%"));
+                }
+                else { }
+                //是否加WorkSectionTy模糊搜索
+                if (WorkSectionTy != "" && WorkSectionTy != null)
+                {
+                    //strSql.Append(" and WorkSectionTy like '%" + WorkSectionTy + "%'");
+                    strSql.Append(" and WorkSectionTy like @WorkSectionTy ");
+                    parameter.Add(DbFactory.CreateDbParameter("@WorkSectionTy", "%" + WorkSectionTy + "%"));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by a.sort asc ");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+
+
+
+                string fileName = "工段基础信息";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_WorkSectionBase(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "工段基础信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "工段基础信息导出操作失败：" + ex.Message);
+                return null;
+            }
+
+        }
         #endregion
 
         #endregion

@@ -51,7 +51,15 @@ namespace HfutIE.Business
         {
             StringBuilder strSql = new StringBuilder();
             List<DbParameter> parameter = new List<DbParameter>();
-            strSql.Append("Select count(1) From " + tablename + " where 1=1");
+            
+            if (tablename == "Base_User")
+            {
+                strSql.Append("Select count(1) From " + tablename + " where Enabled='1'");
+            }
+            else
+            {
+                strSql.Append("Select count(1) From " + tablename + " where 1=1");
+            }
             strSql.Append(" AND " + fieldname + " = @fieldname");
             parameter.Add(DbFactory.CreateDbParameter("@fieldname", fieldvalue));
             if (!string.IsNullOrEmpty(keyfield))

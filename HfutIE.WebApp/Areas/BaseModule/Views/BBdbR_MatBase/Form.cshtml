@@ -5,60 +5,131 @@
 <script type="text/javascript">
     var KeyValue = GetQuery('KeyValue');//主键
     $(function () {
-        BindDropItem("#MatTyp", "MatType", "==请选择==");
+        //BindDropItem("#MatTyp", "MatType", "==请选择==");
         BindDropItem("#MatCatg", "MatCatg", "==请选择==");
         setUpPhotographChangeEvent();//绑定选择图片的事件
         InitControl();
     })
+
+    //物料数量大于0
+    function checkNum(val) {
+        document.getElementById('MatNum').value = val >= 0 ? val : 0;
+    }
+
     //得到一个对象实体
     function InitControl() {
         if (!!GetQuery('KeyValue')) {
             AjaxJson("/BaseModule/BBdbR_MatBase/SetMatForm", { KeyValue: KeyValue }, function (data) {
                 //SetWebControls(data);
-                $("#MatCd").val(data.rows[0]["MatCd"]);
-                $("#MatNm").val(data.rows[0]["MatNm"]);
-                $("#MatCatg").val(data.rows[0]["MatCatg"]);
-                $("#MatTyp").val(data.rows[0]["MatTyp"]);
-                $("#MatSpec").val(data.rows[0]["MatSpec"]);
-                $("#Unit").val(data.rows[0]["Unit"]);
-                $("#LeadTm").val(data.rows[0]["LeadTm"]);
-                $("#YieldRate").val(data.rows[0]["YieldRate"]);
-                $("#Rem").val(data.rows[0]["Rem"]);
-                var image = data.rows[0]["MatImg"];
+                $("#MatCd").val(data.rows[0]["MatCd"]);         //物料编号
+                $("#MatNm").val(data.rows[0]["MatNm"]);         //物料名称
+                $("#WcCd").val(data.rows[0]["WcCd"]);           //工位编号
+                $("#WcNm").val(data.rows[0]["WcNm"]);           //工位名称
+                $("#IsScan").val(data.rows[0]["IsScan"]);       //关重件
+                $("#IsPrint").val(data.rows[0]["IsPrint"]);     //是否打印
+                $("#RsvFld1").val(data.rows[0]["RsvFld1"]);     //打印工位
+                if (data.rows[0]["RsvFld2"] == "0" || data.rows[0]["RsvFld2"] == "1") {
+                    $("#RsvFld2").val(data.rows[0]["RsvFld2"]);     //安全件
+                }
+                else if (data.rows[0]["RsvFld2"] == "" || data.rows[0]["RsvFld2"] == null) {
+                    $("#RsvFld2").val("0");
+                }
+                else {
+                    $("#RsvFld2").val("2"); 
+                    $("#RsvFld2_2").val(data.rows[0]["RsvFld2"]); 
+                    $('#RsvFld2_2_title_1').show();
+                    $('#RsvFld2_2_title_2').show();
+                }
+                
+                $("#MatNum").val(data.rows[0]["MatNum"]);       //数量
+                $("#ShortCode").val(data.rows[0]["ShortCode"]); //简码
+                $("#MatCatg").val(data.rows[0]["MatCatg"]);     //物料类别
+                $("#MatTyp").val(data.rows[0]["MatTyp"]);       //禁止重复
+                //$("#LeadTm").val(data.rows[0]["LeadTm"]);       //提前期
+                //$("#YieldRate").val(data.rows[0]["YieldRate"]); //良品率
+                $("#Rem").val(data.rows[0]["Rem"]);             //备注
+                var image = data.rows[0]["MatImg"];             //图片
                 var test = document.getElementById('picture');
                 test.src = 'data:image/;base64,' + image;
                 test.style.width = 145;
                 test.style.height = 145;
-                
             });
         }    
     }   
 
     //保存事件
     function AcceptClick() {
-        //if (!(checkHasOne(KeyValue))) {
-        //    return false;
-        //}
+
         if (!CheckDataValid('#form1')) {
             return false;
         }
-        var MatCd = document.getElementById("MatCd").value;
-        var MatNm = document.getElementById("MatNm").value;
-        var MatCatg = $('#MatCatg').val();
-        var MatTyp = $('#MatTyp').val();
-        var MatSpec = $('#MatSpec').val();
-        var Unit = $('#Unit').val();
-        var LeadTm = $('#LeadTm').val();
-        var YieldRate = $('#YieldRate').val();
-        var Rem = $('#Rem').val();
-        var fd = new FormData();//FormData主要是用来存储键值对
+        
+        var MatCd = document.getElementById("MatCd").value;     //物料编号
+        var MatNm = document.getElementById("MatNm").value;     //物料名称
+        var WcCd = document.getElementById("WcCd").value;       //关重件工位编号
+        var WcNm = "";                                          //关重件工位名称
+        var IsScan = document.getElementById("IsScan").value;   //是否关重件
+        var IsPrint = document.getElementById("IsPrint").value; //是否打印
+        var RsvFld1 = document.getElementById("RsvFld1").value; //打印工位
+
+        var RsvFld2 = document.getElementById("RsvFld2").value; //安全件
+        if (RsvFld2 == "2") {
+            RsvFld2 = document.getElementById("RsvFld2_2").value;
+        }
+        else { }
+
+        var MatNum = $('#MatNum').val();                        //数量
+        var ShortCode = $('#ShortCode').val();                  //简码
+        var MatCatg = $('#MatCatg').val();                      //物料类别
+        var MatTyp = $('#MatTyp').val();                        //禁止重复
+        if (MatCatg=="") {
+            tipDialog("物料类别不能为空", 3, -1);
+            top.frames[tabiframeId()].windowload();//???
+            closeDialog();
+        }
+        //var MatSpec = $('#MatSpec').val();                      //规格型号
+        //var LeadTm = $('#LeadTm').val();                        //提前期
+        //var YieldRate = $('#YieldRate').val();                  //良品率
+        var Rem = $('#Rem').val();                              //备注
+        var fd = new FormData();                                //FormData主要是用来存储键值对
         var file = $('#Photograph')[0].files[0];
         fd.append('file', file);
-        if ((KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined')&&(file == 'null' || file == undefined)) {//未选择文件,且是新增
-            tipDialog('请选择图片文件', 3, -2)
+        var status = true;
+        if (WcCd != "" && WcCd != null && WcCd != "&nbsp;") {
+            //判断关重件工位编号是否存在
+            AjaxJson("/BaseModule/BBdbR_MatBase/IfexistWcCd?WcCd=" + escape(WcCd), {}, function (data) {
+                status = data;
+            });
         }
         else {
-            var url = "/BaseModule/BBdbR_MatBase/SubmitPicture1?KeyValue=" + KeyValue + "&MatCd=" + MatCd + "&MatNm=" + MatNm + "&MatCatg=" + MatCatg + "&MatTyp=" + MatTyp + "&MatSpec=" + MatSpec + "&Unit=" + Unit + "&LeadTm=" + LeadTm + "&YieldRate=" + YieldRate + "&Rem=" + escape(Rem) + "&file=" + file;
+            WcId = "";
+            WcCd = "";
+            WcNm = "";
+        }
+        if (status == "unfind") {
+            tipDialog("关重件工位编号不存在", 3, -1);
+            return;
+        }
+        else if (status != true){
+            WcNm = status[0].WcNm;        //工位名称赋值
+            WcId = status[0].WcId;
+        }
+
+        status = true;
+        if (RsvFld1 != "" && RsvFld1 != null && RsvFld1 != "&nbsp;") {
+            //判断打印工位编号是否存在
+            AjaxJson("/BaseModule/BBdbR_MatBase/IfexistWcCd?WcCd=" + escape(RsvFld1), {}, function (data) {
+                status = data;
+            });
+        } else {
+            RsvFld1 = "";
+        }
+        if (status == "unfind") {
+            tipDialog("打印工位编号不存在", 3, -1);
+            return;
+        }
+        
+        var url = "/BaseModule/BBdbR_MatBase/SubmitPicture1?KeyValue=" + KeyValue + "&MatCd=" + MatCd + "&MatNm=" + MatNm + "&WcId=" + WcId + "&WcCd=" + WcCd + "&WcNm=" + WcNm + "&IsScan=" + IsScan + "&IsPrint=" + IsPrint + "&RsvFld1=" + RsvFld1 + "&RsvFld2=" + RsvFld2 + "&MatNum=" + MatNum + "&ShortCode=" + ShortCode + "&MatCatg=" + MatCatg + "&MatTyp=" + MatTyp + "&Rem=" + escape(Rem) + "&file=" + file;
             var responseText = JSON.parse(xhrupload(fd, url));//调用xmlhttprequest进行上传，返回值为验证结果，方法在下面
             if (responseText.Message == "该编号已经存在！") {
                 tipCss("MatCd", responseText.Message);
@@ -67,7 +138,6 @@
             tipDialog(responseText.Message, 3, responseText.Code);
             top.frames[tabiframeId()].windowload();//???
             closeDialog();
-        }        
     }
 
     //input（file）改变的事件
@@ -153,6 +223,41 @@
         xhr.send(fd);
         return xhr.responseText;
     }
+
+
+
+    //工位下拉框
+    //function IsScanList() {
+    //    $("#WcNm").html("<option value=''>==待选工位==</option>");
+    //    var wccd = document.getElementById("WcCd").value;  
+    //    AjaxJson("/BaseModule/BBdbR_MatBase/FindWcNm?WcCd=" + escape(wccd) , {}, function (data) {
+    //        for (var i = 0; i < data.rows.length; i++) {
+    //            $("#WcNm").append("<option value='" + data.rows[i]["WcNm"] + "'>" + data.rows[i]["WcNm"] + "</option>");
+    //        }
+    //    });
+    //}
+
+    function WcNmChange() {
+        var wcnm = document.getElementById("WcNm").value;  
+        AjaxJson("/BaseModule/BBdbR_MatBase/FindWcCd?WcNm=" + escape(wcnm), {}, function (data) {
+            $("#MatCd").val(data.rows[0]["MatCd"]);         //物料编号
+        });
+    }
+
+    //安全件下拉框
+    function RsvFld2change() {
+        var RsvFld2 = $('#RsvFld2').val();
+        if (RsvFld2 == '2') {
+            $('#RsvFld2_2_title_1').show();
+            $('#RsvFld2_2_title_2').show();
+        }
+        else {
+            $('#RsvFld2_2_title_1').hide();
+            $('#RsvFld2_2_title_2').hide();
+        }
+    }
+
+    
 </script>
 <form id="form1" style="margin: 1px">
     <div id="message" style="display: none"></div>
@@ -160,49 +265,94 @@
         <tr>
             <th class='formTitle' style="height:30px">物料编号：</th>
             <td class='formValue'>
-                <input id="MatCd" maxlength=50 type="text" class="txt required" datacol="yes" err="物料编号" checkexpession="NotNull" checkdata="hasOne" />
+                <input id="MatCd" maxlength=50 type="text" class="txt required" datacol="yes" err="物料编号" checkexpession="NotNull" checkdata="hasOne" readonly />
             </td>
             <th class='formTitle' style="height:30px">物料名称：</th>
             <td class='formValue'>
-                <input id="MatNm" maxlength=50 type="text" class="txt required" datacol="yes" err="物料名称" checkexpession="NotNull" checkdata="hasOne" />
+                <input id="MatNm" maxlength=50 type="text" class="txt required" datacol="yes" err="物料名称" checkexpession="NotNull" checkdata="hasOne" readonly />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">是否关重件：</th>
+            <td class='formValue'>
+                <select id="IsScan" maxlength=50 type="text" class="txt required checkdata" checkexpession="是否关重件" datacol="yes" err="是否关重件" onclick="">
+                    <option value='0'>否</option>
+                    <option value='1'>是</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">关重件工位编号：</th>
+            <td class='formValue'>
+                <input id="WcCd" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">是否打印：</th>
+            <td class='formValue'>
+                <select id="IsPrint" maxlength=50 type="text" class="txt required checkdata" checkexpession="是否打印" datacol="yes" err="是否打印" onclick="">
+                    <option value='0'>否</option>
+                    <option value='1'>是</option>
+                </select>
+            </td>
+            <th class='formTitle' style="height:30px">打印工位编号：</th>
+            <td class='formValue'>
+                <input id="RsvFld1" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">安全件：</th>
+            <td class='formValue'>
+                <select id="RsvFld2" maxlength=30 type="text" class="txt" onchange="RsvFld2change()">
+                    <option value='1'>是</option>
+                    <option value='0'>否</option>
+                    <option value='2'>编辑</option>
+                </select>
+            </td>
+            <th id="RsvFld2_2_title_1" class='formTitle' style="height:30px;display:none;">安全件编码：</th>
+            <td id="RsvFld2_2_title_2" class='formValue' style="display:none;">
+                <input id="RsvFld2_2" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">数量：</th>
+            <td class='formValue'>
+                <input id="MatNum" maxlength=50 type="number" class="txt "  min="0" oninput="checkNum(this.value)" />
+            </td>
+            <th class='formTitle' style="height:30px">简码：</th>
+            <td class='formValue'>
+                <input id="ShortCode" maxlength=50 type="text" class="txt  " />
             </td>
         </tr>
         <tr>
             <th class='formTitle' style="height:30px">物料类别：</th>
             <td class='formValue'>
-                <select id="MatCatg" maxlength=100 type="text" class="txt required checkdata" checkexpession="物料类别" datacol="yes" err="物料类别" onclick=""></select>
+                <select id="MatCatg" maxlength=100 type="text" class="txt required checkdata" checkexpession="物料类别" datacol="yes" err="物料类别" checkdata="hasOne"></select>
             </td>
-            <th class='formTitle' style="height:30px">物料类型：</th>
+
+            <th class='formTitle' style="height:30px">禁止重复：</th>
             <td class='formValue'>
-                <select id="MatTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="物料类型" datacol="yes" err="物料类型" onclick=""></select>
-            </td>
-        </tr>
-        <tr>
-            <th class='formTitle' style="height:30px">规格型号：</th>
-            <td class='formValue'>
-                <input id="MatSpec" maxlength=50 type="text" class="txt required checkdata" datacol="yes" err="规格型号" checkexpession="NotNull" checkdata="hasOne" />
-            </td>
-            <th class='formTitle' style="height:30px">单位：</th>
-            <td class='formValue'>
-                <input id="Unit" maxlength=50 type="text" class="txt " />
-            </td>
-        </tr>
-        <tr>
-            <th class='formTitle' style="height:30px">提前期：</th>
-            <td class='formValue'>
-                <input id="LeadTm" maxlength=50 type="text" class="txt " />
-            </td>
-            <th class='formTitle' style="height:30px">良品率：</th>
-            <td class='formValue'>
-                <input id="YieldRate" maxlength=50 type="text" class="txt "  />
+                <select id="MatTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="禁止重复" datacol="yes" err="禁止重复" checkdata="hasOne">
+                    <option value='0'>允许</option>
+                    <option value='1'>禁止</option>
+                </select>
             </td>
         </tr>
         <tr>
             <th class='formTitle' style="height:30px">备注：</th>
-            <td class='formValue'>
-                <textarea id="Rem" maxlength="200" class="txtArea" rows="2"></textarea>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea"></textarea>
             </td>
         </tr>
+        @*<tr>
+            <th class='formTitle' style="height:30px">提前期：</th>
+            <td class='formValue'>
+                <input id="LeadTm" maxlength=50 type="text" class="txt " onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            </td>
+            <th class='formTitle' style="height:30px">良品率：</th>
+            <td class='formValue'>
+                <input id="YieldRate" maxlength=50 type="text" class="txt " />
+            </td>
+        </tr>*@
+
         <tr>
             <th class="formTitle">物料图片：</th>
             <td class="formValue" rowspan="3" style="float:inherit" colspan="3">

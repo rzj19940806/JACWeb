@@ -7,15 +7,17 @@
     var WcCd = GetQuery('WcCd');//工位编号
     var WcNm = GetQuery('WcNm');//工位名称
     $(function () {
+        InitControl();
+        Show1();
         BindDropItem("#GetItemTy", "GetItemTy");
         $('#WcCd').val(WcCd);
         $('#WcNm').val(WcNm);
-        InitControl();
     })
     //得到一个对象实体
     function InitControl() {
         if (!!GetQuery('KeyValue')) {
             AjaxJson("/BaseModule/BBdbR_GetItemBase/SetGetItemForm", { KeyValue: KeyValue }, function (data) {
+                 
                 var GetItemType = data.GetItemType;
                 if (GetItemType == "0") {//定性
                     document.getElementById("getitemuplimit").style.display = "none";
@@ -37,6 +39,12 @@
         }
         if (!CheckDataValid('#form1')) {
             return false;
+        } 
+        var GetItemUpLimit = $("#GetItemUpLimit").val();//缓存上限必须要大于缓存下限
+        var GetItemLowLimit = $("#GetItemLowLimit").val();
+        if (GetItemUpLimit < GetItemLowLimit) {
+            alert("缓存上限必须要大于缓存下限！");
+            return;
         }
         var postData = GetWebControls("#form1");
         AjaxJson("/BaseModule/BBdbR_GetItemBase/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
@@ -78,11 +86,11 @@
         <tr style=" height :30px">
             <th class='formTitle'>工位编号：</th>
             <td class='formValue'>
-                <input id="WcCd" maxlength=50 type="text" class="txt required checkdata" err="工位编号" checkexpession="NotNull" datacol="yes" />
+                <input id="WcCd" maxlength=50 type="text" class="txt required checkdata" err="工位编号" checkexpession="NotNull" datacol="yes" readonly/>
             </td>
             <th class='formTitle'>工位名称：</th>
             <td class='formValue'>
-                <input id="WcNm" maxlength=50 type="text" class="txt required checkdata" err="工位名称" checkexpession="NotNull" datacol="yes" />
+                <input id="WcNm" maxlength=50 type="text" class="txt required checkdata" err="工位名称" checkexpession="NotNull" datacol="yes" readonly/>
             </td>
         </tr>
         <tr style=" height :30px">
@@ -103,17 +111,17 @@
         <tr id="getitemuplimit" style=" display: none; height: 30px">
             <th class='formTitle'>采集项上限：</th>
             <td class='formValue'>
-                <input id="GetItemUpLimit" maxlength=50 type="text" class="txt" />
+                <input id="GetItemUpLimit" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
             <th class='formTitle'>采集项下限：</th>
             <td class='formValue'>
-                <input id="GetItemLowLimit" maxlength=50 type="text" class="txt" />
+                <input id="GetItemLowLimit" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
         </tr>
         <tr id="getitemvalue" style=" display: none; height: 30px">
             <th class='formTitle'>采集项标准值：</th>
             <td class='formValue'>
-                <input id="GetItemValue" maxlength=50 type="text" class="txt" />
+                <input id="GetItemValue" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
             <th class='formTitle'>采集项参数单位：</th>
             <td class='formValue'>
@@ -123,7 +131,7 @@
         <tr style=" height :30px">
             <th class='formTitle'>采集频次：</th>
             <td class='formValue' colspan="3">
-                <input id="GetItemFq" maxlength=50 type="text" class="txt" />
+                <input id="GetItemFq" maxlength=50 type="text" class="txt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
             </td>
         </tr>
         <tr style=" height :30px">

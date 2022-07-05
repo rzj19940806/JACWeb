@@ -39,7 +39,7 @@ namespace HfutIE.Business
                         Enabled As IsAvailable,
                         '0' as parentId,  
                         '0' as sort    
-                        from BBdbR_CompanyBase where Enabled = '1' ");
+                        from BBdbR_CompanyBase where Enabled = '1' order by sort asc ");
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion
@@ -59,11 +59,11 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
             {
-                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
-                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.CompanyId='" + areaId + "'";  //===复制时需要修改===        
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.CompanyId='" + areaId + "' order by a.sort asc";  //===复制时需要修改===        
             }
             return Repository().FindTableBySql(sql.ToString(), false);
         }
@@ -88,17 +88,17 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (Condition == "all")
             {
-                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
             }
             else
             {
                 if (keywords == "all")
                 {
-                    sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                    sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 order by a.sort asc";     //===复制时需要修改===
                 }
                 else
                 {
-                    sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and  " + Condition + " like  '%" + keywords + "%'";  //===复制时需要修改===
+                    sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and  " + Condition + " like  '%" + keywords + "%' order by a.sort asc";  //===复制时需要修改===
                 }
             }
             return Repository().FindTableBySql(sql.ToString(), false);          
@@ -260,19 +260,7 @@ namespace HfutIE.Business
 
         #endregion
 
-        #region 11.弹框负责人员
-        //11.获取所有人员
-        public DataTable GetPlineNm()
-        {
-            string sql = @"select StfId as id, stfnm from BBdbR_StfBase where Enabled='1' and StfPosn='工厂负责人'";
-            return Repository().FindTableBySql(sql);
-        }
-        //获取人员信息
-        public DataTable GetPlineNm2(string StfId)
-        {
-            string sql = @"select stfnm,phn,email from BBdbR_StfBase where Enabled='1' and StfId=" + "'" + StfId + "'";
-            return Repository().FindTableBySql(sql);
-        }
+        #region 11.编辑弹框中数据源
         /// <summary>
         /// 编辑弹框中数据源
         /// </summary>

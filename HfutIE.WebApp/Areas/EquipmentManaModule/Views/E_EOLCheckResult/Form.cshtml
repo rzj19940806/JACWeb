@@ -1,0 +1,85 @@
+@{
+    ViewBag.Title = "E_EOLCheckResult》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_EOLCheckResult/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/E_EOLCheckResult/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>Car：</th>
+            <td class='formValue'>
+                <input id="Car" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型名称：</th>
+            <td class='formValue'>
+                <input id="CarName" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>站点：</th>
+            <td class='formValue'>
+                <input id="Station" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>时间：</th>
+            <td class='formValue'>
+                <input id="Time" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>测试次数：</th>
+            <td class='formValue'>
+                <input id="TestNum" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>结果：</th>
+            <td class='formValue'>
+                <input id="Result" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

@@ -3,12 +3,15 @@
 // Software Developers @ HfutIE 2021
 //=====================================================================================
 
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 
 namespace HfutIE.Business
@@ -33,22 +36,26 @@ namespace HfutIE.Business
         public DataTable GetTree()
         {
             StringBuilder strSql = new StringBuilder();
-            //===复制时需要修改===
+            //===复制时需要修改=== CompanyId AS Attribute,
             strSql.Append(@"select    
                               CompanyId AS keys,
                               CompanyCd AS code,
                               CompanyNm AS name,
                               Enabled As IsAvailable,
                               '0' AS parentId,
+                              CompanyId AS companyid,
                               '1' as sort 
-                             from BBdbR_CompanyBase where Enabled = '1' ");
-            strSql.Append(@" union select  FacId AS keys,     
-                             FacCd AS code,
-                             FacNm AS name,
-                             Enabled As IsAvailable,
-                             CompanyId as parentId,  
-                            '1' as sort    
-                            from BBdbR_FacBase where Enabled = '1' ");         
+                              from BBdbR_CompanyBase where Enabled = '1'
+							  union
+							  select  DepartmentID AS keys,     
+                              DepartmentCode AS code,
+                              DepartmentName AS name,
+                              Enabled As IsAvailable,
+                              ParentDepartmentID as parentId,  
+                              CompanyId AS companyid,
+                              '1' as sort 
+                              from BBdbR_DepartmentBase where Enabled = '1'  order by code asc");
+                
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion
@@ -62,27 +69,47 @@ namespace HfutIE.Business
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public DataTable GetList(string areaId, string parentId, ref JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetList(string areaId, string parentId, string Condition, string keywords, ref JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
             DataTable dt = new DataTable();
-            if (string.IsNullOrEmpty(areaId) && string.IsNullOrEmpty(parentId))
+            List<DbParameter> parameter = new List<DbParameter>();
+            if (parentId == "0"||String.IsNullOrEmpty(parentId))//点击公司节点
             {
-                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+                
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId  where a.Enabled=1 and b.Enabled=1  and ParentDepartmentID = b.CompanyId  ";     //===复制时需要修改===  and a.ParentDepartmentID = '" + areaId + "'
+                
+                if (Condition == "all"||String.IsNullOrEmpty(Condition))
+                {
+
+                }
+                else
+                {
+
+                    sql += " and  a." + Condition + " like  @keywords "; 
+                    parameter.Add(DbFactory.CreateDbParameter("@keywords", "%" + keywords + "%"));
+                    //sql += " and  a." + Condition + " like  '%" + keywords + "%' ";
+                }
+                sql += "  order by DepartmentCode asc";
                 dt = Repository().FindTableBySql(sql.ToString(), false);
             }
             else
             {
-                if (parentId != "0")//点击工厂
+                //点击某部门
+                sql = "select a.*,c.CompanyCd as CompanyCd,c.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase c on a.CompanyId=c.CompanyId  where a.Enabled=1 and c.Enabled=1  and a.ParentDepartmentID='" + areaId + "'";     //===复制时需要修改===
+                if (Condition == "all" || String.IsNullOrEmpty(Condition))
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID  where a.Enabled=1 and b.Enabled=1 and a.FacId='" + areaId + "'";     //===复制时需要修改===
-                    dt = Repository().FindTableBySql(sql.ToString(), false);
+
                 }
-                else//点击公司
+                else
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,d.DepartmentName as ParentDepartmentName,d.DepartmentCode as ParentDepartmentCode  from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId join BBdbR_CompanyBase c on b.CompanyId=c.CompanyId left join BBdbR_DepartmentBase d on  a.ParentDepartmentID=d.DepartmentID  where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.CompanyId='" + areaId + "'";     //===复制时需要修改===
-                    dt = Repository().FindTableBySql(sql.ToString(), false);
+                    sql += " and  a." + Condition + " like  @keywords ";
+                    parameter.Add(DbFactory.CreateDbParameter("@keywords", "%" + keywords + "%"));
+                    //sql += " and  a." + Condition + " like  '%" + keywords + "%' ";
                 }
+                sql += "  order by DepartmentCode asc";
+                //dt = Repository().FindTableBySql(sql.ToString(), false);
+                dt = DataFactory.Database().FindTableBySql(sql, parameter.ToArray(), false);
             }
             return dt;           
         }
@@ -90,27 +117,27 @@ namespace HfutIE.Business
         #endregion
 
         #region 3.展示表格
-        /// <summary>
-        /// 搜索表格中所有Enabled = true的数据, 即为有效的工厂信息GetDepartmentBase
-        /// </summary>
-        /// <param name="jqgridparam">分页参数</param>
-        /// <returns>返回搜索到的数据</returns>
-        public List<BBdbR_DepartmentBase> GetPageList(JqGridParam jqgridparam) //===复制时需要修改===
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT  * FROM  BBdbR_DepartmentBase where 1=1");
-            List<BBdbR_DepartmentBase> dt = Repository().FindListBySql(strSql.ToString());
-            for (int i = 0; i < dt.Count; i++)
-            {
-                string sql = "select * from BBdbR_FacBase where FacId='" + dt[i].FacId + "'";
-                DataTable dt1 = Repository().FindTableBySql(sql.ToString());
-                if (dt1.Rows.Count > 0)
-                {
-                    dt[i].FacId = dt1.Rows[0]["FacNm"].ToString();
-                }
-            }
-            return dt;
-        }
+        ///// <summary>
+        ///// 搜索表格中所有Enabled = true的数据, 即为有效的工厂信息GetDepartmentBase
+        ///// </summary>
+        ///// <param name="jqgridparam">分页参数</param>
+        ///// <returns>返回搜索到的数据</returns>
+        //public List<BBdbR_DepartmentBase> GetPageList(JqGridParam jqgridparam) //===复制时需要修改===
+        //{
+        //    StringBuilder strSql = new StringBuilder();
+        //    strSql.Append(@"SELECT  * FROM  BBdbR_DepartmentBase where 1=1");
+        //    List<BBdbR_DepartmentBase> dt = Repository().FindListBySql(strSql.ToString());
+        //    for (int i = 0; i < dt.Count; i++)
+        //    {
+        //        string sql = "select * from BBdbR_FacBase where FacId='" + dt[i].FacId + "'";
+        //        DataTable dt1 = Repository().FindTableBySql(sql.ToString());
+        //        if (dt1.Rows.Count > 0)
+        //        {
+        //            dt[i].FacId = dt1.Rows[0]["FacNm"].ToString();
+        //        }
+        //    }
+        //    return dt;
+        //}
 
        /// <summary>
        /// 返回填充编辑界面数据源
@@ -123,7 +150,7 @@ namespace HfutIE.Business
             DataTable dt = new DataTable();
             if (KeyValue != "")
             {
-                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId where a.Enabled=1 and b.Enabled=1 and a.DepartmentID='"+ KeyValue+"'";     //===复制时需要修改===
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId where a.Enabled=1 and b.Enabled=1 and a.DepartmentID='" + KeyValue+"'";     //===复制时需要修改===
                 dt = Repository().FindTableBySql(sql.ToString(), false);
                 return dt;
             }
@@ -152,7 +179,7 @@ namespace HfutIE.Business
         public int CheckCount(string tableName, string KeyName, string KeyValue)
         {
             //string sql = @"select * from " + tableName + " where Enabled = 1 and " + KeyName + " = '" + KeyValue + "'";
-            string sql = @"select * from " + tableName + " where  " + KeyName + " = '" + KeyValue + "'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' and " + KeyName + " = '" + KeyValue + "'";
             DataTable count = Repository().FindTableBySql(sql);
             int a = count.Rows.Count;
             return a;
@@ -196,26 +223,72 @@ namespace HfutIE.Business
         /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public DataTable GetPageListByCondition(string keywords, string Condition, JqGridParam jqgridparam) //===复制时需要修改===
+        public DataTable GetPageListByCondition(string areaId, string parentId, string Condition, string keywords, ref JqGridParam jqgridparam) //===复制时需要修改===
         {
+            #region 原版本
+            //string sql = "";
+            //DataTable dt = new DataTable();
+            //if (Condition == "all")
+            //{
+            //    sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+            //}
+            //else
+            //{
+            //    if (keywords == "all")
+            //    {
+            //        sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+            //    }
+            //    else
+            //    {
+            //        sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1 and a." + Condition + " like  '%" + keywords + "%'";      //===复制时需要修改===
+            //    }
+            //}
+            //return Repository().FindTableBySql(sql.ToString(), false);
+            #endregion
+
+            #region 修改版本
             string sql = "";
             DataTable dt = new DataTable();
-            if (Condition == "all")
+            List<DbParameter> parameter = new List<DbParameter>();
+            if (parentId == "0" || String.IsNullOrEmpty(parentId))//点击公司节点
             {
-                sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
-            }
-            else
-            {
-                if (keywords == "all")
+
+                sql = "select a.*,b.CompanyCd as CompanyCd,b.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase b on a.CompanyId=b.CompanyId  where a.Enabled=1 and b.Enabled=1  and ParentDepartmentID = b.CompanyId  ";     //===复制时需要修改===  and a.ParentDepartmentID = '" + areaId + "'
+                if (Condition == "all" || String.IsNullOrEmpty(Condition))
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1";     //===复制时需要修改===
+
                 }
                 else
                 {
-                    sql = "select a.*,b.FacCd as FacCd,b.FacNm as FacNm,c.DepartmentName as ParentDepartmentName,c.DepartmentCode as ParentDepartmentCode from " + tableName + " a join BBdbR_FacBase b on a.FacId=b.FacId left join BBdbR_DepartmentBase c on  a.ParentDepartmentID=c.DepartmentID where a.Enabled=1 and b.Enabled=1 and a." + Condition + " like  '%" + keywords + "%'";      //===复制时需要修改===
+                    sql += " and  a." + Condition + " like  @keywords ";
+                    parameter.Add(DbFactory.CreateDbParameter("@keywords", "%" + keywords + "%"));
+                    //sql += " and  a." + Condition + " like  '%" + keywords + "%' ";
                 }
+                sql += "  order by DepartmentCode asc";
+                
+
             }
-            return Repository().FindTableBySql(sql.ToString(), false);      
+            else
+            {
+                //点击某部门
+                sql = "select a.*,c.CompanyCd as CompanyCd,c.CompanyNm as CompanyNm from " + tableName + " a join BBdbR_CompanyBase c on a.CompanyId=c.CompanyId  where a.Enabled=1 and c.Enabled=1  and a.ParentDepartmentID='" + areaId + "'";     //===复制时需要修改===
+                if (Condition == "all" || String.IsNullOrEmpty(Condition))
+                {
+
+                }
+                else
+                {
+                    sql += " and  a." + Condition + " like  @keywords ";
+                    parameter.Add(DbFactory.CreateDbParameter("@keywords", "%" + keywords + "%"));
+                    //sql += " and  a." + Condition + " like  '%" + keywords + "%' ";
+                }
+                sql += "  order by DepartmentCode asc";
+                
+            }
+            //dt = Repository().FindTableBySql(sql.ToString(), false);
+            dt = DataFactory.Database().FindTableBySql(sql, parameter.ToArray(), false);
+            return dt;
+            #endregion
         }
 
         #endregion
@@ -256,21 +329,20 @@ namespace HfutIE.Business
         /// 获取所有人员
         /// </summary>
         /// <returns></returns>
-        public DataTable GetPlineNm()
+        public DataTable GetPlineNm(string StfId)
         {
-            string sql = @"select StfId as id, stfnm from BBdbR_StfBase where Enabled='1' and StfPosn='工厂负责人'";
+            string sql = "";
+            if (string.IsNullOrEmpty(StfId))
+            {
+                 sql = @"select UserId as id,Code,RealName,Telephone,Email from Base_User where Enabled='1' order by RealName desc";
+            }
+            else
+            {
+                sql = @"select UserId as id,Code,RealName,Telephone,Email from Base_User where Enabled='1' and UserId=" + "'" + StfId + "' order by RealName desc";
+            }
             return Repository().FindTableBySql(sql, false);
         }
-        /// <summary>
-        /// 获取人员信息
-        /// </summary>
-        /// <param name="StfId"></param>
-        /// <returns></returns>
-        public DataTable GetPlineNm2(string StfId)
-        {
-            string sql = @"select stfnm,phn,email from BBdbR_StfBase where Enabled='1' and StfId=" + "'" + StfId + "'";
-            return Repository().FindTableBySql(sql, false);
-        }
+        
 
         /// <summary>
         /// 获取所有父部门
@@ -278,8 +350,104 @@ namespace HfutIE.Business
         /// <returns></returns>
         public DataTable GetPDepartMent()
         {
-            string sql = @"select DepartmentID,DepartmentName from BBdbR_DepartmentBase where Enabled='1' and DepartmentType='父部门'";
+            string sql = @"select DepartmentID,DepartmentName from BBdbR_DepartmentBase where Enabled='1'
+                          union 
+                          select CompanyId as DepartmentID,CompanyNm as DepartmentName from  BBdbR_CompanyBase where Enabled = '1'
+";
             return Repository().FindTableBySql(sql, false);
+        }
+        #endregion
+
+        #region 9.查找父部门下是否有子部门
+        /// <summary>
+        /// 搜索表格中挂在父部门名下的子部门数量
+        /// </summary>
+        /// <param name="KeyValue">分页参数</param>
+        /// <returns>返回搜索到的数据</returns>
+        public int GetParentDepartCount(string KeyValue) //===复制时需要修改===
+        {
+            string sql = "";
+            int count = 0;
+            if (KeyValue != "")
+            {
+                sql = @"select * from " + tableName + " where Enabled='1' and ParentDepartmentID='" + KeyValue + "'";
+                DataTable dt = Repository().FindTableBySql(sql);
+                
+                count = dt.Rows.Count;
+            }
+            return count;
+        }
+        #endregion
+
+        #region 9.获取部门下拉框
+
+        public DataTable GetDepartmentList()
+        {
+            StringBuilder strSql = new StringBuilder();
+            DataTable dt = new DataTable();
+
+            strSql.Append(@"SELECT DepartmentID, b.CompanyId, DepartmentCode,	DepartmentName  ,CompanyNm
+                                                			
+                                      FROM    BBdbR_DepartmentBase a left join BBdbR_CompanyBase b on a.CompanyId = b.CompanyId  where a.Enabled = '1' and b.Enabled = '1' ");
+            return dt = Repository().FindTableBySql(strSql.ToString(), false);
+        }
+
+        #endregion
+
+        #region 9.获得导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
         }
         #endregion
 

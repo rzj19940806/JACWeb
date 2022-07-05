@@ -1,0 +1,199 @@
+@{
+    ViewBag.Title = "E_PressureRecordInfo》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_PressureRecordInfo/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/E_PressureRecordInfo/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>ID：</th>
+            <td class='formValue'>
+                <input id="ID" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>CarType：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>SensorNm：</th>
+            <td class='formValue'>
+                <input id="SensorNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTireID：</th>
+            <td class='formValue'>
+                <input id="RFTireID" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureLimit：</th>
+            <td class='formValue'>
+                <input id="RFTirePressureLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <input id="RFTirePressureLowerLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureValue：</th>
+            <td class='formValue'>
+                <input id="RFTirePressureValue" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RFTirePressureResult：</th>
+            <td class='formValue'>
+                <input id="RFTirePressureResult" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTireID：</th>
+            <td class='formValue'>
+                <input id="LFTireID" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTirePressureLimit：</th>
+            <td class='formValue'>
+                <input id="LFTirePressureLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>FTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <input id="FTirePressureLowerLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTirePressureValue：</th>
+            <td class='formValue'>
+                <input id="LFTirePressureValue" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LFTirePressureResult：</th>
+            <td class='formValue'>
+                <input id="LFTirePressureResult" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTireID：</th>
+            <td class='formValue'>
+                <input id="RBTireID" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureLimit：</th>
+            <td class='formValue'>
+                <input id="RBTirePressureLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <input id="RBTirePressureLowerLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureValue：</th>
+            <td class='formValue'>
+                <input id="RBTirePressureValue" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>RBTirePressureResult：</th>
+            <td class='formValue'>
+                <input id="RBTirePressureResult" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTireID：</th>
+            <td class='formValue'>
+                <input id="LBTireID" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureLimit：</th>
+            <td class='formValue'>
+                <input id="LBTirePressureLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureLowerLimit：</th>
+            <td class='formValue'>
+                <input id="LBTirePressureLowerLimit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureValue：</th>
+            <td class='formValue'>
+                <input id="LBTirePressureValue" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>LBTirePressureResult：</th>
+            <td class='formValue'>
+                <input id="LBTirePressureResult" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>TirePressureUnit：</th>
+            <td class='formValue'>
+                <input id="TirePressureUnit" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>DetectionSource：</th>
+            <td class='formValue'>
+                <input id="DetectionSource" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>DetectionTime：</th>
+            <td class='formValue'>
+                <input id="DetectionTime" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

@@ -41,49 +41,64 @@ namespace HfutIE.Entity
         /// </summary>
         /// <returns></returns>
         [DisplayName("公司名称")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyNm { get; set; }
         /// <summary>
         /// 法人
         /// </summary>
         /// <returns></returns>
         [DisplayName("法人")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string ArtificialPerson { get; set; }
         /// <summary>
         /// 联系电话
         /// </summary>
         /// <returns></returns>
         [DisplayName("联系电话")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyTelephone { get; set; }
         /// <summary>
         /// 传真
         /// </summary>
         /// <returns></returns>
         [DisplayName("传真")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyFax { get; set; }
         /// <summary>
         /// 邮箱
         /// </summary>
         /// <returns></returns>
         [DisplayName("邮箱")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyEmail { get; set; }
         /// <summary>
         /// 公司地址
         /// </summary>
         /// <returns></returns>
         [DisplayName("公司地址")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyAddress { get; set; }
         /// <summary>
         /// 公司描述
         /// </summary>
         /// <returns></returns>
         [DisplayName("公司描述")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string CompanyDescription { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         /// <returns></returns>
         [DisplayName("备注")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Rem { get; set; }
+        /// <summary>
+        /// 顺序号
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("顺序号")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string sort { get; set; }
         /// <summary>
         /// 有效性
         /// </summary>
@@ -166,7 +181,7 @@ namespace HfutIE.Entity
         public override void Modify(string KeyValue)
         {
             this.CompanyId = KeyValue;
-            this.CreTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            this.MdfTm = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             this.MdfCd = ManageProvider.Provider.Current().UserId;
             this.MdfNm = ManageProvider.Provider.Current().UserName;
         }

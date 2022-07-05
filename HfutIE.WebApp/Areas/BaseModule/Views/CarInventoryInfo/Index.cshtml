@@ -1,0 +1,206 @@
+@{
+    ViewBag.Title = "区间库存";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        BindDropItem("#CarType", "CarType", "==全部==");
+        bindAVINm();
+        GetGrid();
+        //Show();
+    })
+    //加载表格
+    function GetGrid() {
+        var crossAviCd = $("#crossAviCd").val();
+        if (crossAviCd == "全部") {
+            crossAviCd = "";
+        }
+        var nocrossAviCd = $("#nocrossAviCd").val();
+        if (nocrossAviCd == "全部") {
+            nocrossAviCd = "";
+        }
+        var CarType = $("#CarType").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        $("#gridTable").jqGrid({
+         url: "@Url.Content("~/BaseModule/CarInventoryInfo/GridPageListJsonCarRecord")?crossAviCd=" + escape(crossAviCd) + "&nocrossAviCd=" + escape(nocrossAviCd) +
+                "&StartTime=" + escape(ColletionTimeStart) + "&EndTime=" + escape(ColletionTimeEnd)
+                + "&CarType=" + escape(CarType),
+        datatype: "json",
+        height: $(window).height() - 150,
+        //width:1600,
+        autowidth: true,
+        colModel: [
+                //{ label: '过点信息记录主键', name: 'CarPastRecordId', index: 'CarPastRecordId', width: 0, align: 'center',sortable: true ,hidden: true },
+                //{ label: 'AVI站点主键', name: 'AviId', index: 'AviId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '订单编号', name: 'OrderCd', index: 'OrderCd', width: 100, align: 'center', sortable: true },
+                { label: '工单号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 0, align: 'center', sortable: true },
+                //{ label: 'AVI站点编号', name: 'AviCd', index: 'AviCd', width: 0, align: 'center',sortable: true  },
+                { label: '底盘号', name: 'ChassisCd', index: 'ChassisCd', width: 0, align: 'center', sortable: true },
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center',sortable: true  },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 80, align: 'center',sortable: true  },
+                { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center',sortable: true  },
+                { label: '车型名称', name: 'MatNm', index: 'MatNm', width: 200, align: 'center', sortable: true },
+                { label: '颜色', name: 'CarColor1', index: 'CarColor1', width: 0, align: 'center',sortable: true  },
+                { label: '当前AVI站点名称', name: 'AviNm', index: 'AviNm', width: 0, align: 'center',sortable: true  },
+                { label: '采集时间', name: 'FeedbackTime', index: 'FeedbackTime', width: 0, align: 'center',sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }
+                },
+        ],
+            pager: "#gridPager",
+            sortname: 'PastTime',
+            sortorder: 'desc',
+            gridview: true,
+            rowNum: 200,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //绑定AVI名称下拉框
+    function bindAVINm() {
+        $("#crossAviCd").html("");
+        $("#nocrossAviCd").html("");
+        $("#crossAviCd").append("<option value='全部'>全部</option>");
+        $("#nocrossAviCd").append("<option value='全部'>全部</option>");
+        AjaxJson("/BaseModule/CarInventoryInfo/getAllAviNm", {}, function (DataJson) {
+            $.each(DataJson, function (i) {
+                $("#crossAviCd").append($("<option></option>").val(DataJson[i].OP_CODE).html(DataJson[i].AviNm));
+                $("#nocrossAviCd").append($("<option></option>").val(DataJson[i].OP_CODE).html(DataJson[i].AviNm));
+            });
+        });
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid"); //重新载入
+    }
+    //搜索
+    function btnSearch() {
+        var crossAviCd = $("#crossAviCd").val();
+        if (crossAviCd == "全部") {
+            crossAviCd = "";
+        }
+        var nocrossAviCd = $("#nocrossAviCd").val();
+        if (nocrossAviCd == "全部") {
+            nocrossAviCd = "";
+        }   
+        var CarType = $("#CarType").val();
+
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+       
+
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/BaseModule/CarInventoryInfo/GridPageListJsonCarRecord")?crossAviCd=" + escape(crossAviCd) + "&nocrossAviCd=" + escape(nocrossAviCd) +
+                "&StartTime=" + escape(ColletionTimeStart) + "&EndTime=" + escape(ColletionTimeEnd)
+                + "&CarType=" + escape(CarType), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //加载搜索框
+    function Show() {
+        let Condition = $('#Condition').val();
+        if (Condition == 'all') {
+            $('#keywords').hide();
+        } else {
+            $('#keywords').show();
+        }
+    }
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            btnSearch();
+            window.setTimeout(function () {
+                location.href = "/BaseModule/CarInventoryInfo/GetExcel_Data";
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+</script>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    <table border="0" class="form-find" style="height: 45px;">
+        <tr>
+            <th >
+                车型
+            </th>
+            <td>
+                <select id="CarType" class="txt" style="height: 28px;width: 150px"></select>
+            </td>
+            <th >
+                经过AVI点
+            </th>
+            <td>
+                <select id="crossAviCd" class="txt" style="height: 28px;width: 150px"></select>
+            </td>
+            <th >
+                未经过AVI点
+            </th>
+            <td>
+                <select id="nocrossAviCd" class="txt" style="height: 28px;width: 150px"></select>
+            </td>
+
+            <td id="timetd">
+                <label>采集开始时间：</label>
+                <input id="ColletionTimeStart" type="text" class="txt Wdate" value="@DateTime.Now.Date.AddHours(8).ToString("yyyy-MM-dd")" style="width: 120px" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'ColletionTimeEnd\')}'}); blur();" readonly/>
+                <label>采集结束时间：</label>
+                <input id="ColletionTimeEnd" type="text" class="txt Wdate"  value="@DateTime.Now.Date.AddHours(20).ToString("yyyy-MM-dd")" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'ColletionTimeStart\')}'}); blur();" readonly/>
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btnSearch()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="height: 49% ;width:auto; ">
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable"></table>
+        <div id="gridPager"></div>
+    </div>
+</div>

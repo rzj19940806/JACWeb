@@ -1,0 +1,342 @@
+@{
+    ViewBag.Title = "日计划接收过程表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        //Show();
+        CellItem_CarType('CarType');//加载车型下拉框
+        BindDropItem("#ConditionCarType", "CarType", "==全部==");
+        GetGrid();
+    })
+
+    //全局传参变量
+    var postData = {
+        StartTimePlanTime: "",
+        EndTimePlanTime: "",
+        ConditionVIN: "",
+        ConditionProducePlanCd: "",
+        ConditionOrderCd: "",
+        ConditionMatCd: "",
+        StartTimeRecieveTm: "",
+        EndTimeRecieveTm: "",
+        ConditionCarType: "",
+        ConditionPlanStatus: ""
+    }
+
+    //搜索栏
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "PlanTime" || Condition == "RecieveTm") {
+            $("#StartTime").show();
+            $("#EndTime").show();
+            $("#State").hide();
+            $("#Keywords").hide();
+        }
+        else if (Condition == "OrderStatus") {
+            $("#StartTime").hide();
+            $("#EndTime").hide();
+            $("#State").show();
+            $("#Keywords").hide();
+        }
+        else {
+            $("#StartTime").hide();
+            $("#EndTime").hide();
+            $("#State").hide();
+            $("#Keywords").show();
+        }
+    }
+
+    //加载表格
+    function GetGrid() {
+        postData.StartTimePlanTime = $("#StartTimePlanTime").val();     //预计生产开始时间
+        postData.EndTimePlanTime = $("#EndTimePlanTime").val();         //预计生产结束时间
+        postData.ConditionVIN = $("#ConditionVIN").val();               //VIN码
+        postData.ConditionProducePlanCd = $("#ConditionProducePlanCd").val(); //计划编号
+        postData.ConditionOrderCd = $("#ConditionOrderCd").val();       //订单号
+        postData.ConditionMatCd = $("#ConditionMatCd").val();           //车身物料号-车型编码
+        postData.StartTimeRecieveTm = $("#StartTimeRecieveTm").val();   //计划接收开始时间
+        postData.EndTimeRecieveTm = $("#EndTimeRecieveTm").val();       //计划接收结束时间
+        postData.ConditionCarType = $("#ConditionCarType").val();       //车型
+        postData.ConditionPlanStatus = $("#ConditionPlanStatus").val(); //计划状态
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/PlanModule/ProducePlan/GetProducePlanListJson")",
+            postData: postData,
+            datatype: "json",
+            height: $(window).height() - 172,
+            autowidth: true,
+            colModel: [
+                { label: '计划过程主键', name: 'PlanProId', index: 'PlanProId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '计划编号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 0, align: 'center', sortable: true },
+                { label: '订单号', name: 'OrderCd', index: 'OrderCd', width: 0, align: 'center', sortable: true },
+                //{ label: '销售订单号', name: 'SaleOrderCd', index: 'SaleOrderCd', width: 0, align: 'center', sortable: true },
+                //{ label: '客户', name: 'Guest', index: 'Guest', width: 0, align: 'center', sortable: true },
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                //{ label: '流水号', name: 'SequenceNo', index: 'SequenceNo', width: 0, align: 'center', sortable: true },
+                //{ label: '车身号', name: 'BodyNo', index: 'BodyNo', width: 0, align: 'center', sortable: true },
+                { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+                { label: '颜色', name: 'CarColor1', index: 'CarColor1', width: 0, align: 'center', sortable: true },
+                { label: '预计生产时间', name: 'PlanTime', index: 'PlanTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }  },
+                //{ label: '获取方式', name: 'PlanType', index: 'PlanType', width: 0, align: 'center', sortable: true, hidden: true},
+                //{
+                //    label: '订单状态', name: 'OrderStatus', index: 'OrderStatus', width: 0, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '0') return "未执行";
+                //        if (cellvalue == '1') return "执行中";
+                //        if (cellvalue == '2') return "已执行";
+                //        if (cellvalue == '3') return "报废";
+                //        else return cellvalue;
+                //    } },
+                {
+                    label: '计划状态', name: 'PlanStatus', index: 'PlanStatus', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '0') return "未上线";
+                        if (cellvalue == '1') return "执行中";
+                        if (cellvalue == '2') return "已上线";
+                        if (cellvalue == '3') return "已完成";
+                        else return cellvalue;
+                    } },
+                //{ label: '计划描述', name: 'PlanDsc', index: 'PlanDsc', width: 0, align: 'center', sortable: true },
+                { label: '接收时间', name: 'RecieveTm', index: 'RecieveTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                //{ label: '是否转档', name: 'IsFile', index: 'IsFile', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                //{ label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            rowNum: 100,
+            pager: "#gridPager",
+            sortname: 'PlanTime',
+            sortorder: 'desc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            multiselect: true,
+            multiboxonly: true,
+        });
+    }
+
+    //搜索
+    function btn_Search() {
+        postData.StartTimePlanTime = $("#StartTimePlanTime").val();     //预计生产开始时间
+        postData.EndTimePlanTime = $("#EndTimePlanTime").val();         //预计生产结束时间
+        postData.ConditionVIN = $("#ConditionVIN").val();               //VIN码
+        postData.ConditionProducePlanCd = $("#ConditionProducePlanCd").val(); //计划编号
+        postData.ConditionOrderCd = $("#ConditionOrderCd").val();       //订单号
+        postData.ConditionMatCd = $("#ConditionMatCd").val();           //车身物料号-车型编码
+        postData.StartTimeRecieveTm = $("#StartTimeRecieveTm").val();   //计划接收开始时间
+        postData.EndTimeRecieveTm = $("#EndTimeRecieveTm").val();       //计划接收结束时间
+        postData.ConditionCarType = $("#ConditionCarType").val();       //车型
+        postData.ConditionPlanStatus = $("#ConditionPlanStatus").val(); //计划状态
+
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/PlanModule/ProducePlan/GetProducePlanListJson")",
+            postData: postData,
+            datatype: 'json'
+        }).trigger('reloadGrid');
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+
+    //根据数据字典显示车型
+    var CarTypeCellItem = "";
+    function CellItem_CarType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                CarTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                CarTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var StartTimePlanTime = $("#StartTimePlanTime").val();     //预计生产开始时间
+        var EndTimePlanTime = $("#EndTimePlanTime").val();         //预计生产结束时间
+        var ConditionVIN = $("#ConditionVIN").val();               //VIN码
+        var ConditionProducePlanCd = $("#ConditionProducePlanCd").val(); //计划编号
+        var ConditionOrderCd = $("#ConditionOrderCd").val();       //订单号
+        var ConditionMatCd = $("#ConditionMatCd").val();           //车身物料号-车型编码
+        var StartTimeRecieveTm = $("#StartTimeRecieveTm").val();   //计划接收开始时间
+        var EndTimeRecieveTm = $("#EndTimeRecieveTm").val();       //计划接收结束时间
+        var ConditionCarType = $("#ConditionCarType").val();       //车型
+        var ConditionPlanStatus = $("#ConditionPlanStatus").val(); //计划状态
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/PlanModule/ProducePlan/GetExcel_Data?StartTimePlanTime=" + escape(StartTimePlanTime) + "&EndTimePlanTime=" + escape(EndTimePlanTime) + "&ConditionVIN=" + escape(ConditionVIN) + "&ConditionProducePlanCd=" + escape(ConditionProducePlanCd) + "&ConditionOrderCd=" + escape(ConditionOrderCd) + "&ConditionMatCd=" + escape(ConditionMatCd)
+                    + "&StartTimeRecieveTm=" + escape(StartTimeRecieveTm) + "&EndTimeRecieveTm=" + escape(EndTimeRecieveTm) + "&ConditionCarType=" + escape(ConditionCarType) + "&ConditionPlanStatus=" + escape(ConditionPlanStatus);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "VIN");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            //delConfig('/PlanModule/ProducePlan/Delete', delparm, KeyValue.split(",").length);
+            var count = KeyValue.split(",").length;
+            if (count == undefined) {
+                count = 1;
+            }
+            confirmDialog("温馨提示", "注：删除后相关采集记录会同步删除！您确定要删除 " + count + " 笔记录？", function (r) {
+                if (r) {
+                    Loading(true, "正在删除数据...");
+                    window.setTimeout(function () {
+                        AjaxJson('/PlanModule/ProducePlan/Delete', delparm, function (data) {
+                            tipDialog(data.Message, 3, data.Code);
+                            if (data.Code > 0) {
+                                windowload();
+                            }
+                        });
+                    }, 200);
+                }
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
+</script>
+<!--工具栏-->
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    <table border="0" class="form-find" style="height: 45px;">
+        @*搜索栏第一行*@
+        <tr>
+            @*<td>
+            搜索条件：
+        </td>
+        <td>
+            <select id="Condition" onchange="Show()" class="txt" style="height: 28px;width: 150px">
+                <option value="PlanTime">预计生产时间</option>
+                <option value="ProducePlanCd">计划编号</option>
+                <option value="OrderCd">订单号</option>
+                    <option value="SaleOrderCd">销售订单号</option>
+                <option value="VIN">VIN码</option>
+                    <option value="SequenceNo">流水号</option>
+                    <option value="BodyNo">车身号</option>
+                <option value="MatCd">车身物料号</option>
+                <option value="CarType">车型</option>
+                    <option value="CarColor1">颜色</option>
+                <option value="OrderStatus">订单状态</option>
+                <option value="RecieveTm">计划接收时间</option>
+                    <option value="RecieveSeq">接收组序号</option>
+                    <option value="Seq">排序号</option>
+            </select>
+        </td>*@
+
+            <th>预计生产时间：</th>
+            <td id="STime_s">开始：</td>
+            <td>
+                <input id="StartTimePlanTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(-7)" style="width: 120px" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'EndTimePlanTime\')}'}); blur();" readonly/>
+            </td>
+            <td id="ETime_s">结束：</td>
+            <td>
+                <input id="EndTimePlanTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(+0)" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTimePlanTime\')}'}); blur();" readonly/>
+            </td>
+
+            <th>VIN码：</th>
+            <td>
+                <input id="ConditionVIN" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>计划编号：</th>
+            <td>
+                <input id="ConditionProducePlanCd" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>订单号：</th>
+            <td>
+                <input id="ConditionOrderCd" type="text" class="txt" style="width: 120px" />
+            </td>
+
+            <th>&nbsp; &nbsp; &nbsp; 车型编码：</th>
+            <td>
+                <input id="ConditionMatCd" type="text" class="txt" style="width: 120px" />
+            </td>
+
+
+        </tr>
+
+        @*搜索栏第二行*@
+        <tr>
+            @*<th>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>*@
+
+            <th>计划接收时间：</th>
+            <td id="STime_s2">开始：</td>
+            <td>
+                <input id="StartTimeRecieveTm" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(-7)" style="width: 120px" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'EndTimeRecieveTm\')}'}); blur();" readonly/>
+            </td>
+            <td id="ETime_s2">结束：</td>
+            <td>
+                <input id="EndTimeRecieveTm" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(+0)" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTimeRecieveTm\')}'}); blur();" readonly/>
+            </td>
+
+            <th>车型：</th>
+            <td>
+                <select id="ConditionCarType" class="txt" style="height: 28px;width: 150px"></select>
+            </td>
+
+            <th>计划状态：</th>
+            <td>
+                <select id="ConditionPlanStatus" class="txt" style="height: 28px;width: 150px">
+                    <option value="">==全部==</option>
+                    <option value="0">未上线</option>
+                    <option value="1">执行中</option>
+                    <option value="2">已上线</option>
+                    <option value="3">已完成</option>
+                </select>
+            </td>
+
+
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

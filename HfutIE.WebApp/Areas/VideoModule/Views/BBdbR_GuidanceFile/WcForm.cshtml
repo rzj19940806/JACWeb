@@ -1,0 +1,141 @@
+@{
+    ViewBag.Title = "班制班次配置";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetGrid_up();
+        GetGrid_down();
+        BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
+    })
+    var wcId = GetQuery('wcId').substring(1);//工位
+    function GetGrid() {
+        let condition = {
+            ParamName: "",
+            Operation: "Equal",
+            ParamValue: areaId
+        }
+        var conditions = new Array();
+        conditions.push(condition);
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/VideoModule/BBdbR_GuidanceFile/GridPageJsonNew")?ParameterJson=" + JSON.stringify(conditions),
+            datatype: "json",
+            height: $(window).height() - 149,
+            autowidth: true,
+            colModel: [
+                { label: '指导文件主键', name: 'GuidanceFileID', index: 'GuidanceFileID', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '产线ID', name: 'PlineId', index: 'PlineId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '工位ID', name: 'WcId', index: 'WcId', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '名称', name: 'WcNm', index: 'WcNm', width: 100, align: 'center', sortable: true },
+                { label: '指导文件编号', name: 'GuidanceFileCode', index: 'GuidanceFileCode', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '指导文件名称', name: 'GuidanceFileName', index: 'GuidanceFileName', width: 0, align: 'center', sortable: true },
+                { label: '指导文件类型', name: 'GuidanceFileType', index: 'GuidanceFileType', width: 75, align: 'center', sortable: true },
+                { label: '指导文件路径', name: 'GuidanceFilePath', index: 'GuidanceFilePath', width: 350, align: 'center', sortable: true },
+                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager",
+            sortname: 'GuidanceFileCode',
+            sortorder: 'desc',
+            rownumbers: true,
+            shrinkToFit: true,
+            //multiselect: true,
+            //multiboxonly: true,
+            gridview: true,
+        });
+    }
+        
+    //刷新
+    function windowload() {
+        $("#gridTable_up").trigger("reloadGrid"); //重新载入
+        $("#gridTable_down").trigger("reloadGrid"); //重新载入
+    }
+
+    //确认配置检查项目
+    function btn_accept() {     
+        var ids = $("#gridTable_down").jqGrid("getRowData"); //获取gridSelectTable表中多行数据
+        AjaxJson('/BaseModule/BFacR_ClassBase/SubmitStaffConfig?', { listdto: ids, ClassId: KeyValue }, function (data) {
+            var t = data;
+            if (t.Code == "1")//提交成功
+            {
+                alertDialog("提交成功！")
+                $("#gridTable_down").trigger('reloadGrid');
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            }
+            else {
+                alertDialog("提交失败！", '-1');
+                closeDialog();
+            }
+        });
+    }
+</script>
+
+<div id="message" style="display: none; padding: 1px; padding-bottom: 0px;"></div>
+<div class="bd" style="border-bottom: none; margin: 1px;">
+    <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+        <div class="tab_list_top" style="position: absolute">
+            <div id="Tabbasic" class="tab_list bd actived" onclick="Tabchange('Staff')">配置班次信息</div>
+        </div>
+    </div>
+</div>
+<div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+    <!---->
+    <div id="Staff" class="tabPanel">
+        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+            <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px">
+                @*<div class="note-prompt" style="margin: 1px;">
+                    温馨提示：
+                </div>*@
+                <div style="background-color:gainsboro ;color:#27a4aB;font-size:medium;width:100%;font-weight: bold">
+                    &nbsp操作按钮<span class="ModuleName"></span>
+                </div>
+                <div class="tools_bar leftline rightline" style="margin-bottom: 0px; margin: 1px;">
+                    <div class="PartialButton">
+                        <a id="lr-replace" ids="lr-replace" title="刷新当前" onclick="Replace()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b>
+                            </span>
+                        </a>
+                        <div class="tools_separator"></div>
+                        <a id="lr-download" ids="lr-download" title="下载文件" onclick="btn_download()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/download.png') 50% 4px no-repeat;">下载</b>
+                            </span>
+                        </a>
+                        <a id="lr-preview" ids="lr-preview" title="预览视频文件" onclick="btn_preview()" class="tools_btn">
+                            <span>
+                                <b style="background: url('../../Content/Images/Icon16/preview_results.png') 50% 4px no-repeat;">预览</b>
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="layout">
+
+            <div>
+                <div class="btnbartitle">
+                    <div>
+                        文件信息
+                    </div>
+                </div>
+                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                    <table id="gridTable_up"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

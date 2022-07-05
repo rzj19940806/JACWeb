@@ -74,5 +74,9 @@ namespace HfutIE.Utilities
         /// 是否系统账户；拥有所以权限
         /// </summary>
         public bool IsSystem { get; set; }
+        /// <summary>
+        /// 密码策略等级——2021.12.20新增
+        /// </summary>
+        public string PwdRank { get; set; }
     }
 }

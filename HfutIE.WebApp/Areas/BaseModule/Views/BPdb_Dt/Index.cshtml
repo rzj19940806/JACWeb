@@ -5,16 +5,17 @@
 <script type="text/javascript">
     $(function () {
         //CellItem_ClassType('ClassType');//需在GetGrid()之前进行初始化赋值
-        GetGrid();
+        //BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
         GetTree();
-        Show();
-        BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
+        GetGrid();
+        
     })
 
     var area_key, area_name = "";
     var selectnodeishaschild = "";//选中树节点是否有子节点
     var parentId = "";//父节点编号
     var ClassTypeCellItem = "";
+    let Type = '';
 
     //加载左边树
     function GetTree() {
@@ -24,8 +25,12 @@
                 area_key = item.id;            //ID(年+月)
                 area_name = item.text;         //名称(月)
                 parentId = item.parentnodes;   //父节点编号(年)
+                Type = item.Type;
+                var RsvFld1 = $("#RsvFld1").val();
+                var RsvFld2 = $("#RsvFld2").val();
+                var DtTyp = $("#DtTyp").val();
                 //2.点击树展示表格
-                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BPdb_Dt/GridListJson")?areaId=" + area_name + "&parentId=" + parentId, datatype: 'json'}).trigger('reloadGrid');
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BPdb_Dt/GridListJson")?areaId=" + area_name + "&parentId=" + parentId + "&RsvFld1=" + RsvFld1 + "&RsvFld2=" + RsvFld2 + "&DtTyp=" + DtTyp, datatype: 'json'}).trigger('reloadGrid');
     },
     url: "@Url.Content("~/BaseModule/BPdb_Dt/TreeJson")"    //1.获取树
     };
@@ -34,66 +39,75 @@
     //加载表格
     function GetGrid() {
         $("#gridTable").jqGrid({
-        url: "@Url.Content("~/BaseModule/BPdb_Dt/GridPageJson1")",
+        url: "@Url.Content("~/BaseModule/BPdb_Dt/GridListJson")",
         datatype: "json",
-        height: $(window).height() - 149,
+            height: $(window).height() - 149,
         autowidth: true,
         colModel: [
                 { label: '主键', name: 'DtId', index: 'DtId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '机构id', name: 'OrgId', index: 'OrgId', width: 150, align: 'center', sortable: true, hidden: true },
-                { label: '班制id', name: 'ClassId', index: 'ClassId', width: 150, align: 'center', sortable: true, hidden: true },
+                { label: '机构id', name: 'OrgId', index: 'OrgId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '班制id', name: 'ClassId', index: 'ClassId', width: 0, align: 'center', sortable: true, hidden: true },
                 {
-                    label: '机构级别', name: 'OrgRank', index: 'OrgRank', width: 200, align: 'center', sortable: true,
+                    label: '机构级别', name: 'OrgRank', index: 'OrgRank', width: 75, align: 'center', sortable: true,
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == '1') return "车间";
                         if (cellvalue == '2') return "产线";
                     }
                 },
-                { label: '机构名称', name: 'RsvFld1', index: 'RsvFld1', width: 150, align: 'center', sortable: true },
+            { label: '机构名称', name: 'RsvFld1', index: 'RsvFld1', width: 75, align: 'center', sortable: true },
                 {
-                    label: '班制名称', name: 'RsvFld2', index: 'RsvFld2', width: 150, align: 'center', sortable: true,
+                    label: '班制名称', name: 'RsvFld2', index: 'RsvFld2', width: 100, align: 'center', sortable: true,
                 },
                 {
-                    label: '日期', name: 'Tm', index: 'Tm', width: 250, align: 'center', sortable: true, 
+                    label: '日期', name: 'Tm', index: 'Tm', width: 100, align: 'center', sortable: true, 
                     formatter: function (cellvalue, options, rowObject) {
                         return formatDate(cellvalue, 'yyyy-MM-dd');
                     }
-                },
+            },
+            { label: '工作时间(h)', name: 'WorkTime', index: 'WorkTime', width: 75, align: 'center', sortable: true },
+            { label: '早上开始', name: 'MorningStrTm', index: 'MorningStrTm', width: 75, align: 'center', sortable: true },
+            { label: '早上结束', name: 'MorningEndTm', index: 'MorningEndTm', width: 75, align: 'center', sortable: true },
+            { label: '下午开始', name: 'AfternoonStrTm', index: 'AfternoonStrTm', width: 75, align: 'center', sortable: true },
+            { label: '下午结束', name: 'AfternoonEndTm', index: 'AfternoonEndTm', width: 75, align: 'center', sortable: true },
+            { label: '晚上开始', name: 'NightStrTm', index: 'NightStrTm', width: 75, align: 'center', sortable: true },
+            { label: '晚上结束', name: 'NightEndTm', index: 'NightEndTm', width: 75, align: 'center', sortable: true },
                 {
-                    label: '日期类型', name: 'DtTyp', index: 'DtTyp', width: 150, align: 'center', sortable: true,
+                    label: '日期类型', name: 'DtTyp', index: 'DtTyp', width: 75, align: 'center', sortable: true,
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == '1') return "工作";
                         if (cellvalue == '0') return "休息";
                     }
                 },
 
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 200, align: 'center', sortable: true,
+            {
+                label: '有效性', name: 'Enabled', index: 'Enabled', width: 50, align: 'center', sortable: true, hidden: true,
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
                         if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
                     }
                 },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'left', sortable: true, hidden: true },
-                { label: '备注', name: 'Rem', index: 'Rem', width: 280, align: 'center', sortable: true },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 100, align: 'center', sortable: true, hidden: true },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 100, align: 'center', sortable: true },
+            { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 150, align: 'center', sortable: true },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 100, align: 'center', sortable: true },
+            { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 150, align: 'center', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'center', sortable: true },
         ],
-        viewrecords: true,//显示总的记录条数
-        rowNum: 50,
-        rowList: [50, 100, 500, 1000],
-        pager: "#gridPager",
-        sortname: '',
-        sortorder: 'desc',
-        rownumbers: true,
-        multiselect: true,
-        multiboxonly: true,
-        shrinkToFit: true,
-        gridview: true,
-        loadonce: true,
+            rowNum: 50,
+            rowList: [50, 100, 500, 1000],
+            pager: "#gridPager",
+            sortname: 'Tm',
+            sortorder: 'desc',
+            multiselect: true,
+            multiboxonly: true,
+            shrinkToFit: false,
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
     });
     }
 
@@ -142,41 +156,42 @@
         }
     }
 
-    //加载搜索框
-    function Show() {
-        var Condition = $("#Condition").val();
-        if (Condition == "all") {
-            $("#DtTyp").hide();
-            $("#keywords").hide();
+   
+
+
+    //导出
+    function btn_derive() {
+        count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
         }
-        else if (Condition == "DtTyp") {
-            $("#DtTyp").show();
-            $("#keywords").hide();
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
         }
         else {
-            $("#DtTyp").hide();
-            $("#keywords").show();
+            SetDeriveExcel("#gridTable", "工厂日历信息" + formatDate(CurrentTime(), 'yyyyMMdd'));
+            openDialog("/CommonModule/BPdb_Dt/DeriveDialog", "DeriveDialog", "工厂日历信息导出", 600, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
         }
     }
 
+    // 导入
+    function btn_import() {   
+            openDialog("/BaseModule/BPdb_Dt/ExcelImportDialog?area_key=" + area_key, "ExcelImportDialog", "工厂日历信息导入", 750, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
     //搜索
     function btn_Search() {
-        var Condition = $("#Condition").val();
-        if (Condition == "DtTyp") { //日期类型
-            var keywords = $("#DtTyp").val();
-        }
-        else {
-            var keywords = $("#keywords").val();
-            if (Condition == 'RsvFld1' && keywords == '') {
-                tipDialog("请输入机构名称！", 1.5, 0);
-                return;
-            } else if (Condition == 'RsvFld2' && keywords == '') {
-                tipDialog("请输入班制名称！", 1.5, 0);
-                return;
-            }
-        }
+        var RsvFld1 = $("#RsvFld1").val();
+        var RsvFld2 = $("#RsvFld2").val();
+        var DtTyp = $("#DtTyp").val();
+        
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BPdb_Dt/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BPdb_Dt/GridPageByCondition")?areaId=" + area_name + "&parentId=" + parentId + "&RsvFld1=" + RsvFld1 + "&RsvFld2=" + RsvFld2 + "&DtTyp=" + DtTyp, page: 1, datatype: 'json'
     }).trigger('reloadGrid');
     }
     $(document).keypress(function (e) {
@@ -185,6 +200,26 @@
             btn_Search();
         }
     });
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var RsvFld1 = $("#RsvFld1").val();
+        var RsvFld2 = $("#RsvFld2").val();
+        var DtTyp = $("#DtTyp").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BPdb_Dt/GetExcel_Data?areaId=" + area_name + "&parentId=" + parentId + "&RsvFld1=" + RsvFld1 + "&RsvFld2=" + RsvFld2 + "&DtTyp=" + DtTyp;
+                Loading(false);
+            }, 200);
+        }
+    }
 
     //根据数据字典显示内容
     function CellItem(Code, cellvalue) {
@@ -238,20 +273,20 @@
         @*搜索框区域*@
         <table border="0" class="form-find" style="height: 45px;">
             <tr>
-                <th>关键字：</th>
+                <th>机构名称：</th>
                 <td>
-                    <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
-                        <option value="all">==全部==</option>
-                        <option value="RsvFld1">机构名称</option>
-                        <option value="RsvFld2">班制名称</option>
-                        <option value="DtTyp">日期类型</option>
-                    </select>
+                    <input id="RsvFld1" type="text" class="txt" style="width: 120px" />
                 </td>
+
+                <th>班制名称：</th>
                 <td>
-                    <input id="keywords" type="text" class="txt" style="width: 200px" />
+                    <input id="RsvFld2" type="text" class="txt" style="width: 120px" />
                 </td>
+
+                <th>日期类型：</th>
                 <td>
                     <select id="DtTyp" style="width: 150px;height:25px">
+                        <option value="">全部</option>
                         <option value="1">工作</option>
                         <option value="0">休息</option>
                     </select>
@@ -259,13 +294,13 @@
                 <td>
                     <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
                 </td>
-               
+
             </tr>
         </table>
         @*</div>*@
         @*表格区域*@
         <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-            <table id="gridTable"></table>
+            <table id="gridTable" style="width:1500px"></table>
             <div id="gridPager"></div>
         </div>
     </div>

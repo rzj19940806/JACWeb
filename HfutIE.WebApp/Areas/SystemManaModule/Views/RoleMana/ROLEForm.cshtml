@@ -19,12 +19,13 @@
     function InitControl() {       
         if (!!GetQuery('RoleId')) {
             AjaxJson("/SystemManaModule/RoleMana/SetRoleForm", { RoleId: GetQuery('RoleId') }, function (data) {
-                $("#RoleCd").val(data.rows[0]["rolecd"]);
-                $("#RoleNm").val(data.rows[0]["rolenm"]);
-                $("#RoleCatg").val(data.rows[0]["rolecatg"]);
-                $("#RoleTyp").val(data.rows[0]["roletyp"]);
-                $("#SortCode").val(data.rows[0]["sortcode"]);
-                $("#Enabled").val(data.rows[0]["enabled"]);
+                SetWebControls(data);
+                //$("#RoleCd").val(data.rows[0]["rolecd"]);
+                //$("#RoleNm").val(data.rows[0]["rolenm"]);
+                //$("#RoleCatg").val(data.rows[0]["rolecatg"]);
+                //$("#RoleTyp").val(data.rows[0]["roletyp"]);
+                //$("#SortCode").val(data.rows[0]["sortcode"]);
+                //$("#Enabled").val(data.rows[0]["enabled"]);
             });
         } 
     }
@@ -62,7 +63,8 @@
                 角色编码：
             </th>
             <td class="formValue">
-                <input id="RoleCd" type="text" class="txt required" datacol="yes" err="角色编号" checkexpession="NotNull" />
+                @*<input id="RoleCd" type="text" class="txt required" datacol="yes" err="角色编号" checkexpession="NotNull" />*@
+                <input id="RoleCd" onblur="FieldExist(this.id,'Base_Roles','RoleId','角色编码')" type="text" class="txt required" datacol="yes" err="工号" checkexpession="NotNull" />
             </td>
         </tr>
         <tr>
@@ -70,7 +72,7 @@
                 角色名称：
             </th>
             <td class="formValue">
-                <input id="RoleNm" type="text" class="txt required" datacol="yes" err="部门名称" checkexpession="NotNull" />
+                <input id="RoleNm" type="text" class="txt required" datacol="yes" err="角色名称" checkexpession="NotNull" />
             </td>
         </tr>
         <tr>
@@ -85,16 +87,16 @@
                 角色类型：
             </th>
             <td class="formValue">
-                <input id="RoleTyp" type="text" class="txt" datacol="yes" err="部门名称"  />
+                <input id="RoleTyp" type="text" class="txt" datacol="yes" err="角色类型"  />
             </td>
         </tr>
-        <tr>
+        @*<tr>
             <th class="formTitle">显示顺序：</th>
             <td class="formValue">
                 <input id="SortCode" type="text" onkeyup="IsNumber(this.id)" class="txt required" datacol="yes" err="显示顺序" checkexpession="Num" />
             </td>
-        </tr>
-        <tr>
+        </tr>*@
+        @*<tr>
             <th class="formTitle">选项：</th>
             <td class="formValue">
                 <span class="item">
@@ -102,6 +104,6 @@
                     <label for="Enabled">有效</label>
                 </span>
             </td>
-        </tr>
+        </tr>*@
     </table>
 </form>

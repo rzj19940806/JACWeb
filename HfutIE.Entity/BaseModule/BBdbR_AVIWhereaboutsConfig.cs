@@ -37,37 +37,55 @@ namespace HfutIE.Entity
         [DisplayName("AVI主键")]
         public string AviId { get; set; }
         /// <summary>
-        /// 去向AVI站点主键
+        /// 去向产线主键
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("AVI站点顺序")]
+        public int AVISequence { get; set; }
+        /// <summary>
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
         [DisplayName("去向AVI站点主键")]
         public string ToAVIId { get; set; }
         /// <summary>
-        /// 去向AVI站点编号
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
-        [DisplayName("去向AVI站点编号")]
+        [DisplayName("AVI站点编号")]
         public string ToAVICd { get; set; }
         /// <summary>
-        /// 去向AVI站点名称
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
-        [DisplayName("去向AVI站点名称")]
+        [DisplayName("AVI站点名称")]
         public string ToAVINm { get; set; }
         /// <summary>
-        /// AVI站点是否独立
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
         [DisplayName("AVI站点是否独立")]
-        public int? IsIndependence { get; set; }
+        public int IsIndependence { get; set; }
         /// <summary>
-        /// 去向AVI站点顺序
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
         [DisplayName("去向AVI站点顺序")]
-        public int? ToAVISequence { get; set; }
+        public int ToAVISequence { get; set; }
         /// <summary>
-        /// 去向产线主键
+        /// 去向产线标识
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("去向产线编号")]
+        public string ToPlineCd { get; set; }
+        /// <summary>
+        /// 去向产线标识
+        /// </summary>
+        /// <returns></returns>
+        [DisplayName("去向产线名称")]
+        public string ToPlineNm { get; set; }
+        /// <summary>
+        /// 去向产线标识
         /// </summary>
         /// <returns></returns>
         [DisplayName("去向产线主键")]

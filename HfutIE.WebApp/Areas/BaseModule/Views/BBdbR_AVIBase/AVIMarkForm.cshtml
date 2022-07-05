@@ -25,6 +25,7 @@
             AjaxJson("/BaseModule/BBdbR_AVIBase/GetAviNm2?ToAVIId=" + ToAVIId, {}, function (data) {
                 $("#ToAVINm").val(data.rows[0]["AviNm"]);
                 $("#ToAVICd").val(data.rows[0]["AviCd"]);
+                $("#ToAVISequence").val(data.rows[0]["AVISequence"]);
             });
         }
     }
@@ -64,7 +65,7 @@
                 <input id="RsvFld1" maxlength=50 type="text" class="txt required" datacol="yes" err="AVI站点名称" checkexpession="NotNull" checkdata="hasOne" readonly />
             </td>
         </tr>
-        <tr>
+        <tr style="display:none">
             <th class='formTitle'>是否独立：</th>
             <td class='formValue'>
                 <select id="IsIndependence" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否独立" onclick="">
@@ -76,7 +77,7 @@
         <tr style="display:none">
             <th class='formTitle'>去向产线主键：</th>
             <td class='formValue'>
-                <input id="PlineId" maxlength=50 type="text" class="txt required" datacol="yes" err="去向产线主键" checkexpession="NotNull" checkdata="hasOne" />
+                <input id="PlineId" maxlength=50 type="text" class="txt"/>
             </td>
         </tr>
         <tr>
@@ -111,13 +112,13 @@
                 <input id="ToAVINm" maxlength=50 type="text" class="txt" readonly />
             </td>
         </tr>
-        <tr >
-            <th class='formTitle'>AVI站点顺序：</th>
+        <tr style="display:none">
+            <th class='formTitle'>去向AVI站点顺序：</th>
             <td class='formValue'>
-                <input id="ToAVISequence" maxlength=300 type="text" class="txt" />
+                <input id="ToAVISequence" maxlength=50 type="text" class="txt" readonly />
             </td>
         </tr>
-        <tr>
+        <tr style="display:none">
             <th class='formTitle' style="height:30px">有效性：</th>
             <td class='formValue'>
                 <select id="Enabled" maxlength=300 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="有效性" readonly>

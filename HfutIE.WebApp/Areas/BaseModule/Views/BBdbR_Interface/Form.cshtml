@@ -1,0 +1,130 @@
+@{
+    ViewBag.Title = "接口基础信息表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        //Show();
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/BaseModule/BBdbR_Interface/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                //document.getElementById("CodeValue").readOnly = false;
+            });
+        }
+    }
+    //根据检查项类型加载表单
+    //function Show() {
+    //    var Condition = $("#ExecutionMode").val();
+    //    if (Condition == "实时") {
+    //        $("#execTime").hide();
+    //        $("#execSpan").hide();
+    //    }
+    //    else if (Condition == "定时") {
+    //        $("#execTime").show();
+    //        $("#execSpan").hide();
+    //    } else if (Condition == "间隔") {
+    //        $("#execTime").hide();
+    //        $("#execSpan").show();
+    //    }
+
+    //}
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        //var ChangeValue = $("#ChangeValue").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/BaseModule/BBdbR_Interface/SubmitForm1?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            top.frames[tabiframeId()].btn_stopInterface(KeyValue);
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>接口编号：</th>
+            <td class='formValue'>
+                <input id="InterfaceCd" maxlength=50 type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接口名称：</th>
+            <td class='formValue'>
+                <input id="InterfaceNm" maxlength=50 type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>发送方：</th>
+            <td class='formValue'>
+                <input id="Sender" maxlength=16 type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>接收方：</th>
+            <td class='formValue'>
+                <input id="Receiver" maxlength=16 type="text" class="txt" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>执行状态：</th>
+            <td class='formValue'>
+                <select id="Status" class="txt required" datacol="yes" err="执行方式" checkexpession="NotNull" onchange="Show()">
+                    <option value="true">启动</option>
+                    <option value="false">停止</option>
+                </select>
+            </td>
+        </tr>
+        @*<tr>
+            <th class='formTitle'>执行方式：</th>
+            <td class='formValue'>
+                <select id="ExecutionMode" class="txt required" datacol="yes" err="执行方式" checkexpession="NotNull" onchange="Show()">
+                    <option value="实时">实时</option>
+                    <option value="定时">定时</option>
+                    <option value="间隔">间隔</option>
+                </select>
+            </td>
+        </tr>*@
+        @*<tr id="execTime">
+            <th class='formTitle' id=" ">执行时间：</th>
+            <td class='formValue'>
+                <input id="ExecutionTime" maxlength=16 type="text" class="txt" />
+            </td>
+        </tr>*@
+        <tr id="execSpan">
+            <th class='formTitle'>执行间隔(分钟)：</th>
+            <td class='formValue'>
+                <input id="InterfaceTime" maxlength=16 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr id="execSpan">
+            <th class='formTitle'>下次执行时间：</th>
+            <td class='formValue'>
+                <input id="NextTime" maxlength=16 type="text" style="border:1px solid #ccc" class="txt Wdate " onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd  HH:mm:ss' })" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>SQL语句：</th>
+            <td class='formValue'>
+                <input id="Sql" maxlength=150 type="text" class="txt" />
+            </td>
+        </tr>
+        
+        <tr style=" height:40px">
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>

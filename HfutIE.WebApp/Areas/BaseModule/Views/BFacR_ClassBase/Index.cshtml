@@ -16,6 +16,7 @@
         GetGrid1();
         BindDropItem("#ClassTyp", "ClassTyp", "==全部==");
         BindDropItem("#TeamTyp", "TeamTyp", "==全部==");
+        Show();
     })
 
     var subgrid_table_id = "";//子表名
@@ -25,7 +26,7 @@
         $("#gridTable").jqGrid({
         url: "@Url.Content("~/BaseModule/BFacR_ClassBase/GridPageJson")",
         datatype: "json",
-        height: 288,
+        height: ($(window).height() - 270)*0.5,
         autowidth: true,
         colModel: [
                 { label: '班制主键', name: 'ClassId', index: 'ClassId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -36,16 +37,16 @@
                     formatter: function (cellvalue, options, rowObject) {
                         return CellItem('ClassTyp', cellvalue);
                 }},
-                { label: '班制开始时间', name: 'StartTm', index: 'StartTm', width: 0, align: 'center',sortable: true  },
+                {label: '班制开始时间', name: 'StartTm', index: 'StartTm', width: 0, align: 'center', sortable: true,},
                 { label: '班制总时长', name: 'TmSpan', index: 'TmSpan', width: 0, align: 'center',sortable: true  },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                   label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                   formatter: function (cellvalue, options, rowObject) {
-                       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                       else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                       }
-                 },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //   label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                //   formatter: function (cellvalue, options, rowObject) {
+                //       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                //       else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                //       }
+                // },
                 { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
@@ -57,8 +58,8 @@
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
             ],
             pager: "#gridPager",
-            sortname: 'ClassCd',
-            sortorder: 'asc',
+            sortname: 'CreTm',
+            sortorder: 'desc',
             rowNum: 30,
             rowList: [30, 50, 100, 500, 1000],
             shrinkToFit: true,
@@ -89,14 +90,14 @@
                         },
                         { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true },
                         { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true },
-                        { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                        {
-                            label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                            formatter: function (cellvalue, options, rowObject) {
-                                if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                                else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                            }
-                        }
+                        //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                        //{
+                        //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                        //    formatter: function (cellvalue, options, rowObject) {
+                        //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                        //        else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        //    }
+                        //}
                     ],
                     forceFit: true,//表格大小固定在容器区域内
                     scrollofset: true,//取消滚动条留白区域
@@ -122,7 +123,7 @@
     function GetGrid1() {
         $("#gridTable_Bottom").jqGrid({
         datatype: "json",
-        height: 280,
+        height: ($(window).height() - 270) * 0.5,
         autowidth: true,
         colModel: [
             { label: '班组主键', name: 'TeamId', index: 'TeamId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -135,14 +136,14 @@
                 }
             },
             { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-            {
-                label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                    else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                }
-            },
+            //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+            //{
+            //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+            //    formatter: function (cellvalue, options, rowObject) {
+            //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+            //        else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+            //    }
+            //},
             { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
             { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
             { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
@@ -154,11 +155,14 @@
             { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
          ],
          pager: "#gridPager_Bottom",
-         sortname: '',
-         sortorder: 'desc',
+         sortname: 'TeamCd',
+         sortorder: 'asc',
          rownumbers: true,
          shrinkToFit: false,
          gridview: true,
+         loadonce: true,
+         rowNum: 30,
+         rowList: [10, 50, 100, 500, 1000],
     });
 }
       //刷新
@@ -304,37 +308,29 @@
     </table>
     @*表格区域*@
     @*<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-        <table id="gridTable"></table>
-        <div id="gridPager"></div>
-    </div>*@
-    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    班制清单 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                </div>
-            </div>
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>*@
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            班制清单 <span class="ModuleName"></span>
         </div>
     </div>
-    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px;">
-                   班制配置信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 40%; width:auto;">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager_Bottom"></div>
-                </div>
-            </div>
+    <div style="height: 49% ;width:auto; ">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px;">
+            班次配置信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <div style="height: 40%; width:auto;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager_Bottom"></div>
         </div>
     </div>
 </div>

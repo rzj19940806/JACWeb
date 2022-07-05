@@ -50,32 +50,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Andon\BPIE_SLDoc.cs" />
+    <Compile Include="Andon\BBdbR_DataAcqPro.cs" />
+    <Compile Include="BaseModule\AUEX_NEW_FUELOIL_ID.cs" />
     <Compile Include="BaseModule\BBdbR_AlarmAddressBase.cs" />
-    <Compile Include="BaseModule\BBdbR_CarStrandedBase.cs" />
-    <Compile Include="BaseModule\BBdbR_CntlAddrConf.cs" />
-    <Compile Include="BaseModule\BBdbR_AVIBase.cs" />
     <Compile Include="BaseModule\BBdbR_AVIActionConfig.cs" />
+    <Compile Include="BaseModule\BBdbR_AVIBase.cs" />
+    <Compile Include="BaseModule\BBdbR_AviGroupBase.cs" />
     <Compile Include="BaseModule\BBdbR_AVIGroupConfig.cs" />
     <Compile Include="BaseModule\BBdbR_AVIWhereaboutsConfig.cs" />
-    <Compile Include="BaseModule\BBdbR_CarPartBase.cs" />
+    <Compile Include="BaseModule\BBdbR_BarCodeBase.cs" />
     <Compile Include="BaseModule\BBdbR_CarPartQuaCheckItemConfig.cs" />
     <Compile Include="BaseModule\BBdbR_CarSchedulRuleConfig.cs" />
+    <Compile Include="BaseModule\BBdbR_CarStrandedBase.cs" />
+    <Compile Include="BaseModule\BBdbR_CntlAddrConf.cs" />
     <Compile Include="BaseModule\BBdbR_CompanyBase.cs" />
-    <Compile Include="BaseModule\BBdbR_DefectCatgBase.cs" />
-    <Compile Include="BaseModule\BBdbR_DefectCatgDeTail.cs" />
+    <Compile Include="BaseModule\BBdbR_DecodeRule.cs" />
     <Compile Include="BaseModule\BBdbR_DepartmentBase.cs" />
     <Compile Include="BaseModule\BBdbR_DvcBase.cs" />
     <Compile Include="BaseModule\BBdbR_FacBase.cs" />
     <Compile Include="BaseModule\BBdbR_FaultBase.cs" />
+    <Compile Include="BaseModule\BBdbR_FunctionBase.cs" />
     <Compile Include="BaseModule\BBdbR_GetItemBase.cs" />
+    <Compile Include="BaseModule\BBdbR_Interface.cs" />
     <Compile Include="BaseModule\BBdbR_MatBase.cs" />
     <Compile Include="BaseModule\BBdbR_MatFileConfig.cs" />
+    <Compile Include="BaseModule\BBDBR_MatJZConfig.cs" />
+    <Compile Include="BaseModule\BBdbR_PartMatConfig.cs" />
     <Compile Include="BaseModule\BBdbR_PlineBase.cs" />
+    <Compile Include="BaseModule\BBdbR_PointFunctionConfigBase.cs" />
     <Compile Include="BaseModule\BBdbR_PostBase.cs" />
+    <Compile Include="BaseModule\BBdbR_Print.cs" />
+    <Compile Include="BaseModule\BBdbR_PrintConfig.cs" />
+    <Compile Include="BaseModule\BBdbR_ProductBase.cs" />
+    <Compile Include="BaseModule\BBdbR_ProductWcConfig.cs" />
+    <Compile Include="BaseModule\BBdbR_ProductWcMatConfig.cs" />
     <Compile Include="BaseModule\BBdbR_PushRule.cs" />
-    <Compile Include="BaseModule\BBdbR_QuaCheckItemBase.cs" />
-    <Compile Include="BaseModule\BBdbR_QuaCheckModelCarConfig.cs" />
-    <Compile Include="BaseModule\BBdbR_QuaCheckModelCarPartConfig.cs" />
     <Compile Include="BaseModule\BBdbR_QualityCheckModelBase.cs" />
     <Compile Include="BaseModule\BBdbR_QualityCheckPointBase.cs" />
     <Compile Include="BaseModule\BBdbR_SchedulRuleBase.cs" />
@@ -88,15 +98,44 @@
     <Compile Include="BaseModule\BFacR_ClassConfig.cs" />
     <Compile Include="BaseModule\BFacR_ClassTeamConfig.cs" />
     <Compile Include="BaseModule\BFacR_ShiftBase.cs" />
+    <Compile Include="BaseModule\BFacR_ShiftTimeConfig.cs" />
     <Compile Include="BaseModule\BFacR_TeamBase.cs" />
     <Compile Include="BaseModule\BFacR_TeamOrg.cs" />
     <Compile Include="BaseModule\BFacR_TeamStfConfig.cs" />
     <Compile Include="BaseModule\BPdb_Dt.cs" />
+    <Compile Include="BaseModule\BBdbR_QualityCheckPointCarComponentConfig.cs" />
     <Compile Include="BaseModule\ClassConfigView.cs" />
     <Compile Include="BaseModule\DepartmentStaffConfigView.cs" />
-    <Compile Include="EquipmentManaModule\E_EquipmentMaiPlan_Pro.cs" />
+    <Compile Include="BaseModule\E_PressureRecordInfo.cs" />
+    <Compile Include="BaseModule\MBB_BD_PRODU.cs" />
+    <Compile Include="BaseModule\P_PlanFeedBack_Pro.cs" />
+    <Compile Include="BaseModule\P_ProductionLog.cs" />
     <Compile Include="BaseModule\TeamPlineConfigView.cs" />
     <Compile Include="BaseModule\TeamStaffConfigView.cs" />
+    <Compile Include="Car\P_CarPastInfo_Pro.cs" />
+    <Compile Include="Car\P_CarPastRecordInfo.cs" />
+    <Compile Include="CommonClass\ExtensionClass.cs" />
+    <Compile Include="EquipmentManaModule\E_EOLCheckResult.cs" />
+    <Compile Include="EquipmentManaModule\E_EOLDetailResult.cs" />
+    <Compile Include="EquipmentManaModule\E_EquipmentMaiPlan_Pro.cs" />
+    <Compile Include="GuidanceFile\BBdbR_GuidanceFile.cs" />
+    <Compile Include="OT\Q_KeyByPass_Pro.cs" />
+    <Compile Include="OT\Q_KeyPartsBind_Pro.cs" />
+    <Compile Include="Plan\P_FitEnCodeInfo.cs" />
+    <Compile Include="Plan\P_HourProducePlan_Pro.cs" />
+    <Compile Include="Plan\P_ProducePlan_Pro.cs" />
+    <Compile Include="Plan\P_PublishPlan_Pro.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgDeTail.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgGroupBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarComponentBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionGroupBase.cs" />
+    <Compile Include="QualityManaModule\Q_CarQualityInspection_Pro.cs" />
+    <Compile Include="QualityManaModule\Q_CarQualityOutput_Pro.cs" />
+    <Compile Include="QualityManaModule\Q_CarQualityResult_Pro.cs" />
+    <Compile Include="QualityManaModule\Q_HTCarQualityOutput_Pro.cs" />
+    <Compile Include="QualityManaModule\Q_HTCarQualityResult_Pro.cs" />
     <Compile Include="QualityModule\QAS_DTSItemStaDto.cs" />
     <Compile Include="QualityModule\QAS_JunctData_SWD.cs" />
     <Compile Include="QualityModule\QAS_JunctionDataDoc.cs" />
@@ -142,7 +181,6 @@
     <Compile Include="CommonModule\Base_ProductLine.cs" />
     <Compile Include="CommonModule\Base_ProvinceCity.cs" />
     <Compile Include="CommonModule\Base_QueryRecord.cs" />
-    <Compile Include="CommonModule\Base_Roles.cs" />
     <Compile Include="CommonModule\Base_Shortcuts.cs" />
     <Compile Include="CommonModule\Base_SysLog.cs" />
     <Compile Include="CommonModule\Base_SysLogDetail.cs" />
@@ -174,13 +212,14 @@
     <Compile Include="InformationPublish\PushObject_Groupchat_V.cs" />
     <Compile Include="InformationPublish\PushObject_StfBase_V.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemManaModule\Base_Roles3.cs" />
+    <Compile Include="SystemManaModule\Base_Roles.cs" />
     <Compile Include="SystemManaModule\Base_StfRoleConf.cs" />
     <Compile Include="SystemManaModule\S_ButtonPermission.cs" />
     <Compile Include="SystemManaModule\S_LogErr.cs" />
     <Compile Include="SystemManaModule\S_ModulePermission.cs" />
     <Compile Include="SystemManaModule\S_SysLog.cs" />
     <Compile Include="SystemManaModule\S_SysLogDetail.cs" />
+    <Compile Include="VisualizationModule\S_PlanBoardInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HfutIE.DataAccess\HfutIE.DataAccess.csproj">
@@ -196,7 +235,9 @@
       <Name>HfutIE.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

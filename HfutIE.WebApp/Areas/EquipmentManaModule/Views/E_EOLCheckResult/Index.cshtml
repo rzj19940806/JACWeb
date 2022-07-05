@@ -1,0 +1,1599 @@
+@{
+    /**/
+    
+    ViewBag.Title = "E_EOLCheckResult";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+
+    .differ {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
+<script type="text/javascript">
+    //全局变量
+    var SelectedPage ;
+
+
+    $(function () {
+        CellItem_CarType('CarType');//加载车型下拉框
+        BindDropItem("#ConditionCarType", "CarType", "==全部==");
+
+        //ShowSearchArea();
+        //初始化表格EOL
+        GetGridEOLup();
+        GetGridEOL1();
+        //初始化表格检测线
+        GetGridTestLineup();
+        GetGridTestLineResultSpeed();
+        GetGridTestLineResultSlip();
+        GetGridTestLineResultHorn();
+        GetGridTestLineResultHead();
+        GetGridTestLineResultBrake();
+        GetGridTestLineResultAngle();
+        GetGridTestLineResultAlignment();
+        GetGridTestLineResultABS();
+        //初始化表格加注
+        GetGridJZup();
+        GetGridJZResultEHYFDY();
+        GetGridJZResultEHYZXY();
+        GetGridJZResultSHYZDY();
+        GetGridJZResultSHYLM();
+        GetGridJZResultSHYXDY();
+        GetGridJZResultZYCL();
+        GetGridJZResultZYBR();
+        GetGridJZResultZYAC();
+        //初始化表格胎压
+        GetGridTYup();
+        //初始化表格拧紧
+        GetGridNJup();
+        changeupTab("EOL");//默认显示EOL页面
+
+    })
+
+    //加载搜索框
+    //function ShowSearchArea() {
+    //    var Condition = $("#Condition").val();
+    //    if (Condition == "all") {
+    //        $("#ConditionCarType").hide();
+    //        $("#InputVIN").hide();
+    //    }
+    //    else if (Condition == "CarType") {
+    //        $("#ConditionCarType").show();
+    //        $("#InputVIN").hide();
+    //    }
+    //    else if (Condition == "VIN") {
+    //        $("#ConditionCarType").hide();
+    //        $("#ConditionCarType").val("all");
+    //        $("#InputVIN").show();
+    //    }
+    //    else {
+    //        $("#ConditionCarType").hide();
+    //        $("#ConditionCarType").val("all");
+    //        $("#InputVIN").hide();
+    //    }
+    //}
+
+
+    //根据数据字典显示车型
+    var CarTypeCellItem = "";
+    function CellItem_CarType(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                CarTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                CarTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+            //length=0不处理
+        })
+    }
+
+
+
+    //搜索框回到初始状态-用于切换页签
+    //function SearchAreaRecover() {
+    //    $("#ConditionCarType").val("all");
+    //    $("#Condition").val("all");
+    //    $("#InputVIN").val("");
+    //    ShowSearchArea();//重新加载搜索框
+    //}
+
+    //上标签切换
+    function changeupTab(id) {
+        $(".upDiv").hide();
+        $("#" + id + "Page").show();
+        $(".upTab").removeClass("actived");
+        $("#Tabcheck" + id).addClass("actived");
+        if (id =="TESTLine") {
+            TESTLineTabchange("Speed");
+        } else if (id == "JZ") {
+            JZTabchange("EHYFDY");
+        }
+    }
+    //检测线标签切换
+    function TESTLineTabchange(id) {
+        $(".TESTLineDiv").hide();
+        $("#checkTestLine" + id).show();
+        $(".TESTLineTab").removeClass("actived");
+        $("#TabcheckTestLine" + id).addClass("actived");
+    }
+    //加注标签切换
+    function JZTabchange(id) {
+        $(".JZDiv").hide();
+        $("#checkJZ" + id).show();
+        $(".JZTab").removeClass("actived");
+        $("#TabcheckJZ" + id).addClass("actived");
+    }
+
+
+    //搜索
+    function btn_Search() {
+        var StartTime = $("#StartTime").val();
+        var EndTime = $("#EndTime").val();
+        var VIN = $("#InputVIN").val();
+        var CarType = $("#ConditionCarType").val();
+
+        //EOL界面
+            //EOL界面上表查询
+            $("#gridTableEOLup").jqGrid('setGridParam', {
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+            //EOL界面下表清空
+            $("#gridTableEOL1").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLDetailResult")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+
+
+        //检测线界面
+            //检测线界面上表查询
+            $("#gridTableTestLineup").jqGrid('setGridParam', {
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTestLineResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+            //检测线下表清空
+            //速度表
+            $("#gridTableTestLineSpeed").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultSpeed")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //侧滑结果表
+            $("#gridTableTestLineSlip").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultSlip")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //喇叭声级表
+            $("#gridTableTestLineHorn").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultHorn")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //灯光检测表
+            $("#gridTableTestLineHead").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultHead")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //制动结果表
+            $("#gridTableTestLineBrake").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultBrake")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //转角结果表
+            $("#gridTableTestLineAngle").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultAngle")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //四轮定位结果表
+            $("#gridTableTestLineAlignment").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultAlignment")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            //ABS结果表
+            $("#gridTableTestLineABS").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultABS")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+
+
+        //加注界面
+            //加注界面上表查询
+            $("#gridTableJZup").jqGrid('setGridParam', {
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetJZResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+            //加注界面下表清空
+            $("#gridTableJZEHYFDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYFDY")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //二合一转向液
+            $("#gridTableJZEHYZXY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYZXY")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一制动液
+            $("#gridTableJZSHYZDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYZDY")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一冷媒
+            $("#gridTableJZSHYLM").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYLM")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一洗涤液
+            $("#gridTableJZSHYXDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYXDY")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压CL
+            $("#gridTableJZZYCL").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYCL")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压BR
+            $("#gridTableJZZYBR").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYBR")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压AC
+            $("#gridTableJZZYAC").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYAC")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
+
+
+
+
+
+        //胎压界面
+            //胎压界面上表查询
+            $("#gridTableTYup").jqGrid('setGridParam', {
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTYCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+
+
+        //拧紧界面
+            //胎压界面上表查询
+            $("#gridTableNJup").jqGrid('setGridParam', {
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+
+
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+
+
+
+
+    //1.EOL分页
+    //加载EOL上表格
+    function GetGridEOLup() {
+        $("#gridTableEOLup").jqGrid({
+            colModel: [
+                { label: '主键', name: 'ECRID', index: 'ECRID', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '车型', name: 'CarType2', index: 'CarType2', width: 200, align: 'center', sortable: true },
+                { label: '车辆名称', name: 'CarName', index: 'CarName', width: 400, align: 'center', sortable: true },
+                { label: '站点', name: 'Station', index: 'Station', width: 0, align: 'center', sortable: true },
+                { label: '时间', name: 'Time', index: 'Time', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '检测次数', name: 'TestNum', index: 'TestNum', width: 0, align: 'center', sortable: true },
+                { label: '检测结果', name: 'Result', index: 'Result', width: 0, align: 'center', sortable: true }
+            ],
+            datatype: "json",
+            height: ($(window).height() - 240) * 0.6,
+            pager: "#gridPagerEOLup",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            //表格行单击事件onClickRow
+            onSelectRow: function (RowId) {
+                var VIN = GetJqGridRowValue("#gridTableEOLup", "VIN");
+                $("#gridTableEOL1").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLDetailResult")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            },
+        });
+    }
+    //加载EOL下表格
+    function GetGridEOL1() {
+        $("#gridTableEOL1").jqGrid({
+            colModel: [
+                { label: '主键', name: 'ECRID', index: 'ECRID', width: 0, align: 'center',sortable: true ,hidden: true },
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center',sortable: true  },
+                { label: '站点', name: 'Station', index: 'Station', width: 0, align: 'center',sortable: true  },
+                { label: '测试次数', name: 'TestNum', index: 'TestNum', width: 0, align: 'center', sortable: true },
+                { label: '检测模块', name: 'ModuleNm', index: 'ModuleNm', width: 0, align: 'center', sortable: true },
+                { label: '检查项名称', name: 'CheckNm', index: 'CheckNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'CheckContent', index: 'CheckContent', width: 0, align: 'center', sortable: true },
+                { label: '检测结果', name: 'CheckResult', index: 'CheckResult', width: 0, align: 'center',sortable: true  }
+            ],
+            datatype: "json",
+            height: ($(window).height() - 240) * 0.4,
+            pager: "#gridPagerEOL1",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+        });
+    }
+
+    //2.检测线分页
+    //加载检测线上表格-计划表+检测结果
+    function GetGridTestLineup() {
+        $("#gridTableTestLineup").jqGrid({
+            colModel: [
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+                { label: '颜色', name: 'CarColor', index: 'CarColor', width: 0, align: 'center', sortable: true },
+                {
+                    label: 'ABS检测结果', name: 'ABSResult', index: 'ABSResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '四轮定位检测结果', name: 'AlignmentResult', index: 'AlignmentResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '转角检测结果', name: 'AngleResult', index: 'AngleResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '制动检测结果', name: 'BrakeResult', index: 'BrakeResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '灯光检测结果', name: 'Head_Result', index: 'Head_Result', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '喇叭检测结果', name: 'HornResult', index: 'HornResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                },
+                {
+                    label: '速度检测结果', name: 'SpeedResult', index: 'SpeedResult', width: 0, align: 'center', sortable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 'O') return "OK";
+                        else if (cellvalue == 'X') return "NG";
+                        else return "";
+                    }
+                }
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.75,
+            pager: "#gridPagerTestLineup",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            //表格行单击事件onClickRow
+            onSelectRow: function (RowId) {
+                var VIN = GetJqGridRowValue("#gridTableTestLineup", "VIN");
+                //速度表
+                $("#gridTableTestLineSpeed").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultSpeed")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //侧滑结果表
+                $("#gridTableTestLineSlip").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultSlip")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //喇叭声级表
+                $("#gridTableTestLineHorn").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultHorn")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //灯光检测表
+                $("#gridTableTestLineHead").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultHead")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //制动结果表
+                $("#gridTableTestLineBrake").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultBrake")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //转角结果表
+                $("#gridTableTestLineAngle").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultAngle")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //四轮定位结果表
+                $("#gridTableTestLineAlignment").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultAlignment")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //ABS结果表
+                $("#gridTableTestLineABS").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridTestLineResultABS")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+            }
+        });
+    }
+
+    //加载检测线下表格-1.速度表
+    function GetGridTestLineResultSpeed() {
+        $("#gridTableTestLineSpeed").jqGrid({
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: 'VIN号', name: 'VinCode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+                { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+                //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+                //{ label: 'AutoGearFlag', name: 'AutoGearFlag', index: 'AutoGearFlag', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '车速表(km/h)', name: 'SpeedValue', index: 'SpeedValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }  },
+                { label: '评价', name: 'SpeedResult', index: 'SpeedResult', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineSpeed",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+        });
+    }
+
+    //加载检测线下表格-2.侧滑检测表
+    function GetGridTestLineResultSlip() {
+        $("#gridTableTestLineSlip").jqGrid({
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: 'VIN号', name: 'VinCode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+                { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+                //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+                { label: '前轴侧滑值(m/Km)', name: 'FrontSlipValue', index: 'FrontSlipValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }},
+                { label: '前轴侧滑评判', name: 'FrontSlipResult', index: 'FrontSlipResult', width: 0, align: 'center', sortable: true },
+                { label: '后轴侧滑值(m/Km)', name: 'RearSlipValue', index: 'RearSlipValue', width: 0, align: 'center', sortable: true , formatter: 'number', formatoptions: { decimalPlaces: 1 }},
+                { label: '后轴侧滑评判', name: 'RearSlipResult', index: 'RearSlipResult', width: 0, align: 'center', sortable: true },
+                { label: '总评价', name: 'SlipResult', index: 'SlipResult', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineSlip",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+    });
+    }
+
+    //加载检测线下表格-3.喇叭声级表
+    function GetGridTestLineResultHorn() {
+        $("#gridTableTestLineHorn").jqGrid({
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: 'VIN号', name: 'Vincode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+                { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+                //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+                { label: '声级(db)', name: 'HornValue', index: 'HornValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '评价', name: 'HornResult', index: 'HornResult', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineHorn",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+        });
+    }
+
+    //加载检测线下表格-4.灯光检测表
+    function GetGridTestLineResultHead() {
+        $("#gridTableTestLineHead").jqGrid({
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,//高度
+            autowidth: true,
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: 'VIN号', name: 'Vincode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+                { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+                //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+                { label: 'HeadHeight', name: 'HeadHeight', index: 'HeadHeight', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '左-远光上下(cm)', name: 'L_High_VerValue', index: 'L_High_VerValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }},
+                { label: '左-远光上下评判', name: 'L_High_VerResult', index: 'L_High_VerResult', width: 0, align: 'center', sortable: true },
+                { label: '左-远光左右(cm)', name: 'L_High_HorValue', index: 'L_High_HorValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }},
+                { label: '左-远光左右评判', name: 'L_High_HorResult', index: 'L_High_HorResult', width: 0, align: 'center', sortable: true },
+                { label: '左-近光上下(cm)', name: 'L_Low_VerValue', index: 'L_Low_VerValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 } },
+                { label: '左-近光上下评判', name: 'L_Low_VerResult', index: 'L_Low_VerResult', width: 0, align: 'center', sortable: true },
+                { label: '左-近光左右(cm)', name: 'L_Low_HorValue', index: 'L_Low_HorValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '左-近光左右评判', name: 'L_Low_HorResult', index: 'L_Low_HorResult', width: 0, align: 'center', sortable: true },
+                { label: '左-近光光强(cd)', name: 'L_Low_IntenValue', index: 'L_Low_IntenValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 } },
+                { label: '左-远光光强(cd)', name: 'L_High_IntenValue', index: 'L_High_IntenValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 } },
+                { label: '左-远光光强评判', name: 'L_High_IntenResult', index: 'L_High_IntenResult', width: 0, align: 'center', sortable: true },
+
+                { label: '右-远光上下(cm)', name: 'R_High_VerValue', index: 'R_High_VerValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 } },
+                { label: '右-远光上下评判', name: 'R_High_VerResult', index: 'R_High_VerResult', width: 0, align: 'center', sortable: true },
+                { label: '右-远光左右(cm)', name: 'R_High_HorValue', index: 'R_High_HorValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '右-远光左右评判', name: 'R_High_HorResult', index: 'R_High_HorResult', width: 0, align: 'center', sortable: true },
+                { label: '右-近光上下(cm)', name: 'R_Low_VerValue', index: 'R_Low_VerValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 } },
+                { label: '右-近光上下评判', name: 'R_Low_VerResult', index: 'R_Low_VerResult', width: 0, align: 'center', sortable: true },
+                { label: '右-近光左右(cm)', name: 'R_Low_HorValue', index: 'R_Low_HorValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '右-近光左右评判', name: 'R_Low_HorResult', index: 'R_Low_HorResult', width: 0, align: 'center', sortable: true },
+                { label: '右-近光光强(cd)', name: 'R_Low_IntenValue', index: 'R_Low_IntenValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 } },
+                { label: '右-远光光强(cd)', name: 'R_High_IntenValue', index: 'R_High_IntenValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 } },
+                { label: '右-远光光强评判', name: 'R_High_IntenResult', index: 'R_High_IntenResult', width: 0, align: 'center', sortable: true },
+
+                { label: '总评判', name: 'Head_Result', index: 'Head_Result', width: 0, align: 'center', sortable: true }
+            ],
+            pager: "#gridPagerTestLineHead",
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+        });
+    }
+
+    //加载检测线下表格-5.制动检测表
+    function GetGridTestLineResultBrake() {
+        $("#gridTableTestLineBrake").jqGrid({
+            colModel: [
+            { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+            //{ label: 'VIN号', name: 'Vincode', index: 'VinCode', width: 300, align: 'center', sortable: true },
+            { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+            //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+            { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 300, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+            { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+            //{ label: '前左轴重(KG)', name: 'F_L_Weight', index: 'F_L_Weight', width: 0, align: 'center', sortable: true },
+            //    { label: '前右轴重(KG)', name: 'F_R_Weight', index: 'F_R_Weight', width: 0, align: 'center', sortable: true },
+                { label: '前轴重(KG)', name: 'F_Weight', index: 'F_Weight', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }  },
+                //{ label: '前左制动和(N))', name: 'F_L_MaxSumForce', index: 'F_L_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: '前右制动和(N)', name: 'F_R_MaxSumForce', index: 'F_R_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                { label: '前制动和(N))', name: 'F_MaxSumForce', index: 'F_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                { label: '前轴制动率(%)', name: 'F_MaxSum', index: 'F_MaxSum', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '前轴制动率结果', name: 'F_SumResult', index: 'F_SumResult', width: 0, align: 'center', sortable: true },
+                { label: '前轴制动差(%)', name: 'F_MaxDiff', index: 'F_MaxDiff', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '前轴制动差结果', name: 'F_DiffResult', index: 'F_DiffResult', width: 0, align: 'center', sortable: true },
+                { label: '前左阻滞率(%)', name: 'F_L_MaxDragForce', index: 'F_L_MaxDragForce', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '前右阻滞率(%)', name: 'F_R_MaxDragForce', index: 'F_R_MaxDragForce', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }  },
+                { label: '前轴阻滞率结果', name: 'F_DragResult', index: 'F_DragResult', width: 0, align: 'center', sortable: true },
+                { label: '前轴制动总结果', name: 'F_Result', index: 'F_Result', width: 0, align: 'center', sortable: true },
+                //{ label: '最大制动差前左力值(N)', name: 'F_L_MaxDiffForce', index: 'F_L_MaxDiffForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: '最大制动差前右力值(N)', name: 'F_R_MaxDiffForce', index: 'F_R_MaxDiffForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: 'F_MaxDrag', name: 'F_MaxDrag', index: 'F_MaxDrag', width: 0, align: 'center', sortable: true},
+                //{ label: 'F_MotorStop', name: 'F_MotorStop', index: 'F_MotorStop', width: 0, align: 'center', sortable: true},
+                //{ label: '后左轴重(KG)', name: 'R_L_Weight', index: 'R_L_Weight', width: 0, align: 'center', sortable: true },
+                //{ label: '后右轴重(KG)', name: 'R_R_Weight', index: 'R_R_Weight', width: 0, align: 'center', sortable: true },
+                { label: '后轴重(KG)', name: 'R_Weight', index: 'R_Weight', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 } },
+                //{ label: '后左制动和(N)', name: 'R_L_MaxSumForce', index: 'R_L_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: '后右制动和(N)', name: 'R_R_MaxSumForce', index: 'R_R_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                { label: '后制动和(N)', name: 'R_MaxSumForce', index: 'R_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                { label: '后轴制动率(%)', name: 'R_MaxSum', index: 'R_MaxSum', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '后轴制动率结果', name: 'R_SumResult', index: 'R_SumResult', width: 0, align: 'center', sortable: true },
+                { label: '后轴制动差(%)', name: 'R_MaxDiff', index: 'R_MaxDiff', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }  },
+                { label: '后轴制动差结果', name: 'R_DiffResult', index: 'R_DiffResult', width: 0, align: 'center', sortable: true },
+                { label: '后左阻滞率(%)', name: 'R_L_MaxDragForce', index: 'R_L_MaxDragForce', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 } },
+                { label: '后右阻滞率(%)', name: 'R_R_MaxDragForce', index: 'R_R_MaxDragForce', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }  },
+                { label: '后轴阻滞率结果(%)', name: 'R_DragResult', index: 'R_DragResult', width: 0, align: 'center', sortable: true },
+                { label: '后轴制动总结果', name: 'R_Result', index: 'R_Result', width: 0, align: 'center', sortable: true },
+                //{ label: '最大制动差后左力值(N)', name: 'R_L_MaxDiffForce', index: 'R_L_MaxDiffForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: '最大制动差后右力值(N)', name: 'R_R_MaxDiffForce', index: 'R_R_MaxDiffForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: 'R_MaxDrag', name: 'R_MaxDrag', index: 'R_MaxDrag', width: 0, align: 'center', sortable: true },
+                //{ label: 'R_MotorStop', name: 'R_MotorStop', index: 'R_MotorStop', width: 0, align: 'center', sortable: true },
+                { label: '整车重(KG)', name: 'TotalWeight', index: 'TotalWeight', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0}  },
+                { label: '整车制动和(N)', name: 'MaxSumForce', index: 'MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                { label: '整车制动率(%)', name: 'TotalSumValue', index: 'TotalSumValue', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 1 }  },
+                { label: '整车制动评价', name: 'TotalSumResult', index: 'TotalSumResult', width: 0, align: 'center', sortable: true },
+                { label: '制动总评价', name: 'BrakeResult', index: 'BrakeResult', width: 0, align: 'center', sortable: true },
+                //{ label: '驻车制动左测力(N)', name: 'P_L_MaxSumForce', index: 'P_L_MaxSumForce', width: 0, align: 'center', sortable: true },
+                //{ label: '驻车制动右测力(N)', name: 'P_R_MaxSumForce', index: 'P_R_MaxSumForce', width: 0, align: 'center', sortable: true },
+                { label: '驻车力(N)', name: 'P_MaxSumForce', index: 'P_MaxSumForce', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.round(cellvalue * 9.8) } },
+                //{ label: '驻车制动和', name: 'P_MaxSum', index: 'P_MaxSum', width: 0, align: 'center', sortable: true },
+                { label: '驻车制动评价', name: 'P_Result', index: 'P_Result', width: 0, align: 'center', sortable: true },
+                { label: '手刹力(N)', name: 'DragPark_Force', index: 'DragPark_Force', width: 0, align: 'center', sortable: true },
+                { label: '手刹力评价', name: 'DragPark_Result', index: 'DragPark_Result', width: 0, align: 'center', sortable: true },
+                { label: '前轴踏板力(N)', name: 'F_Pedal_Force', index: 'F_Pedal_Force', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }  },
+                { label: '前轴踏板力评价', name: 'F_PedalResult', index: 'F_PedalResult', width: 0, align: 'center', sortable: true },
+                { label: '后轴踏板力(N)', name: 'R_Pedal_Force', index: 'R_Pedal_Force', width: 0, align: 'center', sortable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }  },
+                { label: '后轴踏板力评价', name: 'R_PedalResult', index: 'R_PedalResult', width: 0, align: 'center', sortable: true },
+
+
+                //{ label: 'P_MotorStop', name: 'P_MotorStop', index: 'P_MotorStop', width: 0, align: 'center', sortable: true },
+                //{ label: 'F_ResponseTime', name: 'F_ResponseTime', index: 'F_ResponseTime', width: 0, align: 'center', sortable: true },
+                //{ label: 'R_ResponseTime', name: 'R_ResponseTime', index: 'R_ResponseTime', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineBrake",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+    });
+    }
+
+    //加载检测线下表格-6.转角检测表
+    function GetGridTestLineResultAngle() {
+        $("#gridTableTestLineAngle").jqGrid({
+            colModel: [
+            { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+            //{ label: 'VIN号', name: 'VinCode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+            { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+            //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+            { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+            { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+                { label: '左-内转角(°)', name: 'LeftAngleInData', index: 'LeftAngleInData', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.abs(cellvalue).toFixed(1) }},
+                { label: '左内转结果', name: 'LeftAngleInResult', index: 'LeftAngleInResult', width: 0, align: 'center', sortable: true },
+                { label: '左-外转角(°)', name: 'LeftAngleOutData', index: 'LeftAngleOutData', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.abs(cellvalue).toFixed(1) }},
+                { label: '左外转结果', name: 'LeftAngleOutResult', index: 'LeftAngleOutResult', width: 0, align: 'center', sortable: true },
+                { label: '右-内转角(°)', name: 'RightAngleInData', index: 'RightAngleInData', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.abs(cellvalue).toFixed(1) } },
+                { label: '右内转结果', name: 'RightAngleInResult', index: 'RightAngleInResult', width: 0, align: 'center', sortable: true },
+                { label: '右-外转角(°)', name: 'RightAngleOutData', index: 'RightAngleOutData', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return Math.abs(cellvalue).toFixed(1) } },
+                { label: '右外转结果', name: 'RightAngleOutResult', index: 'RightAngleOutResult', width: 0, align: 'center', sortable: true },
+            { label: '总结果', name: 'Result', index: 'Result', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineAngle",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+    });
+    }
+
+     //加载检测线下表格-7.四轮定位检测表
+    function GetGridTestLineResultAlignment() {
+        $("#gridTableTestLineAlignment").jqGrid({
+            colModel: [
+            { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+            //{ label: 'VIN号', name: 'Vincode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+            { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+            //{ label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+            { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+            { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+            { label: '前左前束值(′)', name: 'FL_Toe_Value', index: 'FL_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            { label: '前左前束评判', name: 'FL_Toe_Result', index: 'FL_Toe_Result', width: 0, align: 'center', sortable: true },
+                { label: '前右前束值(′)', name: 'FR_Toe_Value', index: 'FR_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            { label: '前右前束评判', name: 'FR_Toe_Result', index: 'FR_Toe_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '前前束和值', name: 'FT_Toe_Value', index: 'FT_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 /3).toFixed(2) } },
+            { label: '前前束和评判', name: 'FT_Toe_Result', index: 'FT_Toe_Result', width: 0, align: 'center', sortable: true },
+                { label: '前左外倾值(′)', name: 'FL_Camber_Value', index: 'FL_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            { label: '前左外倾评判', name: 'FL_Camber_Result', index: 'FL_Camber_Result', width: 0, align: 'center', sortable: true },
+                { label: '前右外倾值(′)', name: 'FR_Camber_Value', index: 'FR_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            { label: '前右外倾评判', name: 'FR_Camber_Result', index: 'FR_Camber_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '前外倾差', name: 'FC_Camber_Value', index: 'FC_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            { label: '前外倾差评判', name: 'FC_Camber_Result', index: 'FC_Camber_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后左前束值', name: 'RL_Toe_Value', index: 'RL_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            //{ label: '后左前束评判', name: 'RL_Toe_Result', index: 'RL_Toe_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后右前束值', name: 'RR_Toe_Value', index: 'RR_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) }},
+            //{ label: '后右前束评判', name: 'RR_Toe_Result', index: 'RR_Toe_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后前束和值', name: 'RT_Toe_Value', index: 'RT_Toe_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            //{ label: '后前束和评判', name: 'RT_Toe_Result', index: 'RT_Toe_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后左外倾值', name: 'RL_Camber_Value', index: 'RL_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 /3).toFixed(2) } },
+            //{ label: '后左外倾评判', name: 'RL_Camber_Result', index: 'RL_Camber_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后右外倾值', name: 'RR_Camber_Value', index: 'RR_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) }},
+            //{ label: '后右外倾评判', name: 'RR_Camber_Result', index: 'RR_Camber_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '后外倾差', name: 'RC_Camber_Value', index: 'RC_Camber_Value', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            //{ label: '后外倾差评判', name: 'RC_Camber_Result', index: 'RC_Camber_Result', width: 0, align: 'center', sortable: true },
+            //{ label: '推进角', name: 'THR_Angle', index: 'THR_Angle', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) } },
+            //{ label: '对称角', name: 'SYM_Angle', index: 'SYM_Angle', width: 0, align: 'center', sortable: true, formatter: function (cellvalue, options, rowObject) { return (cellvalue * 180 / 3).toFixed(2) }},
+            { label: '总结果', name: 'Result', index: 'Result', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineAlignment",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+    });
+    }
+
+     //加载检测线下表格-8.ABS检测表
+    function GetGridTestLineResultABS() {
+        $("#gridTableTestLineABS").jqGrid({
+            colModel: [
+            { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: 'VIN号', name: 'VinCode', index: 'VinCode', width: 0, align: 'center', sortable: true },
+            { label: '检测次数', name: 'InspectTimes', index: 'InspectTimes', width: 0, align: 'center', sortable: true },
+            { label: '车型', name: 'VehicleModel', index: 'VehicleModel', width: 0, align: 'center', sortable: true },
+            { label: '检测时间', name: 'InspectTime', index: 'InspectTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+            { label: '检测线号', name: 'LineID', index: 'LineID', width: 0, align: 'center', sortable: true },
+            { label: 'EcuID', name: 'EcuID', index: 'EcuID', width: 0, align: 'center', sortable: true },
+            { label: '清除故障码结果', name: 'ClearDTCResult', index: 'ClearDTCResult', width: 0, align: 'center', sortable: true },
+            { label: '故障码', name: 'DTCCode', index: 'DTCCode', width: 0, align: 'center', sortable: true },
+            { label: '踏板检测结果', name: 'PedalResult', index: 'PedalResult', width: 0, align: 'center', sortable: true },
+
+            { label: '轮速传感器测试结果', name: 'SensorResult', index: 'SensorResult', width: 0, align: 'center', sortable: true },
+            { label: '阀泵测试结果', name: 'ValveResult', index: 'ValveResult', width: 0, align: 'center', sortable: true },
+            { label: 'ABS/ESC总结果', name: 'ABSResult', index: 'ABSResult', width: 0, align: 'center', sortable: true },
+            { label: '前左轮速最大值', name: 'FLMaxSpeedValue', index: 'FLMaxSpeedValue', width: 0, align: 'center', sortable: true },
+            { label: '前左轮速最小值', name: 'FLMinSpeedValue', index: 'FLMinSpeedValue', width: 0, align: 'center', sortable: true },
+
+            { label: '前右轮速最大值', name: 'FRMaxSpeedValue', index: 'FRMaxSpeedValue', width: 0, align: 'center', sortable: true },
+            { label: '前右轮速最小值', name: 'FRMinSpeedValue', index: 'FRMinSpeedValue', width: 0, align: 'center', sortable: true },
+
+            { label: '后左轮速最大值', name: 'RLMaxSpeedValue', index: 'RLMaxSpeedValue', width: 0, align: 'center', sortable: true },
+            { label: '后左轮速最小值', name: 'RLMinSpeedValue', index: 'RLMinSpeedValue', width: 0, align: 'center', sortable: true },
+
+            { label: '后右轮速最大值', name: 'RRMaxSpeedValue', index: 'RRMaxSpeedValue', width: 0, align: 'center', sortable: true },
+            { label: '后右轮速最小值', name: 'RRMinSpeedValue', index: 'RRMinSpeedValue', width: 0, align: 'center', sortable: true },
+
+            { label: '前左轮速传感器评判', name: 'FLSpeedResult', index: 'FLSpeedResult', width: 0, align: 'center', sortable: true },
+            { label: '前右轮速传感器评判', name: 'FRSpeedResult', index: 'FRSpeedResult', width: 0, align: 'center', sortable: true },
+            { label: '后左轮速传感器评判', name: 'RLSpeedResult', index: 'RLSpeedResult', width: 0, align: 'center', sortable: true },
+            { label: '后右轮速传感器评判', name: 'RRSpeedResult', index: 'RRSpeedResult', width: 0, align: 'center', sortable: true },
+            { label: '前左升压值', name: 'FLRecoveryValue', index: 'FLRecoveryValue', width: 0, align: 'center', sortable: true },
+            { label: '前左升压评判', name: 'FLRecoveryResult', index: 'FLRecoveryResult', width: 0, align: 'center', sortable: true },
+            { label: '前左减压值', name: 'FLReductionValue', index: 'FLReductionValue', width: 0, align: 'center', sortable: true },
+            { label: '前左减压评判', name: 'FLReductionResult', index: 'FLReductionResult', width: 0, align: 'center', sortable: true },
+            { label: '前右升压值', name: 'FRRecoveryValue', index: 'FRRecoveryValue', width: 0, align: 'center', sortable: true },
+            { label: '前右升压评判', name: 'FRRecoveryResult', index: 'FRRecoveryResult', width: 0, align: 'center', sortable: true },
+            { label: '前右减压值', name: 'FRReductionValue', index: 'FRReductionValue', width: 0, align: 'center', sortable: true },
+            { label: '前右减压评判', name: 'FRReductionResult', index: 'FRReductionResult', width: 0, align: 'center', sortable: true },
+            { label: '后左升压值', name: 'RLRecoveryValue', index: 'RLRecoveryValue', width: 0, align: 'center', sortable: true },
+            { label: '后左升压评判', name: 'RLRecoveryResult', index: 'RLRecoveryResult', width: 0, align: 'center', sortable: true },
+            { label: '后左减压值', name: 'RLReductionValue', index: 'RLReductionValue', width: 0, align: 'center', sortable: true },
+            { label: '后左减压评判', name: 'RLReductionResult', index: 'RLReductionResult', width: 0, align: 'center', sortable: true },
+            { label: '后右升压值', name: 'RRRecoveryValue', index: 'RRRecoveryValue', width: 0, align: 'center', sortable: true },
+            { label: '后右升压评判', name: 'RRRecoveryResult', index: 'RRRecoveryResult', width: 0, align: 'center', sortable: true },
+            { label: '后右减压值', name: 'RRReductionValue', index: 'RRReductionValue', width: 0, align: 'center', sortable: true },
+            { label: '后右减压评判', name: 'RRReductionResult', index: 'RRReductionResult', width: 0, align: 'center', sortable: true },
+            { label: '前左泵阀评判', name: 'FLValveResult', index: 'FLValveResult', width: 0, align: 'center', sortable: true },
+            { label: '前右泵阀评判', name: 'FRValveResult', index: 'FRValveResult', width: 0, align: 'center', sortable: true },
+            { label: '后左泵阀评判', name: 'RLValveResult', index: 'RLValveResult', width: 0, align: 'center', sortable: true },
+            { label: '后右泵阀评判', name: 'RRValveResult', index: 'RRValveResult', width: 0, align: 'center', sortable: true },
+            ],
+            datatype: "json",
+            height: ($(window).height() - 270) * 0.25,
+            pager: "#gridPagerTestLineABS",
+            autowidth: true,
+            sortname: '',
+            sortorder: 'asc',
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+            altRows: true,//单双行样式不同
+            altclass: 'differ'//单双行样式
+    });
+    }
+
+
+    //3.加注分页
+    //加载检测线上表格-计划表+检测结果
+    function GetGridJZup() {
+        $("#gridTableJZup").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetJZResultList")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.75,
+        autowidth: true,
+        colModel: [
+            { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+            { label: '颜色', name: 'CarColor', index: 'CarColor', width: 0, align: 'center', sortable: true },
+            { label: '防冻液加注结果', name: '防冻液加注结果', index: '防冻液加注结果', width: 0, align: 'center', sortable: true },
+            { label: '转向液加注结果', name: '转向液加注结果', index: '转向液加注结果', width: 0, align: 'center', sortable: true },
+            { label: '制动液加注结果', name: '制动液加注结果', index: '制动液加注结果', width: 0, align: 'center', sortable: true },
+            { label: '冷媒加注结果', name: '冷媒加注结果', index: '冷媒加注结果', width: 0, align: 'center', sortable: true },
+            { label: '洗涤液加注结果', name: '洗涤液加注结果', index: '洗涤液加注结果', width: 0, align: 'center', sortable: true },
+            { label: '正压CL检测结果', name: '正压CL检测结果', index: '正压CL检测结果', width: 0, align: 'center', sortable: true },
+            { label: '正压BR检测结果', name: '正压BR检测结果', index: '正压BR检测结果', width: 0, align: 'center', sortable: true },
+            { label: '正压AC检测结果', name: '正压AC检测结果', index: '正压AC检测结果', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZup",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+        //隔行变色
+        altRows: true,//单双行样式不同
+        altclass: 'differ',//单双行样式
+            gridview: true,
+            //表格行单击事件onClickRow
+            onSelectRow: function (RowId) {
+                var VIN = GetJqGridRowValue("#gridTableJZup", "VIN");
+                //二合一防冻液
+                $("#gridTableJZEHYFDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYFDY")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //二合一转向液
+                $("#gridTableJZEHYZXY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYZXY")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一制动液
+                $("#gridTableJZSHYZDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYZDY")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一冷媒
+                $("#gridTableJZSHYLM").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYLM")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //三合一洗涤液
+                $("#gridTableJZSHYXDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYXDY")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压CL
+                $("#gridTableJZZYCL").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYCL")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压BR
+                $("#gridTableJZZYBR").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYBR")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+                //正压AC
+                $("#gridTableJZZYAC").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYAC")?VIN=" + VIN, page: 1, datatype: 'json' }).trigger('reloadGrid');
+
+            },
+
+    });
+    }
+
+    //加载加注下表格-1.二合一防冻液表
+    function GetGridJZResultEHYFDY() {
+        $("#gridTableJZEHYFDY").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYFDY")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '一次真空值', name: '一次真空值', index: '一次真空值', width: 0, align: 'center', sortable: true },
+                { label: '真空泄露', name: '真空泄露', index: '真空泄露', width: 0, align: 'center', sortable: true },
+                { label: '设置加注量', name: '设置加注量', index: '设置加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注量', name: '加注量', index: '加注量', width: 0, align: 'center', sortable: true },
+                { label: '设置副加注量', name: '设置副加注量', index: '设置副加注量', width: 0, align: 'center', sortable: true },
+                { label: '副加注量', name: '副加注量', index: '副加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注结果', name: '加注结果', index: '加注结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZEHYFDY",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-2.二合一转向液表
+    function GetGridJZResultEHYZXY() {
+        $("#gridTableJZEHYZXY").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYZXY")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '一次真空值', name: '一次真空值', index: '一次真空值', width: 0, align: 'center', sortable: true },
+                { label: '真空泄露', name: '真空泄露', index: '真空泄露', width: 0, align: 'center', sortable: true },
+                { label: '设置加注量', name: '设置加注量', index: '设置加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注量', name: '加注量', index: '加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注结果', name: '加注结果', index: '加注结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZEHYZXY",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-3.三合一制动液表
+    function GetGridJZResultSHYZDY() {
+        $("#gridTableJZSHYZDY").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYZDY")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '一次真空值', name: '一次真空值', index: '一次真空值', width: 0, align: 'center', sortable: true },
+                { label: '真空泄露', name: '真空泄露', index: '真空泄露', width: 0, align: 'center', sortable: true },
+                { label: '设置加注量', name: '设置加注量', index: '设置加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注量', name: '加注量', index: '加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注结果', name: '加注结果', index: '加注结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZSHYZDY",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-4.三合一冷媒
+    function GetGridJZResultSHYLM() {
+        $("#gridTableJZSHYLM").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYLM")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '一次真空值', name: '一次真空值', index: '一次真空值', width: 0, align: 'center', sortable: true },
+                { label: '真空泄露', name: '真空泄露', index: '真空泄露', width: 0, align: 'center', sortable: true },
+                { label: '设置加注量', name: '设置加注量', index: '设置加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注量', name: '加注量', index: '加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注结果', name: '加注结果', index: '加注结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZSHYLM",
+            sortname: '',
+            sortorder: 'desc',
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-5.三合一洗涤液
+    function GetGridJZResultSHYXDY() {
+        $("#gridTableJZSHYXDY").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultSHYXDY")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '设置加注量', name: '设置加注量', index: '设置加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注量', name: '加注量', index: '加注量', width: 0, align: 'center', sortable: true },
+                { label: '加注结果', name: '加注结果', index: '加注结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZSHYXDY",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-6.正压CL
+    function GetGridJZResultZYCL() {
+        $("#gridTableJZZYCL").jqGrid({
+        url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYCL")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                {
+                    label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true
+                    , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '充气压力值', name: '充气压力值', index: '充气压力值', width: 0, align: 'center', sortable: true },
+                { label: '充气时间', name: '充气时间', index: '充气时间', width: 0, align: 'center', sortable: true },
+                { label: '稳压值', name: '设置加注量', index: '稳压值', width: 0, align: 'center', sortable: true },
+                { label: '稳压时间', name: '稳压时间', index: '稳压时间', width: 0, align: 'center', sortable: true },
+                { label: '泄露值', name: '泄露值', index: '泄露值', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: '检测时间', index: '检测时间', width: 0, align: 'center', sortable: true },
+                { label: '均压时间', name: '均压时间', index: '均压时间', width: 0, align: 'center', sortable: true },
+                { label: '检测结果', name: '检测结果', index: '检测结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZZYCL",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+     //加载加注下表格-7.正压BR
+    function GetGridJZResultZYBR() {
+        $("#gridTableJZZYBR").jqGrid({
+        url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYBR")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                {
+                    label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true
+                    , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '充气压力值', name: '充气压力值', index: '充气压力值', width: 0, align: 'center', sortable: true },
+                { label: '充气时间', name: '充气时间', index: '充气时间', width: 0, align: 'center', sortable: true },
+                { label: '稳压值', name: '设置加注量', index: '稳压值', width: 0, align: 'center', sortable: true },
+                { label: '稳压时间', name: '稳压时间', index: '稳压时间', width: 0, align: 'center', sortable: true },
+                { label: '泄露值', name: '泄露值', index: '泄露值', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: '检测时间', index: '检测时间', width: 0, align: 'center', sortable: true },
+                { label: '均压时间', name: '均压时间', index: '均压时间', width: 0, align: 'center', sortable: true },
+                { label: '检测结果', name: '检测结果', index: '检测结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            //pager: "#gridPagerJZZYBR",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //加载加注下表格-8.正压AC
+    function GetGridJZResultZYAC() {
+        $("#gridTableJZZYAC").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultZYAC")",
+            datatype: "json",
+            height: ($(window).height() - 260) * 0.25,
+        autowidth: true,
+            colModel: [
+                { label: '主键', name: '序号', index: '序号', width: 0, align: 'center', sortable: true, hidden: true},
+                { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                {
+                    label: '加注时间', name: '加注时间', index: '加注时间', width: 0, align: 'center', sortable: true
+                    , formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                 },
+                { label: '油品名称', name: '油品名称', index: '油品名称', width: 0, align: 'center', sortable: true },
+                { label: '充气压力值', name: '充气压力值', index: '充气压力值', width: 0, align: 'center', sortable: true },
+                { label: '充气时间', name: '充气时间', index: '充气时间', width: 0, align: 'center', sortable: true },
+                { label: '稳压值', name: '设置加注量', index: '稳压值', width: 0, align: 'center', sortable: true },
+                { label: '稳压时间', name: '稳压时间', index: '稳压时间', width: 0, align: 'center', sortable: true },
+                { label: '泄露值', name: '泄露值', index: '泄露值', width: 0, align: 'center', sortable: true },
+                { label: '检测时间', name: '检测时间', index: '检测时间', width: 0, align: 'center', sortable: true },
+                { label: '均压时间', name: '均压时间', index: '均压时间', width: 0, align: 'center', sortable: true },
+                { label: '检测结果', name: '检测结果', index: '检测结果', width: 0, align: 'center', sortable: true },
+                { label: '设备ID', name: '设备ID', index: '设备ID', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerJZZYAC",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+    //4.胎压分页
+    //加载胎压表格
+    function GetGridTYup() {
+        $("#gridTableTYup").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTYCheckResultListJson")",
+        datatype: "json",
+        height: $(window).height() - 170,
+        autowidth: true,
+        colModel: [
+            { label: '主键', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型', name: 'CarType', index: 'CarType', width: 50, align: 'center', sortable: true },
+            { label: '传感器名称', name: 'SensorNm', index: 'SensorNm', width: 0, align: 'center', sortable: true },
+            { label: '右前轮ID', name: 'RFTireID', index: 'RFTireID', width: 0, align: 'center', sortable: true },
+            { label: '右前轮胎压上限', name: 'RFTirePressureLimit', index: 'RFTirePressureLimit', width: 100, align: 'center', sortable: true },
+            { label: '右前轮胎压下限', name: 'RFTirePressureLowerLimit', index: 'RFTirePressureLowerLimit', width: 100, align: 'center', sortable: true },
+            { label: '右前轮胎压检测值', name: 'RFTirePressureValue', index: 'RFTirePressureValue', width:0, align: 'center', sortable: true },
+            { label: '右前轮胎压检测结果', name: 'RFTirePressureResult', index: 'RFTirePressureResult', width: 50, align: 'center', sortable: true },
+            { label: '左前轮ID', name: 'LFTireID', index: 'LFTireID', width: 0, align: 'center', sortable: true },
+            { label: '左前轮胎压上限', name: 'LFTirePressureLimit', index: 'LFTirePressureLimit', width: 0, align: 'center', sortable: true },
+            { label: '左前轮胎压下限', name: 'LFTirePressureLowerLimit', index: 'LFTirePressureLowerLimit', width: 0, align: 'center', sortable: true },
+            { label: '左前轮胎压检测值', name: 'LFTirePressureValue', index: 'LFTirePressureValue', width: 0, align: 'center', sortable: true },
+            { label: '左前轮胎压检测结果', name: 'LFTirePressureResult', index: 'LFTirePressureResult', width: 0, align: 'center', sortable: true },
+            { label: '右后轮ID', name: 'RBTireID', index: 'RBTireID', width: 0, align: 'center', sortable: true },
+            { label: '右后轮胎压上限', name: 'RBTirePressureLimit', index: 'RBTirePressureLimit', width: 0, align: 'center', sortable: true },
+            { label: '右后轮胎压下限', name: 'RBTirePressureLowerLimit', index: 'RBTirePressureLowerLimit', width: 0, align: 'center', sortable: true },
+            { label: '右后轮胎压检测值', name: 'RBTirePressureValue', index: 'RBTirePressureValue', width: 0, align: 'center', sortable: true },
+            { label: '右后轮胎压检测结果', name: 'RBTirePressureResult', index: 'RBTirePressureResult', width: 0, align: 'center', sortable: true },
+            { label: '左后轮ID', name: 'LBTireID', index: 'LBTireID', width: 0, align: 'center', sortable: true },
+            { label: '左后轮胎压上限', name: 'LBTirePressureLimit', index: 'LBTirePressureLimit', width: 0, align: 'center', sortable: true },
+            { label: '左后轮胎压下限', name: 'LBTirePressureLowerLimit', index: 'LBTirePressureLowerLimit', width: 0, align: 'center', sortable: true },
+            { label: '左后轮胎压检测值', name: 'LBTirePressureValue', index: 'LBTirePressureValue', width: 0, align: 'center', sortable: true },
+            { label: '左后轮胎压检测结果', name: 'LBTirePressureResult', index: 'LBTirePressureResult', width: 0, align: 'center', sortable: true },
+            { label: '胎压检测单位', name: 'TirePressureUnit', index: 'TirePressureUnit', width: 0, align: 'center', sortable: true },
+            { label: '检测路径', name: 'DetectionSource', index: 'DetectionSource', width: 0, align: 'center', sortable: true },
+            { label: '检测时间', name: 'DetectionTime', index: 'DetectionTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+            { label: '总结果', name: 'TireResult', index: 'TireResult', width: 0, align: 'center', sortable: true },
+
+        ],
+            pager: "#gridPagerTYup",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+
+
+    });
+    }
+
+    //5.拧紧分页
+    //加载拧紧表格
+    function GetGridNJup() {
+        $("#gridTableNJup").jqGrid({
+        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultListJson")",
+        datatype: "json",
+        height: $(window).height() - 170,
+        autowidth: true,
+        colModel: [
+            { label: '主键', name: 'ScrewID', index: 'ScrewID', width: 0, align: 'center', sortable: true, hidden: true },
+            { label: 'VIN', name: 'IDENTIFY', index: 'IDENTIFY', width: 0, align: 'center', sortable: true },
+            { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+            { label: 'JOB号', name: 'JOB_NO', index: 'JOB_NO', width: 50, align: 'center', sortable: true },
+            { label: '批次号', name: 'PSET_NO', index: 'PSET_NO', width: 0, align: 'center', sortable: true },
+            { label: '批次大小', name: 'BATCH_SIZE', index: 'BATCH_SIZE', width: 0, align: 'center', sortable: true },
+            { label: '批次号', name: 'BATCH_COUNT', index: 'BATCH_COUNT', width: 100, align: 'center', sortable: true },
+            { label: '批次状态', name: 'BATCH_STATUS', index: 'BATCH_STATUS', width: 100, align: 'center', sortable: true },
+            { label: '拧紧状态', name: 'TORQUE_STATUS', index: 'TORQUE_STATUS', width:0, align: 'center', sortable: true },
+            { label: '扭矩最小值', name: 'TORQUE_MIN', index: 'TORQUE_MIN', width: 50, align: 'center', sortable: true },
+            { label: '扭矩最大值', name: 'TORQUE_MAX', index: 'TORQUE_MAX', width: 0, align: 'center', sortable: true },
+            { label: '扭矩目标值', name: 'TORQUE_TARGET', index: 'TORQUE_TARGET', width: 0, align: 'center', sortable: true },
+            { label: '扭矩', name: 'TORQUE', index: 'TORQUE', width: 0, align: 'center', sortable: true },
+            { label: '角度状态', name: 'ANGLE_STATUS', index: 'ANGLE_STATUS', width: 0, align: 'center', sortable: true },
+            { label: '角度最小值', name: 'ANGLE_MIN', index: 'ANGLE_MIN', width: 0, align: 'center', sortable: true },
+            { label: '角度最大值', name: 'ANGLE_MAX', index: 'ANGLE_MAX', width: 0, align: 'center', sortable: true },
+            { label: '角度目标值', name: 'ANGLE_TARGET', index: 'ANGLE_TARGET', width: 0, align: 'center', sortable: true },
+            { label: '角度', name: 'ANGLE', index: 'ANGLE', width: 0, align: 'center', sortable: true },
+            { label: '拧紧号', name: 'TIGHTENING_ID', index: 'TIGHTENING_ID', width: 0, align: 'center', sortable: true },
+            { label: '拧紧状态', name: 'TIGHTENING_STATUS', index: 'TIGHTENING_STATUS', width: 0, align: 'center', sortable: true },
+            { label: '执行时间', name: 'TIME_STAMP', index: 'TIME_STAMP', width: 0, align: 'center', sortable: true },
+        ],
+            pager: "#gridPagerNJup",
+            sortname: '',
+            sortorder: 'desc',
+            //隔行变色
+            altRows: true,//单双行样式不同
+            altclass: 'differ',//单双行样式
+            gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+
+    //EOL数据导出
+    function btn_deriveEOL() {
+        var StartTime = $("#StartTime").val();                  //开始时间
+        var EndTime = $("#EndTime").val();                      //结束时间
+        var VIN = $("#InputVIN").val();                         //VIN号
+        var CarType = $("#ConditionCarType").val();             //车型
+
+        var count = $("#gridTableEOLup").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataEOL?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) ;
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //检测线数据导出
+    function btn_deriveTestLine() {
+        var StartTime = $("#StartTime").val();                  //开始时间
+        var EndTime = $("#EndTime").val();                      //结束时间
+        var VIN = $("#InputVIN").val();                         //VIN号
+        var CarType = $("#ConditionCarType").val();             //车型
+
+        var count = $("#gridPagerTestLineup").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTestLine?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //加注数据导出
+    function btn_deriveJZ() {
+        var StartTime = $("#StartTime").val();                  //开始时间
+        var EndTime = $("#EndTime").val();                      //结束时间
+        var VIN = $("#InputVIN").val();                         //VIN号
+        var CarType = $("#ConditionCarType").val();             //车型
+
+        var count = $("#gridTableJZup").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataJZ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //胎压数据导出
+    function btn_deriveTY() {
+        var StartTime = $("#StartTime").val();                  //开始时间
+        var EndTime = $("#EndTime").val();                      //结束时间
+        var VIN = $("#InputVIN").val();                         //VIN号
+        var CarType = $("#ConditionCarType").val();             //车型
+
+        var count = $("#gridTableTYup").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTY?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+    //拧紧数据导出
+    function btn_deriveNJ() {
+        var StartTime = $("#StartTime").val();                  //开始时间
+        var EndTime = $("#EndTime").val();                      //结束时间
+        var VIN = $("#InputVIN").val();                         //VIN号
+        var CarType = $("#ConditionCarType").val();             //车型
+
+        var count = $("#gridTableNJup").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataNJ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                Loading(false);
+            }, 200);
+        }
+    }
+</script>
+
+<!--工具栏-->
+<div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+    @*按钮区域*@
+    <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+        <div class="PartialButton">
+            @Html.Partial("_PartialButton")
+        </div>
+    </div>
+    @*搜索框区域*@
+    <table border="0" class="form-find" style="height: 40px;">
+        <tr>
+
+            <th>车型：</th>
+            <td>
+                <select id="ConditionCarType" style="width: 150px;height:25px;"></select>
+            </td>
+
+            <th>VIN号：</th>
+            <td>
+                <input id="InputVIN" type="text" class="txt" style="width: 150px;" />
+            </td>
+
+            <th id="STime_s" style="">开始时间：</th>
+            <td>
+                <input id="StartTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(-7)" style="width: 120px" onfocus="var endDate=$dp.$('EndTime');WdatePicker({maxDate:'#F{$dp.$D(\'EndTime\')}'}); blur();" readonly />
+            </td>
+            <th id="ETime_s" style="">结束时间：</th>
+            <td>
+                <input id="EndTime" type="text" class="txt Wdate" value="@HfutIE.Utilities.DateTimeHelper.GetDate(0)" style="width: 120px" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'StartTime\')}'}); blur();" readonly />
+            </td>
+            <td>
+                <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+            </td>
+        </tr>
+    </table>
+    @*表格区域*@
+    @*一级分页按钮*@
+    <div class="bd" style="border-bottom: none; margin: 1px;">
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="tab_list_top" style="position: absolute">
+                <div id="TabcheckEOL" class="tab_list bd upTab" onclick="changeupTab('EOL')"> EOL集成 </div>
+                <div id="TabcheckTESTLine" class="tab_list bd upTab" onclick="changeupTab('TESTLine')">检测信息</div>
+                <div id="TabcheckJZ" class="tab_list bd upTab" onclick="changeupTab('JZ')">加注信息</div>
+                <div id="TabcheckTMPS" class="tab_list bd upTab" onclick="changeupTab('TMPS')">胎压信息</div>
+                <div id="TabcheckNJ" class="tab_list bd upTab" onclick="changeupTab('NJ')">拧紧信息</div>
+            </div>
+        </div>
+    </div>
+    @*EOL区域*@
+    <div id="EOLPage" class="upDiv" style="height:100%;width:100%;float:left;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableEOLup"></table>
+            <div id="gridPagerEOLup"></div>
+        </div>
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableEOL1"></table>
+            <div id="gridPagerEOL1"></div>
+        </div>
+    </div>
+
+    @*检测线区域*@
+    <div id="TESTLinePage" class="upDiv" style="height:100%;width:100%;float:left;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineup"></table>
+            <div id="gridPagerTestLineup"></div>
+        </div>
+        @*二级分页按钮*@
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="tab_list_top" style="position: absolute">
+                <div id="TabcheckTestLineSpeed" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Speed')">速度</div>
+                <div id="TabcheckTestLineSlip" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Slip')">侧滑</div>
+                <div id="TabcheckTestLineHorn" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Horn')">声级</div>
+                <div id="TabcheckTestLineHead" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Head')">灯光</div>
+                <div id="TabcheckTestLineBrake" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Brake')">制动</div>
+                <div id="TabcheckTestLineAngle" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Angle')">转角</div>
+                <div id="TabcheckTestLineAlignment" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('Alignment')">四轮定位</div>
+                <div id="TabcheckTestLineABS" class="tab_list bd TESTLineTab" onclick="TESTLineTabchange('ABS')">ABS</div>
+            </div>
+        </div>
+        <div id="checkTestLineSpeed" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineSpeed"></table>
+            <div id="gridPagerTestLineSpeed"></div>
+        </div>
+        <div id="checkTestLineSlip" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineSlip"></table>
+            <div id="gridPagerTestLineSlip"></div>
+        </div>
+        <div id="checkTestLineHorn" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineHorn"></table>
+            <div id="gridPagerTestLineHorn"></div>
+        </div>
+        <div id="checkTestLineHead" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineHead"></table>
+            <div id="gridPagerTestLineHead"></div>
+        </div>
+        <div id="checkTestLineBrake" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineBrake"></table>
+            <div id="gridPagerTestLineBrake"></div>
+        </div>
+        <div id="checkTestLineAngle" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineAngle"></table>
+            <div id="gridPagerTestLineAngle"></div>
+        </div>
+        <div id="checkTestLineAlignment" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineAlignment"></table>
+            <div id="gridPagerTestLineAlignment"></div>
+        </div>
+        <div id="checkTestLineABS" class="topline rightline TESTLineDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTestLineABS"></table>
+            <div id="gridPagerTestLineABS"></div>
+        </div>
+    </div>
+
+    @*加注区域*@
+    <div id="JZPage" class="upDiv" style="height:100%;width:100%;float:left;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZup"></table>
+            <div id="gridPagerJZup"></div>
+        </div>
+        @*二级分页按钮*@
+        <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+            <div class="tab_list_top" style="position: absolute">
+                <div id="TabcheckJZEHYFDY" class="tab_list bd JZTab" onclick="JZTabchange('EHYFDY')"> 二合一防冻液 </div>
+                <div id="TabcheckJZEHYZXY" class="tab_list bd JZTab" onclick="JZTabchange('EHYZXY')">二合一转向液</div>
+                <div id="TabcheckJZSHYZDY" class="tab_list bd JZTab" onclick="JZTabchange('SHYZDY')">三合一制动液</div>
+                <div id="TabcheckJZSHYLM" class="tab_list bd JZTab" onclick="JZTabchange('SHYLM')">三合一冷媒</div>
+                <div id="TabcheckJZSHYXDY" class="tab_list bd JZTab" onclick="JZTabchange('SHYXDY')">三合一洗涤液</div>
+                <div id="TabcheckJZZYCL" class="tab_list bd JZTab" onclick="JZTabchange('ZYCL')">正压CL</div>
+                <div id="TabcheckJZZYBR" class="tab_list bd JZTab" onclick="JZTabchange('ZYBR')">正压BR</div>
+                <div id="TabcheckJZZYAC" class="tab_list bd JZTab" onclick="JZTabchange('ZYAC')">正压AC</div>
+            </div>
+        </div>
+        <div id="checkJZEHYFDY" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZEHYFDY"></table>
+            <div id="gridPagerJZEHYFDY"></div>
+        </div>
+        <div id="checkJZEHYZXY" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZEHYZXY"></table>
+            <div id="gridPagerJZEHYZXY"></div>
+        </div>
+        <div id="checkJZSHYZDY" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZSHYZDY"></table>
+            <div id="gridPagerJZSHYZDY"></div>
+        </div>
+        <div id="checkJZSHYLM" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZSHYLM"></table>
+            <div id="gridPagerJZSHYLM"></div>
+        </div>
+        <div id="checkJZSHYXDY" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZSHYXDY"></table>
+            <div id="gridPagerJZSHYXDY"></div>
+        </div>
+        <div id="checkJZZYCL" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZZYCL"></table>
+            <div id="gridPagerJZZYCL"></div>
+        </div>
+        <div id="checkJZZYBR" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZZYBR"></table>
+            <div id="gridPagerJZZYBR"></div>
+        </div>
+        <div id="checkJZZYAC" class="topline rightline JZDiv" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableJZZYAC"></table>
+            <div id="gridPagerJZZYAC"></div>
+        </div>
+    </div>
+
+    @*胎压区域*@
+    <div id="TMPSPage" class="upDiv" style="height:100%;width:100%;float:left;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableTYup"></table>
+            <div id="gridPagerTYup"></div>
+        </div>
+    </div>
+    @*<div id="TMPSPage" class="upDiv" style="height:100%;width:100%;float:left;display:none;">
+            <div id="TopPanelTY" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
+                <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+                    <div style="height: 100% ;width:auto; ">
+                        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                            <table id="gridTableTYup"></table>
+                            <div id="gridPagerTYup"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    @*拧紧区域*@
+    <div id="NJPage" class="upDiv" style="height:100%;width:100%;float:left;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTableNJup"></table>
+            <div id="gridPagerNJup"></div>
+        </div>
+    </div>
+    @*<div id="NJPage" class="upDiv" style="height:100%;width:100%;float:left;display:none;">
+        <div id="TopPanelNJ" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
+            <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
+                <div style="height: 100% ;width:auto; ">
+                    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+                        <table id="gridTableNJup"></table>
+                        <div id="gridPagerNJup"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+</div>

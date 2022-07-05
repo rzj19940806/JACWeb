@@ -92,7 +92,7 @@
                 { label: '员工编号', name: 'StfCd', index: 'StfCd', width: 0, align: 'center', sortable: true },
                 { label: '员工姓名', name: 'StfNm', index: 'StfNm', width: 0, align: 'center', sortable: true },
                 {
-                    label: '性别', name: 'StfGndr', index: 'StfGndr', width: 0, align: 'center', sortable: true,
+                    label: '性别', name: 'StfGndr', index: 'StfGndr', width: 0, align: 'center', sortable: true,hidden: true ,
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == '1') return "女";
                         if (cellvalue == '0') return "男";

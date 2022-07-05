@@ -1,0 +1,202 @@
+@{
+    ViewBag.Title = "关重件录入数据";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        //BindDropItem("#AviType", "AviType", "==全部==");
+        GetGrid();
+        btn_Search();
+    })
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+        //url: "@Url.Content("~/BaseModule/Q_KeyPartsBind_Pro/GetECPageList")",
+        datatype: "json",
+        height: $(window).height() - 149,
+        autowidth: true,
+            colModel: [
+                { label: '订单号', name: 'OrderCd', index: 'OrderCd', width: 100, align: 'center', sortable: true },
+                { label: '计划编号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 150, align: 'center', sortable: true },
+                { label: 'VIN', name: 'VIN', index: 'VIN', width: 175, align: 'center',sortable: true  },
+            { label: '车型', name: 'CarType', index: 'CarType', width: 50, align: 'center', sortable: true, },
+                { label: '车身编号', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
+                { label: '环保码', name: 'Code', index: 'Code', width: 400, align: 'center',sortable: true  },
+            {
+                label: '时间', name: 'Tm', index: 'Tm', width: 0, align: 'center', sortable: true,
+                formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+        ],
+        pager: "#gridPager",
+            sortname: 'Datetime',
+            sortorder: 'asc',
+            gridview: true,
+            rowNum: 200,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+}
+    //刷新
+    function windowload() {
+        $("#gridTable").trigger("reloadGrid"); //重新载入
+
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+    //查询
+     function btn_Search() {
+        var condition = {};
+        condition["TimeStart"] = $("#TimeStart").val();
+        condition["TimeEnd"] = $("#TimeEnd").val();
+
+        let time1 = new Date(condition.TimeStart).getTime();
+        let time2 = new Date(condition.TimeEnd).getTime();
+
+        if (time1 > time2 || TimeStart == '' || TimeEnd == '') {
+            tipDialog("时间不合法，请重新操作！", 1, 0);
+            return;
+        } else
+        {
+            condition["VIN"] = $("#VIN").val();
+            condition["OrderCd"] = $("#OrderCd").val();
+            condition["ProducePlanCd"] = $("#ProducePlanCd").val();
+            condition["CarType"] = $("#CarType").val();
+            condition["MatCd"] = $("#MatCd").val();
+
+            $("#gridTable").jqGrid('setGridParam', {
+                url: "@Url.Content("~/BaseModule/Q_KeyPartsBind_Pro/GetECPageList")", postData: condition, page: 1, datatype: 'json'
+            }).trigger('reloadGrid');
+        }
+    }
+
+
+    //修改后导出
+    根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var TimeStart = $("#TimeStart").val();
+        var TimeEnd = $("#TimeEnd").val();
+        var VIN= $("#VIN").val();
+        var OrderCd= $("#OrderCd").val();
+        var CarType= $("#CarType").val();
+        var ProductMatCd = $("#ProductMatCd").val();
+        var MatCd = $("#MatCd").val();
+        var MatNm = $("#MatNm").val();
+        var SupplierCd= $("#SupplierCd").val();
+        var PlineNm = $("#PlineNm").val();
+        var WcCd = $("#WcCd").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/Q_KeyPartsBind_Pro/GetExcel_Data?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) + "&VIN=" + escape(VIN) + "&OrderCd=" + escape(OrderCd) + "&CarType=" + escape(CarType) + "&ProductMatCd=" + escape(ProductMatCd)
+                    + "&MatCd=" + escape(MatCd) + "&MatNm=" + escape(MatNm) + "&SupplierCd=" + escape(SupplierCd) + "&PlineNm=" + escape(PlineNm) + "&WcCd=" + escape(WcCd);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<!--工具栏-->
+@*按钮区域*@
+<div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*搜索框区域*@
+<table border="0" class="form-find" style="height: 45px;">
+    <tr>
+        <th>
+            VIN
+        </th>
+        <td>
+            <input id="VIN" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            订单号
+        </th>
+        <td>
+            <input id="OrderCd" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            计划编号
+        </th>
+        <td>
+            <input id="ProducePlanCd" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            车型
+        </th>
+        <td>
+            <select id="CarType" style="width: 125px; height: 25px">
+                <option value="">全部</option>
+                <option value="3">M3</option>
+                <option value="4">M4</option>
+                <option value="5">L5</option>
+                <option value="6">L6</option>
+            </select>
+        </td>
+        <th>
+            车型编号
+        </th>
+        <td>
+            <input id="MatCd" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th>
+            开始时间
+        </th>
+        <td>
+            <input id="TimeStart" type="text" class="txt Wdate" style="width: 125px"  value="@DateTime.Now.AddDays(-DateTime.Now.Day + 1).ToString("yyyy-MM-dd")"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'TimeEnd\')}'}); blur();" readonly />
+        </td>
+        <th>
+            结束时间
+        </th>
+        <td>
+            <input id="TimeEnd" type="text" class="txt Wdate" style="width: 125px" value="@DateTime.Now.AddMonths(1).AddDays(-DateTime.Now.AddMonths(1).Day).ToString("yyyy-MM-dd")" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'TimeStart\')}'}); blur();" readonly/>
+        </td>
+        <th>
+            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+        </th>
+    </tr>
+</table>
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>

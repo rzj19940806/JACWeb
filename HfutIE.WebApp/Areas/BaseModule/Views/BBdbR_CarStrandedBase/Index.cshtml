@@ -7,6 +7,7 @@
         GetGrid();
         BindDropItem("#StrandedGrand", "StrandedGrand", "==全部==");
         BindDropItem("#StrandedRule", "StrandedRule", "==全部==");
+        Show();
     })
     //加载表格
     function GetGrid() {
@@ -121,6 +122,16 @@
             btn_Search();
         }
     });
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var type = $("#Condition").val();
+        window.setTimeout(function () {
+            location.href = "/BaseModule/BBdbR_CarStrandedBase/GetExcel_Data?type=" + escape(type);
+            Loading(false);
+        }, 200);
+    }
     //根据数据字典显示内容
     function CellItem(Code, cellvalue) {
         var value = "";

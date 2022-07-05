@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,6 +15,11 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 {
     public class BBdbR_CarStrandedBaseController : PublicController<BBdbR_CarStrandedBase>
     {
+        #region 全局变量定义区
+        //定义本页面主要操作的表的表名，称为主表
+        string tableName = "BBdbR_CarStrandedBase";
+        public static DataTable CarStrandedList = new DataTable();
+        #endregion
 
         #region 创建数据库操作对象区域
         //创建数据库访问对象，用以访问其中操作数据库的方法
@@ -36,10 +42,10 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         {
             try
             {
-                DataTable ListData = MyBll.GetPlanList();
+                CarStrandedList = MyBll.GetPlanList();
                 var JsonData = new
                 {
-                    rows = ListData,
+                    rows = CarStrandedList,
                 };
                 string a = JsonData.ToJson();
                 return Content(JsonData.ToJson());
@@ -87,19 +93,25 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     //===复制时需要修改===
                     BBdbR_CarStrandedBase Oldentity = repositoryfactory.Repository().FindEntity(KeyValue);//获取没更新之前实体对象
-                    entity.RuleId = KeyValue;
+                    entity.Modify(KeyValue);
                     IsOk = MyBll.Update(entity);//将修改后的实体更新到数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, Oldentity, KeyValue, Message);//记录日志
+                    //IsOk = MyBll.CheckCount(Name, Value);//判断页面中填写的数据的编号字段的值是否存在
+                    //if (IsOk > 1)//存在
+                    //{
+                    //    Message = "该编号已经存在！";
+                    //    return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
+                    //}
                 }
                 else//新增操作
                 {
-                    IsOk = MyBll.CheckCount(Name, Value);//判断页面中填写的数据的编号字段的值是否存在
-                    if (IsOk > 0)//存在
-                    {
-                        Message = "该编号已经存在！";
-                        return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
-                    }
-                    entity.RuleId = System.Guid.NewGuid().ToString();
+                    //IsOk = MyBll.CheckCount(Name, Value);//判断页面中填写的数据的编号字段的值是否存在
+                    //if (IsOk > 0)//存在
+                    //{
+                    //    Message = "该编号已经存在！";
+                    //    return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
+                    //}
+                    entity.Create();
                     IsOk = MyBll.Insert(entity);//将实体插入数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志
                 }
@@ -170,20 +182,19 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 string keyword = keywords.Trim();
                 Stopwatch watch = CommonHelper.TimerStart();
-                List<BBdbR_CarStrandedBase> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+                CarStrandedList = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
                 var JsonData = new
                 {
                     total = jqgridparam.total,
                     page = jqgridparam.page,
                     records = jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = CarStrandedList,
                 };
-                return Content(ListData.ToJson());
+                return Content(CarStrandedList.ToJson());              
             }
             catch (Exception ex)
             {
-                //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
                 Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
                 return null;
             }
@@ -257,6 +268,36 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             {
                 throw;
             }
+        }
+        #endregion
+
+        #region 10.重构导出方法
+        /// <summary>
+        /// 1.如果是按照条件查询后再进行
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public ActionResult GetExcel_Data(string type, JqGridParam jqgridparam)
+        {
+            Stopwatch watch = CommonHelper.TimerStart();
+            DataTable ListData = new DataTable();
+
+            ListData = CarStrandedList.DefaultView.ToTable("滞留区域管理基本信息表", true, "AreaCd", "AreaNm", "AreaTyp", "StaAVINm", "EndAVINm", "StrandedGrand", "StrandedRuleTm", "StrandedRule", "CreTm", "CreCd", "CreNm");//获取特定列
+
+            if (ListData.Rows.Count > 0)
+            {
+                string fileName = "滞留区域管理基本信息表";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_CarStranded(ListData, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            else
+                return null;
         }
         #endregion
     }

@@ -43,7 +43,7 @@ namespace HfutIE.Business
         public DataTable ReGetConfigList(string keywords, JqGridParam jqgridparam) //===复制时需要修改===
         {
             string sql = "";
-            sql = @"select * from BBdbR_PlineBase where Enabled=1 and PlineId not in (select distinct(PlineId) from BBdbR_AVIWhereaboutsConfig where Enabled=1 and AviId='" + keywords + "')";
+            sql = @"select * from BBdbR_PlineBase where Enabled=1 and PlineId not in (select distinct(PlineId) as PlineId from BBdbR_AVIWhereaboutsConfig where Enabled=1 and AviId='" + keywords + "')";
             return (Repository().FindTableBySql(sql.ToString(), false));
         }
         #endregion
@@ -82,7 +82,7 @@ namespace HfutIE.Business
             string sql = "";
             if (keywords != "")
             {
-                sql = @"select a.*,b.AVIWhereId as AVIWhereId,b.PlineMark as PlineMark,b.IsIndependence as IsIndependence,b.ToAVISequence as ToAVISequence,b.ToAVIId as ToAVIId,b.ToAVICd as ToAVICd,b.ToAVINm as ToAVINm,c.AviCd as AviCd,c.AviNm as AviNm from BBdbR_PlineBase a join " + tableName + " b on a.PlineId=b.PlineId join BBdbR_AVIBase c on b.AviId=c.AviId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and b.AviId='" + keywords + "'";
+                sql = @"select a.*,b.AVIWhereId as AVIWhereId,b.PlineMark as PlineMark,b.IsIndependence as IsIndependence,b.ToAVISequence as ToAVISequence,b.ToAVIId as ToAVIId,b.ToAVICd as ToAVICd,b.ToAVINm as ToAVINm,c.AviCd as AviCd,c.AviNm as AviNm,b.Rem as Rem0 from BBdbR_PlineBase a join " + tableName + " b on a.PlineId=b.PlineId join BBdbR_AVIBase c on b.AviId=c.AviId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and b.AviId='" + keywords + "'";
                 return (Repository().FindTableBySql(sql.ToString(), false));
             }
             else
@@ -158,9 +158,19 @@ namespace HfutIE.Business
             int Isok = 0;
             if (PlineId != "")
             {
+                string sql = "select PlineId,PlineCd,PlineNm from BBdbR_PlineBase where PlineId='"+ PlineId + "'";
+                DataTable Plinedt= Repository().FindTableBySql(sql.ToString());
+                string sql1 = "select AVISequence,AviCd as AVICd,AviNm as AVINm from BBdbR_AVIBase where AviId='" + AviId + "'";
+                DataTable Avidt = Repository().FindTableBySql(sql1.ToString());
                 BBdbR_AVIWhereaboutsConfig Classentity = new BBdbR_AVIWhereaboutsConfig();
                 Classentity.AviId = AviId;
                 Classentity.PlineId = PlineId;
+                Classentity.ToPlineCd = Plinedt.Rows[0]["PlineCd"].ToString();
+                Classentity.ToPlineNm = Plinedt.Rows[0]["PlineNm"].ToString();
+                if (Avidt.Rows[0]["avisequence"].ToString()!="")
+                {
+                    Classentity.AVISequence = int.Parse(Avidt.Rows[0]["avisequence"].ToString());
+                }
                 Classentity.Create();
                 Repository().Insert(Classentity);
                 Isok = 1;
@@ -181,7 +191,7 @@ namespace HfutIE.Business
         {
             string sql = "";
             BBdbR_AVIWhereaboutsConfig entity = new BBdbR_AVIWhereaboutsConfig();
-            sql = @"select a.*,b.AviNm as AviNm,c.PlineNm as PlineNm from BBdbR_AVIWhereaboutsConfig a join BBdbR_AVIBase b on a.AviId=b.AviId join BBdbR_PlineBase c on a.PlineId=c.PlineId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and a.AVIWhereId='" + KeyValue + "'";
+            sql = @"select a.*,b.AviNm as AviNm,c.PlineNm as PlineNm,c.PlineCd as PlineCd from BBdbR_AVIWhereaboutsConfig a join BBdbR_AVIBase b on a.AviId=b.AviId join BBdbR_PlineBase c on a.PlineId=c.PlineId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and a.AVIWhereId='" + KeyValue + "'";
             DataTable dt = Repository().FindTableBySql(sql.ToString(), false);
             if (dt.Rows.Count>0)
             {
@@ -190,9 +200,18 @@ namespace HfutIE.Business
                 entity.ToAVICd = dt.Rows[0]["ToAVICd"].ToString();
                 entity.ToAVINm = dt.Rows[0]["ToAVINm"].ToString();
                 entity.AviId = dt.Rows[0]["AviId"].ToString();
-                entity.IsIndependence=int.Parse(dt.Rows[0]["IsIndependence"].ToString()) ;
-                entity.ToAVISequence= int.Parse(dt.Rows[0]["ToAVISequence"].ToString()); 
+                entity.Rem = dt.Rows[0]["Rem"].ToString();
+                if (dt.Rows[0]["IsIndependence"].ToString()!="" )
+                {
+                    entity.IsIndependence = int.Parse(dt.Rows[0]["IsIndependence"].ToString());
+                }
+                if (dt.Rows[0]["ToAVISequence"].ToString() != "")
+                {
+                    entity.ToAVISequence = int.Parse(dt.Rows[0]["ToAVISequence"].ToString());
+                }
                 entity.PlineId = dt.Rows[0]["PlineId"].ToString();
+                entity.ToPlineCd = dt.Rows[0]["PlineCd"].ToString();
+                entity.ToPlineNm = dt.Rows[0]["PlineNm"].ToString();
                 entity.RsvFld1 = dt.Rows[0]["AviNm"].ToString();
                 entity.RsvFld2 = dt.Rows[0]["PlineNm"].ToString();
                 entity.PlineMark = dt.Rows[0]["PlineMark"].ToString();
@@ -222,7 +241,7 @@ namespace HfutIE.Business
         //获取人员信息
         public DataTable GetAviNm2(string ToAVIId)
         {
-            string sql = @"select AviCd,AviNm from BBdbR_AVIBase where Enabled='1' and AviId=" + "'" + ToAVIId + "'";
+            string sql = @"select AviCd,AviNm,AVISequence from BBdbR_AVIBase where Enabled='1' and AviId=" + "'" + ToAVIId + "'";
             return Repository().FindTableBySql(sql.ToString(), false);
         }
         /// <summary>

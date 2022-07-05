@@ -1,0 +1,169 @@
+@{
+    ViewBag.Title = "生产信息类采集记录表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_ProduceInfoRecord/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/CommonModule/E_ProduceInfoRecord/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <input id="RecId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>机构级别：</th>
+            <td class='formValue'>
+                <input id="Class" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>机构ID：</th>
+            <td class='formValue'>
+                <input id="ClassId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备主键：</th>
+            <td class='formValue'>
+                <input id="DvcId" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备编号：</th>
+            <td class='formValue'>
+                <input id="DvcCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>设备名称：</th>
+            <td class='formValue'>
+                <input id="DvcNm" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身号：</th>
+            <td class='formValue'>
+                <input id="BodyNo" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <input id="CarType" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身物料号：</th>
+            <td class='formValue'>
+                <input id="MatCd" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身面漆颜色：</th>
+            <td class='formValue'>
+                <input id="CarColor1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车身罩光颜色：</th>
+            <td class='formValue'>
+                <input id="CarColor2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>流水号：</th>
+            <td class='formValue'>
+                <input id="SequenceNo" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>生产计数：</th>
+            <td class='formValue'>
+                <input id="Count" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>下线时间：</th>
+            <td class='formValue'>
+                <input id="OfflineTime" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>采集状态：</th>
+            <td class='formValue'>
+                <input id="CollectionStatus" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>采集日期：</th>
+            <td class='formValue'>
+                <input id="CollectionDate" maxlength=10 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>采集时间：</th>
+            <td class='formValue'>
+                <input id="CollectionTime" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>创建时间：</th>
+            <td class='formValue'>
+                <input id="CreTm" maxlength=23 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段1：</th>
+            <td class='formValue'>
+                <input id="RsvFld1" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>预留字段2：</th>
+            <td class='formValue'>
+                <input id="RsvFld2" maxlength=50 type="text" class="txt"   />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

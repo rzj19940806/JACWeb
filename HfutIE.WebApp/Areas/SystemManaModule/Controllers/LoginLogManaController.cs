@@ -1,12 +1,17 @@
 using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
+using HfutIE.Repository;
 using HfutIE.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -22,6 +27,7 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
 
         #region 操作表格
         S_SysLogBll MyBll = new S_SysLogBll();
+        Base_SysLogBll base_syslogbll = new Base_SysLogBll();
         #endregion
 
         #region 全局变量
@@ -55,12 +61,12 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         /// <param name="EndTime">制单结束时间</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GetLogList(string StartTime, string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetLogList(string CreateUserName ,string IPAddress,string StartTime, string EndTime, JqGridParam jqgridparam)
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetLogList(StartTime, EndTime, jqgridparam);                
+                DataTable ListData = base_syslogbll.GetLogList(CreateUserName, IPAddress,StartTime, EndTime,ref jqgridparam);                
                 var JsonData = new
                 {
                     total = jqgridparam.total,
@@ -69,11 +75,12 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
                     costtime = CommonHelper.TimerEnd(watch),
                     rows = ListData,
                 };
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "登录日志信息查询成功");
                 return Content(JsonData.ToJson());
             }
             catch (Exception ex)
             {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "登录日志信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -103,35 +110,35 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         #endregion
 
         #region 加载日志
-        /// <summary>
-        /// 【系统日志】返回系统日志列表JSON
-        /// </summary>
-        /// <param name="ModuleId">模块ID</param>
-        /// <param name="ParameterJson">搜索条件</param>
-        /// <param name="jqgridparam">表格参数</param>
-        /// <returns></returns>
-        public ActionResult GridPageListJson(string ModuleId, string ParameterJson, JqGridParam jqgridparam)
-        {
-            try
-            {
-                Stopwatch watch = CommonHelper.TimerStart();
-                DataTable ListData = MyBll.GetPageList(ModuleId);
-                var JsonData = new
-                {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
-                    costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
-                };
-                return Content(JsonData.ToJson());
-            }
-            catch (Exception ex)
-            {
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
-                return null;
-            }
-        }
+        ///// <summary>
+        ///// 【系统日志】返回系统日志列表JSON
+        ///// </summary>
+        ///// <param name="ModuleId">模块ID</param>
+        ///// <param name="ParameterJson">搜索条件</param>
+        ///// <param name="jqgridparam">表格参数</param>
+        ///// <returns></returns>
+        //public ActionResult GridPageListJson(string ModuleId, string ParameterJson, JqGridParam jqgridparam)
+        //{
+        //    try
+        //    {
+        //        Stopwatch watch = CommonHelper.TimerStart();
+        //        DataTable ListData = base_syslogbll.GetLoginList(ref jqgridparam);
+        //        var JsonData = new
+        //        {
+        //            total = jqgridparam.total,
+        //            page = jqgridparam.page,
+        //            records = jqgridparam.records,
+        //            costtime = CommonHelper.TimerEnd(watch),
+        //            rows = ListData,
+        //        };
+        //        return Content(JsonData.ToJson());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+        //        return null;
+        //    }
+        //}
         #endregion
 
         #region 加载日志详细信息
@@ -172,26 +179,31 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
         public ActionResult SubmitRemoveLog(string KeepTime)
         {
             string Remark = "";
-            if (KeepTime == "7")//保留近一周
+            if (KeepTime == "6")//保留近半年
             {
-                Remark = "保留近一周";
+                Remark = "保留近半年";
             }
-            else if (KeepTime == "1")//保留近一个月
+            else if (KeepTime == "12")//保留近一年
             {
-                Remark = "保留近一个月";
+                Remark = "保留近一年";
             }
-            else if (KeepTime == "3")//保留近三个月
+            else if (KeepTime == "36")//保留近三年
             {
-                Remark = "保留近三个月";
+                Remark = "保留近三年";
             }
-            if (KeepTime == "0")//
+            else if (KeepTime == "60")//保留近五年
+            {
+                Remark = "保留近五年";
+            }
+            else if (KeepTime == "0")//不保留，全部删除
             {
                 Remark = "不保留，全部删除";
             }
+
             try
             {
                 var Message = "清空失败。";
-                int IsOk = MyBll.RemoveLog(KeepTime);
+                int IsOk = base_syslogbll.RemoveLoginLog(KeepTime);
                 if (IsOk >= 0)
                 {
                     IsOk = 1;
@@ -205,6 +217,86 @@ namespace HfutIE.WebApp.Areas.SystemManaModule.Controllers
                 Base_SysLogBll.Instance.WriteLog("", OperationType.Other, "-1", Remark + "," + "错误：" + ex.Message);
                 return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败，错误：" + ex.Message }.ToString());
             }
+        }
+        #endregion
+
+        #region 重构导出
+        public ActionResult GetExcel_Data(string CreateUserName, string IPAddress, string StartTime, string EndTime, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 根据当前搜索条件查出数据并导出
+
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"SELECT CreateDate,LogType,IPAddress,CreateUserName,Status,Remark FROM Base_SysLog WHERE LogType = '0' ");
+
+                #region 判断输入框内容添加检索条件
+                List<DbParameter> parameter = new List<DbParameter>();
+                if (!string.IsNullOrEmpty(CreateUserName))
+                {
+                    strSql.Append(" AND CreateUserName LIKE @CreateUserName");
+                    parameter.Add(DbFactory.CreateDbParameter("@CreateUserName", "%" + CreateUserName + "%"));
+                }
+                if (!string.IsNullOrEmpty(IPAddress))
+                {
+                    strSql.Append(" AND IPAddress LIKE @IPAddress");
+                    parameter.Add(DbFactory.CreateDbParameter("@IPAddress", "%" + IPAddress + "%"));
+                }
+                if (!string.IsNullOrEmpty(StartTime))
+                {
+                    parameter.Add(DbFactory.CreateDbParameter("@StartTime", CommonHelper.GetDateTime(StartTime)));
+                    strSql.Append(" AND DATEDIFF(ss, @StartTime,CreateDate)>=0 ");
+                }
+                if (!string.IsNullOrEmpty(EndTime))
+                {
+
+                    parameter.Add(DbFactory.CreateDbParameter("@EndTime", CommonHelper.GetDateTime(EndTime)));
+                    strSql.Append(" AND DATEDIFF(ss, @EndTime,CreateDate)<=0 ");
+                }
+
+                //if (!string.IsNullOrEmpty(CreateUserName))
+                //{
+                //    strSql.Append(" AND CreateUserName LIKE '%" + CreateUserName + "%'");
+                //}
+                //if (!string.IsNullOrEmpty(IPAddress))
+                //{
+                //    strSql.Append(" AND IPAddress LIKE '%" + IPAddress + "%'");
+                //}
+                //if (!string.IsNullOrEmpty(StartTime))
+                //{
+                //    strSql.Append(" AND CreateDate >= '" + StartTime + "' ");
+                //}
+                //if (!string.IsNullOrEmpty(EndTime))
+                //{
+                //    strSql.Append(" AND CreateDate <=  '" + EndTime + "' ");
+                //}
+                #endregion
+
+                //按照计划时间排序
+                strSql.Append(" order by CreateDate desc");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                #endregion
+
+
+
+                string fileName = "登录日志";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_LoginLogMana(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "登录日志导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "登录日志导出操作失败：" + ex.Message);
+                return null;
+            }
+
         }
         #endregion
 

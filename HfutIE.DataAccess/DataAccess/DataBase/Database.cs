@@ -1887,5 +1887,13 @@ namespace HfutIE.DataAccess
         }
         #endregion
 
+        #region SQL注入新增
+        public DataTable FindTableBySql(string strSql, DbParameter[] parameters, bool isLower)
+        {
+            IDataReader dr = DbHelper.ExecuteReader(CommandType.Text, strSql.ToString(), parameters);
+            return DatabaseReader.ReaderToDataTable(dr, isLower);
+        }
+        #endregion
+
     }
 }

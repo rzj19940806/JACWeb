@@ -1,4 +1,5 @@
 ﻿using HfutIE.Business;
+using HfutIE.DataAccess;
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
@@ -6,8 +7,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -138,27 +142,56 @@ namespace HfutIE.WebApp.Areas.baseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string keywords, string Condition, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string CompanyCd, string CompanyNm, JqGridParam jqgridparam)
         {
             try
             {
-                string keyword = keywords.Trim();
+                CompanyCd = CompanyCd.Trim();
+                CompanyNm = CompanyNm.Trim();
                 Stopwatch watch = CommonHelper.TimerStart();
-                List<BBdbR_CompanyBase> ListData = MyBll.GetPageListByCondition(keyword, Condition, jqgridparam);//===复制时需要修改===
+
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                //未加搜索条件
+                strSql.Append(@"select * from BBdbR_CompanyBase where Enabled = '1' ");
+
+                //公司编号模糊查询
+                if (CompanyCd != "" && CompanyCd!=null)
+                {
+                    strSql.Append(" and CompanyCd like @CompanyCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@CompanyCd", "%" + CompanyCd + "%"));
+                }
+                else { }
+
+                //公司名称模糊查询
+                if (CompanyNm != "" && CompanyNm != null)
+                {
+                    strSql.Append(" and CompanyNm like @CompanyNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@CompanyNm", "%" + CompanyNm + "%"));
+                }
+                else { }
+
+                //排序
+                strSql.Append(" order by sort ");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
                 {
-                    total = jqgridparam.total,
-                    page = jqgridparam.page,
-                    records = jqgridparam.records,
+                    jqgridparam.total,
+                    jqgridparam.page,
+                    jqgridparam.records,
                     costtime = CommonHelper.TimerEnd(watch),
-                    rows = ListData,
+                    rows = dt,
                 };
-                return Content(ListData.ToJson());
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "公司基础信息查询成功");
+                return Content(JsonData.ToJson());
+                
             }
             catch (Exception ex)
             {
                 //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
-                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "异常错误：" + ex.Message);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "公司基础信息查询发生异常错误：" + ex.Message);
                 return null;
             }
         }
@@ -197,6 +230,61 @@ namespace HfutIE.WebApp.Areas.baseModule.Controllers
             }
         }
 
+        #endregion
+
+        #region 5.重构导出
+        public ActionResult GetExcel_Data(string CompanyCd, string CompanyNm)
+        {
+            try
+            {
+
+                #region 根据当前搜索条件查出数据并导出
+                CompanyCd = CompanyCd.Trim();
+                CompanyNm = CompanyNm.Trim();
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                //未加搜索条件
+                strSql.Append(@"select CompanyCd,CompanyNm,ArtificialPerson,CompanyTelephone,CompanyFax,CompanyEmail,CompanyAddress,CompanyDescription,sort,CreCd,CreNm,CreTm,MdfCd,MdfNm,MdfTm,Rem from BBdbR_CompanyBase where Enabled = '1' ");
+                //公司编号模糊查询
+                if (CompanyCd != "" && CompanyCd != null)
+                {
+                    strSql.Append(" and CompanyCd like @CompanyCd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@CompanyCd", "%" + CompanyCd + "%"));
+                }
+                else { }
+                //公司名称模糊查询
+                if (CompanyNm != "" && CompanyNm != null)
+                {
+                    strSql.Append(" and CompanyNm like @CompanyNm ");
+                    parameter.Add(DbFactory.CreateDbParameter("@CompanyNm", "%" + CompanyNm + "%"));
+                }
+                else { }
+                //排序
+                strSql.Append(" order by sort ");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                #endregion
+
+
+
+                string fileName = "公司管理";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_CompanyBase(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "公司基础信息导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "公司基础信息导出操作失败：" + ex.Message);
+                return null;
+            }
+
+        }
         #endregion
 
         #endregion

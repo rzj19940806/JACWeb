@@ -1,0 +1,67 @@
+@{
+    ViewBag.Title = "E_EOLCheckResult》明细页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/CommonModule/E_EOLCheckResult/SetForm", { KeyValue: GetQuery('KeyValue') }, function (data) {
+                SetWebControls(data);
+            });
+        }
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <table class="form">
+        <tr>
+            <th class='formTitle'>主键：</th>
+            <td class='formValue'>
+                <label id="ECRID" />
+            </td>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <label id="VIN" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <label id="Car" />
+            </td>
+            <th class='formTitle'>车型：</th>
+            <td class='formValue'>
+                <label id="CarType" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>名称：</th>
+            <td class='formValue'>
+                <label id="CarName" />
+            </td>
+            <th class='formTitle'>站点：</th>
+            <td class='formValue'>
+                <label id="Station" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>时间：</th>
+            <td class='formValue'>
+                <label id="Time" />
+            </td>
+            <th class='formTitle'>测试次数：</th>
+            <td class='formValue'>
+                <label id="TestNum" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>结果：</th>
+            <td class='formValue'>
+                <label id="Result" />
+            </td>
+        </tr>
+    </table>
+</form>

@@ -131,5 +131,9 @@ namespace HfutIE.DataAccess
         object FindMax<T>(string propertyName, string WhereSql, DbParameter[] parameters) where T : new();
         object FindMaxBySql(string strSql);
         object FindMaxBySql(string strSql, DbParameter[] parameters);
+
+        #region SQL注入新增
+        DataTable FindTableBySql(string strSql, DbParameter[] parameters, bool isLower);
+        #endregion
     }
 }

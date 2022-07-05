@@ -8,7 +8,7 @@
 
     $(function () {
         RateGradeList();
-        addClassNm();
+        //addClassNm();
         InitControl();
     })
     //得到一个对象实体
@@ -18,21 +18,31 @@
                 $("#OrgRank").val(data.OrgRank);
                 $("#RsvFld1").val(data.OrgId);
                 $("#ClassNm").val(data.ClassId);
+                $("#MorningStrTm").val(data.MorningStrTm);
+                $("#MorningEndTm").val(data.MorningEndTm);
+                $("#AfternoonStrTm").val(data.AfternoonStrTm);
+                $("#AfternoonEndTm").val(data.AfternoonEndTm);
+                $("#NightStrTm").val(data.NightStrTm);
+                $("#NightEndTm").val(data.NightEndTm);
+                $("#WorkTime").val(data.WorkTime);
                 $("#DtTyp").val(data.DtTyp);
                 $("#Rem").val(data.Rem);
+                if (data.Rem == "&nbsp;") {
+                    $("#Rem").val("");
+                }
                 $("#Tm").val(Tm);
             });
-        }
+        } else getTime();
     }
     
-    //班制下拉框
-    function addClassNm() {
-        AjaxJson("/BaseModule/BPdb_Dt/GetClassNm?", {}, function (data) {
-            for (var i = 0; i < data.rows.length; i++) {
-                $("#ClassNm").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["classnm"] + "</option>");
-            }
-        }); 
-    }
+    ////班制下拉框
+    //function addClassNm() {
+    //    AjaxJson("/BaseModule/BPdb_Dt/GetClassNm?", {}, function (data) {
+    //        for (var i = 0; i < data.rows.length; i++) {
+    //            $("#ClassNm").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["classnm"] + "</option>");
+    //        }
+    //    }); 
+    //}
 
     //机构名称下拉框
     function RateGradeList() {
@@ -52,6 +62,43 @@
                     $("#RsvFld1").append("<option value='" + data.rows[i]["id"] + "' >" + data.rows[i]["plinenm"] + "</option>");
                 }
             });
+        }
+    }
+
+    //班制选择
+    function getTime() {
+        let classid = $('#ClassNm option:selected').val();//班制id
+        //AjaxJson("/BaseModule/BPdb_Dt/getTime?", { ClassId: classid }, function (data) {
+        //    $("#StrTime").val(data.ItemArray[0]);
+        //    $("#EndTime").val(data.ItemArray[1]);
+        //    $("#WorkTime").val(data.ItemArray[2]);
+        //});
+        if (classid == "1") {
+            $("#MorningStrTm").val("08:00");
+            $("#MorningEndTm").val("11:40");
+            $("#AfternoonStrTm").val("13:00");
+            $("#AfternoonEndTm").val("17:40");
+            $("#NightStrTm").val("");
+            $("#NightEndTm").val("");
+            $("#WorkTime").val("8");
+        }
+        if (classid == "2") {
+            $("#MorningStrTm").val("08:00");
+            $("#MorningEndTm").val("11:40");
+            $("#AfternoonStrTm").val("13:00");
+            $("#AfternoonEndTm").val("17:40");
+            $("#NightStrTm").val("19:00");
+            $("#NightEndTm").val("21:00");
+            $("#WorkTime").val("10");
+        }
+        if (classid == "3") {
+            $("#MorningStrTm").val("08:00");
+            $("#MorningEndTm").val("11:40");
+            $("#AfternoonStrTm").val("13:00");
+            $("#AfternoonEndTm").val("17:40");
+            $("#NightStrTm").val("19:00");
+            $("#NightEndTm").val("23:00");
+            $("#WorkTime").val("12");
         }
     }
 
@@ -90,23 +137,69 @@
         <tr>
             <th class='formTitle' style="width:100px">机构名称：</th>
             <td class='formValue' colspan="3">
-                <select id="RsvFld1" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onclick="" ></select>
+                <select id="RsvFld1" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="机构名称" onclick=""></select>
             </td>
         </tr>
         <tr>
-            <th class='formTitle' >日期：</th>
+            <th class='formTitle'>日期：</th>
             <td class="formValue" colspan="3">
-                <input id="Tm" type="date" class="txt  " datacol="yes" err="日期" checkexpession="NotNull"/>
+                <input id="Tm" type="date" class="txt  " datacol="yes" err="日期" checkexpession="NotNull" />
             </td>
-        </tr>   
+        </tr>
         <tr>
             <th class='formTitle'>班制名称：</th>
             <td class='formValue' colspan="3">
-                <select id="ClassNm" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="班制名称" onclick=""></select>
+                <select id="ClassNm" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="班制名称" onchange="getTime()">
+                    <option value="1" selected="selected">8小时</option>
+                    <option value="2">10小时</option>
+                    <option value="3">12小时</option>
+                </select>
             </td>
         </tr>
         <tr>
-            <th class='formTitle' >日期类型：</th>
+            <th class='formTitle'>早上开始：</th>
+            <td class='formValue' colspan="3">
+                <input id="MorningStrTm" maxlength=100 type="time" class="txt" datacol="yes" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>早上结束：</th>
+            <td class='formValue' colspan="3">
+                <input id="MorningEndTm" maxlength=100 type="time" class="txt" datacol="yes" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>下午开始：</th>
+            <td class='formValue' colspan="3">
+                <input id="AfternoonStrTm" maxlength=100 type="time" class="txt" datacol="yes" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>下午结束：</th>
+            <td class='formValue' colspan="3">
+                <input id="AfternoonEndTm" maxlength=100 type="time" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>晚上开始：</th>
+            <td class='formValue' colspan="3">
+                <input id="NightStrTm" maxlength=100 type="time" class="txt" datacol="yes" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>晚上结束：</th>
+            <td class='formValue' colspan="3">
+                <input id="NightEndTm" maxlength=100 type="time" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>工作时间：</th>
+            <td class='formValue' colspan="3">
+                <input id="WorkTime" maxlength=100 type="number" class="txt required" datacol="yes" err="工作时间" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>日期类型：</th>
             <td class='formValue' colspan="3">
                 <select id="DtTyp" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="日期类型" onclick="" autocomplete="off">
                     <option value="1">工作</option>
@@ -124,7 +217,7 @@
             </td>
         </tr>*@
         <tr>
-            <th class='formTitle' >备注：</th>
+            <th class='formTitle'>备注：</th>
             <td class='formValue' colspan="3">
                 <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
             </td>

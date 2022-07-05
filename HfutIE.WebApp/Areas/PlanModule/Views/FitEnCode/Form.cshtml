@@ -1,0 +1,62 @@
+@{
+    ViewBag.Title = "合装线编码器数值记录表》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/PlanModule/FitEnCode/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                //document.getElementById("CodeValue").readOnly = false;
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var ChangeValue = $("#ChangeValue").val();
+        var postData = GetWebControls("#form1");
+        AjaxJson("/PlanModule/FitEnCode/SubmitForm1", { ChangeValue: ChangeValue, KeyValue: KeyValue}, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            //top.frames[tabiframeId()].changevalue(ChangeValue);
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        @*<tr>
+            <th class='formTitle'>VIN码：</th>
+            <td class='formValue'>
+                <input id="VIN" maxlength=50 type="text" class="txt" readonly="readonly"  />
+            </td>
+        </tr>*@
+        @*<tr>
+            <th class='formTitle'>顺序：</th>
+            <td class='formValue'>
+                <input id="Sort" maxlength=10 type="text" class="txt" datacol="yes" err="顺序" checkexpession="NumOrNull"  />
+            </td>
+        </tr>*@
+        @*<tr>
+            <th class='formTitle'>累计数值：</th>
+            <td class='formValue'>
+                <input id="CodeValue" maxlength=10 type="text" class="txt" datacol="yes" err="累计数值" checkexpession="NumOrNull" readonly="readonly" />
+            </td>
+        </tr>*@
+        <tr>
+            <th class='formTitle'>修改数值：</th>
+            <td class='formValue'>
+                <input id="ChangeValue" maxlength=10 type="text" class="txt" placeholder="建议输入±100之间 单位：cm"/>
+            </td>
+        </tr>
+    </table>
+</form>

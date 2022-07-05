@@ -2,10 +2,17 @@
     ViewBag.Title = "批量分配用户";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+<style>
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+</style>
 <script>
     var RoleId = GetQuery('RoleId');                  //对象主键
-    var Category = GetQuery('RoleCatg');                  //分类
     var CategoryName = GetQuery('RoleNm');          //分类名称
+    var Category = GetQuery('Category');                  //分类
+    var DepartmentId = "";
     $(function () {
         $("#ObjectTitle").html(CategoryName);
         $("#layoutA").splitter({
@@ -58,7 +65,10 @@
             onnodeclick: function (item) {
                 $(".sys_spec_text").html("");   
                 if (item.id != "") {
-                    RoleId = item.id;
+                    //RoleId = item.id;
+                    CategoryName = item.text;
+                    DepartmentId = item.id;
+                    $("#ObjectTitle").html(CategoryName);
                     Loading(true);
                     window.setTimeout(function () {
                         GetList();
@@ -69,13 +79,13 @@
                     $("#CheckButton").attr('class', 'checkAllOff');
                 }
             },
-            url: "@Url.Content("~/SystemManaModule/RoleMana/ScopeRoleList")?RoleId=" + RoleId + '&Category=' + Category
+            url: "@Url.Content("~/SystemManaModule/RoleMana/ScopeRoleList_new")?RoleId=" + RoleId
         };
         $("#ItemsTree").treeview(itemtree);
     }
     //加载该角色用户
     function GetList() {
-        getAjax("/SystemManaModule/RoleMana/MemberList", { RoleId: RoleId, Category: Category }, function (data) {
+        getAjax("/SystemManaModule/RoleMana/MemberList", { RoleId: RoleId, Category: Category, DepartmentId: DepartmentId}, function (data) {
             $(".sys_spec_text").html(data);
         });
         //选中/不选中
@@ -97,7 +107,7 @@
             Loading(true, "正在提交数据...");
             window.setTimeout(function () {
                 var UserId = ""; $('.sys_spec_text .selected a').each(function () { UserId += $(this).attr('id') + ","; });
-                var postData = { UserId: UserId, RoleId: RoleId, Category: Category, }
+                var postData = { UserId: UserId, RoleId: RoleId, Category: Category}
                 AjaxJson("/SystemManaModule/RoleMana/AuthorizedMember", postData, function (data) {
                     Loading(false);
                     tipDialog(data.Message, 3, data.Code);
@@ -115,7 +125,7 @@
 </div>
 <div id="layoutA" class="layout" onselectstart="return false;" style="-moz-user-select: none;">
     <!--左边-->
-    <div class="layoutPanel layout-west">
+    <div class=" layout-west">
         <div class="btnbartitle">
             <div>
                 归属<span id="ObjectTitle"></span>

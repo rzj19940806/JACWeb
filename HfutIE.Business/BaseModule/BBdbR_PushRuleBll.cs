@@ -6,6 +6,7 @@
 using HfutIE.Entity;
 using HfutIE.Repository;
 using HfutIE.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -51,13 +52,13 @@ namespace HfutIE.Business
             {
                 if (keywords != "all")
                 {
-                    sql = @"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm,c.WcCd as WcCd,c.WcNm as WcNm from " + tableName + " a left join BBdbR_PlineBase b on a.PlineId=b.PlineId left join BBdbR_WcBase c on a.WcId=c.WcId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and a." + Condition + " like  '%" + keywords + "%'";
+                    //sql = @"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm,c.WcCd as WcCd,c.WcNm as WcNm from " + tableName + " a left join BBdbR_PlineBase b on a.PlineId=b.PlineId left join BBdbR_WcBase c on a.WcId=c.WcId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and a." + Condition + " like  '%" + keywords + "%'";
+                    sql = @"select * from " + tableName + " Where Enabled = '1' and " + Condition + " like  '%" + keywords + "%'";
                     //根据条件查询
                 }
                 else
                 {
                     sql = @"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm,c.WcCd as WcCd,c.WcNm as WcNm from " + tableName + " a left join BBdbR_PlineBase b on a.PlineId=b.PlineId left join BBdbR_WcBase c on a.WcId=c.WcId where a.Enabled=1";
-
                 }              
             }
             return Repository().FindTableBySql(sql.ToString(), false);
@@ -101,7 +102,7 @@ namespace HfutIE.Business
         /// <returns>返回的是搜索的表中包含该字段值的记录条数</returns>
         public int CheckCount(string tableName, string KeyName, string KeyValue)
         {
-            string sql = @"select * from " + tableName + " where  " + KeyName + " = '" + KeyValue + "'";
+            string sql = @"select * from " + tableName + " where Enabled = '1' and " + KeyName + " = '" + KeyValue + "'";
             DataTable count = Repository().FindTableBySql(sql);
             int a = count.Rows.Count;
             return a;
@@ -130,13 +131,13 @@ namespace HfutIE.Business
         //产线
         public DataTable GetPlineNm()
         {
-            string sql = @"select PlineId as id, PlineNm from BBdbR_PlineBase where 1=1";
+            string sql = @"select PlineId as id, PlineNm from BBdbR_PlineBase where Enabled = '1'";
             return Repository().FindTableBySql(sql);
         }
 
         public DataTable GetWcNm()
         {
-            string sql = @"select WcId as id, WcNm from BBdbR_WcBase where 1=1";
+            string sql = @"select WcId as id, WcNm from BBdbR_WcBase where Enabled = '1'";
             return Repository().FindTableBySql(sql);
         }
         #endregion
@@ -158,6 +159,87 @@ namespace HfutIE.Business
                 listEntity.Add(entity);
             }
             return Repository().Update(listEntity);//修改数据库
+        }
+        #endregion
+
+        #region 7.填充编辑界面
+        /// <summary>
+        /// 填充编辑
+        /// </summary>
+        /// <param name="KeyValue"></param>
+        /// <returns></returns>
+        public BBdbR_PushRule GetPushEntity(string KeyValue,string ClassType)
+        {
+            string sql = "";
+            if (KeyValue!="")
+            {
+                if (ClassType== "产线")
+                {
+                    sql = "select a.RuleId,a.AreaCd,a.ClassType,a.PlineId,a.WcId,a.PushType,a.PushTm,a.AndonFile,a.VersionNumber,a.Enabled,a.CreTm,a.CreCd,a.CreNm,a.MdfTm,a.MdfCd,a.MdfNm,a.Rem,a.RsvFld2,b.PlineNm as RsvFld1 from BBdbR_PushRule a left join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.RuleId='" + KeyValue + "' and a.Enabled='1'";
+                }
+                else
+                {
+                    sql = "select a.RuleId,a.AreaCd,a.ClassType,a.PlineId,a.WcId,a.PushType,a.PushTm,a.AndonFile,a.VersionNumber,a.Enabled,a.CreTm,a.CreCd,a.CreNm,a.MdfTm,a.MdfCd,a.MdfNm,a.Rem,a.RsvFld2,c.WcNm as RsvFld1 from BBdbR_PushRule a left join BBdbR_WcBase c on a.WcId=c.WcId where a.RuleId='" + KeyValue + "' and a.Enabled='1'";
+                }                    
+            }
+            return Repository().FindEntityBySql(sql.ToString());
+        }
+        #endregion
+
+        #region 8.导出模板
+        public void GetExcellTemperature(string ImportId, out DataTable data, out string DataColumn, out string fileName)
+        {
+            DataColumn = "";
+            data = new DataTable();
+            Base_ExcelImport base_excelimport = DataFactory.Database().FindEntity<Base_ExcelImport>(ImportId);
+            fileName = base_excelimport.ImportFileName;
+            List<Base_ExcelImportDetail> listBase_ExcelImportDetail = DataFactory.Database().FindList<Base_ExcelImportDetail>("ImportId", ImportId);
+            object[] rows = new object[listBase_ExcelImportDetail.Count];
+            int i = 0;
+            foreach (Base_ExcelImportDetail excelImportDetail in listBase_ExcelImportDetail)
+            {
+                if (DataColumn == "")
+                {
+                    DataColumn = DataColumn + excelImportDetail.ColumnName;
+                }
+                else
+                {
+                    DataColumn = DataColumn + "|" + excelImportDetail.ColumnName;
+                }
+                switch (excelImportDetail.DataType)
+                {
+                    //字符串
+                    case "0":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //数字
+                    case "1":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(decimal));
+                        rows[i] = "";
+                        break;
+                    //日期
+                    case "2":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(DateTime));
+                        rows[i] = DateTime.Now;
+                        break;
+                    //外键
+                    case "3":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    //唯一识别
+                    case "4":
+                        data.Columns.Add(excelImportDetail.ColumnName, typeof(string));
+                        rows[i] = "";
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+            data.Rows.Add(rows);
+
         }
         #endregion
     }

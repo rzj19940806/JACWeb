@@ -2,67 +2,131 @@
     ViewBag.Title = "班次基本信息表";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+<style type="text/css">
+    .ZebraClass {
+        background-color: #f1f1f1;
+        background-image: none;
+    }
+</style>
 <script type="text/javascript">
+    var key;
     $(function () {
         GetGrid();
         GetGrid1();
+        Show();
         BindDropItem("#RestTm", "RestTm", "==全部==");
+/*        BindDropItem("#TmType", "TmType", "==全部==");*/
     })
     //加载表格
     function GetGrid() {
         $("#gridTable").jqGrid({
-        url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridPageJson")",
+        url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridPageByCondition1")",
         datatype: "json",
-        height: 288,
+        height: ($(window).height() - 270) * 0.5,
         autowidth: true,
         colModel: [
                 { label: '主键', name: 'ShiftId', index: 'ShiftId', width: 0, align: 'center',sortable: true,hidden:true  },
                 { label: '班次编号', name: 'ShiftCd', index: 'ShiftCd', width: 0, align: 'center',sortable: true  },
                 { label: '班次名称', name: 'ShiftNm', index: 'ShiftNm', width: 0, align: 'center',sortable: true  },
                 {
-                    label: '时间类型', name: 'RestTm', index: 'RestTm', width: 0, align: 'center', sortable: true,
+                    label: '时间类型', name: 'RestTm', index: 'RestTm', width: 0, align: 'center', sortable: true, hidden: true ,
                     formatter: function (cellvalue, options, rowObject) {
                         return CellItem('RestTm', cellvalue);
                     }
                 },
-                { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center',sortable: true  },
-                { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center',sortable: true  },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                       if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                       else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                }
-                },
+                { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true, hidden: true  },
+                { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true, hidden: true  },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                
                 { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center',sortable: true  },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center',sortable: true  },
-                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true},
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true},
                 { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center',sortable: true  },
-                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true  },
-                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true},
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true  },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true},
                 { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true  },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true  },
-        ],
-        pager: "#gridPager",
-        sortname: '',
-        sortorder: 'desc',
-        rownumbers: true,
-        shrinkToFit: false,
-        gridview: true,
-        onSelectRow: function (RowId) {
+            ],
+            viewrecords: true,//显示总的记录条数
+            pager: "#gridPager",
+            sortname: 'ShiftCd',
+            sortorder: 'asc',          
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: true,
+            multiselect: true,
+            multiboxonly: true,
+            subGrid: true,
+            rowNum: 15,
+            rowList: [15, 50, 100, 500],
+            iewrecords: true, //是否显示行数
+            onSelectRow: function (RowId) {
             var KeyValue = GetJqGridRowValue("#gridTable", "ShiftId");
             $("#gridTable_Bottom").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridListJson_Down")?KeyValue=" + KeyValue, page: 1, datatype: 'json' }).trigger('reloadGrid');
-        },
+            },
+            subGridRowExpanded: function (subgrid_id, row_id) {
+                subgrid_table_id = subgrid_id + "_t";
+                var subgrid_pager_id;
+                subgrid_pager_id = subgrid_id + "_pgr";
+                $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + subgrid_pager_id + "' class='scroll'></div>");
+                var condition = "ShiftId";
+                var KeyValue = GetJqGridValue("#gridTable", row_id, "ShiftId");
+                $("#" + subgrid_table_id).jqGrid({
+                    url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridListJson_TimeConfig")?KeyValue=" + KeyValue, page: 1, datatype: 'json',
+                    datatype: "json",
+                    colModel: [
+                        //{ label: '班次时间配置主键', name: 'ShiftTimeConfigId', index: 'ShiftTimeConfigId', width: 0, align: 'center', sortable: true, hidden: true },
+                        { label: '班次主键', name: 'ShiftId', index: 'ShiftId', width: 0, align: 'center', sortable: true, hidden: true  },
+                        {
+                            label: '时间类型', name: 'RestTm', index: 'RestTm', width: 0, align: 'center', sortable: true,
+                            formatter: function (cellvalue, options, rowObject) {
+                                return CellItem('RestTm', cellvalue);
+                            }
+                        },
+                        { label: '开始时间', name: 'StrtRestTm', index: 'StrtRestTm', width: 0, align: 'center', sortable: true },
+                        { label: '结束时间', name: 'EndRestTm', index: 'EndRestTm', width: 0, align: 'center', sortable: true },
+                        //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                        
+                        { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
+                        { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                        { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true, hidden: true },
+                        { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true },
+                        { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+                        { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true},
+                        { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                        { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                        { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+                    ],
+                    forceFit: true,//表格大小固定在容器区域内
+                    scrollofset: true,//取消滚动条留白区域
+                    rowNum: "all",
+                    sortname: 'StrtRestTm',
+                    sortorder: 'asc',        
+                    altRows: true,
+                    altclass: 'ZebraClass',
+                    autowidth: true,
+                    multiselect: true,
+                    multiboxonly: true,
+                    rownumbers: true,//启用记录条数
+                    rowList: [200, 100, 500, 1000],//记录条数列表
+                    viewrecords: true,//显示总的记录条数
+                    rownumWidth: 45,//序号列宽
+                    shrinkToFit: true,//列宽自适应
+                    loadonce: true,//排序
+                    onSelectRow: function (RowId) {
+                        key = GetJqGridRowValue("#" + subgrid_table_id, "ShiftId");
+                    },
+                });
+            }
        });
     }
-
+    
     //加载班制配置信息表格
     function GetGrid1() {
         $("#gridTable_Bottom").jqGrid({
             datatype: "json",
-            height: 280,
+            height: ($(window).height() - 270) * 0.5,
             autowidth: true,
             colModel: [
                 { label: '班组主键', name: 'TeamId', index: 'TeamId', width: 0, align: 'center', sortable: true, hidden: true },
@@ -75,14 +139,14 @@
                     }
                 },
                 { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
-                {
-                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
-                        else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
-                    }
-                },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true },
+                //{
+                //    label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true,
+                //    formatter: function (cellvalue, options, rowObject) {
+                //        if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                //        else if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                //    }
+                //},
                 { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true },
                 { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
@@ -93,12 +157,20 @@
                 { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
             ],
+            viewrecords: true,//显示总的记录条数
             pager: "#gridPager_Bottom",
-            sortname: '',
-            sortorder: 'desc',
-            rownumbers: true,
-            shrinkToFit: false,
+            sortname: 'TeamCd',
+            sortorder: 'asc',
             gridview: true,
+            multiselect: true,
+            rowNum: 15,
+            rowList: [15, 50, 100, 500],
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            iewrecords: true, //是否显示行数
         });
     }
 
@@ -113,6 +185,8 @@
         var url = "/BaseModule/BFacR_ShiftBase/Form"
         openDialog(url, "Form", "新增班次", 500, 300, function (iframe) {
             top.frames[iframe].AcceptClick()
+            $("#gridTable").trigger("reloadGrid"); //重新载入
+            Replace();
         });
     }
 
@@ -126,16 +200,52 @@
         var url = "/BaseModule/BFacR_ShiftBase/Form?KeyValue=" + KeyValue;
         openDialog(url, "Form", "编辑班次", 500, 300, function (iframe) {
             top.frames[iframe].AcceptClick()
+            $("#gridTable").trigger("reloadGrid"); //重新载入
+            Replace();
         });
     }
 
     //删除
     function btn_delete() {
         var KeyValue = GetJqGridRowValue("#gridTable", "ShiftId");
+
         if (IsDelData(KeyValue)) {
             var delparm = 'KeyValue=' + KeyValue;
             delConfig('/BaseModule/BFacR_ShiftBase/Delete', delparm, KeyValue.split(",").length);
+        };
+    }
+
+    //新增班次配置按钮
+    function btn_add_TmConfig() {
+        var FatherKey = GetJqGridRowValue("#gridTable", "ShiftId");
+        if (FatherKey != undefined) {
+            var url = "/BaseModule/BFacR_ShiftBase/ShiftTimeConfig?FatherKey=" + FatherKey;
+            openDialog(url, "ShiftTimeConfig", "新增班次时间配置", 500, 300, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        } else {
+            alertDialog("请先选择班次！", 0);
         }
+    }
+
+    //编辑班次配置按钮
+    function btn_edit_TmConfig() {
+        if (!IsChecked(key)) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/BaseModule/BFacR_ShiftBase/ShiftTimeConfig?KeyValue=" + key;
+        openDialog(url, "ShiftTimeConfig", "编辑班次时间配置", 500, 300, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //删除班次配置按钮
+    function btn_delete_TmConfig() {
+        var key = GetJqGridRowValue("#" + subgrid_table_id, "ShiftId");
+        if (IsDelData(key)) {
+            var delparm = 'KeyValue=' + key;
+            delConfig('/BaseModule/BFacR_ShiftBase/Delete', delparm, key.split(",").length);
+        };
     }
     //班组配置
     function btn_Config() {
@@ -147,28 +257,73 @@
             });
         }
     }
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else if (Condition == "ShiftCd") {
+            $("#keywords").show();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
 
     //搜索
     function btn_Search() {
+
         var Condition = $("#Condition").val();
         var keywords = $("#keywords").val();
-        $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1
-    }).trigger('reloadGrid');
+        if (Condition == "ShiftCd" && keywords == "") {
+            tipDialog("请输入编号！", 1.5, 0);
+            return; 
+        } else if (Condition == "ShiftNm" && keywords == '') {          
+                tipDialog("请输入名称！", 1.5, 0);
+                return;
+        }       
+        $("#gridTable").jqGrid('setGridParam', {            
+            url: "@Url.Content("~/BaseModule/BFacR_ShiftBase/GridPageByCondition1")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
     }
 
     //导入
     function btn_import() {
         openDialog("/BaseModule/BFacR_ShiftBase/ExcelImportDialog", "ExcelImportDialog", "班次基本信息导入", 750, 300, function (iframe) {
             top.frames[iframe].AcceptClick();
+            Replace();
         });
     }
-    //导出Excel
+
+    ////导出Excel
+    //function btn_derive() {
+    //    SetDeriveExcel("#gridTable", "班次基本信息");
+    //    openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "班次基本信息导出", 600, 300, function (iframe) {
+    //        top.frames[iframe].AcceptClick();
+    //    });
+    //}
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
-        SetDeriveExcel("#gridTable", "班次基本信息");
-        openDialog("/CommonModule/ExcelImport/DeriveDialog", "DeriveDialog", "班次基本信息导出", 600, 300, function (iframe) {
-            top.frames[iframe].AcceptClick();
-        });
+        var type = $("#Condition").val();
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BFacR_ShiftBase/GetExcel_Data?type=" + escape(type);
+                Loading(false);
+            }, 200);
+        }
+       
     }
 
     //根据数据字典显示内容
@@ -197,7 +352,7 @@
         <tr>
             <th>关键字：</th>
             <td>
-                <select id="Condition" style="width: 150px;height:25px">
+                <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
                     <option value="all">==全部==</option>
                     <option value="ShiftCd">班次编号</option>
                     <option value="ShiftNm">班次名称</option>
@@ -211,34 +366,26 @@
             </td>
         </tr>
     </table>
-    <div id="TopPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:100%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px">
-                    班次清单 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 49% ;width:auto; ">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable"></table>
-                    <div id="gridPager"></div>
-                </div>
-            </div>
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px">
+            班次清单 <span class="ModuleName"></span>
         </div>
     </div>
-    <div id="BottomPanel" class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;width:100%;float:left;height:45%">
-        <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;height:100%">
-            <div class="btnbartitle">
-                <div style="float: left;margin-left:22px;">
-                    班组配置信息 <span class="ModuleName"></span>
-                </div>
-            </div>
-            <div style="height: 40%; width:auto;">
-                <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-                    <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
-                    <div id="gridPager_Bottom"></div>
-                </div>
-            </div>
+    <div style="height: 49% ;width:auto; ">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+    <div class="btnbartitle">
+        <div style="float: left;margin-left:22px;">
+            班组配置信息 <span class="ModuleName"></span>
+        </div>
+    </div>
+    <div style="height: 40%; width:auto;">
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable_Bottom" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager_Bottom"></div>
         </div>
     </div>
 </div>

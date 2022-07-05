@@ -1,0 +1,282 @@
+﻿@{
+    ViewBag.Title = "用户管理》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var DepartmentId = GetQuery('DepartmentId');
+    var KeyValue = GetQuery('KeyValue');
+    var tipsmes = "";
+    $(function () {
+        //绑定部门
+        //BindDepartment();
+        pwdRankChange();
+        LoadDepartment();//加载部门下拉树
+        
+        //判断新增的时候。如果选择了left项目，公司、部门会自动赋值
+        if (!!DepartmentId) {
+            //获取部门名称
+            AjaxJson("/BaseModule/BBdbR_DepartmentBase/SetForm", { KeyValue: DepartmentId }, function (data) {
+                $("#DepartmentName").val(data.DepartmentName);
+            })
+
+            $("#DepartmentId").val(DepartmentId);
+        }
+        InitControl();
+       
+    })
+    //初始化绑定下拉框
+    function BindCombobox() {
+        //加载公司
+        @*$("#CompanyName").focus(function () {
+            var objId = this.id;
+            comboBoxTree(objId, "150px");
+            var itemtree = {
+                onnodeclick: function (item) {
+                    $("#CompanyId").val(item.id);
+                    $('#CompanyName').val(item.text);
+                    //加载部门
+                    BindDepartment();
+                },
+                url: "@Url.Content("~/CommonModule/Company/TreeJson")"
+            };
+            $("#comboBoxTree" + objId).treeview(itemtree);
+        })*@
+        
+
+    }
+
+    //部门下拉框
+    //function BindDepartment() {
+    //    $("#DepartmentId").html("");
+    //    $("#DepartmentId").append("<option value=''>==请选择==</option>");
+    //    AjaxJson("/SystemManaModule/UserMana/DepartmentList", { }, function (DataJson) {
+    //        $.each(DataJson, function (i) {
+    //            $("#DepartmentId").append($("<option></option>").val(DataJson[i].DepartmentID).html(DataJson[i].DepartmentName));
+    //        });
+    //    })
+    //}
+
+    //得到一个对象实体
+    function InitControl() {
+        if (!!KeyValue) {
+            AjaxJson("/SystemManaModule/UserMana/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                //BindDepartment();
+                //$("#DepartmentId").val(data.DepartmentId);
+                AjaxJson("/BaseModule/BBdbR_DepartmentBase/SetForm", { KeyValue: data.DepartmentId }, function (data) {
+                    $("#DepartmentName").val(data.DepartmentName);
+                })
+                if (!!data.Birthday) {
+                    var time = data.Birthday.substring(0, 10);
+                    $("#Birthday").val(time);
+                }
+                $("#Password").val("******");
+                document.getElementById("Code").readOnly = true;
+                //document.getElementById("Password").readOnly = true;
+            });
+        }
+        
+    }
+   
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        Loading(true, "正在提交数据...");
+        var forms = $("#form1");
+        //Getcheckboxvalue(forms);//更改forms中的CheckBox的value
+        //forms.submit();//提交forms，forms在这里可能不是表单form????????????
+        //return;
+        window.setTimeout(function () {
+            var postData = GetWebControls("#form1");
+            postData["BuildFormJson"] = JSON.stringify(GetWebControls("#CustomAttribute"));
+            AjaxJson("/SystemManaModule/UserMana/SubmitUserForm?KeyValue=" + GetQuery('KeyValue'), postData, function (data) {
+                tipDialog(data.Message, 3, data.Code);
+                top.frames[tabiframeId()].windowload();
+                closeDialog();
+            });
+        }, 200);
+    }
+
+    
+    //获取CheckBox的值
+    function Getcheckboxvalue(element) {
+        var reVal = "";
+        $(element).find('input,select,textarea').each(function (r) {
+            var id = $(this).attr('id');
+            var value = $(this).val();
+            var type = $(this).attr('type');
+            switch (type) {
+                case "checkbox":
+                    if ($(this).attr("checked")) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                    break;
+                default:
+                    if (value == "") {
+                        value = "&nbsp;";
+                    }
+                    break;
+            }
+        });
+        return element;
+    }
+
+
+    //根据密码策略来变更提示信息
+    function pwdRankChange() {
+        var rank = $("#PwdRank").val();
+        if (rank == 1) {
+            tipsmes = "温馨提示：1级密码策略：密码长度在4~20之间";
+        } else if (rank == 2) {
+            tipsmes = "温馨提示：2级密码策略：密码长度在6~20之间，必须包含大小写字母、数字";
+        } else if (rank == 3) {
+            tipsmes = "温馨提示：3级密码策略：密码长度在8~20之间，必须包含大小写字母、数字和特殊字符";
+        }
+        document.getElementById("tips_form").innerHTML = tipsmes;
+    }
+
+    //加载部门
+    function LoadDepartment() {
+        $("#DepartmentName").focus(function () {
+            var objId = this.id;
+            comboBoxTree(objId, "180px");
+            var itemtree = {
+                onnodeclick: function (item) {
+                    $("#DepartmentId").val(item.id);
+                    $('#DepartmentName').val(item.text);
+                },
+                url: "@Url.Content("~/SystemManaModule/UserMana/TreeJson")"
+            };
+            $("#comboBoxTree" + objId).treeview(itemtree);
+        })
+    }
+
+
+</script>
+<form id="form1">
+    <div id="message" style="display: none; padding: 1px; padding-bottom: 0px;"></div>
+    
+    <div class="ScrollBar" style="margin: 1px; overflow: hidden;">
+        <!--基本信息-->
+        <div id="basic" class="tabPanel">
+            <div id="tips_form" class="note-prompt" style="margin: 1px;">
+                温馨提示：
+            </div>
+            <table class="form">
+                <tr>
+                    <th class="formTitle">工号：</th>
+                    <td class="formValue">
+                        <input id="Code" onblur="FieldExist(this.id,'Base_User','UserId','工号')" type="text" class="txt required" datacol="yes" err="工号" checkexpession="NotNull" />
+                    </td>
+                    <th class="formTitle">姓名：</th>
+                    <td class="formValue">
+                        <input id="RealName" type="text" class="txt required" datacol="yes" err="真实" checkexpession="NotNull" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">登录账户：</th>
+                    <td class="formValue">
+                        <input id="Account" onblur="FieldExist(this.id,'Base_User','Account','登录账户')" type="text" class="txt required" datacol="yes" err="登录账户" checkexpession="NotNull" />
+                    </td>
+                    <th class="formTitle">登录密码：</th>
+                    <td class="formValue">
+                        <input id="Password" type="Password" class="txt required" datacol="yes" err="登录密码" checkexpession="NotNull" value="0000"  readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">性别：</th>
+                    <td class="formValue">
+                        <select id="Gender" class="txtselect">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </td>
+                    <th class="formTitle">出生日期：</th>
+                    <td class="formValue">
+                        <input id="Birthday" type="text" class="txt Wdate" onfocus="WdatePicker({maxDate:'%y-%M-%d'})" />
+                    </td>
+                </tr>
+                <tr>
+                    @*
+        <th class="formTitle">所在公司：</th>
+        <td class="formValue">
+            <input id="CompanyId" type="hidden" />
+            <input id="CompanyName" type="text" class="txt icontree" datacol="yes" err="所在公司" checkexpession="NotNull" />
+        </td>*@
+                    <th class="formTitle">密码策略等级：</th>
+                    <td class="formValue">
+                        <select id="PwdRank" class="txtselect" onchange="pwdRankChange()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </td>
+                    <th class="formTitle">所在部门：</th>
+                    <td class="formValue">
+                        <input id="DepartmentId" type="hidden" class="txt" />
+                        <input id="DepartmentName" type="text" class="txt icontree" />
+                        @*<input id="DepartmentId" type="hidden" />
+                        <input id="DepartmentName" maxlength="50" type="text" class="txt required" datacol="yes" err="所在部门" checkexpession="NotNull" />*@
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">电子邮箱：</th>
+                    <td class="formValue">
+                        <input id="Email" type="text" class="txt" />
+                    </td>
+                    <th class="formTitle">联系手机：</th>
+                    <td class="formValue">
+                        <input id="Mobile" type="text" class="txt" datacol="yes" err="手机" checkexpession="MobileOrNull" />
+                    </td>
+                    @*<th class="formTitle">联系电话：</th>
+                <td class="formValue">
+                    <input id="Telephone" type="text" class="txt" datacol="yes" err="电话" checkexpession="PhoneOrNull" />
+                </td>*@
+                </tr>
+                <tr>
+                    <th class='formTitle'>有效性：</th>
+                    <td class='formValue'>
+                        <select id="Enabled" maxlength=100 type="text" class="txt required checkdata" checkexpession="NotNull" datacol="yes" err="是否独立" onclick="">
+                            <option value="1">使用</option>
+                            <option value="2">冻结</option>
+                        </select>
+                    </td>
+                    @*<th class="formTitle"></th>
+        <td class="formValue" colspan="3">
+            <span class="item">
+                <input id="InnerUser" name="InnerUser" type="checkbox" checked="checked" style="vertical-align: middle;" />
+                <label for="InnerUser" style="vertical-align: middle;">内部员工</label>
+                &nbsp;&nbsp;
+            </span>
+            <span class="item">
+                <input id="Enabled" name="Enabled" type="checkbox" checked="checked" style="vertical-align: middle;" />
+                <label for="Enabled" style="vertical-align: middle;">有效</label>
+            </span>
+            <label style="vertical-align: middle; color: red;">注意：禁用该用户后，将不能登录。</label>
+        </td>*@
+                </tr>
+                <tr>
+                    <th class="formTitle">
+                        说明：
+                    </th>
+                    <td class="formValue" colspan="3">
+                        <textarea id="Remark" class="txtArea" rows="6"></textarea>
+                    </td>
+                </tr>
+                @*<tr>
+                <th class="formTitle">证件照：</th>
+                <td class="formValue" rowspan="3" style="float:inherit">
+                    <input id="Photograph" name="Photograph" type="file" accept="image/*" />
+                    <img id="picture" height="145" />
+                </td>
+            </tr>*@
+            </table>
+        </div>
+        
+    </div>
+
+</form>

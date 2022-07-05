@@ -6,14 +6,15 @@
 <script type="text/javascript">
     $(function () {
         CellItem_AviCatg('WorkSectionTy');//需在GetGrid()之前进行初始化赋值
-        GetGrid();
         GetTree();
-        Show();
+        GetGrid();
         BindDropItem("#WorkSectionTy", "WorkSectionTy", "==全部==");
     })
-    var area_key, area_name = "";
+    var area_key = "";
+    var area_name = "";
     var selectnodeishaschild = "";//选中树节点是否有子节点
     var parentId = "";//父节点编号
+    var Nodesort = "";//树层级
 
     var WorkSectionBaseTypeCellItem = "";
 
@@ -25,8 +26,12 @@
                 area_key = item.id;            //ID
                 area_name = item.text;         //名称
                 parentId = item.parentnodes;   //父节点编号
+                Nodesort = item.Type;          //树层级
+                var WorkSectionCd = $("#WorkSectionCd").val();
+                var WorkSectionNm = $("#WorkSectionNm").val();
+                var WorkSectionTy = $("#WorkSectionTy").val();
                 //2.点击树展示表格
-                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_WorkSectionBase/GridListJson")?areaId=" + area_key + "&parentId=" + parentId, datatype: 'json'}).trigger('reloadGrid');
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_WorkSectionBase/GridListJson")?areaId=" + area_key + "&parentId=" + parentId + "&Nodesort=" + Nodesort + "&WorkSectionCd=" + WorkSectionCd + "&WorkSectionNm=" + WorkSectionNm + "&WorkSectionTy=" + WorkSectionTy, datatype: 'json'}).trigger('reloadGrid');
     },
     url: "@Url.Content("~/BaseModule/BBdbR_WorkSectionBase/TreeJson")"    //1.获取树
     };
@@ -44,60 +49,73 @@
             colModel: [
                 { label: '工段主键', name: 'WorkSectionId', index: 'WorkSectionId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '车间主键', name: 'WorkShopId', index: 'WorkShopId', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '工段编号', name: 'WorkSectionCd', index: 'WorkSectionCd', width: 0, align: 'center', sortable: true },
-                { label: '工段名称', name: 'WorkSectionNm', index: 'WorkSectionNm', width: 0, align: 'center', sortable: true },
+                { label: '工段编号', name: 'WorkSectionCd', index: 'WorkSectionCd', width: 100, align: 'center', sortable: true },
+                { label: '工段名称', name: 'WorkSectionNm', index: 'WorkSectionNm', width: 100, align: 'center', sortable: true },
                 {
-                    label: '工段类型', name: 'WorkSectionTy', index: 'WorkSectionTy', width: 150, align: 'center', sortable: true,
+                    label: '工段类型', name: 'WorkSectionTy', index: 'WorkSectionTy', width: 100, align: 'center', sortable: true,
                     formatter: "select", formatoptions: { value: WorkSectionBaseTypeCellItem }
                 },
-                { label: '车间编号', name: 'WorkshopCd', index: 'WorkshopCd', width: 0, align: 'center', sortable: true },
-                { label: '车间名称', name: 'WorkshopNm', index: 'WorkshopNm', width: 0, align: 'center', sortable: true },
-                { label: '车间类型', name: 'WorkshopTyp', index: 'WorkshopTyp', width: 0, align: 'center', sortable: true },
-                { label: 'JPH', name: 'WspJPH', index: 'WspJPH', width: 0, align: 'center', sortable: true },
-                { label: '缓存上限', name: 'CacheQantity', index: 'CacheQantity', width: 0, align: 'center', sortable: true },
-                { label: '缓存下限', name: 'CacheLimit', index: 'CacheLimit', width: 0, align: 'center', sortable: true },
-                { label: '最高在制', name: 'HighestQantity', index: 'HighestQantity', width: 0, align: 'center', sortable: true },
-                { label: '最低在制', name: 'LowestQantity', index: 'LowestQantity', width: 0, align: 'center', sortable: true },
+                { label: '车间编号', name: 'WorkshopCd', index: 'WorkshopCd', width: 100, align: 'center', sortable: true },
+                { label: '车间名称', name: 'WorkshopNm', index: 'WorkshopNm', width: 100, align: 'center', sortable: true },
+                { label: '车间类型', name: 'WorkshopTyp', index: 'WorkshopTyp', width: 100, align: 'center', sortable: true },
+                { label: 'JPH', name: 'WspJPH', index: 'WspJPH', width: 100, align: 'center', sortable: true, hidden: true},
+                { label: '缓存上限', name: 'CacheQantity', index: 'CacheQantity', width: 100, align: 'center', sortable: true, hidden: true},
+                { label: '缓存下限', name: 'CacheLimit', index: 'CacheLimit', width: 100, align: 'center', sortable: true, hidden: true },
+                { label: '最高在制', name: 'HighestQantity', index: 'HighestQantity', width: 100, align: 'center', sortable: true, hidden: true},
+                { label: '最低在制', name: 'LowestQantity', index: 'LowestQantity', width: 100, align: 'center', sortable: true, hidden: true},
                 { label: '负责人员主键', name: 'StfId', index: 'StfId', width: 0, align: 'center', sortable: true , hidden: true},              
-                { label: '负责人员姓名', name: 'StfNm', index: 'StfNm', width: 0, align: 'center', sortable: true },
-                { label: '负责人手机号', name: 'Phn', index: 'Phn', width: 0, align: 'center', sortable: true },
+                { label: '负责人员姓名', name: 'StfNm', index: 'StfNm', width: 100, align: 'center', sortable: true, hidden: true},
+                { label: '负责人手机号', name: 'Phn', index: 'Phn', width: 100, align: 'center', sortable: true, hidden: true},
+                { label: '顺序号', name: 'sort', index: 'sort', width: 100, align: 'center',sortable: true  },
                 {
-                    label: '有效性', name: 'Enable', index: 'Enable', width: 60, align: 'center',
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 60, align: 'center',hidden: true,
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
                         if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
                     }
                 },
-                { label: '工段描述', name: 'WorkSecDsc', index: 'WorkSecDsc', width: 0, align: 'center', sortable: true },
+                { label: '工段描述', name: 'WorkSecDsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
                 { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
             ],
             views: true,//显示总的记录条数
-            rownumbers: true,//显示记录条数
             pager: "#gridPager",
-            sortname: '',//排序列
+            sortname: 'sort',//排序列
             sortorder: 'asc',//排序规则：升序或者降序（asc or desc）
             sortable: true,
-            shrinkToFit: true,
             gridview: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
         });
     }
 
     //加载搜索框
-    function Show() {
-        var Condition = $("#Condition").val();
-        if (Condition == "all") {
-            $("#WorkSectionTy").hide();
-            $("#keywords").hide();
-        }
-        else if (Condition == "WorkSectionTy") {
-            $("#WorkSectionTy").show();
-            $("#keywords").hide();
-        }
-        else {
-            $("#WorkSectionTy").hide();
-            $("#keywords").show();
-        }
-    }
+    //function Show() {
+    //    var Condition = $("#Condition").val();
+    //    if (Condition == "all") {
+    //        $("#WorkSectionTy").hide();
+    //        $("#keywords").hide();
+    //    }
+    //    else if (Condition == "WorkSectionTy") {
+    //        $("#WorkSectionTy").show();
+    //        $("#keywords").hide();
+    //    }
+    //    else {
+    //        $("#WorkSectionTy").hide();
+    //        $("#keywords").show();
+    //    }
+    //}
 
     //刷新
     function windowload() {
@@ -146,17 +164,12 @@
 
     //搜索
     function btn_Search() {
-        var Condition = $("#Condition").val();
-        var keywords;
-        if (Condition == "WorkSectionTy") {
-            keywords = $("#WorkSectionTy").val();
-        }
-        else {
-            keywords = $("#keywords").val();
-        }
+        var WorkSectionCd = $("#WorkSectionCd").val();
+        var WorkSectionNm = $("#WorkSectionNm").val();
+        var WorkSectionTy = $("#WorkSectionTy").val();
 
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_WorkSectionBase/GridPageByCondition")?keywords=" + escape(keywords) + "&Condition=" + escape(Condition), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_WorkSectionBase/GridPageByCondition")?areaId=" + escape(area_key) + "&parentId=" + parentId + "&Nodesort=" + Nodesort + "&WorkSectionCd=" + WorkSectionCd + "&WorkSectionNm=" + WorkSectionNm + "&WorkSectionTy=" + WorkSectionTy, page: 1, datatype: 'json'
         }).trigger('reloadGrid');
         }
     $(document).keypress(function (e) {
@@ -165,6 +178,40 @@
             btn_Search();
         }
     });
+
+
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var WorkSectionCd = $("#WorkSectionCd").val();
+        var WorkSectionNm = $("#WorkSectionNm").val();
+        var WorkSectionTy = $("#WorkSectionTy").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/BaseModule/BBdbR_WorkSectionBase/GetExcel_Data?areaId=" + escape(area_key) + "&parentId=" + parentId + "&Nodesort=" + Nodesort + "&WorkSectionCd=" + WorkSectionCd + "&WorkSectionNm=" + WorkSectionNm + "&WorkSectionTy=" + WorkSectionTy;
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+
+
+
+
+
     //根据数据字典显示内容
     function CellItem(Code, cellvalue) {
         var value = "";
@@ -215,37 +262,38 @@
         <!--按钮工具栏 -->
         <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
             <div class="PartialButton">
-                <a id="Ir_replace" ids="repalce" onclick="windowload()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/arrow_refresh.png') 50% 4px no-repeat;">刷新</b></span></a>
-                <div class="tools_separator"></div>
-                <a id="Ir_add" ids="add" onclick="btn_add()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/add.png') 50% 4px no-repeat;">新增</b></span></a>
-                <div class="tools_separator"></div>
-                <a id="Ir_edit" ids="edit" onclick="btn_edit()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/edit.gif') 50% 4px no-repeat;">编辑</b></span></a>
-                <div class="tools_separator"></div>
-                <a id="Ir_delete" ids="delete" onclick="btn_delete()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/DeleteRed.png') 50% 4px no-repeat;">删除</b></span></a>
-                <div class="tools_separator"></div>
-                <a id="Ir_back" ids="back" onclick="btn_back()" class="tools_btn"><span><b style="background: url('../../Content/Images/Icon16/back.png') 50% 4px no-repeat;">离开</b></span></a>
-                <div class="tools_separator"></div>
+                @Html.Partial("_PartialButton")
             </div>
         </div>
         @*搜索框区域*@
         <table border="0" class="form-find" style="height: 45px;">
             <tr>
-                <th>关键字：</th>
+                @*<th>关键字：</th>
+        <td>
+            <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
+                <option value="all">==全部==</option>
+                <option value="WorkSectionCd">工段编号</option>
+                <option value="WorkSectionNm">工段名称</option>
+                <option value="WorkSectionTy">工段类型</option>
+            </select>
+        </td>
+        <td>
+            <input id="keywords" type="text" class="txt" style="width: 200px" />
+        </td>*@
+
+                <th>工段编号：</th>
                 <td>
-                    <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
-                        <option value="all">==全部==</option>
-                        <option value="WorkSectionCd">工段编号</option>
-                        <option value="WorkSectionNm">工段名称</option>
-                        <option value="WorkSectionTy">工段类型</option>
-                    </select>
+                    <input id="WorkSectionCd" type="text" class="txt" style="width: 120px" />
                 </td>
+
+                <th>工段名称：</th>
                 <td>
-                    <input id="keywords" type="text" class="txt" style="width: 200px" />
+                    <input id="WorkSectionNm" type="text" class="txt" style="width: 120px" />
                 </td>
+
+                <th>工段类型：</th>
                 <td>
-                    <select id="WorkSectionTy" style="display: none; width: 150px; height: 25px">
-                        <option>---请选择工段类型--</option>
-                    </select>
+                    <select id="WorkSectionTy" style="width: 150px; height: 25px"></select>
                 </td>
                 <td>
                     <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />

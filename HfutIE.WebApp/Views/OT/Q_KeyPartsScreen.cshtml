@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安驰FAS-主线关重件录入界面</title>
+    <title>江淮安驰FAS系统</title>
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!--框架必需start-->
+    <link href="~/Content/Styles/HfutIEui-startmenu.css" rel="stylesheet" />
+    <link href="~/Content/Styles/HfutIEui-framework.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/jquery/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/Scripts/HfutIEui-framework.js"></script>
+    <!--框架必需end-->
+    <!--引入弹窗组件start-->
+    <script src="~/Content/Scripts/lhgdialog/lhgdialog.min.js"></script>
+    <!--引入弹窗组件end-->
+    <!--自定义滚动条组件start-->
+    <script src="~/Content/Scripts/scrollbar/scrollbar.js"></script>
+    <!--自定义滚动条组件end-->
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/datepicker/WdatePicker.js"></script>
+    <!--日期组件start-->
+    <script src="~/Content/Scripts/Index.js"></script>
+    <!--页面必备-->
+    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css" />
+    <script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            Initialize();
+        });
+        //1.全局变量
+        //1.1初始加载静态信息
+        var allStaticInfo;
+        var aviInfo;
+        //车身入站post数据
+        var carStartPostData;
+        var LastVIN="";//上次入站VIN码
+        //1.3工位车身状态
+        var stationCarState = "0";  //0-初始状态，1-已经过入站位，2-已经过预警位，3-已经过停止位
+        //1.4工位车身信息
+        var car;
+        //1.5mqtt实例
+        var client;
+        //1.6mqtt连接状态
+        var mqttStatus = false;
+        //1.6mqtt重连次数
+        var ReconnectionNumber = 0;
+
+        //2.初始化加载
+        function Initialize() {
+            try {
+                SetAllWH();         //加载界面的宽高
+                GetStaticInfo();    //加载静态信息
+                GetCurrentDate();   //实时时间刷新
+                GetMatImg();
+            } catch (e) {
+            }
+        }
+        //2.1加载界面的宽高
+        function SetAllWH() {
+            $("#all").width($(window).width());
+            $("#all").height($(window).height());
+        }
+        //2.2加载静态信息并进行后续信息初始化与MQTT连接
+        function GetStaticInfo() {
+            try {
+               
+                $.ajax({
+                    url: RootPath() + '/OT/GetStaticInfo',
+                    type: "post",
+                    data: null,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        Evaluation(data);
+                    },
+                    error: function (data) {
+                        Loading(false);
+                        alertDialog(data.responseText, -1);
+                    }
+                });
+            } catch (e) {
+            }
+        }
+
+        //2.5实时时间刷新
+        function GetCurrentDate() {
+            var myDate = new Date();
+
+            var year = myDate.getFullYear();        //获取当前年
+            var month = myDate.getMonth() + 1;   //获取当前月
+            var date = myDate.getDate();            //获取当前日
+
+
+            var h = myDate.getHours();              //获取当前小时数(0-23)
+            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+            var s = myDate.getSeconds();
+
+            var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+            jQuery("#localtime").html(now);
+            setTimeout(GetCurrentDate, 1000);
+        }
+
+        //2.6初始化赋值
+        function Evaluation(data) {
+            try {
+                carStartPostData = {
+                    WcId: data.props.WcId,
+                    VIN:"9999"
+                };
+                allStaticInfo = data.props;
+                delete allStaticInfo.AviId;
+                delete allStaticInfo.Queue;
+                delete allStaticInfo.WcQueue;
+                $("#station").html(data.props.WcNm);
+            } catch (e) {
+            }
+        }
+
+        //4.1.2车身入站
+        function GetMatImg() {
+            AjaxJson('@Url.Content("~/OT/GetMatImg")', carStartPostData, function (data) {
+                if (data.code == 1) {
+                    $("#main").html("");
+                    CarPicture("车身默认照片");
+                    $("#vin").html("当前工位无车");//Vin码
+                    $("#sequence").html("顺序号");//顺序号
+                    $("#color").html("颜色");//颜色
+                    $("#cartype").html("车型");//车型
+                    $("#car_dis").html("车身描述");//车身描述
+                } else if (data.code == 2) {
+                    $("#main").html("");
+                    carStartPostData.VIN = data.vinInfo[0].vin;
+                    if (data.Product[0].matimg == null) {
+                        CarPicture("车身默认照片");
+                    } else {
+                        CarPicture(data.vinInfo[0].cartype + data.vinInfo[0].carcolor1);
+                    }
+                    $("#vin").html(data.vinInfo[0].vin);//Vin码
+                    $("#sequence").html(data.vinInfo[0].sequenceno);//顺序号
+                    $("#color").html(data.vinInfo[0].carcolor1);//颜色
+                    $("#cartype").html(data.vinInfo[0].cartype);//车型
+                    $("#car_dis").html(data.Product[0].matnm);//车身描述
+                    for (var i = 0; i < data.PartImgs.length; i++) {
+                        var html = "<div class='main_box main_box_left' style='margin-left:1%;margin-right:1%;'><div class='main_title' style='font-size:15px;height:10%'>"+data.PartImgs[i].matnm +" "+data.PartImgs[i].matcd+"</div><div class='in_main_box_left' style='height:90%' ><img src='data:image/png;base64,"+data.PartImgs[i].matimg +"' alt='物料照片' style='width:95%;height:95%'/></div></div>";
+                        $("#main").append(html);
+                    }
+                } else if (data.code == -1) {
+                    tipDialog(data.msg, 3, -2);
+                }
+            });
+            setTimeout(GetMatImg, 3000);
+        }
+        //左侧车身照片
+        function CarPicture(name) {
+            AjaxJson("/VideoModule/BBdbR_GuidanceFile/GetPicture?name=" + name, {}, function (data) {
+                $("#productpicture").attr("src", 'data:image/' + data.name + ';base64,' + data.file);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="all" id="all">
+        <div class="up" id="up">
+            <div id="logo_img" class="logo_img">
+                <img id="refinelogo" src="~/Content/Images/LOGO/logoRefine.png" alt="refineLogo" align="middle" style="width:100%" />
+            </div>
+            <div class="up_box baclground" id="up_localtime">
+                <div id="localtime" class="p_in_upbox" style="font-size: 15px;"></div>
+                <p id="localtime_dis" class="p_mark_in_upbox">时间</p>
+            </div>
+            <div class="up_box baclground" id="up_station">
+                <div id="station" class="p_in_upbox" style="font-size: 15px;">工位</div>
+                <p id="station_dis" class="p_mark_in_upbox">工位</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="down" id="down">
+            <div class="left" id="left">
+                <div id="car_img" class="car_img" style="height:30%">
+                    <img id='productpicture' src="~/Content/Images/LOGO/logoM5.jpg" alt="车身照片" style="width:90%;height:90%;" />
+                </div>
+                <div class="left_box" id="vin_box" style="height:16%">
+                    <div id="vin" class="in_left_box baclground">
+                        VIN码
+                    </div>
+                </div>
+                <div class="left_box" id="sequence_box" style="height:16%">
+                    <div id="sequence" class="in_left_box baclground">
+                        流水号
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="color_box" style="height:16%">
+                    <div id="color" class="in_left_box in_left_box_small baclground">
+                        颜色
+                    </div>
+                </div>
+                <div class="left_box left_box_small" id="cartype_box" style="height:16%">
+                    <div id="cartype" class="in_left_box in_left_box_small baclground">
+                        车型
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="left_box" id="car_dis_box" style="height:20%">
+                    <div class="in_left_box baclground">
+                        <div id="car_dis" class="in_left_box baclground">
+                            车身描述
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="main" id="main" style="height: 95%; display: flex; justify-content: center; align-items: center;"></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+
+</html>
