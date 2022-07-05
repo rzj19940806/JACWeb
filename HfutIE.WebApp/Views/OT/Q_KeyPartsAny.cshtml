@@ -177,7 +177,7 @@
                 if (Message.gid != gid) {
                     $("#in_main_box_left")[0].innerHTML = "";
                     $("#in_main_box_right")[0].innerHTML = "";
-                    carStart(Message, stationCarState);
+                    carStart(allStaticInfo, Message, "主线");
                 }
             }
         }
@@ -203,7 +203,7 @@
                     if (data.code == 1) {
                         $("#in_main_box_left")[0].innerHTML = "";
                         $("#in_main_box_right")[0].innerHTML = "";
-                        if (carStart(data, stationCarState)) {
+                        if (carStart(allStaticInfo, data, "主线")) {
                             updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
                         }
                         return;

@@ -18,14 +18,14 @@ function manualCarStart(allStaticInfo, vin, del, plineType, gid) {
                 }
                 if (carStart(allStaticInfo,data, plineType)) {
                     if (del == true) {
-                        updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】");
+                        updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + data.vinInfo[0].vin + "】");
                     }
                     if (plineType == "辅线" && $(".part_dis_box_right").length == 0) {
                         var i = 0;
                         setTimeout(function () {
                             swal(
                                 {
-                                    title: vin,
+                                    title: data.vinInfo[0].vin,
                                     text: "当前车身未配置物料，将在5s后自动加载后续车身",
                                     confirmButtonText: "提前刷新",
                                     cancelButtonText: "取消刷新",
@@ -45,7 +45,8 @@ function manualCarStart(allStaticInfo, vin, del, plineType, gid) {
                     }
                 }
                 return;
-            } else if (data.code == -2) uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + data.msg + "】");
+            }
+            else if (data.code == -2) uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + data.msg + "】");
             else uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【错误信息：" + data.msg + "】");
             NotHaveCar();
         });
