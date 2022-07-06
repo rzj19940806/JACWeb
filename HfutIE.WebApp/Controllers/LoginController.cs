@@ -284,20 +284,20 @@ namespace HfutIE.WebApp.Controllers
                             ManageProvider.Provider.AddCurrent(imanageuser);
 
                             #region 判断是否需要修改密码
-                            //if (Password == "4a7d1ed414474e4033ac29ccb8653d9b" || base_user.LastPwdModfyTm == null)//密码为默认密码0000/从未修改过密码
-                            //{
-                            //    Msg = "7";
-                            //    break;
-                            //}
-                            //else if (base_user.LastPwdModfyTm != null)
-                            //{
-                            //    var span = (DateTime.Now - DateTime.Parse(base_user.LastPwdModfyTm.ToString())).TotalDays;
-                            //    if (span >= 60)//距离上次修改密码时间超过两个月
-                            //    {
-                            //        Msg = "7";
-                            //        break;
-                            //    }
-                            //}
+                            if (Password == "4a7d1ed414474e4033ac29ccb8653d9b" || base_user.LastPwdModfyTm == null)//密码为默认密码0000/从未修改过密码
+                            {
+                                Msg = "7";
+                                break;
+                            }
+                            else if (base_user.LastPwdModfyTm != null)
+                            {
+                                var span = (DateTime.Now - DateTime.Parse(base_user.LastPwdModfyTm.ToString())).TotalDays;
+                                if (span >= 60)//距离上次修改密码时间超过两个月
+                                {
+                                    Msg = "7";
+                                    break;
+                                }
+                            }
                             #endregion
 
                             //对在线人数全局变量进行加1处理
