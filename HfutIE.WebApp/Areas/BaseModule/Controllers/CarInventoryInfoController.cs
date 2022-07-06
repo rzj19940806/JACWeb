@@ -108,45 +108,23 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 #endregion
 
                 #region 查询版本3.0
-                StringBuilder strSql = new StringBuilder();
-                List<DbParameter> parameter = new List<DbParameter>();
-                strSql.Append($@"select B.OrderCd,B.ProducePlanCd,A.VIN,SUBSTRING(A.VIN,10,8)as ChassisCd,A.CarType,A.CarColor1,A.MatCd,A.OP_CODE,B.FeedbackTime,MatNm,AviNm from (
+                string sql = "";
+                sql = $@" 
+                    select B.OrderCd,B.ProducePlanCd,A.VIN,SUBSTRING(A.VIN,10,8)as ChassisCd,A.CarType,A.CarColor1,A.MatCd,A.OP_CODE,B.FeedbackTime,MatNm,AviNm from (
                     select  A.VIN,A.CarType,A.CarColor1,A.MatCd,B.OP_CODE,C.MatNm,D.AviNm--B.ProducePlanCd,B.OrderCd,
                     from P_LineProductionQueue_Pro A with(nolock)
                     join (select VIN,MAX(OP_CODE) OP_CODE from P_PlanFeedBack_Pro with(nolock) where FeedbackTime is not null group by VIN ) B 
-                    on A.VIN=B.VIN and A.CarType like @CarType --车型筛选
+                    on A.VIN=B.VIN and A.CarType like '%{CarType}%' --车型筛选
                     LEFT JOIN BBdbR_MatBase C ON A.MatCd= C.MatCd LEFT JOIN  BBdbR_AVIBase D ON B.OP_CODE = D.OP_CODE 
                     ) A 
                     join P_PlanFeedBack_Pro B on A.VIN=B.VIN and A.OP_CODE=B.OP_CODE
-                    and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE= @crossAviCd or @crossAviCd='') --经过AVI点，允许为空
-                    and DATEDIFF(DD,IIF(@StartTime='','2022-01-01',@StartTime),PI.FeedbackTime)>=0 --'2022-03-15' 过点开始时间
-                    and DATEDIFF(DD,PI.FeedbackTime,IIF(@EndTime='',getdate(),@EndTime))>=0 ) --'2022-04-15'=过点结束时间
-                    and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE= @nocrossAviCd and PI.FeedbackTime is null or @nocrossAviCd=''))--未经过AVI点，允许为空 ");
-                parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@crossAviCd", crossAviCd));
-                parameter.Add(DbFactory.CreateDbParameter("@nocrossAviCd", nocrossAviCd));
-                parameter.Add(DbFactory.CreateDbParameter("@StartTime", StartTime));
-                parameter.Add(DbFactory.CreateDbParameter("@EndTime", EndTime));
-                dtExport = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
-
-
-
-                //string sql = "";
-                //sql = $@" 
-                //    select B.OrderCd,B.ProducePlanCd,A.VIN,SUBSTRING(A.VIN,10,8)as ChassisCd,A.CarType,A.CarColor1,A.MatCd,A.OP_CODE,B.FeedbackTime,MatNm,AviNm from (
-                //    select  A.VIN,A.CarType,A.CarColor1,A.MatCd,B.OP_CODE,C.MatNm,D.AviNm--B.ProducePlanCd,B.OrderCd,
-                //    from P_LineProductionQueue_Pro A with(nolock)
-                //    join (select VIN,MAX(OP_CODE) OP_CODE from P_PlanFeedBack_Pro with(nolock) where FeedbackTime is not null group by VIN ) B 
-                //    on A.VIN=B.VIN and A.CarType like '%{CarType}%' --车型筛选
-                //    LEFT JOIN BBdbR_MatBase C ON A.MatCd= C.MatCd LEFT JOIN  BBdbR_AVIBase D ON B.OP_CODE = D.OP_CODE 
-                //    ) A 
-                //    join P_PlanFeedBack_Pro B on A.VIN=B.VIN and A.OP_CODE=B.OP_CODE
-                //    and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{crossAviCd}' or '{crossAviCd}'='') --经过AVI点，允许为空
-                //    and DATEDIFF(DD,IIF('{StartTime}'='','2022-01-01','{StartTime}'),PI.FeedbackTime)>=0 --'2022-03-15' 过点开始时间
-                //    and DATEDIFF(DD,PI.FeedbackTime,IIF('{EndTime}'='',getdate(),'{EndTime}'))>=0 ) --'2022-04-15'=过点结束时间
-                //    and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{nocrossAviCd}' and PI.FeedbackTime is null or '{nocrossAviCd}'=''))--未经过AVI点，允许为空";
+                    and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{crossAviCd}' or '{crossAviCd}'='') --经过AVI点，允许为空
+                    and DATEDIFF(DD,IIF('{StartTime}'='','2022-01-01','{StartTime}'),PI.FeedbackTime)>=0 --'2022-03-15' 过点开始时间
+                    and DATEDIFF(DD,PI.FeedbackTime,IIF('{EndTime}'='',getdate(),'{EndTime}'))>=0 ) --'2022-04-15'=过点结束时间
+                    and not exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{nocrossAviCd}' and PI.FeedbackTime is not null and '{nocrossAviCd}'<>''))--未经过AVI点，允许为空   ";
 
                 #endregion
+
 
 
 
