@@ -145,12 +145,13 @@
         var StartTime = $("#StartTime").val();
         var EndTime = $("#EndTime").val();
         var VIN = $("#InputVIN").val();
+        var Cd = $("#InputCd").val();
         var CarType = $("#ConditionCarType").val();
 
         //EOL界面
             //EOL界面上表查询
             $("#gridTableEOLup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLCheckResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) +"&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
             }).trigger('reloadGrid');
             //EOL界面下表清空
             $("#gridTableEOL1").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetEOLDetailResult")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
@@ -159,7 +160,7 @@
         //检测线界面
             //检测线界面上表查询
             $("#gridTableTestLineup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTestLineResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTestLineResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) +"&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
         }).trigger('reloadGrid');
             //检测线下表清空
             //速度表
@@ -183,7 +184,7 @@
         //加注界面
             //加注界面上表查询
             $("#gridTableJZup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetJZResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetJZResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
             }).trigger('reloadGrid');
             //加注界面下表清空
             $("#gridTableJZEHYFDY").jqGrid('setGridParam', { url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetGridJZResultEHYFDY")?VIN=" + null, page: 1, datatype: 'json' }).trigger('reloadGrid');
@@ -209,14 +210,14 @@
         //胎压界面
             //胎压界面上表查询
             $("#gridTableTYup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTYCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetTYCheckResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
             }).trigger('reloadGrid');
 
 
         //拧紧界面
             //胎压界面上表查询
             $("#gridTableNJup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")?" + "&CarType=" + escape(CarType)+ "&VIN=" + escape(VIN) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
             }).trigger('reloadGrid');
 
 
@@ -239,6 +240,7 @@
             colModel: [
                 { label: '主键', name: 'ECRID', index: 'ECRID', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
                 { label: '车型', name: 'CarType2', index: 'CarType2', width: 200, align: 'center', sortable: true },
                 { label: '车辆名称', name: 'CarName', index: 'CarName', width: 400, align: 'center', sortable: true },
                 { label: '站点', name: 'Station', index: 'Station', width: 0, align: 'center', sortable: true },
@@ -305,6 +307,7 @@
         $("#gridTableTestLineup").jqGrid({
             colModel: [
                 { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+                { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
                 { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
                 { label: '颜色', name: 'CarColor', index: 'CarColor', width: 0, align: 'center', sortable: true },
                 {
@@ -818,6 +821,7 @@
         autowidth: true,
         colModel: [
             { label: 'VIN码', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
             { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
             { label: '颜色', name: 'CarColor', index: 'CarColor', width: 0, align: 'center', sortable: true },
             { label: '防冻液加注结果', name: '防冻液加注结果', index: '防冻液加注结果', width: 0, align: 'center', sortable: true },
@@ -1175,6 +1179,7 @@
         colModel: [
             { label: '主键', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
             { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center', sortable: true },
+            { label: '车型编码', name: 'MatCd', index: 'MatCd', width: 0, align: 'center', sortable: true },
             { label: '车型', name: 'CarType', index: 'CarType', width: 50, align: 'center', sortable: true },
             { label: '传感器名称', name: 'SensorNm', index: 'SensorNm', width: 0, align: 'center', sortable: true },
             { label: '右前轮ID', name: 'RFTireID', index: 'RFTireID', width: 0, align: 'center', sortable: true },
@@ -1232,6 +1237,7 @@
         colModel: [
             { label: '主键', name: 'ScrewID', index: 'ScrewID', width: 0, align: 'center', sortable: true, hidden: true },
             { label: 'VIN', name: 'IDENTIFY', index: 'IDENTIFY', width: 0, align: 'center', sortable: true },
+            { label: '车型编号', name: 'Cd', index: 'Cd', width: 0, align: 'center', sortable: true },
             { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
             { label: 'JOB号', name: 'JOB_NO', index: 'JOB_NO', width: 50, align: 'center', sortable: true },
             { label: '批次号', name: 'PSET_NO', index: 'PSET_NO', width: 0, align: 'center', sortable: true },
@@ -1275,6 +1281,7 @@
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
         var CarType = $("#ConditionCarType").val();             //车型
+        var Cd = $("#InputCd").val();                           //车型编码
 
         var count = $("#gridTableEOLup").getGridParam("records");
         if (count == 0) {
@@ -1287,7 +1294,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataEOL?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) ;
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataEOL?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd) ;
                 Loading(false);
             }, 200);
         }
@@ -1299,6 +1306,7 @@
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
         var CarType = $("#ConditionCarType").val();             //车型
+        var Cd = $("#InputCd").val();                           //车型编码
 
         var count = $("#gridPagerTestLineup").getGridParam("records");
         if (count == 0) {
@@ -1311,7 +1319,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTestLine?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTestLine?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd);
                 Loading(false);
             }, 200);
         }
@@ -1323,6 +1331,7 @@
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
         var CarType = $("#ConditionCarType").val();             //车型
+        var Cd = $("#InputCd").val();                           //车型编码
 
         var count = $("#gridTableJZup").getGridParam("records");
         if (count == 0) {
@@ -1335,7 +1344,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataJZ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataJZ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd);
                 Loading(false);
             }, 200);
         }
@@ -1347,6 +1356,7 @@
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
         var CarType = $("#ConditionCarType").val();             //车型
+        var Cd = $("#InputCd").val();                           //车型编码
 
         var count = $("#gridTableTYup").getGridParam("records");
         if (count == 0) {
@@ -1359,7 +1369,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTY?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataTY?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd);
                 Loading(false);
             }, 200);
         }
@@ -1371,6 +1381,7 @@
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
         var CarType = $("#ConditionCarType").val();             //车型
+        var Cd = $("#InputCd").val();                           //车型编码
 
         var count = $("#gridTableNJup").getGridParam("records");
         if (count == 0) {
@@ -1383,7 +1394,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataNJ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataNJ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd);
                 Loading(false);
             }, 200);
         }
@@ -1410,6 +1421,11 @@
             <th>VIN号：</th>
             <td>
                 <input id="InputVIN" type="text" class="txt" style="width: 150px;" />
+            </td>
+
+            <th>车型编码：</th>
+            <td>
+                <input id="InputCd" type="text" class="txt" style="width: 150px;" />
             </td>
 
             <th id="STime_s" style="">开始时间：</th>

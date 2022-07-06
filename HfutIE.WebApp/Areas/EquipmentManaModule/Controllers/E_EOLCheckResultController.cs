@@ -84,7 +84,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 2.根据搜索条件加载EOL上表格数据-E_EOLCheckResult
-        public ActionResult GetEOLCheckResultByCondition( string CarType,string VIN,string StartTime,string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetEOLCheckResultByCondition( string CarType,string VIN,string Cd,string StartTime,string EndTime, JqGridParam jqgridparam)
         {
             #region 原版本
             //StartTime = StartTime + " 00:00:00";
@@ -136,7 +136,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select A.*,C.CarType as CarType2 from E_EOLCheckResult A left join P_ProducePlan_Pro C ON A.VIN = C.VIN where  exists (select 1 from E_EOLCheckResult B where A.VIN=B.VIN group by vin having  A.TestNum=MAX(B.TestNum))  ");
+                strSql.Append(@"select A.*,C.MatCd,C.CarType as CarType2 from E_EOLCheckResult A left join P_ProducePlan_Pro C ON A.VIN = C.VIN where exists (select 1 from E_EOLCheckResult B where A.VIN=B.VIN group by vin having A.TestNum=MAX(B.TestNum))  ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
@@ -153,6 +153,14 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     //strSql.Append(" and VIN like '%" + VIN + "%' ");
                     strSql.Append(" and A.VIN like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //模糊搜索车型编码
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and C.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
@@ -239,49 +247,27 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #region 检测线区域方法
 
         #region 根据搜索条件加载检测线上表格数据-计划表车身信息+8个表的检测结果
-        public ActionResult GetTestLineResultByCondition( string CarType, string VIN, string StartTime, string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetTestLineResultByCondition( string CarType, string VIN,string Cd, string StartTime, string EndTime, JqGridParam jqgridparam)
         {
             Stopwatch watch = CommonHelper.TimerStart();
             //开始时间
-            if (StartTime!=""&& StartTime!=null)
+            if (StartTime==""|| StartTime==null)
             {
-                StartTime = StartTime + " 00:00:00";
-            }
-            else
-            {
-                StartTime = "2021-01-01 00:00:00";
+                StartTime = "2021-01-01";
             }
 
             //结束时间
-            if (EndTime != "" && EndTime != null)
-            {
-                EndTime = EndTime + " 23:59:59";
-            }
-            else
+            if (EndTime == "" || EndTime == null)
             {
                 EndTime = DateTime.Now.ToString("yyyy-MM-dd");
-                EndTime = EndTime + " 23:59:59";
             }
-
-            //车型
-            if (CarType != "")
-            {
-                CarType = "%" + CarType + "%";
-            }
-            else { }
-            //VIN号
-            if (VIN != "")
-            {
-                VIN = "%" + VIN ;
-            }
-            else { }
             
             try
             {
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
                 //开始时间，结束时间，车型，VIN号-（模糊查询）
-                strSql.Append(@"select * from TestLineResult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "')");
+                strSql.Append($"select * from TestLineResult ('{StartTime}','{EndTime}','{CarType}','{VIN}','{Cd}')");
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
 
                 var JsonData = new
@@ -502,45 +488,19 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #region 加注区域方法
 
         #region 根据搜索条件加载加注上表格数据-计划表车身信息+8个表的检测结果
-        public ActionResult GetJZResultByCondition(string CarType, string VIN, string StartTime, string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetJZResultByCondition(string CarType, string VIN, string Cd, string StartTime, string EndTime, JqGridParam jqgridparam)
         {
             Stopwatch watch = CommonHelper.TimerStart();
             //开始时间
-            if (StartTime != "" && StartTime != null)
+            if (StartTime == "" || StartTime == null)
             {
-                StartTime = StartTime + " 00:00:00";
-            }
-            else
-            {
-                StartTime = "2021-01-01 00:00:00";
+                StartTime = "2021-01-01";
             }
 
             //结束时间
-            if (EndTime != "" && EndTime != null)
-            {
-                EndTime = EndTime + " 23:59:59";
-            }
-            else
+            if (EndTime == "" || EndTime == null)
             {
                 EndTime = DateTime.Now.ToString("yyyy-MM-dd");
-                EndTime = EndTime + " 23:59:59";
-            }
-            //车型
-            if (CarType != "")
-            {
-                if (CarType == "all")
-                {
-                    CarType = "";
-                }
-                else
-                {
-                    CarType = "%" + CarType + "%";
-                }
-            }
-            //VIN号
-            if (VIN != "")
-            {
-                VIN = "%" + VIN + "%";
             }
 
             try
@@ -548,7 +508,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
                 //开始时间，结束时间，车型，VIN号-（模糊查询）
-                strSql.Append(@"select * from JZresult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "')");
+                strSql.Append($"select * from JZresult ('{StartTime}','{EndTime}','{CarType}','{VIN}','{Cd}')");
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
                 var JsonData = new
                 {
@@ -790,7 +750,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 2.根据搜索条件加载胎压上表格数据-E_TireCheck
-        public ActionResult GetTYCheckResultByCondition( string CarType, string VIN, string StartTime, string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetTYCheckResultByCondition( string CarType, string VIN, string Cd, string StartTime, string EndTime, JqGridParam jqgridparam)
         {
             #region 查询原方法
             //StartTime = StartTime + " 00:00:00";
@@ -842,14 +802,14 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select * from E_TireCheck A where exists (select 1 from E_TireCheck B where A.VIN=B.VIN group by vin having  A.DetectionTime=MAX(B.DetectionTime))  ");
+                strSql.Append(@"select A.*,P.MatCd from E_TireCheck A join P_PublishPlan_Pro P on A.VIN=P.VIN and exists (select 1 from E_TireCheck B where A.VIN=B.VIN group by vin having  A.DetectionTime=MAX(B.DetectionTime))  ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
                 if (CarType != "" && CarType != null)
                 {
                     //strSql.Append(" and CarType like '%" + CarType + "%' ");
-                    strSql.Append(" and CarType like @CarType ");
+                    strSql.Append(" and A.CarType like @CarType ");
                     parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
                 }
 
@@ -857,8 +817,16 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 if (VIN != "" && VIN != null)
                 {
                     //strSql.Append(" and VIN like '%" + VIN + "%' ");
-                    strSql.Append(" and VIN like @VIN ");
+                    strSql.Append(" and A.VIN like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //模糊搜索cd
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and P.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
@@ -918,7 +886,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
 
 
         #region 拧紧区域方法
-        public ActionResult GetNJCheckResultByCondition(string CarType, string VIN, string StartTime, string EndTime, JqGridParam jqgridparam)
+        public ActionResult GetNJCheckResultByCondition(string CarType, string VIN, string StartTime, string EndTime,string Cd ,JqGridParam jqgridparam)
         {
             #region 查询修改
             try
@@ -928,7 +896,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select A.*,C.CarType from E_SCREW A left join P_ProducePlan_Pro C ON A.IDENTIFY = C.VIN where exists (select 1 from E_SCREW B where A.IDENTIFY=B.IDENTIFY group by IDENTIFY having  A.TIME_STAMP=MAX(B.TIME_STAMP))  ");
+                strSql.Append(@"select A.*,C.CarType,P.MatCd as Cd from E_SCREW A left join P_ProducePlan_Pro C ON A.IDENTIFY = C.VIN left join P_PublishPlan_Pro P on A.IDENTIFY=P.VIN  where exists (select 1 from E_SCREW B where A.IDENTIFY=B.IDENTIFY group by IDENTIFY having  A.TIME_STAMP=MAX(B.TIME_STAMP))  ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
@@ -945,6 +913,14 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     //strSql.Append(" and IDENTIFY like '%" + VIN + "%' ");
                     strSql.Append(" and IDENTIFY like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //模糊搜索cd
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and P.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
@@ -1004,7 +980,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #region 导出
 
         #region EOL数据导出
-        public ActionResult GetExcel_DataEOL(string StartTime, string EndTime, string VIN, string CarType)
+        public ActionResult GetExcel_DataEOL(string StartTime, string EndTime, string VIN, string Cd, string CarType)
         {
             try
             {
@@ -1013,7 +989,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select A.VIN,C.CarType as CarType2,A.CarName,A.Station,A.Time,A.TestNum,A.Result from E_EOLCheckResult A left join P_ProducePlan_Pro C ON A.VIN = C.VIN where  exists (select 1 from E_EOLCheckResult B where A.VIN=B.VIN group by vin having  A.TestNum=MAX(B.TestNum)) ");
+                strSql.Append(@"select A.VIN,C.MatCd,C.CarType as CarType2,A.CarName,A.Station,A.Time,A.TestNum,A.Result from E_EOLCheckResult A left join P_ProducePlan_Pro C ON A.VIN = C.VIN where  exists (select 1 from E_EOLCheckResult B where A.VIN=B.VIN group by vin having  A.TestNum=MAX(B.TestNum)) ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
@@ -1030,6 +1006,13 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     //strSql.Append(" and VIN like '%" + VIN + "%' ");
                     strSql.Append(" and A.VIN like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+                //模糊搜索车型编码
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and C.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
@@ -1086,7 +1069,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 检测线数据导出
-        public ActionResult GetExcel_DataTestLine(string StartTime, string EndTime, string VIN, string CarType)
+        public ActionResult GetExcel_DataTestLine(string StartTime, string EndTime, string VIN, string CarType, string Cd)
         {
             try
             {
@@ -1111,21 +1094,10 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     EndTime = EndTime + " 23:59:59";
                 }
 
-                //车型
-                if (CarType != "")
-                {
-                    CarType = "%" + CarType + "%";
-                }
-                //VIN号
-                if (VIN != "")
-                {
-                    VIN = "%" + VIN + "%";
-                }
-
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
                 //开始时间，结束时间，车型，VIN号-（模糊查询）
-                strSql.Append(@"select VIN,CarType,CarColor,ABSResult,AlignmentResult,AngleResult,BrakeResult,Head_Result,HornResult,SpeedResult from TestLineResult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "')");
+                strSql.Append(@"select VIN,MatCd,CarType,CarColor,ABSResult,AlignmentResult,AngleResult,BrakeResult,Head_Result,HornResult,SpeedResult from TestLineResult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "','" + Cd + "')");
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
 
                 #endregion
@@ -1157,7 +1129,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 加注数据导出
-        public ActionResult GetExcel_DataJZ(string StartTime, string EndTime, string VIN, string CarType)
+        public ActionResult GetExcel_DataJZ(string StartTime, string EndTime, string VIN, string CarType, string Cd)
         {
             try
             {
@@ -1182,21 +1154,10 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     EndTime = EndTime + " 23:59:59";
                 }
 
-                //车型
-                if (CarType != "")
-                {
-                    CarType = "%" + CarType + "%";
-                }
-                //VIN号
-                if (VIN != "")
-                {
-                    VIN = "%" + VIN + "%";
-                }
-
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
                 //开始时间，结束时间，车型，VIN号-（模糊查询）
-                strSql.Append(@"select VIN,CarType,CarColor,"+ "防冻液加注结果" + ",转向液加注结果,制动液加注结果,冷媒加注结果,洗涤液加注结果,正压CL检测结果,正压BR检测结果,正压AC检测结果 from JZresult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "')");
+                strSql.Append(@"select VIN,MatCd,CarType,CarColor," + "防冻液加注结果" + ",转向液加注结果,制动液加注结果,冷媒加注结果,洗涤液加注结果,正压CL检测结果,正压BR检测结果,正压AC检测结果 from JZresult ('" + StartTime + "','" + EndTime + "','" + CarType + "','" + VIN + "','" + Cd + "')");
 
                 #region 解决乱码
                 //Encoding ec = Encoding.GetEncoding("iso-8859-1");
@@ -1235,7 +1196,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 胎压数据导出
-        public ActionResult GetExcel_DataTY(string StartTime, string EndTime, string VIN, string CarType)
+        public ActionResult GetExcel_DataTY(string StartTime, string EndTime, string VIN, string CarType, string Cd)
         {
             try
             {
@@ -1244,7 +1205,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select * from E_TireCheck A where exists (select 1 from E_TireCheck B where A.VIN=B.VIN group by vin having  A.DetectionTime=MAX(B.DetectionTime))  ");
+                strSql.Append(@"select A.VIN,P.MatCd,A.CarType,A.SensorNm,A.RFTireID,A.RFTirePressureLimit,A.RFTirePressureLowerLimit,A.RFTirePressureValue,A.RFTirePressureResult,A.LFTireID,A.LFTirePressureLimit,A.LFTirePressureLowerLimit,A.LFTirePressureValue,A.LFTirePressureResult,A.RBTireID,A.RBTirePressureLimit,A.RBTirePressureLowerLimit,A.RBTirePressureValue,A.RBTirePressureResult,A.LBTireID,A.LBTirePressureLimit,A.LBTirePressureLowerLimit,A.LBTirePressureValue,A.LBTirePressureResult,A.TirePressureUnit,A.DetectionSource,A.DetectionTime,A.TireResult from E_TireCheck A join P_PublishPlan_Pro P on A.VIN=P.VIN and exists (select 1 from E_TireCheck B where A.VIN=B.VIN group by vin having  A.DetectionTime=MAX(B.DetectionTime))  ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
@@ -1261,6 +1222,14 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     //strSql.Append(" and VIN like '%" + VIN + "%' ");
                     strSql.Append(" and VIN like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //模糊搜索车型编码
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and P.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
@@ -1287,7 +1256,6 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 strSql.Append(" order by DetectionTime desc");
 
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
-                dt.Columns.Remove("ID");
                 #endregion
 
 
@@ -1317,7 +1285,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
         #endregion
 
         #region 拧紧数据导出
-        public ActionResult GetExcel_DataNJ(string StartTime, string EndTime, string VIN, string CarType)
+        public ActionResult GetExcel_DataNJ(string StartTime, string EndTime, string VIN, string CarType, string Cd)
         {
             try
             {
@@ -1326,7 +1294,7 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select C.CarType,A.* from E_SCREW A left join P_ProducePlan_Pro C ON A.IDENTIFY = C.VIN where exists (select 1 from E_SCREW B where A.IDENTIFY=B.IDENTIFY group by IDENTIFY having  A.TIME_STAMP=MAX(B.TIME_STAMP))  ");
+                strSql.Append(@"select A.IDENTIFY,P.MatCd as Cd,C.CarType,A.JOB_NO,A.PSET_NO,A.BATCH_SIZE,A.BATCH_COUNT,A.BATCH_STATUS,A.TORQUE_STATUS,A.TORQUE_MIN,A.TORQUE_MAX,A.TORQUE_TARGET,A.TORQUE,A.ANGLE_STATUS,A.ANGLE_MIN,A.ANGLE_MAX,A.ANGLE_TARGET,A.ANGLE,A.TIGHTENING_ID,A.TIGHTENING_STATUS,A.TIME_STAMP from E_SCREW A left join P_ProducePlan_Pro C ON A.IDENTIFY = C.VIN left join P_PublishPlan_Pro P on A.IDENTIFY=P.VIN where exists (select 1 from E_SCREW B where A.IDENTIFY=B.IDENTIFY group by IDENTIFY having  A.TIME_STAMP=MAX(B.TIME_STAMP))  ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型
@@ -1343,6 +1311,14 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                     //strSql.Append(" and IDENTIFY like '%" + VIN + "%' ");
                     strSql.Append(" and IDENTIFY like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //模糊搜索cd
+                if (Cd != "" && Cd != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and P.MatCd like @Cd ");
+                    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
