@@ -5351,13 +5351,16 @@ namespace HfutIE.Utilities
             cell214.SetCellValue("维修时间");
 
             ICell cell215 = row2.CreateCell(15);
-            cell215.SetCellValue("复检人员编号");
+            cell215.SetCellValue("维修备注");
 
             ICell cell216 = row2.CreateCell(16);
-            cell216.SetCellValue("复检人员姓名");
+            cell216.SetCellValue("复检人员编号");
 
             ICell cell217 = row2.CreateCell(17);
-            cell217.SetCellValue("复检时间");
+            cell217.SetCellValue("复检人员姓名");
+
+            ICell cell218 = row2.CreateCell(18);
+            cell218.SetCellValue("复检时间");
 
             for (int k = 0; k < dt.Rows.Count; k++)
             {
