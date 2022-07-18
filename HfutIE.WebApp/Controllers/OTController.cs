@@ -337,7 +337,7 @@ namespace HfutIE.WebApp.Controllers
                 if (account==null)
                 {
                     //pass次数校核
-                    string passCount = $"select IIF((select count(*) from Base_User U join Base_ObjectUserRelation OU ON OU.UserId=U.UserId and U.UserId='{KeyByPass.StfId}' join Base_ButtonPermission BP on OU.ObjectId = BP.ObjectId and BP.ModuleButtonId = '900b0d90-9b20-460b-b838-8cf8d6bb0f9f')= 0,(select isnull((select top 1 isnull(Seq, 3) from BBdbR_WcBase where WcCd = '{KeyByPass.WcCd}' and Enabled = 1),0)-count(*) from Q_KeyByPass_Pro where DATEDIFF(DD, Datetime, getdate()) = 0 and WcCd = '{KeyByPass.WcCd}' and Enabled = 1),999)";
+                    string passCount = $"select IIF((select count(*) from Base_User U join Base_ObjectUserRelation OU ON OU.UserId=U.UserId and U.UserId='System' join Base_ButtonPermission BP on OU.ObjectId = BP.ObjectId join Base_Button B on BP.ModuleButtonId=B.ButtonId  and B.FullName='PASS')= 0,(select isnull((select top 1 isnull(Seq, 3) from BBdbR_WcBase where WcCd = '{KeyByPass.WcCd}' and Enabled = 1),0)-count(*) from Q_KeyByPass_Pro where DATEDIFF(DD, Datetime, getdate()) = 0 and WcCd = '{KeyByPass.WcCd}' and Enabled = 1),999)";
                     passRestTimes = Convert.ToInt32(DataFactory.Database().FindTableBySql(passCount).Rows[0][0]);
                     if (passRestTimes<=0)
                     {
@@ -354,7 +354,7 @@ namespace HfutIE.WebApp.Controllers
                     var a4 = a2 == a3;
                     if (entity != null && entity.Enabled=="1" && entity.Password == Md5Helper.MD5(DESEncrypt.Encrypt(password.ToLower(),entity.Secretkey).ToLower(), 32).ToLower())
                     {
-                        string sql= $"select U.RealName,B.FullName,M.FullName from Base_User U join Base_ObjectUserRelation OU ON OU.UserId=U.UserId and U.UserId='{entity.UserId}' join Base_ButtonPermission BP on OU.ObjectId = BP.ObjectId join Base_Button B on BP.ModuleButtonId = B.ButtonId and B.Enabled = 1 and B.FullName = 'PASS' join Base_Module M on B.ModuleId = M.ModuleId and M.FullName = '关重件'";
+                        string sql= $"select U.RealName,B.FullName buttonName,M.FullName moduleName from Base_User U join Base_ObjectUserRelation OU ON OU.UserId=U.UserId and U.UserId='{entity.UserId}' join Base_ButtonPermission BP on OU.ObjectId = BP.ObjectId join Base_Button B on BP.ModuleButtonId = B.ButtonId and B.Enabled = 1 and B.FullName = 'PASS' join Base_Module M on B.ModuleId = M.ModuleId and M.FullName = '关重件'";
                         if (DataFactory.Database().FindTableBySql(sql).Rows.Count==0)
                         {
                             code = 3;
