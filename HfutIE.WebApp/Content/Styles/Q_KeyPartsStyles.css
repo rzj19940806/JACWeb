@@ -283,11 +283,18 @@ p {
     background-color: #CBD1F6;
     float: left;
     height: 90%;
-    width: 70%;
+    width: 60%;
     transform: translateY(5%);
-    margin: 0 1% 0 5%;
+    margin: 0 1% 0 1%;
 }
 
+.part_btn_box_right {
+    float: left;
+    width: 17%;
+    height: 90%;
+    margin: 0 1% 0 1%;
+    transform: translateY(5%);
+}
 .part_code_right {
     height: 47%;
     font-size: 20px;
@@ -306,12 +313,6 @@ p {
     align-items: center;
 }
 
-.part_btn_box_right {
-    float: left;
-    width: 24%;
-    height: 90%;
-    transform: translateY(5%);
-}
 
 .part_btn_right {
     width: 98%;
@@ -328,9 +329,9 @@ p {
     color: black;
     float: left;
     height: 90%;
-    width: 70%;
+    width: 60%;
     transform: translateY(5%);
-    margin: 0 1% 0 5%;
+    margin: 0 1% 0 1%;
 }
 
 .part_manual_box {

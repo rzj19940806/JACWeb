@@ -157,6 +157,9 @@ function carStart(allStaticInfo,data, plineType) {
                 if (item.isscan == 1 || item.isscan == "1") {
                     for (var i = 1; i < item.matnum + 1; i++) {
                         right += `  <div class="part_box_right" id="part_box_right_${item.matid}_${i}">
+                                    <div class="part_btn_box_right" id="part_btn_bind_right_${item.matid}">
+                                        <input id="part_btn_right_${item.matid}_${i}" class="part_btn_right" type="button" value="强录" onclick="bind(this)">
+                                    </div>
                                     <div class="part_dis_box_right" id="part_dis_box_right_${item.matid}_${i}">
                                         <div id="part_code_right_${item.matid}_${i}" class="part_code_right">${item.matcd}</div>
                                         <div id="part_name_right_${item.matid}_${i}" class="part_name_right">${item.matnm}</div>
@@ -250,6 +253,43 @@ function partBind(allStaticInfo, barcodeRule, parts, BarCode, plineType, station
     }
     delete allStaticInfo.MatId;
 }
+//强制绑定
+function bindFun() {
+
+    swal({
+        title: "强制绑定物料条码",
+        type: "input",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        animation: "slide-from-top",
+        inputPlaceholder: "请输入物料条码"
+    },
+        function (inputValue) {
+            if (inputValue === false) return false;
+            if (inputValue === "") {
+                swal.showInputError("产线名称不能为空！");
+                return false;
+            }
+            if (inputValue.indexOf(" ") != -1) {
+                swal.showInputError("不能输入空格！");
+                return false;
+            }
+            var sendinfo = inputValue;
+            let message = new Paho.MQTT.Message(sendinfo);//发送的内容
+            message.destinationName = topic3;//发送的主题
+            client.send(message);
+            swal({
+                title: "成功",
+                timer: 1000,
+                type: "success",
+                showConfirmButton: false
+            });
+        });
+}
+
 
 //ByPass
 function byPassFun(allStaticInfo, parts, obj, plineType, stationCarState) {
