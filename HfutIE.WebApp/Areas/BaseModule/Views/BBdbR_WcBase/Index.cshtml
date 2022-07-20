@@ -79,6 +79,14 @@
                 { label: '排序号', name: 'SeqPoint', index: 'Seq', width: 0, align: 'center', sortable: true, hidden: true  },
                 { label: '工位描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
                 { label: 'Pass次数', name: 'Seq', index: 'Seq', width: 80, align: 'center', sortable: true },
+                {
+                    label: '是否允许强制录入', name: 'RsvFld1', index: 'RsvFld1', width: 100, align: 'center', 
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "允许";
+                        else if (cellvalue == '0') return "不允许";
+                        else { return "不允许";}
+                    }
+                },
                 { label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true  },
 
                 {
@@ -95,7 +103,7 @@
                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true  },
                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true  },
                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
-                { label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true  },
+                //{ label: '预留字段1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true  },
                 { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true  },
         ],
             rowNum: 50,

@@ -8336,19 +8336,25 @@ namespace HfutIE.Utilities
             cell210.SetCellValue("工位描述");
 
             ICell cell211 = row2.CreateCell(11);
-            cell211.SetCellValue("创建时间");
+            cell211.SetCellValue("Pass次数");
 
             ICell cell212 = row2.CreateCell(12);
-            cell212.SetCellValue("创建人名称");
+            cell212.SetCellValue("是否允许强制录入");
 
             ICell cell213 = row2.CreateCell(13);
-            cell213.SetCellValue("修改时间");
+            cell213.SetCellValue("创建时间");
 
             ICell cell214 = row2.CreateCell(14);
-            cell214.SetCellValue("修改人名称");
+            cell214.SetCellValue("创建人名称");
 
             ICell cell215 = row2.CreateCell(15);
-            cell215.SetCellValue("备注");
+            cell215.SetCellValue("修改时间");
+
+            ICell cell216 = row2.CreateCell(16);
+            cell216.SetCellValue("修改人名称");
+
+            ICell cell217 = row2.CreateCell(17);
+            cell217.SetCellValue("备注");
 
 
 
@@ -8362,13 +8368,31 @@ namespace HfutIE.Utilities
                     string dgvValue = string.Empty;
                     //dgvValue = dt.Rows[k][j].ToString();
 
-                    if (dt.Rows[k][j].ToString() == "&nbsp;")
+                    if (j == 12) //是否允许强制录入
                     {
-                        dgvValue = "";
+                        if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "允许";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "不允许";
+                        }
+                        else
+                        {
+                            dgvValue = "不允许";
+                        }
                     }
                     else
                     {
-                        dgvValue = dt.Rows[k][j].ToString();
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
                     }
                     ICell cell = row3.CreateCell(b);
                     cell.SetCellValue(dgvValue);

@@ -1100,7 +1100,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 #region 查询
                 StringBuilder strSql = new StringBuilder();
                 List<DbParameter> parameter = new List<DbParameter>();
-                strSql.Append(@"select a.WcCd,a.WcNm,a.WcTyp,b.PlineCd as PlineCd,b.PlineNm as PlineNm,a.Sort,a.StartPoint,a.PreAlarmPoint,a.StopPoint,a.EndPoint,a.Dsc,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on c.WorkshopId=d.WorkshopId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 ");
+                strSql.Append(@"select a.WcCd,a.WcNm,a.WcTyp,b.PlineCd as PlineCd,b.PlineNm as PlineNm,a.Sort,a.StartPoint,a.PreAlarmPoint,a.StopPoint,a.EndPoint,a.Dsc,a.Seq,a.RsvFld1,a.CreTm,a.CreNm,a.MdfTm,a.MdfNm,a.Rem from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on c.WorkshopId=d.WorkshopId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 ");
 
                 if (string.IsNullOrEmpty(area_key) && string.IsNullOrEmpty(parentId))
                 {

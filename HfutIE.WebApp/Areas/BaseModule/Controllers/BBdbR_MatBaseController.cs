@@ -360,7 +360,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string ConditionMatCd, string ConditionMatNm, string ConditionMatCatg, string ConditionMatTyp, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string ConditionMatCd, string ConditionMatNm, string ConditionMatCatg, string ConditionMatTyp, string IsScan, string WcCd, string IsPrint, string RsvFld1, JqGridParam jqgridparam)
         {
             try
             {
@@ -387,7 +387,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 strSql.Append(@"select IIF(MatImg is null,'0','1') IfMatImg,
                 IIF((select count(*) from BBdbR_PartMatConfig where PartCd=BBdbR_MatBase.MatCd and Enabled = '1')>0 ,'1','0') IfPart,* 
                 from BBdbR_MatBase 
-                where Enabled = 1 and MatCd like @ConditionMatCd  and MatNm like @ConditionMatNm and MatCatg like @ConditionMatCatg ");
+                where Enabled = 1 and MatCd like @ConditionMatCd  and MatNm like @ConditionMatNm and MatCatg like @ConditionMatCatg  ");
                 parameter.Add(DbFactory.CreateDbParameter("@ConditionMatCd", "%" + ConditionMatCd + "%"));
                 parameter.Add(DbFactory.CreateDbParameter("@ConditionMatNm", "%" + ConditionMatNm + "%"));
                 parameter.Add(DbFactory.CreateDbParameter("@ConditionMatCatg", "%" + ConditionMatCatg + "%"));
@@ -396,6 +396,45 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     strSql.Append(" and MatTyp = @ConditionMatTyp");
                     parameter.Add(DbFactory.CreateDbParameter("@ConditionMatTyp", "%" + ConditionMatTyp + "%"));
+                }
+
+                //是否关重件
+                if (IsScan != "" && IsScan != null)
+                {
+                    if (IsScan=="1")
+                    {
+                        strSql.Append(" and IsScan = '1'");
+                    }
+                    else 
+                    {
+                        strSql.Append(" and IsScan != '1'");
+                    }
+                   
+                }
+                //关重件工位
+                if (WcCd != "" && WcCd != null)
+                {
+                    strSql.Append(" and WcCd like @WcCd");
+                    parameter.Add(DbFactory.CreateDbParameter("@WcCd", "%" + WcCd + "%"));
+                }
+                //是否打印
+                if (IsPrint != "" && IsPrint != null)
+                {
+                    if (IsPrint == "1")
+                    {
+                        strSql.Append(" and IsPrint = '1'");
+                    }
+                    else
+                    {
+                        strSql.Append(" and IsPrint != '1'");
+                    }
+
+                }
+                //打印工位
+                if (RsvFld1 != "" && RsvFld1 != null)
+                {
+                    strSql.Append(" and RsvFld1 like @RsvFld1");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld1", "%" + RsvFld1 + "%"));
                 }
 
                 //排序
@@ -1449,7 +1488,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #endregion
 
         #region 重构导出
-        public ActionResult GetExcel_Data(string ConditionMatCd, string ConditionMatNm, string ConditionMatCatg,string ConditionMatTyp, JqGridParam jqgridparam)
+        public ActionResult GetExcel_Data(string ConditionMatCd, string ConditionMatNm, string ConditionMatCatg,string ConditionMatTyp, string IsScan, string WcCd, string IsPrint, string RsvFld1, JqGridParam jqgridparam)
         {
             try
             {
@@ -1472,6 +1511,45 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     strSql.Append(" and MatTyp = @ConditionMatTyp");
                     parameter.Add(DbFactory.CreateDbParameter("@ConditionMatTyp", "%" + ConditionMatTyp + "%"));
+                }
+
+                //是否关重件
+                if (IsScan != "" && IsScan != null)
+                {
+                    if (IsScan == "1")
+                    {
+                        strSql.Append(" and IsScan = '1'");
+                    }
+                    else
+                    {
+                        strSql.Append(" and IsScan != '1'");
+                    }
+
+                }
+                //关重件工位
+                if (WcCd != "" && WcCd != null)
+                {
+                    strSql.Append(" and WcCd like @WcCd");
+                    parameter.Add(DbFactory.CreateDbParameter("@WcCd", "%" + WcCd + "%"));
+                }
+                //是否打印
+                if (IsPrint != "" && IsPrint != null)
+                {
+                    if (IsPrint == "1")
+                    {
+                        strSql.Append(" and IsPrint = '1'");
+                    }
+                    else
+                    {
+                        strSql.Append(" and IsPrint != '1'");
+                    }
+
+                }
+                //打印工位
+                if (RsvFld1 != "" && RsvFld1 != null)
+                {
+                    strSql.Append(" and RsvFld1 like @RsvFld1");
+                    parameter.Add(DbFactory.CreateDbParameter("@RsvFld1", "%" + RsvFld1 + "%"));
                 }
 
                 //排序

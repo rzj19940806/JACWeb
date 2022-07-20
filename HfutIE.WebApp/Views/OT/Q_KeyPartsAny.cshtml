@@ -244,6 +244,10 @@
             byPassFun(allStaticInfo, parts, obj, "主线", stationCarState);
         }
 
+        function bind(obj) {
+            bindFun(allStaticInfo, parts, obj, "主线", stationCarState);
+        }
+
         //4.Mqtt
         //4.2连接失败回调
         function onFailConnect() {

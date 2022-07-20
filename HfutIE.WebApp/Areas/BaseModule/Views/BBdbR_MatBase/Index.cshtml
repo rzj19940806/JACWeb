@@ -434,8 +434,13 @@
        var ConditionMatNm = $("#ConditionMatNm").val();
        var ConditionMatCatg = $("#ConditionMatCatg").val();
        var ConditionMatTyp = $("#ConditionMatTyp").val();
+       var IsScan = $("#IsScan").val();
+       var WcCd = $("#WcCd").val();
+       var IsPrint = $("#IsPrint").val();
+       var RsvFld1 = $("#RsvFld1").val();
+
         $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageByCondition")?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_MatBase/GridPageByCondition")?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp) + "&IsScan=" + escape(IsScan) + "&WcCd=" + escape(WcCd) + "&IsPrint=" + escape(IsPrint) + "&RsvFld1=" + escape(RsvFld1), page: 1, datatype: 'json'
     }).trigger('reloadGrid');
     }
     $(document).keypress(function (e) {
@@ -537,6 +542,10 @@
         var ConditionMatNm = $("#ConditionMatNm").val();
         var ConditionMatCatg = $("#ConditionMatCatg").val();
         var ConditionMatTyp = $("#ConditionMatTyp").val();
+        var IsScan = $("#IsScan").val();
+        var WcCd = $("#WcCd").val();
+        var IsPrint = $("#IsPrint").val();
+        var RsvFld1 = $("#RsvFld1").val();
         var count = $("#gridTable").getGridParam("records");
         if (count == 0) {
             tipDialog("没有要导出的信息！", 1.5, 0);
@@ -548,7 +557,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/BaseModule/BBdbR_MatBase/GetExcel_Data?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp);
+                location.href = "/BaseModule/BBdbR_MatBase/GetExcel_Data?ConditionMatCd=" + escape(ConditionMatCd) + "&ConditionMatNm=" + escape(ConditionMatNm) + "&ConditionMatCatg=" + escape(ConditionMatCatg) + "&ConditionMatTyp=" + escape(ConditionMatTyp) + "&IsScan=" + escape(IsScan) + "&WcCd=" + escape(WcCd) + "&IsPrint=" + escape(IsPrint) + "&RsvFld1=" + escape(RsvFld1);
                 Loading(false);
             }, 200);
         }
@@ -594,6 +603,9 @@
             //length=0不处理
         })
     }
+
+
+
 </script>
 <!--工具栏-->
 <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
@@ -604,7 +616,6 @@
 <div class="leftline rightline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
     <table border="0" class="form-find" style="height: 45px;">
         <tr>
-
             <th>物料编号：</th>
             <td>
                 <input id="ConditionMatCd" type="text" class="txt" style="width: 200px" />
@@ -633,6 +644,33 @@
             <th style="text-align:right;width:100%;color:red;font-size:12px">
                 *注：双击其中一行可查看物料图片
             </th>
+        </tr>
+        <tr>
+            <th>是否关重件：</th>
+            <td>
+                <select id="IsScan" style="width: 150px;height:25px" >
+                    <option value="">==全部==</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>）
+                </select>
+            </td>
+            <th id="WcCdtitle" >关重件工位编号：</th>
+            <td id="WcCdtitle2">
+                <input id="WcCd" type="text" class="txt" style="width: 200px" />
+            </td>
+
+            <th>是否打印：</th>
+            <td>
+                <select id="IsPrint" style="width: 150px;height:25px">
+                    <option value="">==全部==</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>）
+                </select>
+            </td>
+            <th id="RsvFld1title" >打印工位：</th>
+            <td id="RsvFld1title2" >
+                <input id="RsvFld1" type="text" class="txt" style="width: 200px" />
+            </td>
         </tr>
     </table>
 </div>

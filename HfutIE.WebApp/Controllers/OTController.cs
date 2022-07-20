@@ -327,6 +327,17 @@ namespace HfutIE.WebApp.Controllers
             return Content(new { code, msg }.ToJson());
         }
 
+        public ActionResult isAmindBind(string WcId)
+        {
+            //pass次数校核
+            string sql = $"select * from BBdbR_WcBase where RsvFld1=1 and Enabled=1 and WcId='{WcId}'";
+            int num = DataFactory.Database().FindTableBySql(sql).Rows.Count;
+            if (num == 0)
+                return Content(new { code = 1, msg = false }.ToJson());
+            else
+                return Content(new { code = 1, msg = true }.ToJson());
+        }
+
         public ActionResult PassBind(Q_KeyByPass_Pro KeyByPass, int MatNo, string plineType = "主线",string account=null,string password=null)
         {
             int code=1;//-2.程序异常错误，0.其他完成作业，1.正常执行，2.无PASS权限且次数使用完，3.账号异常或无权限

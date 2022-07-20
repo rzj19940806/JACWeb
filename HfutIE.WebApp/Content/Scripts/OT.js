@@ -144,6 +144,9 @@ function carStart(allStaticInfo,data, plineType) {
             let right = "";
             if (allStaticInfo.PlineCd =="Line-23") {
                 right = `  <div class="part_box_right" id="part_box_right_环保码_1">
+                                    <div class="part_btn_box_right" id="part_btn_bind_right_${item.matid}">
+                                        <input id="part_bind_right_${item.matid}_${i}" class="part_btn_right" type="button" value="--" onclick="">
+                                    </div>
                     <div class="part_dis_box_right" id="part_dis_box_right_环保码_1">
                         <div id="part_code_right_环保码_1" class="part_code_right">Environmental Code</div>
                         <div id="part_name_right_环保码_1" class="part_name_right">环保码(大于45位小于60位)</div>
@@ -158,7 +161,7 @@ function carStart(allStaticInfo,data, plineType) {
                     for (var i = 1; i < item.matnum + 1; i++) {
                         right += `  <div class="part_box_right" id="part_box_right_${item.matid}_${i}">
                                     <div class="part_btn_box_right" id="part_btn_bind_right_${item.matid}">
-                                        <input id="part_btn_right_${item.matid}_${i}" class="part_btn_right" type="button" value="强录" onclick="bind(this)">
+                                        <input id="part_bind_right_${item.matid}_${i}" class="part_btn_right" type="button" value="强录" onclick="bind(this)">
                                     </div>
                                     <div class="part_dis_box_right" id="part_dis_box_right_${item.matid}_${i}">
                                         <div id="part_code_right_${item.matid}_${i}" class="part_code_right">${item.matcd}</div>
@@ -253,39 +256,77 @@ function partBind(allStaticInfo, barcodeRule, parts, BarCode, plineType, station
     }
     delete allStaticInfo.MatId;
 }
-//强制绑定
-function bindFun() {
 
+
+function isAmindBind(WcId) {
+    AjaxJson('/OT/isAmindBind', { WcId: WcId }, function (date) {
+        return date.msg;
+    });
+
+}
+//强制绑定
+function bindFun(allStaticInfo, parts, obj, plineType, stationCarState) {
+    if (!isAmindBind(allStaticInfo.WcId)) {
+        swal({
+            title: "无强制录入权限",
+            text: "请联系管理员维护工位信息",
+            type: "error",
+            showConfirmButton: false,
+            timer: 1500,
+        });
+        return false;
+    }
+    let mat = obj.id.substring(16).split('_');
+    let matid = mat[0];
+    //if (matid == "环保码") {
+    //    partDeal("环保码", "1", "orange", plineType);
+    //    return;
+    //}
+    let matno;
+    $.each(parts, function (i, item) {
+        if (item.matid == matid) {
+            allStaticInfo["MatId"] = item.matid;
+            allStaticInfo["MatCd"] = item.matcd;
+            allStaticInfo["MatNm"] = item.matnm;
+            matno = item.matnum;
+            return false;
+        }
+    });
     swal({
         title: "强制绑定物料条码",
         type: "input",
+        html: true,
+        text:"<input type='text' name='barcode' id='bindbarcode' placeholder='请输入物料码'>",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        closeOnConfirm: false,
         animation: "slide-from-top",
         inputPlaceholder: "请输入物料条码"
     },
         function (inputValue) {
             if (inputValue === false) return false;
-            if (inputValue === "") {
-                swal.showInputError("产线名称不能为空！");
+            allStaticInfo["BarCode"] = $("#bindbarcode").val();
+            if (allStaticInfo.BarCode === "") {
+                swal.showInputError("不能为空！");
                 return false;
             }
-            if (inputValue.indexOf(" ") != -1) {
-                swal.showInputError("不能输入空格！");
-                return false;
-            }
-            var sendinfo = inputValue;
-            let message = new Paho.MQTT.Message(sendinfo);//发送的内容
-            message.destinationName = topic3;//发送的主题
-            client.send(message);
-            swal({
-                title: "成功",
-                timer: 1000,
-                type: "success",
-                showConfirmButton: false
+            AjaxJson('/OT/PartBind', { KeyPartsBind: allStaticInfo, MatNo: matno, plineType: plineType }, function (data) {
+                if (data.code == 1 || data.code == "1") {
+                    updateLog("物料绑定提醒:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + allStaticInfo.BarCode + "】");
+                    partDeal(allStaticInfo.MatId, Number(matno), "green", plineType, stationCarState);
+                    if (allStaticInfo.DvcCatg == '多屏协同') {
+                        var message = {
+                            matId: allStaticInfo.MatId,
+                            matno: Number(matno),
+                            gid: gid
+                        };
+                        publishMqtt(JSON.stringify(message), "/OTScreen/MatBind/" + allStaticInfo.WcId);
+                    }
+                }
+                else {
+                    uperrorLog("物料绑定异常:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + allStaticInfo.BarCode + "】【异常信息：" + data.msg + "】");
+                }
             });
         });
 }
@@ -382,6 +423,8 @@ function partDeal(matId, matNo, color, plineType, stationCarState) {
     try {
         $("#part_dis_box_right_" + matId + "_" + matNo).attr("class", "part_dis_box_right_select");
         $("#part_dis_box_right_" + matId + "_" + matNo).css("background-color", color);
+        $("#part_bind_right_" + matId + "_" + matNo).css("background-color", color);
+        $("#part_bind_right_" + matId + "_" + matNo).attr("onclick", "");
         $("#part_btn_right_" + matId + "_" + matNo).css("background-color", color);
         $("#part_btn_right_" + matId + "_" + matNo).attr("onclick", "");
         $.each(parts, function (i, item) {
