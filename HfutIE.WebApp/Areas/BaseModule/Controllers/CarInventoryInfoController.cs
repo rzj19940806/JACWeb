@@ -129,7 +129,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
 
 
-                //dtExport = database.FindTableBySql(sql.ToString(), false);
+                dtExport = database.FindTableBySql(sql.ToString(), false);
                 var JsonData = new
                 {
                     total = jqgridparam.total,

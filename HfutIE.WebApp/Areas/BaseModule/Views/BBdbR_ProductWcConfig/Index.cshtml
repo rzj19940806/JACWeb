@@ -8,7 +8,7 @@
         GetGrid();
         GetTree();
         GetGrid1();
-        $("#ItemsTree").css("height", $(window).height() * 0.65 - 179);
+        $("#ItemsTree").css("height", ($(window).height() - 190) * 0.85 );
     })
     var Nodetext = "";//定义全局变量来表示树是否被点击
     var Nodesort = "";//在新增和物料配置时用于判断点击到的节点
@@ -23,7 +23,7 @@
         $("#gridTable").jqGrid({
         url: "@Url.Content("~/BaseModule/BBdbR_ProductWcConfig/GridPageJsonProduct")",//没有datatable从该方法控制器中返回
             datatype: "json",
-            height: ($(window).height() - 210) * 0.35,
+            height: ($(window).height() - 210) * 0.15,
         autowidth: true,
             colModel: [
                 { label: '产品主键', name: 'MatId', MatId: 'matid', width: 0, align: 'center', sortable: true, hidden: true },
@@ -58,7 +58,7 @@
     function GetGrid1() {
         $("#gridTable1").jqGrid({
             datatype: "json",
-            height: ($(window).height() - 210) * 0.65,
+            height: ($(window).height() - 210) * 0.85,
             autowidth: true,
             colModel: [
                 { label: '产品工位物料主键', name: 'ProductClassMatId', index: 'ProductClassMatId', width: 0, align: 'center', sortable: true, hidden: true },

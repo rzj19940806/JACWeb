@@ -17,7 +17,7 @@
                 RoleName = item.text;        //名称
                 $("#CenterTitle").html(" - " + RoleName);
                 $("#gridTable").jqGrid('setGridParam', {
-                    url: "@Url.Content("~/SystemManaModule/RoleMana/GridPageListJson")?RoleId=" + RoleId, page: 1
+                    url: "@Url.Content("~/SystemManaModule/RoleMana/GridPageListJson")?RoleId=" + RoleId, page: 1, datatype: "json"
                 }).trigger('reloadGrid');
             },
             url: "@Url.Content("~/SystemManaModule/RoleMana/TreeJson")"

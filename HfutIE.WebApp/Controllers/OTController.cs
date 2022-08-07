@@ -255,9 +255,11 @@ namespace HfutIE.WebApp.Controllers
             DataTable PartBond = null;
             try//获取当前工位车身对应信息
             {
+                string sql = $"select plineid from BBdbR_WcBase with(nolock) where WcId='68'";
+                string plineid = DbHelperSQL.OpenTable(sql).Rows[0][0].ToString();
                 Product = q_KeyParts.GetProduct(vinInfo.Rows[0]["ProductMatCd"].ToString());//获取产品基本信息中的产品信息
                 DataTable partTable = q_KeyParts.GetParts(Product.Rows[0]["MatId"].ToString(),WcId);//获取产品工位物料配置信息
-                PartImgs = q_KeyParts.GetPartImgs(partTable, vinInfo.Rows[0]["PlineId"].ToString(), WcId, vinInfo.Rows[0]["Vin"].ToString(),del, plineType);//获取产品工位物料配置信息//顺便刷新实时扫码表
+                PartImgs = q_KeyParts.GetPartImgs(partTable, plineid, WcId, vinInfo.Rows[0]["Vin"].ToString(),del, plineType);//获取产品工位物料配置信息//顺便刷新实时扫码表
                 PartBond = q_KeyParts.GetBondParts(vinInfo.Rows[0]["VIN"].ToString(), WcId);
                 DataRow[] partrows = partTable.Select("IsScan='1'");
                 Parts = partTable.Clone();

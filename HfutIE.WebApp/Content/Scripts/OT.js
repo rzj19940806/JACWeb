@@ -259,10 +259,11 @@ function partBind(allStaticInfo, barcodeRule, parts, BarCode, plineType, station
 
 
 function isAmindBind(WcId) {
+    var result;
     AjaxJson('/OT/isAmindBind', { WcId: WcId }, function (date) {
-        return date.msg;
+        result= date.msg;
     });
-
+    return result;
 }
 //强制绑定
 function bindFun(allStaticInfo, parts, obj, plineType, stationCarState) {
@@ -293,7 +294,7 @@ function bindFun(allStaticInfo, parts, obj, plineType, stationCarState) {
         }
     });
     swal({
-        title: "强制绑定物料条码",
+        title: allStaticInfo.MatNm,
         type: "input",
         html: true,
         text:"<input type='text' name='barcode' id='bindbarcode' placeholder='请输入物料码'>",
@@ -302,7 +303,7 @@ function bindFun(allStaticInfo, parts, obj, plineType, stationCarState) {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         animation: "slide-from-top",
-        inputPlaceholder: "请输入物料条码"
+        inputPlaceholder: "强制绑定物料条码"
     },
         function (inputValue) {
             if (inputValue === false) return false;
@@ -311,6 +312,8 @@ function bindFun(allStaticInfo, parts, obj, plineType, stationCarState) {
                 swal.showInputError("不能为空！");
                 return false;
             }
+            allStaticInfo["SupplierCd"] = " ";
+            allStaticInfo["RsvFld1"] = " ";//批次号
             AjaxJson('/OT/PartBind', { KeyPartsBind: allStaticInfo, MatNo: matno, plineType: plineType }, function (data) {
                 if (data.code == 1 || data.code == "1") {
                     updateLog("物料绑定提醒:【工位：" + allStaticInfo.WcNm + "】【VIN：" + allStaticInfo.VIN + "】【关重件物料码：" + allStaticInfo.MatCd + "】【关重件名称：" + allStaticInfo.MatNm + "】【关重件条码：" + allStaticInfo.BarCode + "】");
