@@ -95,7 +95,7 @@
         }
         //界面加载时获取车身信息
         function getCar() {
-            AjaxJson("/OT/getScanStatus", { AviId: aviInfo.AviId, WcId: allStaticInfo.WcId, type: "辅线" }, function (data) {
+            AjaxJson("/OT/getScanStatus", {  WcId: allStaticInfo.WcId }, function (data) {
                 if (data.Code == 0) {
                     manualCarStart(data.VIN, true);
                     //manualCarStart(data.VIN, false);

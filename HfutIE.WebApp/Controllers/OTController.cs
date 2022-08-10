@@ -255,7 +255,7 @@ namespace HfutIE.WebApp.Controllers
             DataTable PartBond = null;
             try//获取当前工位车身对应信息
             {
-                string sql = $"select plineid from BBdbR_WcBase with(nolock) where WcId='68'";
+                string sql = $"select plineid from BBdbR_WcBase with(nolock) where WcId='{WcId}'";
                 string plineid = DbHelperSQL.OpenTable(sql).Rows[0][0].ToString();
                 Product = q_KeyParts.GetProduct(vinInfo.Rows[0]["ProductMatCd"].ToString());//获取产品基本信息中的产品信息
                 DataTable partTable = q_KeyParts.GetParts(Product.Rows[0]["MatId"].ToString(),WcId);//获取产品工位物料配置信息

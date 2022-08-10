@@ -144,8 +144,8 @@ function carStart(allStaticInfo,data, plineType) {
             let right = "";
             if (allStaticInfo.PlineCd =="Line-23") {
                 right = `  <div class="part_box_right" id="part_box_right_环保码_1">
-                                    <div class="part_btn_box_right" id="part_btn_bind_right_${item.matid}">
-                                        <input id="part_bind_right_${item.matid}_${i}" class="part_btn_right" type="button" value="--" onclick="">
+                                    <div class="part_btn_box_right" id="part_btn_bind_right_环保码_1">
+                                        <input id="part_bind_right_环保码_1" class="part_btn_right" type="button" value="--" onclick="">
                                     </div>
                     <div class="part_dis_box_right" id="part_dis_box_right_环保码_1">
                         <div id="part_code_right_环保码_1" class="part_code_right">Environmental Code</div>
