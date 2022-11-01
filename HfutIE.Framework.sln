@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HfutIE.Cache", "HfutIE.Cache\HfutIE.Cache.csproj", "{E984E0CC-2C1A-4812-9B71-40FA086F0F86}"
 EndProject
@@ -78,5 +78,8 @@ Global
 		{E0B30F33-66F0-4B5D-A788-2B511DAE3530} = {530BD766-FBCE-4889-96A1-B6FCEEF9197B}
 		{0A1CD819-5D17-4BF3-AFA4-A0B70996C2A3} = {BBB13585-9EA5-4EFE-9E89-5AD3B4C3D1CF}
 		{90D79C78-E2DC-42E9-92A3-5426E5697D01} = {AA1B776E-1134-4C01-BB81-BCE050E3D772}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC931DD9-ABC5-4B06-8184-437610AFAA16}
 	EndGlobalSection
 EndGlobal

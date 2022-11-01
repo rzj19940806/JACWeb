@@ -198,7 +198,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         //不管是新增还是编辑首先判断页面输入的编号是否已经存在
         //如果已经存在就直接返回“该编号已经存在！”的信息
         //不存在再进行下一步
-        public  ActionResult SubmitForm1(BBdbR_PlineBase entity, string KeyValue)//===复制时需要修改===
+        public  ActionResult SubmitForm1(BBdbR_PlineBase entity, string KeyValue, string KeyValue2)//===复制时需要修改===
         {
             try
             {
@@ -234,7 +234,8 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     {
                         Message = "该编号已经存在！";
                         return Content(new JsonMessage { Success = false, Code = IsOk.ToString(), Message = Message }.ToString());
-                    }                  
+                    }
+                    entity.WorkSectionId = KeyValue2;
                     entity.Create();
                     IsOk = MyBll.Insert(entity);//将实体插入数据库，插入成功返回1，失败返回0；
                     this.WriteLog(IsOk, entity, null, KeyValue, Message);//记录日志

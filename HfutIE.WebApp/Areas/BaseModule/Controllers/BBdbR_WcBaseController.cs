@@ -800,7 +800,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         /// <param name="parentId">节点的父级主键</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns></returns>
-        public ActionResult GridListJsonQuality(string area_key, string parentId, string sort,string WcCd,string WcNm, JqGridParam jqgridparam)
+        public ActionResult GridListJsonQuality(string area_key, string parentId, string sort, string WcCd, string WcNm,JqGridParam jqgridparam)
         {
             try
             {
@@ -822,47 +822,49 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 #region 点击树修改—点击树展示质控点信息，考虑搜索条件
                 Stopwatch watch = CommonHelper.TimerStart();
                 StringBuilder strSql = new StringBuilder();
-                if (area_key == "" && parentId == "")
-                {
-                    strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on d.WorkshopId=c.WorkshopId where a.Enabled=1 and b.Enabled=1 and d.WorkshopCd='ZLCJXN01' ");
-                }
-                else
-                {
-                    if (parentId != "0")
+                
+                    if (area_key == "" && parentId == "")
                     {
-                        if (sort == "0")
-                        {
-                            strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.WorkSectionId='" + area_key + "' ");     //===复制时需要修改===
-                        }
-                        else if (sort == "1")
-                        {
-                            strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.WorkSectionId='" + area_key + "' ");     //===复制时需要修改===
-                        }
-                        else
-                        {
-                            strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.Enabled=1 and b.Enabled=1 and a.PlineId='" + area_key + "' ");     //===复制时需要修改===要修改===
-                        }
+                        strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on d.WorkshopId=c.WorkshopId where a.Enabled=1 and b.Enabled=1 and d.WorkshopCd='ZLCJXN01' ");
                     }
                     else
                     {
-                        strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on c.WorkshopId=d.WorkshopId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 and d.WorkshopId='" + area_key + "' ");     //===复制时需要修改===
+                        if (parentId != "0")
+                        {
+                            if (sort == "0")
+                            {
+                                strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.WorkSectionId='" + area_key + "' ");     //===复制时需要修改===
+                            }
+                            else if (sort == "1")
+                            {
+                                strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and c.WorkSectionId='" + area_key + "' ");     //===复制时需要修改===
+                            }
+                            else
+                            {
+                                strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId where a.Enabled=1 and b.Enabled=1 and a.PlineId='" + area_key + "' ");     //===复制时需要修改===要修改===
+                            }
+                        }
+                        else
+                        {
+                            strSql.Append(@"select a.*,b.PlineCd as PlineCd,b.PlineNm as PlineNm from BBdbR_WcBase a join BBdbR_PlineBase b on a.PlineId=b.PlineId join BBdbR_WorkSectionBase c on b.WorkSectionId=c.WorkSectionId join BBdbR_WorkshopBase d on c.WorkshopId=d.WorkshopId where a.Enabled=1 and b.Enabled=1 and c.Enabled=1 and d.Enabled=1 and d.WorkshopId='" + area_key + "' ");     //===复制时需要修改===
+                        }
                     }
-                }
-                //模糊搜索质控点编号
-                if (WcCd != null && WcCd != "")
-                {
-                    strSql.Append(" and a.WcCd like '%" + WcCd + "%'");
-                }
-                else { }
-                //模糊搜索质控点名称
-                if (WcNm != null && WcNm != "")
-                {
-                    strSql.Append(" and a.WcNm like '%" + WcNm + "%'");
-                }
-                else { }
+                    //模糊搜索质控点编号
+                    if (WcCd != null && WcCd != "")
+                    {
+                        strSql.Append(" and a.WcCd like '%" + WcCd + "%'");
+                    }
+                    else { }
+                    //模糊搜索质控点名称
+                    if (WcNm != null && WcNm != "")
+                    {
+                        strSql.Append(" and a.WcNm like '%" + WcNm + "%'");
+                    }
+                    else { }
 
-                //排序
-                strSql.Append(" order by a.sort ");
+                    //排序
+                    strSql.Append(" order by a.sort ");
+                
                 DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
                 var JsonData = new
                 {
@@ -978,12 +980,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #endregion
 
         #region 9.1 加载未配置组件
-        public ActionResult GridNotConfigJson(string WcId, string Condition, string keywords, JqGridParam jqgridparam)//加载未配置组件
+        public ActionResult GridNotConfigJson(string WcId, string Condition, string keywords, string isCH, JqGridParam jqgridparam)//加载未配置组件
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable dt = MyBll1.GetNotConfig(WcId, Condition, keywords, ref jqgridparam);
+                DataTable dt = MyBll1.GetNotConfig(WcId, Condition, keywords, isCH, ref jqgridparam);
                 var JsonData = new
                 {
                     total = jqgridparam.total,
@@ -1033,12 +1035,12 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #endregion
 
         #region 9.3在首页加载已经配置过的组件信息
-        public ActionResult GridMatListJson(string KeyValue, JqGridParam jqgridparam)//在首页加载已经配置过的组件信息
+        public ActionResult GridMatListJson(string KeyValue, string isCH, JqGridParam jqgridparam)//在首页加载已经配置过的组件信息
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable dt = MyBll1.GetMatList(KeyValue);
+                DataTable dt = MyBll1.GetMatList(KeyValue,isCH);
                 var JsonData = new
                 {
                     total = jqgridparam.total,

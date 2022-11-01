@@ -146,7 +146,6 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 int index = -1;
                 for (int i = 0; i < listTable.Rows.Count; i++)
                 {
-                    
                     if (nowvin != listTable.Rows[i]["VIN"].ToString())
                     {
                         DataRow row = alltable.NewRow();

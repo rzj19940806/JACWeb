@@ -271,6 +271,13 @@ order by A.RsvFld1";
             DbTransaction isOpenTrans = database.BeginTrans();
             db.Insert(KeyPartsBind, isOpenTrans);
             int num = ScanStatus(KeyPartsBind.WcId, KeyPartsBind.VIN, KeyPartsBind.MatId, KeyPartsBind.BarCode, MatNo, tableName);
+            //T-13和T-06工位进行数据绑定
+            if (KeyPartsBind.WcId == "16"|| KeyPartsBind.WcId=="9")
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("UPDATE dbo.Tg_TightenDataDoc SET Vin='" + KeyPartsBind.VIN + "' WHERE RsvFld3='"+ KeyPartsBind.BarCode + "' AND WcId='198'");
+                db.ExecuteBySql(sb);
+            }
             if (num > 0)
                 database.Commit();
             else

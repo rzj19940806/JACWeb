@@ -7,7 +7,7 @@
         BindDropItem("#CarType", "CarType", "==全部==");
         GetGrid();
         GetGrid2();
-        btn_Search();
+        //btn_Search();
     })
 
 
@@ -23,21 +23,21 @@
         autowidth: true,
             colModel: [
                 { label: '车身部位质检结果主键', name: 'CarQualityResultId', index: 'CarQualityResultId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '质控点组名称（工段）', name: 'QualityCheckPointGroupNm', index: 'QualityCheckPointGroupNm', width: 0, align: 'center', sortable: true },
                 { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center',sortable: true  },
                 { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center',sortable: true  },
-                { label: '转序日期', name: 'TransitionTm', index: 'TransitionTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '转序日期', name: 'TransitionTm', index: 'TransitionTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }, hidden: true  },
                 { label: '质控点组主键', name: 'QualityCheckPointGroupId', index: 'QualityCheckPointGroupId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '质控点组编号', name: 'QualityCheckPointGroupCd', index: 'QualityCheckPointGroupCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '质控点组名称（工段）', name: 'QualityCheckPointGroupNm', index: 'QualityCheckPointGroupNm', width: 0, align: 'center',sortable: true  },
                 { label: '质控点主键', name: 'QualityCheckPointId', index: 'QualityCheckPointId', width: 0, align: 'center', sortable: true, hidden: true  },
                 { label: '质控点编号', name: 'QualityCheckPointCd', index: 'QualityCheckPointCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '质控点名称', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 0, align: 'center', sortable: true, hidden: true},
                 { label: '质检录入时间', name: 'QualityInspectTm', index: 'QualityInspectTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
-                { label: '质检结果', name: 'QualityResult', index: 'QualityResult', width: 0, align: 'center', sortable: true },
                 { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '质检结果', name: 'QualityResult', index: 'QualityResult', width: 0, align: 'center', sortable: true },
+                { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, hidden: true  },
                 { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true, hidden: true },
@@ -84,15 +84,18 @@
             colModel: [
                 { label: '车身质检销项主键', name: 'CarInspectionOutputId', index: 'CarInspectionOutputId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '车身部位质检结果主键', name: 'CarQualityResultId', index: 'CarQualityResultId', width: 0, align: 'center', sortable: true, hidden: true  },
+                { label: '质控点名称', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 0, align: 'center', sortable: true },
                 { label: 'VIN', name: 'VIN', index: 'VIN', width: 0, align: 'center',sortable: true  },
-                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center',sortable: true  },
-                { label: '转序日期', name: 'TransitionTm', index: 'TransitionTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
+                { label: '计划编号', name: 'ProducePlanCd', index: 'ProducePlanCd', width: 0, align: 'center', sortable: true },
+                { label: '订单编号', name: 'OrderCd', index: 'OrderCd', width: 0, align: 'center', sortable: true },
+                { label: '车身组件名称', name: 'CarComponentNm', index: 'CarComponentNm', width: 0, align: 'center', sortable: true },
+                { label: '转序日期', name: 'TransitionTm', index: 'TransitionTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }, hidden: true },
                 { label: '质控点组主键', name: 'QualityCheckPointGroupId', index: 'QualityCheckPointGroupId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '质控点组编号', name: 'QualityCheckPointGroupCd', index: 'QualityCheckPointGroupCd', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '质控点组名称（工段）', name: 'QualityCheckPointGroupNm', index: 'QualityCheckPointGroupNm', width: 0, align: 'center',sortable: true  },
                 { label: '质控点主键', name: 'QualityCheckPointId', index: 'QualityCheckPointId', width: 0, align: 'center', sortable: true, hidden: true  },
                 { label: '质控点编号', name: 'QualityCheckPointCd', index: 'QualityCheckPointCd', width: 0, align: 'center', sortable: true, hidden: true },
-                { label: '质控点名称', name: 'QualityCheckPointNm', index: 'QualityCheckPointNm', width: 0, align: 'center', sortable: true, hidden: true},
                 { label: '缺陷名称', name: 'DefectNm', index: 'DefectNm', width: 0, align: 'center',sortable: true  },
                 { label: '备注', name: 'DefectAnalysis', index: 'DefectAnalysis', width: 0, align: 'center', sortable: true },
                 { label: '录入人员编号', name: 'StfCd', index: 'StfCd', width: 0, align: 'center', sortable: true, hidden: true },
@@ -128,7 +131,6 @@
     function windowload() {
         $("#gridTable").trigger("reloadGrid"); //重新载入
         $("#gridTable2").trigger("reloadGrid"); //重新载入
-        
     }
 
 

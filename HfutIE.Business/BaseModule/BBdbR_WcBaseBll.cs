@@ -356,7 +356,7 @@ namespace HfutIE.Business
                                    c.WorkshopNm As name,
                                    c.Enabled As IsAvailable,
                                    '0' as parentId,
-                                   '0' as sort             
+                                   '0' as sort ,c.sort as que             
                                    from BBdbR_WorkshopBase c where c.Enabled = '1' and c.WorkshopCd='ZLCJXN01'  ");
             //工段节点
             strSql.Append(@"union select 
@@ -365,7 +365,7 @@ namespace HfutIE.Business
                                     b.WorkSectionNm AS name, 
                                     b.Enabled As IsAvailable,
                                     b.WorkshopId as parentId,
-                                    '1' as sort 
+                                    '1' as sort  ,b.sort as que
                                     from BBdbR_WorkSectionBase b,BBdbR_WorkshopBase c where b.WorkshopId = c.WorkshopId and b.Enabled= '1'  ");
             //产线节点
             strSql.Append(@" union select    
@@ -374,9 +374,9 @@ namespace HfutIE.Business
                                     a.PlineNm AS name,
                                     a.Enabled As IsAvailable,
                                     a.WorkSectionId AS parentId,
-                                    '2' as sort 
+                                    '2' as sort ,a.sort as que
                              from  BBdbR_PlineBase a,BBdbR_WorkSectionBase b 
-                             where a.WorkSectionId=b.WorkSectionId and a.Enabled = '1' and a.Enabled = '1' order by code asc");
+                             where a.WorkSectionId=b.WorkSectionId and a.Enabled = '1' and a.Enabled = '1' order by que asc");
             return Repository().FindTableBySql(strSql.ToString());
         }
         #endregion

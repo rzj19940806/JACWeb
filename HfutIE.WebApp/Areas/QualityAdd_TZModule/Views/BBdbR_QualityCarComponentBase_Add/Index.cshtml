@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "部件基本表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        GetGrid();
+        GetTree();
+    })
+    var area_key = "", area_name = "";
+    var selectnodeishaschild = "";//选中树节点是否有子节点
+    var parentId = "";//父节点编号
+    var Type = "";//树节点等级
+    var WorkSectionBaseTypeCellItem = "";
+    //加载左边树
+    function GetTree() {
+        var itemtree = {
+            onnodeclick: function (item) {
+                selectnodeishaschild = item.hasChildren;
+                area_key = item.id;            //ID
+                area_name = item.text;         //名称
+                parentId = item.parentnodes;   //父节点编号
+                Type = item.Type;//树节点等级
+                var CarComponentCd = $("#CarComponentCd").val();    //检验部件编号
+                var CarComponentNm = $("#CarComponentNm").val();    //检验部件名称
+                //2.点击树展示表格
+                $("#gridTable").jqGrid('setGridParam',
+                    {
+                        url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/GridListJson")?areaId="
+                            + area_key + "&parentId=" + parentId + "&Type=" + Type + "&CarComponentCd=" + CarComponentCd + "&CarComponentNm=" + CarComponentNm, datatype: 'json'
+                    }).trigger('reloadGrid');
+            },
+            url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/TreeJson")"    //1.获取树
+        };
+        $("#ItemsTree").treeview(itemtree);
+    }
+   //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/GridListJson?areaId='' & parentId='' & Type='' & CarComponentCd='' & CarComponentNm='' ")",
+            datatype: "json",
+            autowidth: true,
+            height: $(window).height() -149,
+            colModel: [
+                { label: '部件主键', name: 'CarComponentId', index: 'CarComponentId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '检验岗主键', name: 'CarPositionId', index: 'CarPositionId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '检验项目主键', name: 'CarPositionGroupId', index: 'CarPositionGroupId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '部件编号', name: 'CarComponentCd', index: 'CarComponentCd', width: 0, align: 'center', sortable: true },
+                { label: '部件名称', name: 'CarComponentNm', index: 'CarComponentNm', width: 150, align: 'center', sortable: true },
+                { label: '检验岗名称', name: 'CarPositionNm', index: 'CarPositionNm', width: 0, align: 'center', sortable: true },
+                { label: '检验项目名称', name: 'CarPositionGroupNm', index: 'CarPositionGroupNm', width: 0, align: 'center', sortable: true },
+                { label: '部件简码', name: 'CarComponentSimpleCd', index: 'CarComponentSimpleCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '部件描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center', sortable: true },
+                {
+                    label: '有效性', name: 'Enabled', index: 'Enabled', width: 60, align: 'center', sortable: false, hidden: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == '1') return "<img src='../../Content/Images/checkokmark.gif'/>";
+                        else if (cellvalue == '0') return "<img src='../../Content/Images/checknomark.gif'/>";
+                        else return "";
+                    }
+                },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'left', sortable: false, hidden: true },
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 200, align: 'center', sortable: true,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                {
+                    label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 200, align: 'center', sortable: true,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
+                },
+                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+            ],
+            views: true,//显示总的记录条数
+            pager: "#gridPager",
+            sortname: 'CarComponentNm',//排序列
+            sortorder: 'asc',//排序规则：升序或者降序（asc or desc）
+            sortable: true,
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+            ondblClickRow: function (row) {//双击行时触发
+                var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
+                var KeyValue = rowData.CarComponentId;
+                var image1, filename1;
+                AjaxJson("/QualityManaModule/BBdbR_QualityCarComponentBase_Add/LoadImage", { KeyValue: KeyValue }, function (data) {
+                    image1 = data.rows[0].cartypeimage;
+
+                });
+                var test = document.getElementById('picture');
+                test.src = 'data:image/' + ';base64,' + image1;
+                test.style.width = "300px";
+                test.style.height = "300px";
+                repeat();
+            }
+        });
+    }
+    function repeat() {
+        $('#modal_volume').fadeIn();
+    }
+    //刷新
+    function windowload() {
+        //$("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //新增按钮
+    function btn_add() {
+        if (!!area_key) {
+            if (parentId != "0") {
+                var url = "/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/Form?areaId=" + area_key + "&parentId=" + parentId;
+                openDialog(url, "Form", "新增车身部件信息", 500, 360, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+            else {
+                alertDialog("请选择检验项目节点！", 0);
+            }
+        }
+        else {
+            alertDialog("请选择左边检验项目信息", 0);
+        }
+    }
+    //编辑按钮
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarComponentId");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/Form?KeyValue=" + KeyValue + "&areaId=" + area_key;
+        openDialog(url, "Form", "编辑车身部件信息", 500, 360, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarComponentId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/Delete', delparm, KeyValue.split(",").length);
+            //windowload();
+        }
+    }
+    //车型车身组件配置
+    function btn_CarPartCarTypeConfig() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "CarComponentId");
+        var CarComponentCd = GetJqGridRowValue("#gridTable", "CarComponentCd");
+        var CarComponentNm = GetJqGridRowValue("#gridTable", "CarComponentNm");
+        var CarPositionId = GetJqGridRowValue("#gridTable", "CarPositionId");
+        var CarPositionGroupId = GetJqGridRowValue("#gridTable", "CarPositionGroupId");
+        if (KeyValue == undefined) {
+            tipDialog("您没有选中任何项，请选择后在操作", 3, -5);
+            return;
+        }
+        var url = "/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/ConfigForm?KeyValue=" + escape(KeyValue) + "&CarComponentCd=" + escape(CarComponentCd) + "&CarComponentNm=" + escape(CarComponentNm) + "&CarPositionId=" + escape(CarPositionId) + "&CarPositionGroupId=" + escape(CarPositionGroupId);
+        openDialog(url, "Form", "配置车型车身部件信息", 500, 360, function (iframe) {
+            top.frames[iframe].AcceptClick()
+        });
+    }
+    //搜索
+    function btn_Search() {
+        var CarComponentCd = $("#CarComponentCd").val();
+        var CarComponentNm = $("#CarComponentNm").val();
+
+
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/GridPageByCondition")?areaId=" + area_key + "&parentId=" + parentId + "&Type=" + Type + "&CarComponentCd=" + CarComponentCd + "&CarComponentNm=" + CarComponentNm, page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+        }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "all") {
+            $("#keywords").hide();
+        }
+        else {
+            $("#keywords").show();
+        }
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var CarComponentCd = $("#CarComponentCd").val();
+        var CarComponentNm = $("#CarComponentNm").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/QualityAdd_TZModule/BBdbR_QualityCarComponentBase_Add/GetExcel_Data?areaId=" + escape(area_key) + "&parentId=" + escape(parentId) + "&Type=" + escape(Type) + "&CarComponentCd=" + escape(CarComponentCd) + "&CarComponentNm=" + escape(CarComponentNm);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+
+
+
+</script>
+<div id="layout" class="layout">
+    @*树区域*@
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                检验岗-项目索引
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <div class="layoutPanel layout-center">
+        @*按钮区域*@
+        <!--工具栏-->
+        <div class="tools_bar leftline rightline" style="margin: 1px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        @*搜索框区域*@
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <th>部件编号：</th>
+                <td>
+                    <input id="CarComponentCd" type="text" class="txt" style="width: 120px" />
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <th>部件名称：</th>
+                <td>
+                    <input id="CarComponentNm" type="text" class="txt" style="width: 120px" />
+                </td>
+
+
+
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        @*</div>*@
+        @*表格区域*@
+        <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+            <table id="gridTable" class="ui-jqgrid tr.jqgrow td"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>
+
+

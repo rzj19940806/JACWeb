@@ -1,0 +1,413 @@
+﻿* {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+div {
+    /*border-radius: 10px;*/
+    font-size: 15px;
+}
+
+p {
+    font-size: 15px;
+}
+
+.clear {
+    clear: both;
+}
+
+.all {
+    width: 100%;
+    background-color: #D6E9FF;
+    overflow: hidden;
+}
+
+
+.up {
+    width: 100%;
+    height: 10%;
+    min-height: 75px;
+    margin-bottom: 1%;
+    background-color: white;
+}
+
+#logo_img {
+    float: left;
+    margin-left: 20px;
+    width: 25%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#refinelogo {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.up_box {
+    float: right;
+    width: 9%;
+    min-width: 90px;
+    height: 90%;
+    background-color: #EEF3FC;
+    margin: 0 0.5%;
+}
+
+.up_button {
+    padding-top: 13px;
+    text-align: center;
+}
+
+.p_in_upbox {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+
+
+
+.p_mark_in_upbox {
+    font-size: 15px;
+    color: blue;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.down {
+    text-align: left;
+    width: 100%;
+    height: 89%;
+}
+
+.left {
+    float: left;
+    width: 20%;
+    height: 100%;
+    background-color: white;
+    margin-right: 1%;
+}
+
+#left_table {
+    width: 100%;
+}
+
+#car_img {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#productpicture {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 15px;
+}
+
+.left_box {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left_box_small {
+    float: left;
+    width: 50%;
+}
+
+.in_left_box {
+    width: 90%;
+    height: 80%;
+    background-color: #F2F5F9;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.in_left_box_small {
+    width: 80%;
+}
+
+#car_dis {
+    display: initial;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+#vin_input {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#vin_input_left {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#vin_input_right {
+    width: 75%;
+    height: 50%;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#vin_sure {
+    width: 75%;
+    height: 50%;
+    background-color: #5176A3;
+}
+
+
+.main {
+    float: right;
+    width: 79%;
+    height: 70%;
+}
+
+.baclground {
+    background-image: url(../Images/LOGO/background.png);
+}
+
+.main_box {
+    width: 49.5%;
+    height: 100%;
+    background-color: #F8F2F2;
+    border-radius: 15px 15px 5px 5px;
+}
+
+.main_box_left {
+    float: left;
+}
+
+.main_box_right {
+    float: right;
+}
+
+.main_title {
+    background-color: #5176A3;
+    width: 100%;
+    height: 7%;
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.in_main_box_left {
+    padding-top: 5px;
+    overflow-x: hidden;
+    height: 93%;
+    width: 100%;
+}
+
+
+
+
+.in_main_box_right {
+    padding-top: 5px;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 83%;
+    width: 100%;
+    background-color: #ADB8CA;
+}
+
+.tighten_box_1 {
+    width: 100%;
+    height: 93%;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: #ADB8CA;
+}
+
+
+.bottom {
+    float: left;
+    width: 79%;
+    height: 29%;
+    margin-top: 1%;
+    background-color: white;
+    border-radius: 15px 15px 5px 5px;
+}
+
+#bottem_dis {
+    background-color: #5176A3;
+    width: 100%;
+    height: 15%;
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+#bottom_text {
+    overflow: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    height: 78%;
+    background-color: #F8F2F2;
+}
+
+.Tighten_btn_pass {
+    width: 50%;
+    height: 10%;
+    background-color: #CBD1F6;
+    color: black;
+    font-size: 20px;
+    border: 1px #5176A3;
+    border-radius: 15px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.Tighten_btn_passed {
+    width: 50%;
+    height: 10%;
+    background-color: orange;
+    color: black;
+    font-size: 20px;
+    border: 1px #5176A3;
+    border-radius: 15px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+
+
+.tighten_box_Group {
+    border-bottom: 3px solid #8fA8C2;
+    border-radius: 0px 0px 0 0;
+    width: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #ADB8CA;
+    padding-bottom: 15px;
+}
+
+.tighten_box_2_left {
+    width: 40%;
+    height: 30%;
+    background-color: #ADB8CA;
+    float: left;
+    padding-top: 2%;
+}
+
+.Tighten_code_right {
+    width: 40%;
+    height: 45%;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    float: right;
+    padding-right: 5%;
+}
+
+
+.Tighten_code_left {
+    width: 40%;
+    height: 45%;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    float: left;
+    padding-left: 1%;
+}
+
+.tighten_title_top {
+    width: 100%;
+    height: 10%;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    background-color: darkslategray;
+    padding-top: 5px;
+    padding-top: 5px;
+}
+
+.tighten_box_2_right {
+    width: 60%;
+    height: 30%;
+    background-color: #ADB8CA;
+    float: right;
+    padding-top: 2%;
+}
+
+.tighten_box_2_num {
+    width: 25%;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    height: 25%;
+    background-color: #ADB8CA;
+    float: left;
+    padding-top: 3%;
+}
+
+.tighten_box_2_rtitle {
+    width: 25%;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    height: 25%;
+    background-color: #ADB8CA;
+    float: right;
+    padding-top: 3%;
+}
+
+.tighten_box_2_ltitle {
+    width: 25%;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    height: 25%;
+    background-color: #ADB8CA;
+    float: left;
+    padding-top: 3%;
+}
+
+.tighten_box_2_is_OK {
+    width: 25%;
+    height: 25%;
+    font-size: 30px;
+    font-weight: bold;
+    color: forestgreen;
+    background-color: #ADB8CA;
+    float: right;
+    padding-top: 3%;
+}
+
+.tighten_box_2_is_NOK {
+    width: 25%;
+    height: 25%;
+    font-size: 30px;
+    font-weight: bold;
+    color: firebrick;
+    background-color: #ADB8CA;
+    float: right;
+    padding-top: 3%;
+}

@@ -115,7 +115,7 @@ namespace HfutIE.WebApp.Controllers
                 //2.获取工厂模型
                 //2.1获取IP地址
                 var IP = NetHelper.GetIPAddress();
-                //IP = "10.138.13.62";
+                 //IP = "10.138.13.62";
                 //2.2根据IP地址获取设备-工位---公司
                 //获取工位--字典中使用classid代替
                 q_KeyParts.GetRowValue("BBdbR_DvcBase", "ClassId,DvcCatg", "IPAddr", IP, ref BaseInfoProps);
@@ -339,7 +339,20 @@ namespace HfutIE.WebApp.Controllers
             else
                 return Content(new { code = 1, msg = true }.ToJson());
         }
-
+        #region 得到PadIP
+        public ActionResult GetSeverTime()
+        {
+            try
+            {
+                DateTime SeverTime = DateTime.Now;
+                return Content("\"" + SeverTime.ToString() + "\"");
+            }
+            catch (Exception)
+            {
+                return Content("error");
+            }
+        }
+        #endregion
         public ActionResult PassBind(Q_KeyByPass_Pro KeyByPass, int MatNo, string plineType = "主线",string account=null,string password=null)
         {
             int code=1;//-2.程序异常错误，0.其他完成作业，1.正常执行，2.无PASS权限且次数使用完，3.账号异常或无权限
@@ -361,10 +374,10 @@ namespace HfutIE.WebApp.Controllers
                 else
                 {
                     Base_User entity = DataFactory.Database().FindEntity<Base_User>("Account", account);
-                    var a1 = entity.Enabled == "1";
-                    var a2 = Md5Helper.MD5(DESEncrypt.Encrypt(password.ToLower(), entity.Secretkey).ToLower(), 32).ToLower();
-                    var a3 = entity.Password;
-                    var a4 = a2 == a3;
+                    //var a1 = entity.Enabled == "1";
+                    //var a2 = Md5Helper.MD5(DESEncrypt.Encrypt(password.ToLower(), entity.Secretkey).ToLower(), 32).ToLower();
+                    //var a3 = entity.Password;
+                    //var a4 = a2 == a3;
                     if (entity != null && entity.Enabled=="1" && entity.Password == Md5Helper.MD5(DESEncrypt.Encrypt(password.ToLower(),entity.Secretkey).ToLower(), 32).ToLower())
                     {
                         string sql= $"select U.RealName,B.FullName buttonName,M.FullName moduleName from Base_User U join Base_ObjectUserRelation OU ON OU.UserId=U.UserId and U.UserId='{entity.UserId}' join Base_ButtonPermission BP on OU.ObjectId = BP.ObjectId join Base_Button B on BP.ModuleButtonId = B.ButtonId and B.Enabled = 1 and B.FullName = 'PASS' join Base_Module M on B.ModuleId = M.ModuleId and M.FullName = '关重件'";

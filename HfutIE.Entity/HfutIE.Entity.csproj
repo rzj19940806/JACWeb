@@ -126,11 +126,17 @@
     <Compile Include="Plan\P_ProducePlan_Pro.cs" />
     <Compile Include="Plan\P_PublishPlan_Pro.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgBase_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgDeTail.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgDeTail_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgGroupBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgGroupBase_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarComponentBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarComponentBase_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarPositionBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionBase_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarPositionGroupBase.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionGroupBase_Add.cs" />
     <Compile Include="QualityManaModule\Q_CarQualityInspection_Pro.cs" />
     <Compile Include="QualityManaModule\Q_CarQualityOutput_Pro.cs" />
     <Compile Include="QualityManaModule\Q_CarQualityResult_Pro.cs" />
@@ -219,6 +225,10 @@
     <Compile Include="SystemManaModule\S_ModulePermission.cs" />
     <Compile Include="SystemManaModule\S_SysLog.cs" />
     <Compile Include="SystemManaModule\S_SysLogDetail.cs" />
+    <Compile Include="TightModule\Tg_ByPass_Pro.cs" />
+    <Compile Include="TightModule\Tg_JobTorqueConfig.cs" />
+    <Compile Include="TightModule\Tg_WcJobConfig.cs" />
+    <Compile Include="TightModule\TightEnable.cs" />
     <Compile Include="VisualizationModule\S_PlanBoardInfo.cs" />
   </ItemGroup>
   <ItemGroup>

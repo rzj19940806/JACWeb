@@ -71,7 +71,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
 
                 #region datatable接收查询结果
                 StringBuilder strSql = new StringBuilder();
-                strSql.Append(@"SELECT  * FROM  BBdbR_ProductBase where Enabled=1 order by MatCd asc ");
+                strSql.Append(@"select a.*,b.RsvFld1 as seq FROM  BBdbR_ProductBase a left join AUEX_NEW_FUELOIL_ID b on a.Oil=b.GID where  a.Enabled=1 order by MatCd asc ");
                 DataTable dtExport = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
                 var JsonData = new
                 {
@@ -95,7 +95,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 #region datatable接收查询结果
                 StringBuilder strSql = new StringBuilder();
                 List<DbParameter> parameter = new List<DbParameter>();
-                strSql.Append(@"SELECT  * FROM  BBdbR_ProductBase where Enabled=1 ");
+                strSql.Append(@"SELECT  a.*,b.RsvFld1 as seq FROM  BBdbR_ProductBase a left join AUEX_NEW_FUELOIL_ID b on a.Oil=b.GID  where a.Enabled=1 ");
 
                 #region 判断输入框内容添加检索条件
                 //是否加产品编号模糊搜索

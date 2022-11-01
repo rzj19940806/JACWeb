@@ -51,7 +51,6 @@
             try {
                 SetAllWH();         //加载界面的宽高
                 GetCurrentDate();   //实时时间刷新
-                //bindKeyDown();      //为物料码输入框绑定键盘点击事件
                 bindKeyDown("vin_input", function () {
                     let vin = $("#vin_input").val().trim().toUpperCase();
                     $("#vin_input").val("");

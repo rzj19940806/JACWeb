@@ -185,11 +185,17 @@
     <Compile Include="Plan\PublishPlanBll.cs" />
     <Compile Include="Plan\P_FitEnCodeInfoBll.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgBaseBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgBase_AddBll.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgDeTailBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgDeTail_AddBll.cs" />
     <Compile Include="QualityManaModule\BBdbR_DefectCatgGroupBaseBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_DefectCatgGroupBase_AddBll.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarComponentBaseBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarComponentBaseBll_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarPositionBaseBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionBaseBll_Add.cs" />
     <Compile Include="QualityManaModule\BBdbR_QualityCarPositionGroupBaseBll.cs" />
+    <Compile Include="QualityManaModule\BBdbR_QualityCarPositionGroupBaseBll_Add.cs" />
     <Compile Include="QualityManaModule\Q_CarQualityResult_ProBll.cs" />
     <Compile Include="QualityManaModule\Q_CarQualityOutput_ProBll.cs" />
     <Compile Include="QualityManaModule\Q_HTCarQualityOutput_ProBll.cs" />
@@ -210,6 +216,8 @@
     <Compile Include="SystemManaModule\S_ModulePermissionBll.cs" />
     <Compile Include="SystemManaModule\S_SysLogBll.cs" />
     <Compile Include="SystemManaModule\S_SysLogDetailBll.cs" />
+    <Compile Include="TightModule\Tight_OnlineBll.cs" />
+    <Compile Include="TightModule\TightEnableBll.cs" />
     <Compile Include="VisualizationModule\S_PlanBoardInfoBll.cs" />
   </ItemGroup>
   <ItemGroup>

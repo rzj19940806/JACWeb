@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        GetTree();
+        GetGrid();
+
+    })
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridListJson")?sort=" + escape("0") + "&areaId=" + escape("all") + "&DefectCatgGroupCd=" + escape("") + "&DefectCatgGroupNm=" + escape(""),
+        datatype: "json",
+        height: $(window).height() - 180,
+        autowidth: true,
+            colModel: [
+                { label: '缺陷分组主键', name: 'DefectCatgGroupId', index: 'DefectCatgGroupId', width: 0, align: 'center', sortable: true,hidden: true },
+                { label: '缺陷类型主键', name: 'DefectCatgId', index: 'DefectCatgId', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '缺陷分组编号', name: 'DefectCatgGroupCd', index: 'DefectCatgGroupCd', width: 0, align: 'center',sortable: true  },
+                { label: '缺陷分组名称', name: 'DefectCatgGroupNm', index: 'DefectCatgGroupNm', width: 0, align: 'center', sortable: true },
+                { label: '缺陷类型名称', name: 'DefectCatgNm', index: 'DefectCatgNm', width: 0, align: 'center', sortable: true },
+                { label: '描述', name: 'Dsc', index: 'Dsc', width: 0, align: 'center',sortable: true  },
+                { label: '有效性', name: 'Enabled', index: 'Enabled', width: 0, align: 'center', sortable: true, hidden: true },
+                //{ label: '版本号', name: 'VersionNumber', index: 'VersionNumber', width: 0, align: 'center', sortable: true, hidden: true},
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                //{ label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 100, align: 'center',sortable: true  },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 100, align: 'center',sortable: true  },
+                {
+                    label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }},
+                //{ label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 100, align: 'center', sortable: true  },
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 100, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center',sortable: true  },
+                //{ label: 'RsvFld1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true},
+                //{ label: 'RsvFld2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+        ],
+        pager: "#gridPager",
+            sortname: 'DefectCatgGroupNm',
+            sortorder: 'asc',
+            gridview: true,
+            multiselect: true,
+            multiboxonly: true,
+            rowNum: 22,
+            rownumbers: true,//启用记录条数
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,//列宽自适应
+            loadonce: true,//排序
+    });
+    }
+
+
+
+
+    //加载树
+    var Nodetext = "";//定义全局变量来表示树是否被点击
+    var Nodeareaid = "";
+    var Nodevalue = "";
+    var Nodetext = "";
+    var Nodesort = "";
+
+    function GetTree() {
+        var itemtree = {
+            //1.获取树
+            url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/TreeJson")",
+            //2.点击数展示表格
+            onnodeclick: function (item) {
+                value = item.value;//编号
+                text = item.text;//名称
+                sort = item.Type;//层级编号
+                areaId = item.id;//ID
+                Nodetext = text;
+                Nodesort = sort;
+                Nodeareaid = areaId;
+                var DefectCatgGroupCd = $("#DefectCatgGroupCd").val();
+                var DefectCatgGroupNm = $("#DefectCatgGroupNm").val();
+                if (sort==0) {
+                     $("#gridTable").jqGrid('setGridParam', {
+                         url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridListJson")?sort=" + sort + "&areaId=" + areaId + "&DefectCatgGroupCd=" + DefectCatgGroupCd + "&DefectCatgGroupNm=" + DefectCatgGroupNm, datatype: 'json'
+                     }).trigger('reloadGrid');
+                }
+            },
+        };
+        $("#ItemsTree").treeview(itemtree);
+        //3.首次页面表格加载--点击第一个子节点
+        $("ul:first > li:first>ul:first > li:first>div:first").click();
+    }
+
+     //搜索-原方法
+    function btn_Search_Old() {
+        if (Nodeareaid == "" || Nodeareaid == null) {//如果树节点没选中，就是查询所有
+            var condition = {
+                ParamName: "",
+                Operation: "",//这里没用到
+                ParamValue: "",
+            };
+            var conditions = new Array();
+            if ($("#Condition").val() == "all") {//判断如果选中的是全部，刷新表格
+                $("#gridTable").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridPageJson")?ParameterJson=" + JSON.stringify(conditions),
+                    datatype: 'json'
+                }).trigger('reloadGrid');
+            } else {//选中的是其他
+                condition.ParamName = $("#Condition").val();
+                if ($("#Condition").val() == "DefectCatgLevel") {//没用到
+                    condition.Operation = 'Equal';
+                    condition.ParamValue = $("#DefectCatgLevel").val();
+                } else {//直接走这里
+                    condition.Operation = 'Like';
+                    condition.ParamValue = $("#Keywords").val();
+                }
+                conditions.push(condition);
+                $("#gridTable").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridPageJson")?ParameterJson=" + JSON.stringify(conditions),
+                    datatype: 'json'
+                }).trigger('reloadGrid');
+            }
+        } else {//如果树节点选中了，就查询该树节点下的数据
+            var condition = $("#Condition").val();
+            var Keywords = $("#Keywords").val();
+             $("#gridTable").jqGrid('setGridParam', {
+                 url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridPage")?Condition=" + condition + "&keywords=" + Keywords + "&Nodeareaid=" + Nodeareaid, datatype: 'json'
+                }).trigger('reloadGrid');
+        }
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                btn_Search();
+            }
+        });
+    }
+
+    //搜索修改
+    function btn_Search() {
+        var DefectCatgGroupCd = $("#DefectCatgGroupCd").val();
+        var DefectCatgGroupNm = $("#DefectCatgGroupNm").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GridPageByCondition")?DefectCatgGroupCd="
+                + escape(DefectCatgGroupCd) + "&DefectCatgGroupNm=" + escape(DefectCatgGroupNm) + "&areaId=" + escape(Nodeareaid) + "&sort=" + escape(Nodesort), page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+
+
+    //新增
+    function btn_add() {
+        let text = Nodetext;
+        let catgid = Nodeareaid;
+
+        if (IsChecked(text)) {
+            if (Nodeareaid == "all") {
+                tipDialog('无法选中全部进行添加,请您选中具体项后再操作。', 4, 'warning');
+            }
+            else {
+                var url = "/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/Form?text=" + escape(text) + "&catgid=" + escape(catgid);
+                openDialog(url, "Form", "新增缺陷类别基本信息表", 770, 395, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+    //编辑
+    function btn_edit() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "DefectCatgGroupId");
+        if (IsChecked(KeyValue)) {
+            var url = "/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/Form?KeyValue=" + KeyValue;
+            openDialog(url, "Form", "编辑缺陷类别基本信息表", 770, 395, function (iframe) {
+                top.frames[iframe].AcceptClick();
+            });
+        }
+    }
+    //删除
+    function btn_delete() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "DefectCatgGroupId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/DeleteCatgGroup', delparm, KeyValue.split(",").length);
+        }
+    }
+    //刷新
+    function windowload() {
+       // $("#gridTable").trigger("reloadGrid"); //重新载入
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+
+    //修改后导出
+    //根据检索条件搜索出来的数据直接导出
+    function btn_derive() {
+        var DefectCatgGroupCd = $("#DefectCatgGroupCd").val();
+        var DefectCatgGroupNm = $("#DefectCatgGroupNm").val();
+
+        var count = $("#gridTable").getGridParam("records");
+        if (count == 0) {
+            tipDialog("没有要导出的信息！", 1.5, 0);
+            return;
+        }
+        else if (count > 50000) {
+            tipDialog("导出数据过大，请选择搜索条件分批导出", 1.5, 0);
+            return;
+        }
+        else {
+            window.setTimeout(function () {
+                location.href = "/QualityAdd_TZModule/BBdbR_DefectCatgGroupBase_Add/GetExcel_Data?sort=" + escape(Nodesort) + "&areaId=" + escape(Nodeareaid) + "&DefectCatgGroupCd=" + escape(DefectCatgGroupCd) + "&DefectCatgGroupNm=" + escape(DefectCatgGroupNm);
+                Loading(false);
+            }, 200);
+        }
+    }
+
+
+</script>
+<div id="layout" class="layout">
+    <!--左边-->
+    <div class="layoutPanel layout-west">
+        <div class="btnbartitle">
+            <div>
+                缺陷分组
+            </div>
+        </div>
+        <div class="ScrollBar" id="ItemsTree"></div>
+    </div>
+    <!--中间-->
+    <div class="layoutPanel layout-center">
+        <div class="btnbartitle">
+            <div>
+                缺陷类别 <span id="CenterTitle"></span>
+            </div>
+        </div>
+        <!--工具栏-->
+        <div class="tools_bar" style="border-top: none; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        <!--列表-->
+        <div id="grid_List">
+            <div class="bottomline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
+                <table border="0" class="form-find" style="height: 45px;">
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <th>缺陷分组编号：</th>
+                        <td>
+                            <input id="DefectCatgGroupCd" type="text" class="txt" style="width: 120px" />
+                        </td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <th>缺陷分组名称：</th>
+                        <td>
+                            <input id="DefectCatgGroupNm" type="text" class="txt" style="width: 120px" />
+                        </td>
+
+
+                        <td>
+                            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

@@ -20,6 +20,7 @@
 
     var PlineTypeCellItem = "";
 
+    var isCH = "";//根据选中的树节点判断是否是冲涂，若冲涂则为1否则则为0
     //加载左边树
     function GetTree() {
         var itemtree = {
@@ -27,13 +28,22 @@
                 selectnodeishaschild = item.hasChildren;
                 area_key = item.id;            //ID
                 area_name = item.text;         //名称
+                if (area_name.indexOf("冲焊") != -1) {
+                    isCH = "CH";
+                }
+                else if (area_name.indexOf("涂装") != -1) {
+                    isCH = "TZ";
+                }
+                else {
+                    isCH = "0";
+                }
                 Type = item.Type;
                 parentId = item.parentnodes;   //父节点编号
                 itemsort = item.Type;
                 var WcCd = $("#WcCd").val();
                 var WcNm = $("#WcNm").val();
                 //2.点击树展示表格
-                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridListJsonQuality")?area_key=" + area_key + "&&parentId=" + parentId + "&&sort=" + itemsort + "&&WcCd=" + WcCd + "&&WcNm=" + WcNm, datatype: 'json' }).trigger('reloadGrid');
+                $("#gridTable").jqGrid('setGridParam', { url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridListJsonQuality")?area_key=" + area_key + "&&parentId=" + parentId + "&&sort=" + itemsort + "&&WcCd=" + WcCd + "&&WcNm=" + WcNm , datatype: 'json' }).trigger('reloadGrid');
     },
     url: "@Url.Content("~/BaseModule/BBdbR_WcBase/TreeJsonQuality")"    //1.获取树
     };
@@ -111,7 +121,7 @@
                 var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
                 var KeyValue = rowData.WcId;
                 $("#gridTable1").jqGrid('setGridParam', {
-                    url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridMatListJson")?KeyValue=" + escape(KeyValue) , datatype: 'json'
+                    url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridMatListJson")?KeyValue=" + escape(KeyValue)+"&&isCH="+isCH , datatype: 'json'
                     }).trigger('reloadGrid');
             }
     });
@@ -232,7 +242,7 @@
                 tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
             }
             else {
-                var url = "/BaseModule/BBdbR_WcBase/ConfigComponent?KeyValue=" + KeyValue;
+                var url = "/BaseModule/BBdbR_WcBase/ConfigComponent?KeyValue=" + KeyValue + "&&isCH=" + isCH;
                 openDialog(url, "Form", "配置检验岗信息", 600, 600, function (iframe) {
                     top.frames[iframe].AcceptClick()
                 });

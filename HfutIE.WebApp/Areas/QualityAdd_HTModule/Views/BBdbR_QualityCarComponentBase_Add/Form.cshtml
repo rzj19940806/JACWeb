@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "车身组件基本表》表单页面";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    //var CarPositionGroupId = GetQuery('areaId');//主键
+   //var CarPositionId = GetQuery('parentId');//主键
+    var CarPositionGroupId = "";
+    var CarPositionId = "";
+    $(function () {
+        InitControl();
+    })
+
+    //得到一个对象实体
+    function InitControl() {
+        //编辑
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityAdd_HTModule/BBdbR_QualityCarComponentBase_Add/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("CarComponentCd").readOnly = true;//编辑时不可修改==复制时需更改==
+                document.getElementById("CarComponentNm").readOnly = true;//编辑时不可修改==复制时需更改==
+            });
+        }
+        //新增
+        else {
+            CarPositionGroupId = GetQuery('areaId');//主键
+            CarPositionId = GetQuery('parentId');//主键
+            $("#CarPositionGroupId").val(CarPositionGroupId);
+            $("#CarPositionId").val(CarPositionId);
+        }
+    }
+
+    //保存事件
+    function AcceptClick() {
+
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+
+        AjaxJson("/QualityAdd_HTModule/BBdbR_QualityCarComponentBase_Add/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！") {
+                tipCss("WorkSectionCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style="height:30px">车身部件最终编码：</th>
+            <td class='formValue' colspan="3">
+                <input id="CarComponentCd" maxlength=50 type="text" class="txt required" datacol="yes" err="车身组件最终编码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">车身部件名称：</th>
+            <td class='formValue' colspan="3">
+                <input id="CarComponentNm" maxlength=50 type="text" class="txt required" datacol="yes" err="车身组件名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">车身部件简码：</th>
+            <td class='formValue' colspan="3">
+                <input id="CarComponentSimpleCd" maxlength=50 type="text" class="txt required" datacol="yes" err="车身组件简码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr style="display:none">
+            <th class='formTitle' style="height:30px">检验岗主键：</th>
+            <td class='formValue' colspan="3">
+                <input id="CarPositionId" maxlength=50 type="text" class="txt required" datacol="yes" err="车身组件简码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+            <th class='formTitle' style="height:30px">检验项目主键：</th>
+            <td class='formValue' colspan="3">
+                <input id="CarPositionGroupId" maxlength=50 type="text" class="txt required" datacol="yes" err="车身组件简码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle' style="height:30px">车身部件描述：</th>
+            <td class='formValue' colspan="3">
+                <input id="Dsc" maxlength=50 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue' colspan="3">
+                <textarea id="Rem" maxlength="200" class="txtArea" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+</form>
+

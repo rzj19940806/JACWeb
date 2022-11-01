@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "检验项目》表单页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//主键
+    var CarPositionId = GetQuery('areaId');//主键
+    $(function () {
+        GetCarPositionList();//加载检验岗下拉框
+        InitControl();
+    })
+
+    //获取检验岗下拉框
+    function GetCarPositionList() {
+        AjaxJson("/QualityAdd_HTModule/BBdbR_QualityCarPositionGroupBase_Add/GetCarPositionList" , {}, function (data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                $("#CarPositionId").append("<option value='" + data.rows[i]["CarPositionId"] + "'>" + data.rows[i]["CarPositionNm"] + "</option>");
+            }
+        });
+    }
+
+
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityAdd_HTModule/BBdbR_QualityCarPositionGroupBase_Add/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+                document.getElementById("CarPositionGroupCd").readOnly = true;//不可编辑
+                document.getElementById("CarPositionGroupNm").readOnly = true;//不可编辑
+            });
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        //postData.CarPositionId = $("#CarPositionId").val();
+        AjaxJson("/QualityAdd_HTModule/BBdbR_QualityCarPositionGroupBase_Add/SubmitForm?KeyValue=" + KeyValue, postData, function (data) {
+            if (data.Message == "该编号已经存在！" || data.Message == "该名称已经存在！") {
+                tipCss("DefectCatgCd", data.Message);
+                return;
+            }
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle' style=" width:95px">检验岗名称：</th>
+            <td class='formValue'>
+                <select id="CarPositionId" style="height:100%;" maxlength=50 type="text" class="txt required checkdata" checkexpession="检验岗名称" datacol="yes" err="检验岗名称" onclick=""></select>
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检验项目编码：</th>
+            <td class='formValue'>
+                <input id="CarPositionGroupCd" maxlength=50 type="text" class="txt required" datacol="yes"
+                       err="检验项目编码" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检验项目名称：</th>
+            <td class='formValue'>
+                <input id="CarPositionGroupNm" maxlength=50 type="text" class="txt required" datacol="yes"
+                       err="检验项目名称" checkexpession="NotNull" checkdata="hasOne" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>检验项目描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

@@ -159,7 +159,24 @@ namespace HfutIE.WebApp.Controllers
             string IPAddress = NetHelper.GetIPAddress();
             return Content(IPAddress);
         }
-
+        #region 通过设备IP获取设备类型
+        public ActionResult GetDvcTypeByIP(string IP)
+        {
+            try
+            {
+                StringBuilder strSql = new StringBuilder();
+                DataTable dt = new DataTable();
+                strSql.Append(@"select * from BBdbR_DvcBase where IPAddr = '" + IP + "' and Enabled =1 order by CreTm desc");
+                dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                string DvcTyp = dt.Rows[0]["DvcTyp"].ToString();
+                return Content("\"" + DvcTyp + "\"");
+            }
+            catch (Exception)
+            {
+                return Content("error");
+            }
+        }
+        #endregion
         /// <summary>
         /// 登录验证
         /// </summary>

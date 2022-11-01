@@ -65,7 +65,7 @@
         //2.2加载静态信息并进行后续信息初始化与MQTT连接
         function GetStaticInfo() {
             try {
-               
+
                 $.ajax({
                     url: RootPath() + '/OT/GetStaticInfo',
                     type: "post",
@@ -86,18 +86,22 @@
 
         //2.5实时时间刷新
         function GetCurrentDate() {
-            var myDate = new Date();
+            var SeverTime;
 
-            var year = myDate.getFullYear();        //获取当前年
-            var month = myDate.getMonth() + 1;   //获取当前月
-            var date = myDate.getDate();            //获取当前日
+            AjaxJson('@Url.Content("~/OT/GetSeverTime")', {}, function (data) {
+                SeverTime = data;
+            });
+
+            //var year = SeverTime.year;        //获取当前年
+            //var month = myDate.getMonth() + 1;   //获取当前月
+            //var date = myDate.getDate();            //获取当前日
 
 
-            var h = myDate.getHours();              //获取当前小时数(0-23)
-            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
-            var s = myDate.getSeconds();
+            //var h = myDate.getHours();              //获取当前小时数(0-23)
+            //var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+            //var s = myDate.getSeconds();
 
-            var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+            var now = SeverTime;
             jQuery("#localtime").html(now);
             setTimeout(GetCurrentDate, 1000);
         }

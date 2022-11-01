@@ -118,24 +118,62 @@ namespace HfutIE.Business
 
         #region 3.在首页加载已经配置过的组件信息
 
-        public DataTable GetMatList(string KeyValue)//在首页加载已经配置过的组件信息
+        public DataTable GetMatList(string KeyValue, string isCH)//在首页加载已经配置过的组件信息
         {
-            string sql = $"select a.*,c.CarPositionNm,c.CarPositionCd from {tableName} a left join BBdbR_QualityCarPositionBase c on a.CarPositionId=c.CarPositionId where a.Enabled=1 and a.QualityCheckPointId= '{KeyValue}' ";
+            string sql = "";
+            if (isCH == "CH")
+            {
+                sql = $"select a.*,c.CarPositionNm,c.CarPositionCd from {tableName} a left join BBdbR_QualityCarPositionBase_Add c on a.CarPositionId=c.CarPositionId where a.Enabled=1 and a.QualityCheckPointId= '{KeyValue}' and c.Type='CH'  ";
+
+            }
+            else if (isCH == "TZ")
+            {
+                sql = $"select a.*,c.CarPositionNm,c.CarPositionCd from {tableName} a left join BBdbR_QualityCarPositionBase_Add c on a.CarPositionId=c.CarPositionId where a.Enabled=1 and a.QualityCheckPointId= '{KeyValue}' and c.Type='TZ' ";
+            }
+            else
+            {
+                sql = $"select a.*,c.CarPositionNm,c.CarPositionCd from {tableName} a left join BBdbR_QualityCarPositionBase c on a.CarPositionId=c.CarPositionId where a.Enabled=1 and a.QualityCheckPointId= '{KeyValue}' ";
+            }
             return Repository().FindTableBySql(sql, false);
         }
         #endregion
 
-        #region 4.在表单中加载及搜索没配置过的组件清单
-        public DataTable GetNotConfig(string WcId, string Condition, string keywords, ref JqGridParam jqgridparam)//在表单中加载没配置过的组件清单
+        #region 4.在表单中加载及搜索没配置过的组件清单CarPositionInsert
+        public DataTable GetNotConfig(string WcId, string Condition, string keywords, string isCH, ref JqGridParam jqgridparam)//在表单中加载没配置过的组件清单
         {
             StringBuilder strSql = new StringBuilder();
-            if (Condition == "all" || Condition=="")
+            if (isCH == "CH")
             {
-                strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and Enabled=1");
+                if (Condition == "all" || Condition == "")
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase_Add where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and Enabled=1  and Type='CH'" );
+                }
+                else
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase_Add where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and " + Condition + " like '%" + keywords + "%' and Enabled=1  and Type='CH'");
+                }
+            }
+            else if(isCH == "TZ")
+            {
+                if (Condition == "all" || Condition == "")
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase_Add where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and Enabled=1  and Type='TZ'");
+                }
+                else
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase_Add where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and " + Condition + " like '%" + keywords + "%' and Enabled=1  and Type='TZ'");
+                }
             }
             else
             {
-                strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and " + Condition + " like '%" + keywords + "%' and Enabled=1");
+                if (Condition == "all" || Condition == "")
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and Enabled=1");
+                }
+                else
+                {
+                    strSql.Append(@"select CarPositionId,CarPositionCd,CarPositionNm,Enabled,Rem from BBdbR_QualityCarPositionBase where CarPositionId not in(select distinct CarPositionId from " + tableName + " where Enabled=1 and QualityCheckPointId='" + WcId + "' ) and " + Condition + " like '%" + keywords + "%' and Enabled=1");
+                }
             }
             return Repository().FindTableBySql(strSql.ToString(), false);
         }

@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "拧紧使能配置表";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        //CellItem_AviCatg('WcTyp');//需在GetGrid()之前进行初始化赋值
+        GetGrid();
+        GetGrid1();
+        Show();
+    })
+    var area_key = "";
+    var area_name = "";
+    var Type = "";
+    var itemsort = "";
+
+    var PlineTypeCellItem = "";
+
+
+    //加载表格
+    function GetGrid() {
+        $("#gridTable").jqGrid({
+            url: "@Url.Content("~/TightModule/TightEnable/GridPageByCondition")?type='All'" + "",
+        datatype: "json",
+        height: 250,//$(window).height() - 149,
+        autowidth: true,
+        colModel: [
+
+            { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'left', sortable: true, hidden: true },
+            { label: '工位Job编号', name: 'WcJobCd', index: 'WcJobCd', width: 80, align: 'left', sortable: true },
+            { label: 'WcId', name: 'WcId', index: 'WcId', width: 0, align: 'left', sortable: true, hidden: true },
+            { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 80, align: 'left', sortable: true },
+            { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 80, align: 'left', sortable: true },
+            { label: '位置', name: 'Position', index: 'Position', width: 80, align: 'left', sortable: true },
+            { label: 'JOB编号', name: 'JobCd', index: 'JobCd', width: 120, align: 'left', sortable: true },
+            { label: '控制器ID', name: 'ControllerID', index: 'ControllerID', width: 120, align: 'left', sortable: true },
+            { label: '控制器端口', name: 'ControllerPort', index: 'ControllerPort', width: 120, align: 'left', sortable: true },
+            { label: '扭矩上限', name: 'TorqueUL', index: 'TorqueUL', width: 120, align: 'left', sortable: true, hidden: true },
+            { label: '扭矩下限', name: 'TorqueLL', index: 'TorqueLL', width: 120, align: 'left', sortable: true, hidden: true },
+            { label: '扭矩标准值', name: 'TorqueSL', index: 'TorqueSL', width: 120, align: 'left', sortable: true, hidden: true  },
+            { label: '转角上限', name: 'AngleUL', index: 'AngleUL', width: 120, align: 'left', sortable: true, hidden: true  },
+            { label: '转角下限', name: 'AngleLL', index: 'AngleLL', width: 120, align: 'left', sortable: true, hidden: true },
+            { label: '转角标准值', name: 'AngleSL', index: 'AngleSL', width: 120, align: 'left', sortable: true, hidden: true },
+            { label: '拧紧次数', name: 'Num', index: 'Num', width: 120, align: 'left', sortable: true, hidden: true  },
+            {
+                label: '创建时间', name: 'CreTm', index: 'CreTm', width: 120, align: 'left', sortable: true, formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                } },
+            { label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 120, align: 'left', sortable: true },
+            { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 120, align: 'left', sortable: true },
+            {
+                label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 120, align: 'left', sortable: true, formatter: function (cellvalue, options, rowObject) {
+                    return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                } },
+            { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 120, align: 'left', sortable: true },
+            { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 120, align: 'left', sortable: true },
+            { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'left', sortable: true },
+            { label: 'RsvFld1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true, hidden: true  },
+            { label: 'RsvFld2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true },
+        ],
+        //viewrecords: true,//显示总的记录条数
+
+            pager: "#gridPager",
+            sortname: 'sort',
+            sortorder: 'asc',
+            multiselect: false,
+            multiboxonly: false,
+            gridview: true,
+            rowNum: 50,
+            rowList: [50, 100, 500, 1000],
+            rownumbers: true,//启用记录条数
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: false,//列宽自适应
+            loadonce: true,//排序
+           onSelectRow: function (row) {
+                var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
+               var KeyValue = rowData.WcJobCd;
+                $("#gridTable1").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?KeyValue=" + escape(KeyValue) +"&&type='WJCId'", datatype: 'json'
+                    }).trigger('reloadGrid');
+            }
+    });
+    }
+
+     //加载JOB使能配置表信息表格
+    function GetGrid1() {
+        $("#gridTable1").jqGrid({
+                        url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?type='All'" + "",
+            datatype: "json",
+            height: 290,
+            autowidth: true,
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'left', sortable: true, hidden: true },
+                { label: 'JOB编号', name: 'WJCId', index: 'WJCId', width: 120, align: 'left', sortable: true, hidden: true },
+                { label: '绑定类型', name: 'Type', index: 'Type', width: 120, align: 'left', sortable: true },
+                { label: '绑定编号', name: 'Code', index: 'Code', width: 250, align: 'left', sortable: true },
+                {
+                    label: '创建时间', name: 'CreTm', index: 'CreTm', width: 120, align: 'left', sortable: true, formatter: function (cellvalue, options, rowObject) {
+                        return formatDate(cellvalue, 'yyyy-MM-dd hh:mm:ss');
+                    }  },
+                {
+                    label: '创建人编号', name: 'CreCd', index: 'CreCd', width: 120, align: 'left', sortable: true   },
+                { label: '创建人名称', name: 'CreNm', index: 'CreNm', width: 120, align: 'left', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 120, align: 'left', sortable: true, hidden: true},
+                { label: '修改人编号', name: 'MdfCd', index: 'MdfCd', width: 120, align: 'left', sortable: true, hidden: true},
+                { label: '修改人名称', name: 'MdfNm', index: 'MdfNm', width: 120, align: 'left', sortable: true, hidden: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 200, align: 'left', sortable: true, hidden: true  },
+                { label: '图号（车型+图号）', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'left', sortable: true },
+                { label: '预留字段2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'left', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager1",
+            sortname: '',
+            sortorder: 'desc',
+            rownumbers: true,
+            multiselect: true,
+            multiboxonly: true,
+            shrinkToFit: false,
+            gridview: true,
+            loadonce: true,
+        });
+    }
+
+    //加载搜索框
+    function Show() {
+        var Condition = $("#Condition").val();
+        if (Condition == "All") {
+            $("#Cnt").hide();
+            $("#keywords").hide();
+        }
+        else {
+            $("#Cnt").show();
+            $("#keywords").show();
+        }
+    }
+
+    //刷新
+    function windowload() {
+        $("#gridTable").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+        $("#gridTable1").setGridParam({ datatype: 'json', page: 1 }).trigger("reloadGrid");
+    }
+    //配置按钮
+    function btn_Config() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "WcJobCd");
+        if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
+            tipDialog('您没有选中任何项,请您选中后再操作。', 4, 'warning');
+        }
+        else {
+            var count = KeyValue.split(",").length;
+            if (count >= 2) {
+                tipDialog('很抱歉，一次只能选择一个进行操作。', 4, 'warning');
+            }
+            else {
+                var url = "/TightModule/TightEnable/ConfigComponent?KeyValue=" + KeyValue;
+                openDialog(url, "Form", "配置JOB使能信息", 600, 600, function (iframe) {
+                    top.frames[iframe].AcceptClick()
+                });
+            }
+        }
+    }
+    //解除配置
+    function btn_deleteConfig() {
+        var KeyValue = GetJqGridRowValue("#gridTable1", "ID");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/TightModule/TightEnable/ConfigDelete', delparm, KeyValue.split(",").length);
+        }
+    }
+
+
+    // 导入
+    function btn_Import() {
+        openDialog("/TightModule/TightEnable/ExcelImportDialog?area_key=" + area_key, "ExcelImportDialog", "JOB使能信息导入", 750, 300, function (iframe) {
+            top.frames[iframe].AcceptClick();
+        })
+    }
+
+    //搜索
+    function btn_Search() {
+        var type = $("#Condition").val();
+        var content = $("#Cnt").val();
+        $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/TightModule/TightEnable/GridPageByCondition")?type=" + type + "&&KeyValue=" + content , page: 1, datatype: 'json'
+        }).trigger('reloadGrid');
+                $("#gridTable1").jqGrid('setGridParam', {
+                    url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?type=" + type + "&&KeyValue=" + content , page: 1, datatype: 'json'
+    }).trigger('reloadGrid');
+    }
+    $(document).keypress(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            btn_Search();
+        }
+    });
+
+    //根据数据字典显示内容
+    function CellItem(Code, cellvalue) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            $.each(itemjson, function (i) {
+                if (itemjson[i].Code == cellvalue) {
+                    value = itemjson[i].FullName;
+                }
+            });
+        })
+        return value;
+    }
+
+    //根据数据字典显示内容
+    function CellItem_AviCatg(Code) {
+        var value = "";
+        getAjax('/CommonModule/DataDictionary/BinDingItemsJson', { Code: Code }, function (data) {
+            var itemjson = eval("(" + data + ")");
+            var length = itemjson.length;
+            if (length == 1) {
+                PlineTypeCellItem = itemjson[0].Code + ":" + itemjson[0].FullName;
+            }
+            else if (length > 1) {
+                for (var a = 0; a < length - 1; a++) {
+                    value += itemjson[a].Code + ":" + itemjson[a].FullName + ";";
+                }
+                PlineTypeCellItem = value + itemjson[length - 1].Code + ":" + itemjson[length - 1].FullName;
+            }
+        })
+    }
+
+</script>
+        @*按钮区域*@
+        <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+            <div class="PartialButton">
+                @Html.Partial("_PartialButton")
+            </div>
+        </div>
+        @*搜索框区域*@
+        <table border="0" class="form-find" style="height: 45px;">
+            <tr>
+                <th>
+                    检索条件：
+                </th>
+                <td>
+                    <select id="Condition" style="width: 125px; height: 25px" onclick=" Show()">
+                        <option value="All">全部</option>
+                        <option value="WcCd">工位编号</option>
+                        <option value="WcNm">工位名称</option>
+                        <option value="JobCd">Job编号</option>
+                        <option value="ControllerID">控制器ID</option>
+                        <option value="Code">绑定编号</option>
+                    </select>
+                </td>
+                <th id="keywords">
+                    内容：
+                </th>
+                <td>
+                    <input id="Cnt" type="text" class="txt" style="width: 125px" />
+                </td>
+
+                <td>
+                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+                </td>
+            </tr>
+        </table>
+        @*</div>*@
+        @*表格区域*@
+        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+            <table id="gridTable"></table>
+            <div id="gridPager"></div>
+        </div>
+        <!--表 -->
+        <div style="overflow: auto;">
+            <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+                <div class="btnbartitle">
+                    <div style="float: left;margin-left:7px">
+                        <span class="ModuleName">已配置JOB使能信息</span>
+                    </div>
+                </div>
+                <table id="gridTable1" class="ui-jqgrid tr.jqgrow td"></table>
+                <div id="gridPager1"></div>
+            </div>
+        </div>

@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script type="text/javascript">
+    var KeyValue = GetQuery('KeyValue');//缺陷明细主键--编辑
+    var catggroupid = GetQuery('catggroupid');//类别分组id--新增
+    $(function () {
+        InitControl();
+    })
+    //得到一个对象实体
+    function InitControl() {
+        if (!!GetQuery('KeyValue')) {
+            AjaxJson("/QualityAdd_TZModule/BBdbR_DefectCatgDeTail_Add/SetForm", { KeyValue: KeyValue }, function (data) {
+                SetWebControls(data);
+            });
+            $("#DefectCd").attr("readonly", "readonly");
+            $("#DefectNm").attr("readonly", "readonly");
+        }
+    }
+    //保存事件
+    function AcceptClick() {
+        if (!CheckDataValid('#form1')) {
+            return false;
+        }
+        var postData = GetWebControls("#form1");
+        AjaxJson("/QualityAdd_TZModule/BBdbR_DefectCatgDeTail_Add/Submit?KeyValue=" + KeyValue + "&catggroupid=" + catggroupid, postData, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+            top.frames[tabiframeId()].windowload();
+            closeDialog();
+        });
+    }
+</script>
+<form id="form1" style="margin: 1px">
+    <div id="message" style="display: none"></div>
+    <table class="form">
+        <tr>
+            <th class='formTitle'>缺陷编号：</th>
+            <td class='formValue'>
+                <input id="DefectCd" maxlength=50 type="text" class="txt required" datacol="yes" err="缺陷编号" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>缺陷名称：</th>
+            <td class='formValue'>
+                <input id="DefectNm" maxlength=50 type="text" class="txt required" datacol="yes" err="缺陷名称" checkexpession="NotNUll" />
+            </td>
+        </tr>
+        <tr>
+            <th class='formTitle'>描述：</th>
+            <td class='formValue'>
+                <input id="Dsc" maxlength=500 type="text" class="txt" />
+            </td>
+        </tr>
+        @*<tr>
+                <th class='formTitle'>有效性：</th>
+                <td class='formValue'>
+                    <input id="Enabled" maxlength=50 type="text" class="txt"   />
+                </td>
+            </tr>
+            <tr>
+                <th class='formTitle'>版本号：</th>
+                <td class='formValue'>
+                    <input id="VersionNumber" maxlength=50 type="text" class="txt"   />
+                </td>
+            </tr>*@
+        <tr>
+            <th class='formTitle'>备注：</th>
+            <td class='formValue'>
+                <input id="Rem" maxlength=200 type="text" class="txt" />
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</form>

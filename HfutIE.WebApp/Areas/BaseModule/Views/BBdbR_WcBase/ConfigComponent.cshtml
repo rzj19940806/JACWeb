@@ -7,6 +7,7 @@
 <script type="text/javascript">
     //var productclassid = GetQuery('productclassid');
     var WcId = GetQuery('KeyValue');
+    var isCH = GetQuery('isCH');
     //var WcCd = GetQuery('wccd');
     //var WcNm = GetQuery('wcnm');
     var lastrow = "";
@@ -28,7 +29,7 @@
      //加载未配置
     function GetGrid() {
         $("#gridTable").jqGrid({
-            url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridNotConfigJson")?WcId=" + escape(WcId) + "&Condition=&keywords=", page: 1,
+            url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridNotConfigJson")?WcId=" + escape(WcId) + "&&isCH=" + escape(isCH) + "&Condition=&keywords=", page: 1,
         datatype: "json",
         height:125, //$(window).height() - 149,
         width:770,
@@ -104,7 +105,7 @@
         var keywords = $("#keywords").val();
         $("#gridTable").jqGrid('setGridParam', {//设置grid的参数。有些参数的修改必须要重新加载grid才可以生效，这个方法可以覆盖事件
             //url:设置一个grid的ajax url，可配合trigger("reloadGrid")使用;page:设置翻到第几页;datatype:设置新的datatype(xml,json...)
-            url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridNotConfigJson")?WcId=" + escape(WcId) + "&Condition=" + escape(Condition) + "&keywords=" + escape(keywords), page: 1, datatype: 'json'
+            url: "@Url.Content("~/BaseModule/BBdbR_WcBase/GridNotConfigJson")?WcId=" + escape(WcId) + "&Condition=" + escape(Condition) + "&isCH=" + escape(isCH) + "&keywords=" + escape(keywords), page: 1, datatype: 'json'
         }).trigger('reloadGrid');
     }
     //回车事件
@@ -115,7 +116,7 @@
     //});
 
     //保存事件
-    function btn_accept() {
+    function AcceptClick() {
         $("#gridTable1").jqGrid("saveCell", lastrow, lastcell)//对单元格数据进行保存
         var gridData = $("#gridTable1").jqGrid("getRowData");
         
@@ -167,7 +168,7 @@
                             </span>
                         </a>
                         <div class="tools_separator"></div>
-                        <a id="lr-add" ids="lr-add" title="确认此项配置" onclick="btn_accept()" class="tools_btn">
+                        <a id="lr-add" ids="lr-add" title="确认此项配置" onclick="AcceptClick()" class="tools_btn">
                             <span>
                                 <b style="background: url('../../Content/Images/Icon16/accept.png') 50% 4px no-repeat;">确认配置</b>
                             </span>

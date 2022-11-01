@@ -121,7 +121,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     and exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{crossAviCd}' or '{crossAviCd}'='') --经过AVI点，允许为空
                     and DATEDIFF(DD,IIF('{StartTime}'='','2022-01-01','{StartTime}'),PI.FeedbackTime)>=0 --'2022-03-15' 过点开始时间
                     and DATEDIFF(DD,PI.FeedbackTime,IIF('{EndTime}'='',getdate(),'{EndTime}'))>=0 ) --'2022-04-15'=过点结束时间
-                    and not exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{nocrossAviCd}' and PI.FeedbackTime like '20%' and '{nocrossAviCd}'<>''))--未经过AVI点，允许为空   ";
+                    and not exists (select 1 from P_PlanFeedBack_Pro PI where PI.VIN=A.VIN and (PI.OP_CODE='{nocrossAviCd}' and LEN(PI.FeedbackTime)>0  and '{nocrossAviCd}'<>''))--未经过AVI点，允许为空   ";
 
                 #endregion
 

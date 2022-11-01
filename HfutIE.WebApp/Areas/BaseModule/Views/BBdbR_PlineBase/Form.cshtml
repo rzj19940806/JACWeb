@@ -83,7 +83,7 @@
         //}
        
         var postData = GetWebControls("#form1");
-        AjaxJson("/BaseModule/BBdbR_PlineBase/SubmitForm1?KeyValue=" + KeyValue  , postData, function (data) {
+        AjaxJson("/BaseModule/BBdbR_PlineBase/SubmitForm1?KeyValue=" + KeyValue + "&&KeyValue2=" + WorkSectionId, postData, function (data) {
             if (data.Message == "该编号已经存在！") {
                 tipCss("PlineCd", data.Message);
                 return;

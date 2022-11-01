@@ -81,7 +81,7 @@
                                 formMessage('密码长时间未修改', 'error');
                                 var url = "/CommonModule/User/ModifyPwd";
                                 Dialog(url, "", "个人中心", 710, 400);
-                                
+
                             } else {
                                 //alert(rs);
                             }
@@ -98,15 +98,23 @@
             } else {
                 //window.location.href = '@Url.Content("~/OT/Q_KeyParts")';
                 getAjax('@Url.Content("~/Login/GetIpAddress")', null, function (data) {
-                    if (data.substring(0, 10) == "10.138.13.") {
+                    if (data.substring(0, 10) == "10.138.13." || data=="127.0.0.1") {
                         let ip = Number(data.split(".")[3]);
                         if (ip < 60) {//AVI
                             window.location.href = '@Url.Content("~/Home/StartIndex")';
-                        }  else if (ip < 151) {//关重件
+                        } else if (ip < 151) {//关重件
+
                             window.location.href = '@Url.Content("~/OT/Q_KeyParts")';
                         } else {
                             window.location.href = '@Url.Content("~/Home/StartIndex")';
                         }
+                        @*//拧紧重定向
+                        AjaxJson("/Login/GetDvcTypeByIP", { IP: IP }, function (data) {
+                                    DvcTyp = data;
+                                });
+                            if (DvcTyp == '拧紧OT屏') {
+                               window.location.href = '@Url.Content("~/Tighten/Tg_Key")';
+                            }*@
                     } else {
                         window.location.href = '@Url.Content("~/Home/StartIndex")';
                     }
