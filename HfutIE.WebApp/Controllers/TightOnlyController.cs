@@ -54,7 +54,7 @@ namespace HfutIE.WebApp.Controllers
                 //2.1获取IP地址
                 var IP = NetHelper.GetIPAddress();
                 //IP = "10.138.13.252";
-                IP = "10.138.13.43";
+                //IP = "10.138.13.43";
                 //2.2根据IP地址获取设备-工位---公司
                 //获取工位--字典中使用classid代替
                 q_KeyParts.GetRowValue("BBdbR_DvcBase", "ClassId,DvcCatg,DvcTyp,DvcLocatn", "IPAddr", IP, ref BaseInfoProps);
