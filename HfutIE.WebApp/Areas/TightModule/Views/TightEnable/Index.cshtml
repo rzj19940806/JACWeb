@@ -76,9 +76,19 @@
            onSelectRow: function (row) {
                 var rowData = $('#gridTable').jqGrid('getRowData', row);//得到选中行的数据
                var KeyValue = rowData.WcJobCd;
-                $("#gridTable1").jqGrid('setGridParam', {
-                    url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?KeyValue=" + escape(KeyValue) +"&&type='WJCId'", datatype: 'json'
+               var Wc = $("#Wc").val();
+               var type = $("#Condition").val();
+               var vin = $("#Cnt").val();
+               if (type == "VIN" && isEmpty(Wc)) {
+                   tipDialog('请输入工位编号', 2, 'warning');
+               }
+               else {
+                   if (type == "VIN") { KeyValue = vin; }
+                   $("#gridTable1").jqGrid('setGridParam', {
+                       url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?KeyValue=" + escape(KeyValue) + "&&type=" + escape(type) + "&&WcCode=" + escape(Wc), datatype: 'json'
                     }).trigger('reloadGrid');
+               }
+
             }
     });
     }
@@ -127,10 +137,20 @@
         if (Condition == "All") {
             $("#Cnt").hide();
             $("#keywords").hide();
+            $("#WcTitle").hide();
+            $("#Wc").hide();
+        }
+        else if (Condition == "VIN") {
+            $("#Cnt").show();
+            $("#keywords").show();
+            $("#WcTitle").show();
+            $("#Wc").show();
         }
         else {
             $("#Cnt").show();
             $("#keywords").show();
+            $("#WcTitle").hide();
+            $("#Wc").hide();
         }
     }
 
@@ -174,17 +194,29 @@
             top.frames[iframe].AcceptClick();
         })
     }
-
+    function isEmpty(obj) {
+        if (typeof obj == "undefined" || obj == null || obj == "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
     //搜索
     function btn_Search() {
         var type = $("#Condition").val();
         var content = $("#Cnt").val();
-        $("#gridTable").jqGrid('setGridParam', {
-            url: "@Url.Content("~/TightModule/TightEnable/GridPageByCondition")?type=" + type + "&&KeyValue=" + content , page: 1, datatype: 'json'
+        var Wc = $("#Wc").val();
+        if (type == "VIN" && isEmpty(Wc)) {
+            tipDialog('请输入工位编号', 2, 'warning');
+        }
+        else {
+             $("#gridTable").jqGrid('setGridParam', {
+            url: "@Url.Content("~/TightModule/TightEnable/GridPageByCondition")?type=" + type + "&&KeyValue=" + content + "&&WcCode=" + Wc, page: 1, datatype: 'json'
         }).trigger('reloadGrid');
-                $("#gridTable1").jqGrid('setGridParam', {
-                    url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?type=" + type + "&&KeyValue=" + content , page: 1, datatype: 'json'
-    }).trigger('reloadGrid');
+        @*$("#gridTable1").jqGrid('setGridParam', {
+            url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?type=" + type + "&&KeyValue=" + content+"&&WcCode=" + Wc, page: 1, datatype: 'json'
+    }).trigger('reloadGrid');*@
+        }
     }
     $(document).keypress(function (e) {
         // 回车键事件
@@ -239,13 +271,13 @@
                     检索条件：
                 </th>
                 <td>
-                    <select id="Condition" style="width: 125px; height: 25px" onclick=" Show()">
+                    <select id="Condition" style="width: 125px; height: 25px" onclick="Show()">
                         <option value="All">全部</option>
+                        <option value="VIN">VIN号</option>
                         <option value="WcCd">工位编号</option>
                         <option value="WcNm">工位名称</option>
                         <option value="JobCd">Job编号</option>
                         <option value="ControllerID">控制器ID</option>
-                        <option value="Code">绑定编号</option>
                     </select>
                 </td>
                 <th id="keywords">
@@ -254,7 +286,12 @@
                 <td>
                     <input id="Cnt" type="text" class="txt" style="width: 125px" />
                 </td>
-
+                <th id="WcTitle">
+                    工位：
+                </th>
+                <td>
+                    <input id="Wc" type="text" class="txt" style="width: 125px" />
+                </td>
                 <td>
                     <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
                 </td>

@@ -429,12 +429,12 @@ namespace HfutIE.WebApp.Areas.TightModule.Controllers
         //查询值为keywords，也是数据库表_CompanyBaseInformation中的字段名的字段值
         //本查询采用近似查询（like）
 
-        public ActionResult GridPageByCondition(string type, string KeyValue, JqGridParam jqgridparam)
+        public ActionResult GridPageByCondition(string type, string KeyValue,string WcCode, JqGridParam jqgridparam)
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable dt = MyBll.GetPageListByCondition(type, KeyValue, jqgridparam);
+                DataTable dt = MyBll.GetPageListByCondition(type, KeyValue, WcCode, jqgridparam);
                 var JsonData = new
                 {
                     total = jqgridparam.total,
@@ -454,12 +454,12 @@ namespace HfutIE.WebApp.Areas.TightModule.Controllers
             }
         }
 
-        public ActionResult GridPageByConditionEnable(string type, string KeyValue, JqGridParam jqgridparam)
+        public ActionResult GridPageByConditionEnable(string type, string KeyValue,string WcCode, JqGridParam jqgridparam)
         {
             try
             {
                 Stopwatch watch = CommonHelper.TimerStart();
-                DataTable dt = MyBll.GetPageListByConditionEnable(type, KeyValue, jqgridparam);
+                DataTable dt = MyBll.GetPageListByConditionEnable(type, KeyValue, WcCode, jqgridparam);
                 var JsonData = new
                 {
                     total = jqgridparam.total,

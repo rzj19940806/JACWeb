@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace HfutIE.Business
@@ -115,7 +116,7 @@ namespace HfutIE.Business
         /// <param name="Condition">关键字（查询条件）</param>
         /// <param name="jqgridparam">分页参数</param>
         /// <returns>查询的数据（列表）</returns>
-        public DataTable GetPageListByCondition(string Condition, string keywords, JqGridParam jqgridparam) //===复制时需要修改===查询JOB工位信息
+        public DataTable GetPageListByCondition(string Condition, string keywords,string WcCode, JqGridParam jqgridparam) //===复制时需要修改===查询JOB工位信息
         {
             string sql = "";
             if (Condition == "All")
@@ -125,40 +126,87 @@ namespace HfutIE.Business
             }
             else
             {
-                if(Condition=="Code")//通过JOB使能配置查询JOB信息
+                if(Condition=="VIN")//通过JOB使能配置查询JOB信息
                 {
-                    sql = @"select a.* from tg_wcjobconfig a right join Tg_JobEnableConfig  b on  a.wcjobcd=b.WJCId where b.code like '%"+keywords+"%' order by a.wcJobcd asc";
-                    return Repository().FindTableBySql(sql, false);
-
+                    string str = $"select MatCd,CarType from P_ProducePlan_Pro where VIN like '%{keywords}'";
+                    DataTable dt = Repository().FindTableBySql(str, false);
+                    if (dt.Rows.Count > 0)
+                    {
+                        string ProCd = dt.Rows[0]["MatCd"].ToString();
+                        string CarType = (string)dt.Rows[0][1];
+                        //综合查找
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(@"SELECT DISTINCT WcJobCd FROM TightConfigView WHERE Type='产品' AND CHARINDEX(Code,'" + ProCd + "')>0 AND WcCd='" + WcCode + "' UNION ALL ");
+                        sb.Append(@"SELECT DISTINCT WcJobCd FROM TightConfigView a JOIN produceBom b ON a.Code=b.MatCd  WHERE Type='图号' AND b.ProductCd='" + ProCd + "' AND a.WcCd='" + WcCode + "' UNION ALL ");
+                        sb.Append(@"SELECT DISTINCT WcJobCd FROM TightConfigView  WHERE Type='车型' AND Code='" + CarType + "' AND WcCd='" + WcCode + "'  UNION ALL ");
+                        sb.Append(@"SELECT DISTINCT WcJobCd from TightConfigView c JOIN dbo.produceBom d ON c.RsvFld1=d.MatCd WHERE Type='车型+图号' AND d.ProductCd='" + ProCd + "' AND c.Code='" + CarType + "' AND c.WcCd='" + WcCode + "' ");
+                        DataTable Configtable = Repository().FindTableBySql(sb.ToString(), false);
+                        if(Configtable.Rows.Count > 0)
+                        {
+                            string str1 = "";
+                            for (int i = 0; i < Configtable.Rows.Count; i++)
+                            {
+                                if(i!= Configtable.Rows.Count - 1)
+                                {
+                                    str1 += $"'{Configtable.Rows[i][0]}',";
+                                }
+                                else
+                                {
+                                    str1 += $"'{Configtable.Rows[i][0]}'";
+                                }
+                            }
+                            string str2 = "select * from tg_wcjobconfig where WcJobCd in ( ";
+                            str2 += str1;
+                            str2 += " ) order by wcJobcd asc";
+                            return Repository().FindTableBySql(str2, false);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                 
                 }
                 else
                 {
-                sql = @"select * from tg_wcjobconfig where "+ Condition + " like '%"+ keywords + "%' order by wcJobcd asc";
-                return Repository().FindTableBySql(sql, false);
+                    sql = @"select * from tg_wcjobconfig where "+ Condition + " like '%"+ keywords + "%' order by wcJobcd asc";
+                    return Repository().FindTableBySql(sql, false);
                 }
             }
         }
-        public DataTable GetPageListByConditionEnable(string Condition, string keywords, JqGridParam jqgridparam) //===复制时需要修改===查询JOB使能信息
+        public DataTable GetPageListByConditionEnable(string Condition, string keywords,string WcCode, JqGridParam jqgridparam) //===复制时需要修改===查询JOB使能信息
         {
             string sql = "";
-            if (Condition == "All")
+            if (Condition == "VIN")
             {
-                sql = @"select * from Tg_JobEnableConfig  order by Code asc";
-                return Repository().FindTableBySql(sql, false);
+                string str = $"select MatCd,CarType from P_ProducePlan_Pro where VIN like '%{keywords}'";
+                DataTable dt = Repository().FindTableBySql(str, false);
+                if (dt.Rows.Count > 0)
+                {
+                    string ProCd = dt.Rows[0]["MatCd"].ToString();
+                    string CarType = (string)dt.Rows[0][1];
+                    //综合查找
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(@"SELECT DISTINCT WcJobCd AS WJCId,Type,Code,RsvFld1 FROM TightConfigView WHERE Type='产品' AND CHARINDEX(Code,'" + ProCd + "')>0 AND WcCd='" + WcCode + "' UNION ALL ");
+                    sb.Append(@"SELECT DISTINCT WcJobCd AS WJCId,Type,Code,a.RsvFld1 FROM TightConfigView a JOIN produceBom b ON a.Code=b.MatCd  WHERE Type='图号' AND b.ProductCd='" + ProCd + "' AND a.WcCd='" + WcCode + "' UNION ALL ");
+                    sb.Append(@"SELECT DISTINCT WcJobCd AS WJCId,Type,Code,RsvFld1 FROM TightConfigView  WHERE Type='车型' AND Code='" + CarType + "' AND WcCd='" + WcCode + "'  UNION ALL ");
+                    sb.Append(@"SELECT DISTINCT WcJobCd AS WJCId,Type,Code,c.RsvFld1 from TightConfigView c JOIN dbo.produceBom d ON c.RsvFld1=d.MatCd WHERE Type='车型+图号' AND d.ProductCd='" + ProCd + "' AND c.Code='" + CarType + "' AND c.WcCd='" + WcCode + "' ");
+                    return Repository().FindTableBySql(sb.ToString(), false);
+                    
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
-                if (Condition == "Code")
-                {
-                    sql = @"select * from Tg_JobEnableConfig  where code like '%" + keywords + "%'order by Code asc";
-                    return Repository().FindTableBySql(sql, false);
-
-                }
-                else//点击JOB查询使能信息
-                {
-                    sql = @"select * from Tg_JobEnableConfig where WJCId = '" + keywords + "' order by Code asc";
-                    return Repository().FindTableBySql(sql, false);
-                }
+                sql = @"select * from Tg_JobEnableConfig where WJCId = '" + keywords + "' order by CHARINDEX(RTRIM(CAST(Type as NCHAR)),'产品,车型+图号,车型,图号') ";
+                return Repository().FindTableBySql(sql, false);
             }
         }
         #endregion
