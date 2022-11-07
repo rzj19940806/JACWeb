@@ -5412,6 +5412,115 @@ namespace HfutIE.Utilities
             return memoryStream;
         }
         #endregion
+        #region 11.1冲焊车身质量检查销项过程表导出
+        /// <summary>
+        /// 车身质量检查销项过程表导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="excelType"></param>
+        /// <returns></returns>
+        public static MemoryStream ExportExcel_HTCarQualityOutput(DataTable dt, string excelType)
+        {
+            IWorkbook workbook = null;
+            if (excelType == "xls")
+            {
+                workbook = new HSSFWorkbook();//2003
+            }
+            else
+            {
+                workbook = new XSSFWorkbook();//2007
+            }
+            #region 创建一个sheet
+            string name = "质量录入数据";
+            ISheet sheet = workbook.CreateSheet(name);
+            int rowCount = 0;
+
+            //设置全局列宽和行高   
+            sheet.DefaultColumnWidth = 20; //全局列宽   
+            sheet.DefaultRowHeightInPoints = 15; //全局行高
+
+            IRow row2 = sheet.CreateRow(rowCount);
+            row2.Height = 400;
+
+
+            ICell cell201 = row2.CreateCell(0);
+            cell201.SetCellValue("质控点（工段）");
+
+            ICell cell202 = row2.CreateCell(1);
+            cell202.SetCellValue("VIN");
+
+            ICell cell203 = row2.CreateCell(2);
+            cell203.SetCellValue("车型");
+
+            ICell cell204 = row2.CreateCell(3);
+            cell204.SetCellValue("车身组件名称");
+
+            ICell cell205 = row2.CreateCell(4);
+            cell205.SetCellValue("缺陷名称");
+
+            ICell cell206 = row2.CreateCell(5);
+            cell206.SetCellValue("备注");
+
+            ICell cell209 = row2.CreateCell(6);
+            cell209.SetCellValue("录入人员编号");
+
+            ICell cell210 = row2.CreateCell(7);
+            cell210.SetCellValue("录入人员姓名");
+
+            ICell cell211 = row2.CreateCell(8);
+            cell211.SetCellValue("录入时间");
+
+            for (int k = 0; k < dt.Rows.Count; k++)
+            {
+                IRow row3 = sheet.CreateRow(k + rowCount + 1);//是内容行
+                row3.Height = 400;
+                int b = 0;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string dgvValue = string.Empty;
+                    //dgvValue = dt.Rows[k][j].ToString();
+
+                    if (j == 21)
+                    {
+                        if (dt.Rows[k][j].ToString() == "0")
+                        {
+                            dgvValue = "否";
+                        }
+                        else if (dt.Rows[k][j].ToString() == "1")
+                        {
+                            dgvValue = "是";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (dt.Rows[k][j].ToString() == "&nbsp;")
+                        {
+                            dgvValue = "";
+                        }
+                        else
+                        {
+                            dgvValue = dt.Rows[k][j].ToString();
+                        }
+                    }
+                    ICell cell = row3.CreateCell(b);
+                    cell.SetCellValue(dgvValue);
+                    b++;
+                }
+            }
+            #endregion
+
+            //创建excel   
+            MemoryStream memoryStream = new MemoryStream();
+            workbook.Write(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
+        }
+        #endregion
+
         #region 12.日计划表导出
         /// <summary>
         /// 日计划表导出

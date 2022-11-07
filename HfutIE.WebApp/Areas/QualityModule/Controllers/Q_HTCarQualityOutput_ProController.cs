@@ -31,7 +31,7 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
         #endregion
 
         #region 查询方法
-        public ActionResult GetListByCondition( string VIN, string CarType,string TimeStart,string TimeEnd, JqGridParam jqgridparam)
+        public ActionResult GetListByCondition( string VIN, string CarType,string TimeStart,string TimeEnd,string GN , JqGridParam jqgridparam)
         {
             try
             {
@@ -74,6 +74,12 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
                     parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
                 }
                 else { }
+                if (GN != "" && GN != null)
+                {
+                    //strSql.Append(" and DATEDIFF(day,QualityInspectTm,'" + TimeEnd + "') >= 0 ");
+                    strSql.Append(" and RsvFld1 ='" + GN + "' ");
+                }
+                else { }
 
                 #endregion
 
@@ -103,7 +109,7 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
         #endregion
 
         #region 查询方法
-        public ActionResult GetResultByCondition(string VIN, string CarType, string TimeStart, string TimeEnd, JqGridParam jqgridparam)
+        public ActionResult GetResultByCondition(string VIN, string CarType, string TimeStart, string TimeEnd, string GN, JqGridParam jqgridparam)
         {
             try
             {
@@ -137,7 +143,11 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
                     strSql.Append(" and DATEDIFF(day,QualityInspectTm,'" + TimeEnd + "') >= 0 ");
                 }
                 else { }
-
+                if (GN != "" && GN != null)
+                {
+                    strSql.Append(" and RsvFld1 ='" + GN + "' ");
+                }
+                else { }
                 #endregion
 
                 //按照录入时间排序
@@ -751,6 +761,90 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
         }
         #endregion
 
+        #endregion
+
+        #region 2.重构导出方法
+        /// <summary>
+        /// 1.如果是按照条件查询后再进行
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="jqgridparam"></param>
+        /// <returns></returns>
+        public ActionResult GetExcel_Data(string QualityCheckPointGroupNm,  string VIN, string CarType, string TimeStart, string TimeEnd, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 获取数据
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"select QualityCheckPointGroupNm,VIN,CarType,CarComponentNm,DefectNm,DefectAnalysis,CreCd,CreNm,CreTm	 from Q_HTCarQualityOutput_Pro where Enabled = 1 ");
+
+                List<DbParameter> parameter = new List<DbParameter>();
+                #region 判断输入框内容添加检索条件
+                //是否加VIN号模糊搜索
+                if (VIN != "" && VIN != null)
+                {
+                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
+                    strSql.Append(" and VIN like @VIN ");
+                    parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                }
+
+                //是否加VIN号模糊搜索
+                if (CarType != "" && CarType != null)
+                {
+                    //strSql.Append(" and CarType like '%" + CarType + "%' ");
+                    strSql.Append(" and CarType like @CarType ");
+                    parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
+                }
+                else { }
+
+                if (TimeStart != "" && TimeStart != null)
+                {
+                    //strSql.Append(" and DATEDIFF(day,'" + TimeStart + "',QualityInspectTm) >= 0");
+                    //开始时间把@放在前面
+                    strSql.Append(" and DateDiff(dd,@TimeStart,QualityInspectTm) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeStart", TimeStart));
+                }
+                else { }
+                if (TimeEnd != "" && TimeEnd != null)
+                {
+                    //strSql.Append(" and DATEDIFF(day,QualityInspectTm,'" + TimeEnd + "') >= 0 ");
+                    strSql.Append(" and DateDiff(dd,QualityInspectTm,@TimeEnd) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
+                }
+                else { }
+                if (QualityCheckPointGroupNm != "" && QualityCheckPointGroupNm != null)
+                {
+                    //strSql.Append(" and DATEDIFF(day,QualityInspectTm,'" + TimeEnd + "') >= 0 ");
+                    strSql.Append(" and RsvFld1 ='" + QualityCheckPointGroupNm + "' ");
+                }
+                else { }
+
+                #endregion
+
+                //按照录入时间排序
+                strSql.Append(" order by QualityInspectTm desc");
+
+                //DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                #endregion
+                string fileName = "冲涂质量录入数据";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_HTCarQualityOutput(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "质量录入数据导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "质量录入数据导出操作失败：" + ex.Message);
+                return null;
+            }
+
+
+        }
         #endregion
 
 
