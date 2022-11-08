@@ -7,7 +7,9 @@
         //CellItem_AviCatg('WcTyp');//需在GetGrid()之前进行初始化赋值
         GetGrid();
         GetGrid1();
+        GetGrid2();
         Show();
+        changeupTab("Torque");//默认显示EOL页面
     })
     var area_key = "";
     var area_name = "";
@@ -22,7 +24,7 @@
         $("#gridTable").jqGrid({
             url: "@Url.Content("~/TightModule/TightEnable/GridPageByCondition")?type='All'" + "",
         datatype: "json",
-        height: 250,//$(window).height() - 149,
+        height: 285,//$(window).height() - 149,
         autowidth: true,
         colModel: [
 
@@ -32,8 +34,8 @@
             { label: '工位编号', name: 'WcCd', index: 'WcCd', width: 80, align: 'left', sortable: true },
             { label: '工位名称', name: 'WcNm', index: 'WcNm', width: 80, align: 'left', sortable: true },
             { label: '位置', name: 'Position', index: 'Position', width: 80, align: 'left', sortable: true },
-            { label: 'JOB编号', name: 'JobCd', index: 'JobCd', width: 120, align: 'left', sortable: true },
-            { label: '控制器ID', name: 'ControllerID', index: 'ControllerID', width: 120, align: 'left', sortable: true },
+            { label: 'JOB编号', name: 'JobCd', index: 'JobCd', width: 100, align: 'left', sortable: true },
+            { label: '控制器ID', name: 'ControllerID', index: 'ControllerID', width: 100, align: 'left', sortable: true },
             { label: '控制器端口', name: 'ControllerPort', index: 'ControllerPort', width: 120, align: 'left', sortable: true },
             { label: '扭矩上限', name: 'TorqueUL', index: 'TorqueUL', width: 120, align: 'left', sortable: true, hidden: true },
             { label: '扭矩下限', name: 'TorqueLL', index: 'TorqueLL', width: 120, align: 'left', sortable: true, hidden: true },
@@ -86,6 +88,9 @@
                    if (type == "VIN") { KeyValue = vin; }
                    $("#gridTable1").jqGrid('setGridParam', {
                        url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionEnable")?KeyValue=" + escape(KeyValue) + "&&type=" + escape(type) + "&&WcCode=" + escape(Wc), datatype: 'json'
+                   }).trigger('reloadGrid');
+                    $("#gridTable2").jqGrid('setGridParam', {
+                       url: "@Url.Content("~/TightModule/TightEnable/GridPageByConditionTorque")?KeyValue=" + escape(KeyValue) + "&&type=" + escape(type) + "&&WcCode=" + escape(Wc), datatype: 'json'
                     }).trigger('reloadGrid');
                }
 
@@ -128,6 +133,45 @@
             shrinkToFit: false,
             gridview: true,
             loadonce: true,
+        });
+    }
+         //加载JOB使能配置表信息表格
+    function GetGrid2() {
+        $("#gridTable2").jqGrid({
+            datatype: "json",
+            height: 290,
+            autowidth: true,
+            colModel: [
+                { label: 'ID', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '工位JOB编号', name: 'WcJobCd', index: 'WcJobCd', width: 0, align: 'center', sortable: true, },
+                { label: '扭矩上限', name: 'TorqueUL', index: 'TorqueUL', width: 120, align: 'left', sortable: true },
+                { label: '扭矩下限', name: 'TorqueLL', index: 'TorqueLL', width: 120, align: 'left', sortable: true },
+                { label: '扭矩标准值', name: 'TorqueSL', index: 'TorqueSL', width: 120, align: 'left', sortable: true },
+                { label: '转角上限', name: 'AngleUL', index: 'AngleUL', width: 120, align: 'left', sortable: true },
+                { label: '转角下限', name: 'AngleLL', index: 'AngleLL', width: 120, align: 'left', sortable: true },
+                { label: '转角标准值', name: 'AngleSL', index: 'AngleSL', width: 120, align: 'left', sortable: true },
+                { label: '拧紧次数', name: 'Num', index: 'Num', width: 120, align: 'left', sortable: true },
+                { label: '拧紧顺序', name: 'Ord', index: 'Ord', width: 120, align: 'left', sortable: true },
+                { label: '创建时间', name: 'CreTm', index: 'CreTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '创建人员编号', name: 'CreCd', index: 'CreCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '创建人员名称', name: 'CreNm', index: 'CreNm', width: 0, align: 'center', sortable: true },
+                { label: '修改时间', name: 'MdfTm', index: 'MdfTm', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                { label: '修改人员编号', name: 'MdfCd', index: 'MdfCd', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: '修改人员名称', name: 'MdfNm', index: 'MdfNm', width: 0, align: 'center', sortable: true },
+                { label: '备注', name: 'Rem', index: 'Rem', width: 0, align: 'center', sortable: true },
+                { label: 'RsvFld1', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, hidden: true },
+                { label: 'RsvFld2', name: 'RsvFld2', index: 'RsvFld2', width: 0, align: 'center', sortable: true, hidden: true },
+            ],
+            pager: "#gridPager2",
+            sortname: 'WcCd',
+            sortorder: 'desc',
+            rownumbers: true,
+            rowList: [200, 100, 500, 1000],//记录条数列表
+            viewrecords: true,//显示总的记录条数
+            rownumWidth: 45,//序号列宽
+            shrinkToFit: true,
+            gridview: true,
+            loadonce: false,//排序
         });
     }
 
@@ -256,62 +300,93 @@
             }
         })
     }
-
+    //上标签切换
+    function changeupTab(id) {
+        $(".upDiv").hide();
+        $("#" + id + "Page").show();
+        $(".upTab").removeClass("actived");
+        $("#Tabcheck" + id).addClass("actived");
+    }
 </script>
-        @*按钮区域*@
-        <div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
-            <div class="PartialButton">
-                @Html.Partial("_PartialButton")
+@*按钮区域*@
+<div class="tools_bar" style="margin-top: 1px; margin-bottom: 0px;">
+    <div class="PartialButton">
+        @Html.Partial("_PartialButton")
+    </div>
+</div>
+@*搜索框区域*@
+<table border="0" class="form-find" style="height: 45px;">
+    <tr>
+        <th>
+            检索条件：
+        </th>
+        <td>
+            <select id="Condition" style="width: 125px; height: 25px" onclick="Show()">
+                <option value="All">全部</option>
+                <option value="VIN">VIN号</option>
+                <option value="WcCd">工位编号</option>
+                <option value="WcNm">工位名称</option>
+                <option value="JobCd">Job编号</option>
+                <option value="ControllerID">控制器ID</option>
+            </select>
+        </td>
+        <th id="keywords">
+            内容：
+        </th>
+        <td>
+            <input id="Cnt" type="text" class="txt" style="width: 125px" />
+        </td>
+        <th id="WcTitle">
+            工位：
+        </th>
+        <td>
+            <input id="Wc" type="text" class="txt" style="width: 125px" />
+        </td>
+        <td>
+            <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
+        </td>
+    </tr>
+</table>
+@*</div>*@
+
+@*表格区域*@
+<div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<!--表 -->
+<!--<div style="overflow: auto;">
+    <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
+        <div class="btnbartitle">
+            <div style="float: left;margin-left:7px">
+                <span class="ModuleName">已配置JOB使能信息</span>
             </div>
         </div>
-        @*搜索框区域*@
-        <table border="0" class="form-find" style="height: 45px;">
-            <tr>
-                <th>
-                    检索条件：
-                </th>
-                <td>
-                    <select id="Condition" style="width: 125px; height: 25px" onclick="Show()">
-                        <option value="All">全部</option>
-                        <option value="VIN">VIN号</option>
-                        <option value="WcCd">工位编号</option>
-                        <option value="WcNm">工位名称</option>
-                        <option value="JobCd">Job编号</option>
-                        <option value="ControllerID">控制器ID</option>
-                    </select>
-                </td>
-                <th id="keywords">
-                    内容：
-                </th>
-                <td>
-                    <input id="Cnt" type="text" class="txt" style="width: 125px" />
-                </td>
-                <th id="WcTitle">
-                    工位：
-                </th>
-                <td>
-                    <input id="Wc" type="text" class="txt" style="width: 125px" />
-                </td>
-                <td>
-                    <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />
-                </td>
-            </tr>
-        </table>
-        @*</div>*@
-        @*表格区域*@
-        <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
-            <table id="gridTable"></table>
-            <div id="gridPager"></div>
+        <table id="gridTable1" class="ui-jqgrid tr.jqgrow td"></table>
+        <div id="gridPager1"></div>
+    </div>
+</div>-->
+@*一级分页按钮*@
+<div class="bd" style="border-bottom: none; margin: 1px;">
+    <div class="tipstitle_title settingtable bold bd todayInfoPanelTab rightPanelTitle_normal">
+        <div class="tab_list_top" style="position: absolute">
+            <div id="TabcheckEnable" class="tab_list bd upTab" onclick="changeupTab('Enable')"> 已配置JOB使能信息</div>
+            <div id="TabcheckTorque" class="tab_list bd upTab" onclick="changeupTab('Torque')">已配置JOB扭矩信息</div>
         </div>
-        <!--表 -->
-        <div style="overflow: auto;">
-            <div class="topline rightline" style="margin: 0px; margin-top: -1px;">
-                <div class="btnbartitle">
-                    <div style="float: left;margin-left:7px">
-                        <span class="ModuleName">已配置JOB使能信息</span>
-                    </div>
-                </div>
-                <table id="gridTable1" class="ui-jqgrid tr.jqgrow td"></table>
-                <div id="gridPager1"></div>
-            </div>
-        </div>
+    </div>
+</div>
+
+@*EOL区域*@
+<div id="EnablePage" class="upDiv" style="height:100%;width:100%;float:left;">
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable1"></table>
+        <div id="gridPager1"></div>
+    </div>
+</div>
+@*EOL区域*@
+<div id="TorquePage" class="upDiv" style="height:100%;width:100%;float:left;">
+    <div class="topline rightline" style="margin: 1px; margin-top: -1px;">
+        <table id="gridTable2"></table>
+        <div id="gridPager2"></div>
+    </div>
+</div>

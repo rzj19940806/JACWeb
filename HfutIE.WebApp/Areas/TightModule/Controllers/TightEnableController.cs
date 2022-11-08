@@ -478,6 +478,34 @@ namespace HfutIE.WebApp.Areas.TightModule.Controllers
                 return null;
             }
         }
+        public ActionResult GridPageByConditionTorque(string type, string KeyValue, string WcCode, JqGridParam jqgridparam)
+        {
+            try
+            {
+                Stopwatch watch = CommonHelper.TimerStart();
+                string sql = "";
+                DataTable dt = new DataTable();
+                sql = @"SELECT * FROM dbo.Tg_JobTorqueConfig WHERE ID>0 and WcJobCd='" + KeyValue + "' order by Ord ";
+                dt= DbHelperSQL.OpenTable(sql);
+                var JsonData = new
+                {
+                    total = jqgridparam.total,
+                    page = jqgridparam.page,
+                    records = jqgridparam.records,
+                    costtime = CommonHelper.TimerEnd(watch),
+                    rows = dt,
+                };
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "1", "JOB使能信息查询成功");
+                return Content(JsonData.ToJson());
+            }
+            catch (Exception ex)
+            {
+                //CCSLog.CCSLogHelper.WriteExLog(ex, CCSLog.LogType.WebSite);
+                Base_SysLogBll.Instance.WriteLog("", OperationType.Query, "-1", "JOB使能信息查询发生异常错误：" + ex.Message);
+                return null;
+            }
+        }
+
         #endregion
 
         #region 9.1 加载未配置物料或产品
