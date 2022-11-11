@@ -80,7 +80,9 @@
 
                 { label: '实体主键', name: 'MatId', index: 'MatId', width: 0, align: 'center', sortable: true, hidden: true },
                 { label: '类型', name: 'Type', index: 'Type', width: 100, align: 'center', sortable: true },
-                { label: '编码', name: 'Code', index: 'Code', width: 0, align: 'center', sortable: true },
+                {
+                    label: '编码', name: 'Code', index: 'Code', width: 0, align: 'center', sortable: true,editable: true,
+                    edittype: "text" },
                 { label: '名称', name: 'EtName', index: 'EtName', width: 0, align: 'center', sortable: true },
                 {
                     label: '图号', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true, editable: true,
@@ -195,11 +197,10 @@
             <th>关键字：</th>
             <td>
                 <select id="Condition" style="width: 150px;height:25px" onclick="Show()">
-                    <option value="Num">图号</option>
                     <option value="Prod">产品</option>
-                    <option value="车型">车型</option>
                     <option value="车型+图号">车型+图号</option>
-
+                    <option value="车型">车型</option>
+                    <option value="Num">图号</option>
                 </select>
             </td>
             <td>

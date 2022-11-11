@@ -96,7 +96,6 @@
             if (Index) {
                 window.location.href = '@Url.Content("~/Home/")' + Index;
             } else {
-                //window.location.href = '@Url.Content("~/OT/Q_KeyParts")';
                 getAjax('@Url.Content("~/Login/GetIpAddress")', null, function (data) {
                     if (data.substring(0, 10) == "10.138.13." || data=="127.0.0.1") {
                         let ip = Number(data.split(".")[3]);
@@ -108,13 +107,12 @@
                         } else {
                             window.location.href = '@Url.Content("~/Home/StartIndex")';
                         }
-                        @*//拧紧重定向
-                        AjaxJson("/Login/GetDvcTypeByIP", { IP: IP }, function (data) {
-                                    DvcTyp = data;
-                                });
-                            if (DvcTyp == '拧紧OT屏') {
-                               window.location.href = '@Url.Content("~/Tighten/Tg_Key")';
-                            }*@
+                        //拧紧重定向
+                        getAjax('@Url.Content("~/Login/GetDvcTypeByIP")', null, function (data) {
+                            if (data == '拧紧OT屏') {
+                               window.location.href = '@Url.Content("~/TightOnly/Only")';
+                            }});
+
                     } else {
                         window.location.href = '@Url.Content("~/Home/StartIndex")';
                     }

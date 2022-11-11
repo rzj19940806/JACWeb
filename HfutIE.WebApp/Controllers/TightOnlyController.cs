@@ -30,7 +30,7 @@ namespace HfutIE.WebApp.Controllers
         public ActionResult Only()
         {
             var IP = NetHelper.GetIPAddress();
-            //IP = "10.138.13.94";
+            IP = "10.138.13.90";
             if (IP == "10.138.13.89"|| IP == "10.138.13.90") { return View("Tg_FDJ"); }
             else if (IP == "10.138.13.94") { return View("Tg_FZ"); }
             else { return View("Tg_Only"); }
@@ -53,8 +53,7 @@ namespace HfutIE.WebApp.Controllers
                 //2.获取工厂模型
                 //2.1获取IP地址
                 var IP = NetHelper.GetIPAddress();
-                //IP = "10.138.13.252";
-                //IP = "10.138.13.43";
+                IP = "10.138.13.90";
                 //2.2根据IP地址获取设备-工位---公司
                 //获取工位--字典中使用classid代替
                 q_KeyParts.GetRowValue("BBdbR_DvcBase", "ClassId,DvcCatg,DvcTyp,DvcLocatn", "IPAddr", IP, ref BaseInfoProps);
@@ -733,98 +732,7 @@ namespace HfutIE.WebApp.Controllers
                 return Content(new { code, msg }.ToJson());
             }
         }
-        /// <summary>
-        /// 获取基础信息，主要包括工厂模型，账户信息，解析规则
-        /// </summary>
-        [HttpPost]
-        [ValidateInput(false)]
-        public virtual ActionResult GetStaticInfoFDJ()
-        {
-            int code = 1;
-            string msg = "";
-            //基础静态信息---工厂模型、账户信息
-            Dictionary<string, string> BaseInfoProps = new Dictionary<string, string>();
-            //解析规则
-            DataTable BarCode = new DataTable();
-            //AVI信息
-            Dictionary<string, string> AviProps = new Dictionary<string, string>();
-            ////产线信息
-            //string PlineType = "";
-            try
-            {
-                //2.获取工厂模型
-                //2.1获取IP地址
-                var IP = NetHelper.GetIPAddress();
-                //IP = "10.138.13.62";
-                //2.2根据IP地址获取设备-工位---公司
-                //获取工位--字典中使用classid代替
-                q_KeyParts.GetRowValue("BBdbR_DvcBase", "ClassId,DvcCatg,DvcTyp,DvcLocatn", "IPAddr", IP, ref BaseInfoProps);
-                ////获取岗位
-                //q_KeyParts.GetRowValue("BBdbR_PostBase", "PostCd,PostNm,WcId", "PostId", BaseInfoProps["ClassId"], ref BaseInfoProps);
-                //获取工位
-                q_KeyParts.GetRowValue("BBdbR_WcBase", "WcCd,WcNm,PlineId", "WcId", BaseInfoProps["ClassId"], ref BaseInfoProps);
-                //获取产线
-                q_KeyParts.GetRowValue("BBdbR_PlineBase", "PlineCd,PlineNm,EndPoint,WorkSectionId", "PlineId", BaseInfoProps["PlineId"], ref BaseInfoProps);
-                //获取工艺段
-                q_KeyParts.GetRowValue("BBdbR_WorkSectionBase", "WorkSectionCd,WorkSectionNm,WorkshopId", "WorkSectionId", BaseInfoProps["WorkSectionId"], ref BaseInfoProps);
-                //获取车间
-                q_KeyParts.GetRowValue("BBdbR_WorkshopBase", "WorkshopCd,WorkshopNm,FacId", "WorkshopId", BaseInfoProps["WorkshopId"], ref BaseInfoProps);
-                //获取工厂
-                q_KeyParts.GetRowValue("BBdbR_FacBase", "FacCd,FacNm,CompanyId", "FacId", BaseInfoProps["FacId"], ref BaseInfoProps);
-                //获取公司
-                q_KeyParts.GetRowValue("BBdbR_CompanyBase", "CompanyCd,CompanyNm", "CompanyId", BaseInfoProps["CompanyId"], ref BaseInfoProps);
-                //修正
-                BaseInfoProps.Add("WcId", BaseInfoProps["ClassId"]);
-                BaseInfoProps.Remove("ClassId");
-                //// *****获取产线发布基础信息*****
-                //PlineType = q_KeyParts.GetPlineType(BaseInfoProps["PlineId"]);
-                if (BaseInfoProps["PlineCd"].ToString() == "Line-17")
-                {
-                    q_KeyParts.GetRowValue("BBdbR_AVIPlinePublishConfig", "AviId", "PlineId", BaseInfoProps["PlineId"], ref AviProps);
-                }
-            }
-            catch (Exception ex)
-            {
-                code = -1;
-                msg += "获取工厂模型信息时发生错误:" + ex.Message;
-            }
-            try
-            {
-                //1.获取账户基础信息
-                //1.1获取用户名与人员主键
-                //var s = ManageProvider.Provider.Current();
-                string StfNm = ManageProvider.Provider.Current().Account;
-                string UserId = ManageProvider.Provider.Current().UserId;
-                //1.2根据用户主键查找人员主键编号名称
-                if (UserId != "System")
-                {
-                    q_KeyParts.GetRowValue("Base_User", "UserId StfId,Code StfCd,RealName StfNm", "UserId", UserId, ref BaseInfoProps);
-                }
-                else
-                {
-                    BaseInfoProps.Add("StfId", "System");
-                    BaseInfoProps.Add("StfCd", "System");
-                    BaseInfoProps.Add("StfNm", "超级管理员");
-                }
-            }
-            catch (Exception ex)
-            {
-                code = -1;
-                msg += "获取人员信息时发生错误:" + ex.Message;
-            }
-            try
-            {
-                //3.获取解码规则相关线下
-                BarCode = q_KeyParts.GetBarCode(BaseInfoProps["WcId"]);
-            }
-            catch (Exception ex)
-            {
-                code = -1;
-                msg += "获取解析规则时发生错误:" + ex.Message;
-            }
-
-            return Content(new { code, msg, props = BaseInfoProps, BarCode, AviProps }.ToJson());
-        }
+       
         public ActionResult NowTask()
         {
             DataTable dt_Tighten = new DataTable();

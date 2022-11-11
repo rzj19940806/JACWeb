@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>安驰FAS-发动机关重件拧紧综合界面</title>
+    <title>安驰FAS-发动机拧紧界面</title>
     <title>江淮安驰FAS系统</title>
     <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <!--框架必需start-->
@@ -23,13 +23,13 @@
     <!--日期组件start-->
     <script src="~/Content/Scripts/Index.js"></script>
     <!--页面必备-->
-    <link rel="stylesheet" href="~/Content/Styles/Q_KeyPartsStyles.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/Styles/Tg_Only.css" type="text/css">
 
     <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="~/Content/sweetalert/sweetalert.css" type="text/css">
     <link rel="stylesheet" href="~/Content/sweetalert/alertLogin.css" type="text/css">
     <script src="~/Content/Scripts/mqtt/mqttws31.min.js"></script>
-    <script src="~/Content/Scripts/Tg_FDJ.js"></script>
+    <script src="~/Content/Scripts/Tg_Only.js"></script>
     <script src="~/Content/Scripts/jquery/jQuery.md5.js"></script>
     <style>
         fieldset {
@@ -43,15 +43,16 @@
         //1.全局变量
         //1.1初始加载静态信息
         var allStaticInfo;
-        var barcodeRule;
-        var parts;
         var Msg;
-
+        var client;
+        //辅助判断是否自己发送消息
+        var gid = guid();
         //2.初始化加载
         function Initialize() {
             try {
                 SetAllWH();         //加载界面的宽高
                 GetCurrentDate();   //实时时间刷新
+                GetStaticInfo();    //加载静态信息
                 bindKeyDown("vin_input", function () {
                     let vin = $("#vin_input").val().trim().toUpperCase();
                     $("#vin_input").val("");
@@ -60,48 +61,31 @@
                         var msg = `1_${vin}`;
                         publishMqtt(msg, topic);//拧紧控制
                         manualCarStart(allStaticInfo, vin, true, "辅线");//界面显示
-                    } else {
-                        partBind(allStaticInfo, barcodeRule, parts, vin, "辅线");
                     }
                 });                 //为VIN输入框绑定回车事件
-                bindKeyDown("part_input", function () {
-                    var BarCode = $("#part_input").val().trim().toUpperCase();
-                    $("#part_input").val("");
-                    partBind(allStaticInfo, barcodeRule, parts, BarCode, "辅线");
-                });                 //为条码输入框绑定回车事件
-                GetStaticInfo(false);    //加载静态信息
-                MqttConnect();
-                getCar(allStaticInfo)//加载车身信息
-                $("#part_input").focus();
+                $("#vin_input").focus();
             } catch (e) {
                 uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
             }
         }
 
-        function byPass(obj) {
-            byPassFun(allStaticInfo, parts, obj, "辅线");
+        //辅线加载时获取车身信息
+        function getCar(allStaticInfo) {
+            AjaxJson("/OT/getScanStatus", { WcId: allStaticInfo.WcId, type: "辅线" }, function (data) {
+                if (data.Code == 1) {
+                    var topic = "/KeyParts/ScanTighten/" + allStaticInfo.WcId;
+                    var msg = `1_${data.VIN}`;
+                    publishMqtt(msg, topic);//拧紧控制
+                    manualCarStart(allStaticInfo, data.VIN, true, "辅线");
+                } else if (data.Code == -1) {
+                    uperrorLog("车身信息错误：【工位：" + allStaticInfo.WcId + "】【异常信息：" + data.Message + "】");
+                } else if (data.Code == 0) {
+                    uperrorLog("无数据信息:【工位：" + allStaticInfo.WcNm + "】【异常信息：请手动输入VIN码】");
+                }
+                $("#vin_input").focus();
+            });
         }
-
-        function bind(obj) {
-            bindFun(allStaticInfo, parts, obj, "辅线");
-            $("#part_input").focus();
-        }
-        //点击拧紧指示小标题
-        function clickTightentitle() {
-            document.getElementById("TightenTitle").className = "titleselected";
-            document.getElementById("Distitle").className = "titleunselected";
-            //展示频发问题区域，隐藏已选择问题区域
-            $("#Tighten").attr("style", "display:show();");
-            $("#Dis").attr("style", "display:none;");
-        }
-        //点击装配指示小标题
-        function clickDistitle() {
-            document.getElementById("TightenTitle").className = "titleunselected";
-            document.getElementById("Distitle").className = "titleselected";
-            //展示已选择问题区域，隐藏频发问题区域
-            $("#Dis").attr("style", "display:show();");
-            $("#Tighten").attr("style", "display:none");
-        }
+       
         function byPassTighten(obj) {
             var ID = `total_job_${obj.id}`;
             var IsOk = 0;
@@ -128,8 +112,6 @@
         function MqttConnect() {
             try {
                 client = new Paho.MQTT.Client("10.138.13.3", 8083, "partsBind" + allStaticInfo.WcId + gid);//建立客户端实例
-                //client = new Paho.MQTT.Client("10.138.13.252", 8083, "partsBind" + allStaticInfo.WcId + gid);//建立客户端实例
-                //client = new Paho.MQTT.Client("172.20.10.5", 8083, "partsBind" + allStaticInfo.WcId + gid);
                 client.connect({
                     userName: "admin",
                     password: "public",
@@ -151,6 +133,7 @@
             } catch (e) {
                 uperrorLog("订阅消息错误:【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "无法进行正常作业！！】");
             }
+            getCar(allStaticInfo)//加载车身信息,必须在此处写否则mqtt未连接就发消息会报错
         }
 
         //4.1mqtt接收消息后处理
@@ -200,10 +183,14 @@
         }
         //4.5发布消息
         function publishMqtt(text, topic) {
-            var message = new Paho.MQTT.Message(text);
-            message.destinationName = topic;
-            message.qos = 1;
-            client.send(message);
+            try {
+                var message = new Paho.MQTT.Message(text);
+                message.destinationName = topic;
+                message.qos = 1;
+                client.send(message);
+            } catch (e) {
+                uperrorLog("消息队列错误:【工位：" + allStaticInfo.WcNm + "】【异常信息：" + e + "！无法进行正常作业！！】");
+            }
         }
         //4.5消息发布回调
         function onMessageDelivered(requestObject) {
@@ -298,48 +285,25 @@
                     </div>
                 </div>
                 <div class="left_box" id="vin_input_box">
-                    <input id="vin_input" class="input_text" type="text" placeholder="请输入VIN码/物料码">
+                    <input id="vin_input" class="input_text" type="text" placeholder="请输入VIN码">
                 </div>
                 <div class="clear"></div>
             </div>
 
             <div class="main" id="main">
-                <div id="TightenAndDis" class="main_box main_box_left">
-                    <div id="TightenAndDis_">
-                        <div class="title2" style="height:7%;">
-                            <div id="TightenTitle" class="titleselected" style="border-radius: 15px 0 0 0;" onclick="clickTightentitle()">
-                                <p style=" text-align:center; font-size:1.1em; ">拧紧指示</p>
-                            </div>
-                            <div id="Distitle" class="titleunselected" style="border-radius: 0 15px 0 0;" onclick="clickDistitle()">
-                                <p style=" text-align:center; font-size:1.1em; ">装配指示</p>
-                            </div>
-                        </div>
-                        @*拧紧指示*@
-                        <div id="Tighten" class="tighten_box_1" style="width:100%;">
-                         
-                        </div>
-                        @*装配指示*@
-                        <div id="Dis" style="display:none;">
-                            <div id="DisArea" class="in_main_box_left">
-                            </div>
-                        </div>
+                <div class="main_box main_box_left" id="main_left">
+                    <div class="main_title" id="instruction_dis">
+                        装配指示
+                    </div>
+                    <div class="in_main_box_left" id="in_main_box_left">
                     </div>
                 </div>
-
                 <div class="main_box main_box_right" id="main_right">
                     <div class="main_title" id="instruction_dis">
-                        关重件扫码指示
+                        拧紧作业指示
                     </div>
-                    <div class="in_main_box_right" id="in_main_box_right"></div>
-                    <div class="part_manual_box">
-                        <div class="part_input_box">
-                            <input id="part_input" class="part_input" type="text" placeholder="请输入物料码">
-                        </div>
-                    </div>
+                    <div id="Tighten" class="tighten_box_1" style="width:100%;"></div>
                 </div>
-
-
-
                 <div class="clear"></div>
             </div>
 

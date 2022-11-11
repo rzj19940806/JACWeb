@@ -896,8 +896,9 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select a.*,b.TorqueUL,b.TorqueLL,b.TorqueSL,b.AngleUL,AngleLL,AngleSL,Ord,'合格' as tg_result from Tg_TightenDataDoc a join Tg_JobTorqueConfig b on  
-a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord ");
+                strSql.Append(@"select a.*,b.TorqueUL,b.TorqueLL,b.TorqueSL,b.AngleUL,AngleLL,AngleSL,Ord,case when IsOK='1'then '合格'else '不合格'end  as tg_result 
+from Tg_TightenDataDoc a left join Tg_JobTorqueConfig b on  
+a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
                 //模糊搜索车型

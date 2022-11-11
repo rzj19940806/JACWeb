@@ -281,7 +281,11 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                         }
                         
                         IsOk += MyBll.addTime(entity);//更新时间且插入车身过点记录表
-
+                        if (entity.OP_CODE == "ZZ-80")//报交下线更改计划状态
+                        {
+                            string sqlUpdatePlan = "update P_ProducePlan_Pro set PlanStatus=3 where VIN='" + Oldentity.VIN + "'  and IsFile='0' and Enabled = '1'";// and PlanStatus=1
+                            DbHelperSQL.ExecuteSql(sqlUpdatePlan); ;
+                        }
                     }
                 }
                 

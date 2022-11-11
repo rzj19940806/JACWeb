@@ -157,19 +157,29 @@ namespace HfutIE.WebApp.Controllers
         public ActionResult GetIpAddress()
         {
             string IPAddress = NetHelper.GetIPAddress();
+            IPAddress = "10.138.13.94";
             return Content(IPAddress);
         }
         #region 通过设备IP获取设备类型
-        public ActionResult GetDvcTypeByIP(string IP)
+        public ActionResult GetDvcTypeByIP()
         {
             try
             {
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
-                strSql.Append(@"select * from BBdbR_DvcBase where IPAddr = '" + IP + "' and Enabled =1 order by CreTm desc");
+                string IPAddress = NetHelper.GetIPAddress();
+                IPAddress = "10.138.13.94";
+                strSql.Append(@"select DvcTyp from BBdbR_DvcBase where IPAddr = '" + IPAddress + "' and Enabled =1");
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
-                string DvcTyp = dt.Rows[0]["DvcTyp"].ToString();
-                return Content("\"" + DvcTyp + "\"");
+                if (dt.Rows.Count == 1)
+                {
+                    string DvcTyp = dt.Rows[0]["DvcTyp"].ToString();
+                    return Content(DvcTyp);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception)
             {

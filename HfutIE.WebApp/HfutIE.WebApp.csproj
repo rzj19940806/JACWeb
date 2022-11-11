@@ -9409,7 +9409,6 @@
     <Content Include="Content\sweetalert\alertLogin.css" />
     <Content Include="Content\sweetalert\sweetalert-dev.js" />
     <Content Include="Content\sweetalert\sweetalert.css" />
-    <Content Include="Content\Scripts\Tg_FDJ.js" />
     <Content Include="Document\Picture\M5宝马白.jpg" />
     <Content Include="Document\Picture\M5炫酷黑.jpg" />
     <Content Include="Document\Picture\L6宝马白.jpg" />
