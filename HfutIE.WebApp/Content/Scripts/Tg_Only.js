@@ -229,55 +229,194 @@ function getVideo() {
 }
 
 
-//发动机工位自动入站
+//发动机工位自动入站显示
 function manualCarStart(allStaticInfo, vin, isscan) {
     AjaxJson('/TightOnly/VinIn', { VIN: vin, WcId: allStaticInfo.WcId, ShowNm: allStaticInfo.WcNm, IsScan: isscan }, function (data) {
-        if (data.code == 1 || data.code == 2) {
-            $("#in_main_box_left")[0].innerHTML = "";
-            if (carStartTighten(allStaticInfo, vin)) {
-                if (del == true) {
-                    updateLog("车身入站成功:【工位：" + allStaticInfo.WcNm + "】【VIN：" + data.vinInfo[0].vin + "】");
+        if (data.Code == 1) {
+            var total_content = ``;
+            var Group_temp = 1;//Ord
+            var right_content = ``;
+            //有两把枪的情况
+            var total_content2 = ``;
+            var Group_temp2 = 1;
+            var right_content2 = ``;
+            var ID = "";
+            var ID1 = "";
+            var WcJobCd1 = "";
+            var WcJobCd2 = "";
+            var Pass1 = false;
+            var Pass2 = false;
+            total_content += `<div id="tightenArea_${1}" class="tighten_box_Group"> `;//开启第一个Group
+            total_content2 += `<div id="tightenArea_${2}" class="tighten_box_Group"> `;//开启第二个Group
+            $("#Tighten")[0].innerHTML = "";
+            //右侧显示
+            if (data.ResultDt.length > 0) {
+                WcJobCd1 = data.ResultDt[0]["WcJobCd"];
+                $.each(data.ResultDt, function (i, item) {
+                    if (item.WcJobCd == WcJobCd1)//如果是第一个JOB号
+                    {
+                        if (item.IsPass == "Pass") {
+                            Pass1 = true;
+                        }
+                        ID = item.ControllerID;
+                        ID1 = item.ControllerPort;
+                        var Group_num = item.T_sort;//Num总数
+                        var max = item.G_max;//Ord总数
+                        var detail_temp = item.Num;//Num
+                        if (item.Ord == Group_temp)//跟上一个JOB和拧紧组相同，则不增加拧紧组只扩充detail块
+                        {
+                            //每个Ord第一个Num加载标题
+                            if (detail_temp == 1) {
+                                right_content += `<p class="tighten_box_2_ltitle">顺序:</p>
+                                    <p class="tighten_box_2_ltitle" >扭矩:</p>
+                                    <p class="tighten_box_2_ltitle" >转角:</p>
+                                    <p class="tighten_box_2_rtitle" >状态:</p>`
+                            }
+                            if (item.is_OK == "NG") {
+                                right_content += `<p class="tighten_box_2_num">${item.Num}</p>
+                                    <p class="tighten_box_2_is_NOK" id="tighten_isOK_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.is_OK}</p>`
+
+                            }
+                            else {
+                                right_content += `<p class="tighten_box_2_num">${item.Num}</p>
+                                    <p class="tighten_box_2_is_OK" id="tighten_isOK_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.is_OK}</p>`
+                            }
+                            right_content += `<p class="tighten_box_2_num" id="tighten_TT_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.Torque}</p>
+                                    <p class="tighten_box_2_num" id="tighten_AA_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.Angle}°</p>`
+                        }
+                        if (detail_temp == Group_num) {
+                            //最后一个Num
+                            Group_temp = Group_temp + 1;//刷新组编号
+                            total_content += `<div > `;
+                            total_content += `<p class="tighten_title_top" >枪【${item.ControllerPort}】---用【${item.TorqueSL}】Nm---拧【${item.T_sort}】次</p> `;
+                            total_content += `</div>`;
+                            total_content += `<div id="total_job_${WcJobCd1}">`;
+                            total_content += right_content;
+                            right_content = ``;
+                            total_content += `</div>`;//结束右边
+                            if (item.Ord == max) {
+                                total_content += `</div>`;
+                            }
+                        }
+                    }
+                    else {
+                        WcJobCd2 = item.WcJobCd;
+                        ID = item.ControllerID;
+                        ID1 = item.ControllerPort;
+                        if (item.IsPass == "Pass") {
+                            Pass2 = true;
+                        }
+                        //获得第二个JOB的区域
+                        var Group_num2 = item.T_sort;//Num总数
+                        var detail_temp2 = item.Num;//Num
+                        var max = item.G_max;
+                        if (item.Ord == Group_temp2)//跟上一个JOB和拧紧组相同，则不增加拧紧组只扩充detail块
+                        {
+                            //每个Ord第一个Num加载标题
+                            if (detail_temp2 == 1) {
+                                right_content2 += `<p class="tighten_box_2_ltitle">顺序:</p>
+                                    <p class="tighten_box_2_ltitle" >扭矩:</p>
+                                    <p class="tighten_box_2_ltitle" >转角:</p>
+                                    <p class="tighten_box_2_rtitle">状态:</p>`
+                            }
+                            if (item.is_OK == "NG") {
+                                right_content2 += `<p class="tighten_box_2_num">${item.Num}</p>
+                                    <p class="tighten_box_2_is_NOK" id="tighten_isOK_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.is_OK}</p>`
+
+                            }
+                            else {
+                                right_content2 += `<p class="tighten_box_2_num" >${item.Num}</p>
+                                    <p class="tighten_box_2_is_OK" id="tighten_isOK_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.is_OK}</p>`
+                            }
+                            right_content2 += `<p class="tighten_box_2_num" id="tighten_TT_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.Torque}</p>
+                                    <p class="tighten_box_2_num" id="tighten_AA_${ID}_${ID1}_${item.Num}_${item.Ord}">${item.Angle}°</p>`
+                        }
+                        if (detail_temp2 == Group_num2) {
+                            //最后一个Num
+                            Group_temp2 = Group_temp2 + 1;//刷新组编号
+                            total_content2 += `<div > `;
+                            total_content2 += `<p class="tighten_title_top" >枪【${item.ControllerPort}】---用【${item.TorqueSL}】N.m---拧【${item.T_sort}】次</p> `;
+                            total_content2 += `</div>`;
+                            total_content2 += `<div id="total_job_${WcJobCd2}">`;
+                            total_content2 += right_content2;
+                            right_content2 = ``;
+                            total_content2 += `</div>`;//结束右边
+                            if (item.Ord == max) {
+                                total_content2 += `</div>`;
+                            }
+                        }
+                    }
+                });
+                $("#Tighten").append(total_content);//为扫码添加div
+                //添加ByPass按钮
+                var BypassContent = "";
+                if (Pass1) {
+                    BypassContent = `<input id="${WcJobCd1}" class="Tighten_btn_passed" type="button" value="PASS" onclick="">`;
                 }
-                if (plineType == "辅线" && $(".tighten_box_2_num").length == 0) {
-                    var i = 0;
-                    setTimeout(function () {
-                        swal(
-                            {
-                                title: data.vinInfo[0].vin,
-                                text: "当前车身没有拧紧任务，将在5s后自动加载后续车身",
-                                confirmButtonText: "提前刷新",
-                                cancelButtonText: "取消刷新",
-                                timer: 5000,
-                                closeOnConfirm: false,
-                                //closeOnCancel: false,
-                                //showLoaderOnConfirm: true,
-                                showCancelButton: true,
-                            },
-                            function (a) {
-                                swal.close();
-                                if (i++ == 0 && a != false) {
-                                    getnewCar(allStaticInfo);
-                                }
-                            });
-                    }, 500);
+                else {
+                    BypassContent = `<input id="${WcJobCd1}" class="Tighten_btn_pass" type="button" value="PASS" onclick="byPassTighten(this)">`;
                 }
+                $("#Tighten").append(BypassContent);
+                if (total_content2 != "" && WcJobCd2 != "") {
+                    $("#Tighten").append(total_content2);//为扫码添加div
+                    //添加ByPass按钮
+                    var BypassContent2 = "";
+                    if (Pass2) {
+                        BypassContent2 = `<input id="${WcJobCd2}" class="Tighten_btn_passed" type="button" value="PASS" onclick="">`;
+                    }
+                    else {
+                        BypassContent2 = `<input id="${WcJobCd2}" class="Tighten_btn_pass" type="button" value="PASS" onclick="byPassTighten(this)">`;
+                    }
+                    $("#Tighten").append(BypassContent2);
+                }
+                updateLog(data.Msg);
+                //左侧显示
+                AjaxJson('/TightOnly/ShowInfo', { VIN: data.Show, WcId: allStaticInfo.WcId }, function (data) {
+                    carStart(allStaticInfo, data);
+                });
             }
-            else { uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + Msg + "】") }
-            return;
         }
-        else if (data.code == -2) uperrorLog("车身入站异常：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【异常信息：" + data.msg + "】");
-        else uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【VIN：" + vin + "】【错误信息：" + data.msg + "】");
-        NotHaveCar();
+        if (data.Code == 0) {
+            uperrorLog("拧紧入站失败:【工位：" + allStaticInfo.WcNm + "】【原因：" + data.Msg + "】");
+        }
+        if (data.Code == -1) {
+            uperrorLog("拧紧入站错误:【工位：" + allStaticInfo.WcNm + "】【原因：" + data.Msg + "】");
+        }
+        if (data.Code == 2) {
+            //无任务自动加载下一台
+            updateLog(data.Msg);
+            //更新当前VIN号
+            allStaticInfo["VIN"] = vin;
+            var i = 0;
+            setTimeout(function () {
+                swal(
+                    {
+                        title: data.vinInfo[0].vin,
+                        text: "当前车身没有拧紧任务，将在5s后自动加载后续车身",
+                        confirmButtonText: "提前刷新",
+                        cancelButtonText: "取消刷新",
+                        timer: 5000,
+                        closeOnConfirm: false,
+                        showCancelButton: true,
+                    },
+                    function (a) {
+                        swal.close();
+                        if (i++ == 0 && a != false) {
+                            getnewCar(allStaticInfo);
+                        }
+                    });
+            }, 500);
+        }
     });
 }
-
+//自动入站新车
 function getnewCar(allStaticInfo) {
     AjaxJson("/OT/getScanStatus2", { Vin: allStaticInfo.VIN }, function (data) {
         if (data.Code == 1) {
-            var topic = "/KeyParts/ScanTighten/" + allStaticInfo.WcId;
+            var topic = "/KeyParts/AutoTighten/" + allStaticInfo.WcId;
             var msg = `1_${data.VIN}`;
             publishMqtt(msg, topic);//拧紧控制
-            manualCarStart(allStaticInfo, data.VIN, true, "辅线");
+            manualCarStart(allStaticInfo, data.VIN, false);
         } else if (data.Code == 2) {
             var i = 0;
             setTimeout(function () {
@@ -289,8 +428,6 @@ function getnewCar(allStaticInfo) {
                         cancelButtonText: "取消刷新",
                         timer: 60000,
                         closeOnConfirm: false,
-                        //closeOnCancel: false,
-                        //showLoaderOnConfirm: true,
                         showCancelButton: true,
                     },
                     function (a) {
@@ -321,8 +458,6 @@ function CheckPass() {
                     timer: 5000,
                     closeOnConfirm: false,
                     showCancelButton: true,
-                    //closeOnCancel: false,
-                    //showLoaderOnConfirm: true,
                 },
                 function (a) {
                     swal.close();

@@ -60,10 +60,11 @@
                         var topic = "/KeyParts/ScanTighten/" + allStaticInfo.WcId;
                         var msg = `1_${vin}`;
                         publishMqtt(msg, topic);//拧紧控制
-                        //manualCarStart(allStaticInfo, vin, true, "辅线");//界面显示
+                        manualCarStart(allStaticInfo, vin, true);//界面显示
                     }
                 });                 //为VIN输入框绑定回车事件
                 $("#vin_input").focus();
+                NotHaveCar();
             } catch (e) {
                 uperrorLog("HTML初始化错误:【错误信息：" + e + "】");
             }
@@ -76,10 +77,10 @@
                 if (data == "9999") {
                     uperrorLog("无未完成任务:【工位：" + allStaticInfo.WcNm + "】【提示：页面初次加载时请手动扫码】");
                 } else {
-                    var topic = "/KeyParts/ScanTighten/" + allStaticInfo.WcId;
+                    var topic = "/KeyParts/AutoTighten/" + allStaticInfo.WcId;
                     var msg = `1_${data}`;
                     publishMqtt(msg, topic);//拧紧控制
-                    manualCarStart(allStaticInfo, data);
+                    manualCarStart(allStaticInfo, data, false);
                 } 
                 $("#vin_input").focus();
             });
