@@ -350,6 +350,7 @@
     <Compile Include="Areas\QualityModule\Controllers\Q_HTCarQualityOutput_ProController.cs" />
     <Compile Include="Areas\QualityModule\QualityModuleAreaRegistration.cs" />
     <Compile Include="Areas\TightModule\Controllers\TightEnableController.cs" />
+    <Compile Include="Areas\TightModule\Controllers\WcControlController.cs" />
     <Compile Include="Areas\TightModule\Controllers\WcJobController.cs" />
     <Compile Include="Areas\TightModule\TightModuleAreaRegistration.cs" />
     <Compile Include="Areas\SystemManaModule\Controllers\AbnorLogManaController.cs" />
@@ -9996,6 +9997,7 @@
     <Content Include="Areas\QualityModule\Views\Q_HTCarQualityOutput_Pro\Form.cshtml" />
     <Content Include="Areas\QualityModule\Views\Q_HTCarQualityOutput_Pro\Index.cshtml" />
     <Content Include="Areas\QualityModule\Views\Web.config" />
+    <Content Include="Areas\TightModule\Views\WcControl\Index.cshtml" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\AliPay.pubxml" />
     <None Include="Properties\PublishProfiles\DCT.pubxml" />
@@ -10049,6 +10051,7 @@
     <Content Include="Views\TightOnly\Tg_Only.cshtml" />
     <Content Include="Views\TightOnly\Tg_FDJ.cshtml" />
     <Content Include="Views\TightOnly\Tg_FZ.cshtml" />
+    <Content Include="Views\TightOnly\Tg_FDJFZ.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

@@ -774,7 +774,7 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
         {
             try
             {
-                #region 获取数据
+                #region 获取数据---需要修改
                 StringBuilder strSql = new StringBuilder();
                 strSql.Append(@"select QualityCheckPointGroupNm,VIN,CarType,CarComponentNm,DefectNm,DefectAnalysis,CreCd,CreNm,CreTm	 from Q_HTCarQualityOutput_Pro where Enabled = 1 ");
 
@@ -829,7 +829,7 @@ namespace HfutIE.WebApp.Areas.QualityModule.Controllers
                 #endregion
                 string fileName = "冲涂质量录入数据";
                 string excelType = "xls";
-                MemoryStream ms = DeriveExcel.ExportExcel_HTCarQualityOutput(dt, excelType);
+                MemoryStream ms = DeriveExcel.ExportExcel_HTCarQualityOutput(dt, excelType);//需要修改
                 if (!fileName.EndsWith(".xls"))
                 {
                     fileName = fileName + ".xls";

@@ -6,6 +6,7 @@ using HfutIE.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -313,6 +314,105 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         }
         #endregion
 
+        #endregion
+        #region 导出报工反馈
+        //导出报工反馈
+        public ActionResult GetExcel_Data(string AviCd, string VIN, string MatCd, string ProducePlanCd, string ColletionTimeStart, string ColletionTimeEnd, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 获取数据---需要修改
+                //DataTable dt = MyBll.GetPageAddRecord(AviCd, VIN, MatCd, ProducePlanCd, ColletionTimeStart, ColletionTimeEnd, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append($@"select A.ProducePlanCd,SUBSTRING(A.VIN,10,8)as ChassisCd,B.OP_CODE,B.OP_NAME,B.AviCd,B.AviNm,D.OrderCd,A.VIN,C.MatCd,C.MatNm,FeedBackTime,FeedBackState,MODIFY_Time,MODIFY_ID,A.Rem from P_PlanFeedBack_Pro  A left join BBdbR_AVIBase B on A.OP_CODE = B.OP_CODE  left join BBdbR_ProductBase C on A.MatCd = C.MatCd left join P_ProducePlan_Pro D on A.VIN = D.VIN where  A.OP_CODE< (select max(OP_CODE) from (select OP_CODE,FeedbackTime from P_PlanFeedBack_Pro as B where A.VIN=B.VIN and FeedbackTime is not null  ) ac ) and FeedbackTime is null AND  (FeedBackState!=1 or FeedBackState is null) and B.AviCd like @AviCd and A.VIN like @VIN and A.MatCd like @MatCd and A.ProducePlanCd like @ProducePlanCd ");
+                //strSql.Append($@"select A.ProducePlanCd,B.OP_CODE,B.OP_NAME,AVICd,AVINm,D.OrderCd,A.VIN,C.MatCd,MatNm,FeedBackTime,FeedBackState,MODIFY_Time,MODIFY_ID,A.Rem from P_PlanFeedBack_Pro  A  left join BBdbR_AVIBase B on A.OP_CODE = B.OP_CODE   left join BBdbR_ProductBase C on A.MatCd = C.MatCd  left join P_ProducePlan_Pro D on A.VIN = D.VIN ");
+                parameter.Add(DbFactory.CreateDbParameter("@AviCd", "%" + AviCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN));
+                parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@ProducePlanCd", "%" + ProducePlanCd + "%"));
+                if (ColletionTimeStart != "" && ColletionTimeStart != null)
+                {
+                    strSql.Append(" and DateDiff(dd,@ColletionTimeStart,PlanTime) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeStart", ColletionTimeStart));
+                }
+                else { }
+                if (ColletionTimeEnd != "" && ColletionTimeEnd != null)
+                {
+                    strSql.Append(" and DateDiff(dd,PlanTime,@ColletionTimeEnd) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeEnd", ColletionTimeEnd));
+                }
+                else { }
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                #endregion
+                string fileName = "报工反馈数据";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_PlanFeedBack(dt, excelType);//需要修改
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "报工反馈数据导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "报工反馈数据导出操作失败：" + ex.Message);
+                return null;
+            }
+
+
+        }
+        #endregion
+
+        # region 导出采集补录
+        public ActionResult GetExcel_Data2(string AviCd, string VIN, string MatCd, string ProducePlanCd, string ColletionTimeStart, string ColletionTimeEnd, JqGridParam jqgridparam)
+        {
+            try
+            {
+                #region 获取数据---需要修改
+                // DataTable dt = MyBll.GetPageAddRecord(AviCd, VIN, MatCd, ProducePlanCd, ColletionTimeStart, ColletionTimeEnd, jqgridparam);//===复制时需要修改===
+                StringBuilder strSql = new StringBuilder();
+                List<DbParameter> parameter = new List<DbParameter>();
+                strSql.Append($@"select A.ProducePlanCd,SUBSTRING(A.VIN,10,8)as ChassisCd,B.OP_CODE,B.OP_NAME,B.AviCd,B.AviNm,FeedBackTime,D.OrderCd,A.VIN,C.MatCd,C.MatNm,FeedBackState,MODIFY_Time,MODIFY_ID,A.Rem from P_PlanFeedBack_Pro  A left join BBdbR_AVIBase B on A.OP_CODE = B.OP_CODE  left join BBdbR_ProductBase C on A.MatCd = C.MatCd left join P_ProducePlan_Pro D on A.VIN = D.VIN where  A.OP_CODE< (select max(OP_CODE) from (select OP_CODE,FeedbackTime from P_PlanFeedBack_Pro as B where A.VIN=B.VIN and FeedbackTime is not null  ) ac ) and FeedbackTime is null AND  (FeedBackState!=1 or FeedBackState is null) and B.AviCd like @AviCd and A.VIN like @VIN and A.MatCd like @MatCd and A.ProducePlanCd like @ProducePlanCd ");
+                //strSql.Append($@"select A.ProducePlanCd,B.OP_CODE,B.OP_NAME,AVICd,AVINm,D.OrderCd,A.VIN,C.MatCd,MatNm,FeedBackTime,FeedBackState,MODIFY_Time,MODIFY_ID,A.Rem from P_PlanFeedBack_Pro  A  left join BBdbR_AVIBase B on A.OP_CODE = B.OP_CODE   left join BBdbR_ProductBase C on A.MatCd = C.MatCd  left join P_ProducePlan_Pro D on A.VIN = D.VIN ");
+                parameter.Add(DbFactory.CreateDbParameter("@AviCd", "%" + AviCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN));
+                parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@ProducePlanCd", "%" + ProducePlanCd + "%"));
+                if (ColletionTimeStart != "" && ColletionTimeStart != null)
+                {
+                    strSql.Append(" and DateDiff(dd,@ColletionTimeStart,PlanTime) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeStart", ColletionTimeStart));
+                }
+                else { }
+                if (ColletionTimeEnd != "" && ColletionTimeEnd != null)
+                {
+                    strSql.Append(" and DateDiff(dd,PlanTime,@ColletionTimeEnd) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeEnd", ColletionTimeEnd));
+                }
+                else { }
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+
+                #endregion
+                string fileName = "采集补录数据";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_PlanFeedBack2(dt, excelType);//需要修改
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "采集补录数据导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "采集补录数据导出操作失败：" + ex.Message);
+                return null;
+            }
+
+
+        }
         #endregion
 
     }

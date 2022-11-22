@@ -98,46 +98,47 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
         #endregion
 
         #region 重构导出
-        public ActionResult GetExcel_Data(string VIN, string OrderCd, string CarType, string ProductMatCd, string MatCd, string MatNm, string SupplierCd, string PlineNm, string WcCd, string TimeStart, string TimeEnd,string BarCode, string jqgridparam)
+        public ActionResult GetExcel_Data(string VIN, string OrderCd, string CarType, string ProductMatCd, string MatCd, string MatNm, string SupplierCd, string PlineNm, string WcCd, string TimeStart, string TimeEnd,string BarCode, JqGridParam jqgridparam)
         {
             try
             {
-                
+
                 #region 根据当前搜索条件查出数据并导出
-               
-                StringBuilder strSql = new StringBuilder();
 
-                strSql.Append($"select a.VIN,b.MatNm as bMatNm,a.OrderCd,a.CarType,a.ProductMatCd,a.CarColor1,a.BarCode,a.RsvFld1,a.SupplierCd,a.SupplierNm,a.MatCd,a.MatNm,a.FacNm,a.WorkshopNm,a.WorkSectionNm,a.PlineNm,a.WcCd,a.StfNm,a.Datetime from Q_KeyPartsBind_Pro a left join BBdbR_ProductBase b on a.ProductMatCd = b.MatCd  where a.VIN like @VIN and a.OrderCd like @OrderCd and a.CarType like @CarType and a.ProductMatCd like @ProductMatCd and a.MatCd like @MatCd and a.MatNm like @MatNm and a.SupplierCd like @SupplierCd and a.PlineNm like @PlineNm and a.WcCd like @WcCd and a.BarCode like @BarCode ");
+                   StringBuilder strSql = new StringBuilder();
 
-                List<DbParameter> parameter = new List<DbParameter>();
-                parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@OrderCd", "%" + OrderCd + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@ProductMatCd", "%" + ProductMatCd + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@MatNm", "%" + MatNm + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@SupplierCd", "%" + SupplierCd + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@WcCd", "%" + WcCd + "%"));
-                parameter.Add(DbFactory.CreateDbParameter("@BarCode", "%" + BarCode + "%"));
-                //开始时间
-                if (TimeStart != "" && TimeStart != null)
-                {
-                    strSql.Append(" and DateDiff(dd,@TimeStart,Datetime) >=0 ");
-                    parameter.Add(DbFactory.CreateDbParameter("@TimeStart", TimeStart));
-                }
+                    strSql.Append($"select a.VIN,b.MatNm as bMatNm,a.OrderCd,a.CarType,a.ProductMatCd,a.CarColor1,a.BarCode,a.RsvFld1,a.SupplierCd,a.SupplierNm,a.MatCd,a.MatNm,a.FacNm,a.WorkshopNm,a.WorkSectionNm,a.PlineNm,a.WcCd,a.StfNm,a.Datetime from Q_KeyPartsBind_Pro a left join BBdbR_ProductBase b on a.ProductMatCd = b.MatCd  where a.VIN like @VIN and a.OrderCd like @OrderCd and a.CarType like @CarType and a.ProductMatCd like @ProductMatCd and a.MatCd like @MatCd and a.MatNm like @MatNm and a.SupplierCd like @SupplierCd and a.PlineNm like @PlineNm and a.WcCd like @WcCd and a.BarCode like @BarCode ");
 
-                //结束时间
-                if (TimeEnd != "" && TimeEnd != null)
-                {
-                    strSql.Append(" and DateDiff(dd,Datetime,@TimeEnd) >=0 ");
-                    parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
-                }
-                strSql.Append("  order by Datetime desc ");
-                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                    List<DbParameter> parameter = new List<DbParameter>();
+                    parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@OrderCd", "%" + OrderCd + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@ProductMatCd", "%" + ProductMatCd + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@MatNm", "%" + MatNm + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@SupplierCd", "%" + SupplierCd + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@WcCd", "%" + WcCd + "%"));
+                    parameter.Add(DbFactory.CreateDbParameter("@BarCode", "%" + BarCode + "%"));
+                    //开始时间
+                    if (TimeStart != "" && TimeStart != null)
+                    {
+                        strSql.Append(" and DateDiff(dd,@TimeStart,Datetime) >=0 ");
+                        parameter.Add(DbFactory.CreateDbParameter("@TimeStart", TimeStart));
+                    }
 
+                    //结束时间
+                    if (TimeEnd != "" && TimeEnd != null)
+                    {
+                        strSql.Append(" and DateDiff(dd,Datetime,@TimeEnd) >=0 ");
+                        parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
+                    }
+                    strSql.Append("  order by Datetime desc ");
+                    DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                 
                 #endregion
-
+                // DataTable dt = MyBll.GetPageListByCondition(VIN, OrderCd, CarType, ProductMatCd, MatCd, MatNm, SupplierCd, PlineNm, WcCd, TimeStart, TimeEnd, BarCode, jqgridparam);
+                //DataTable dt = MyBll.GetPageListByCondition(VIN, OrderCd, CarType, ProductMatCd, MatCd, MatNm, SupplierCd, PlineNm, WcCd, TimeStart, TimeEnd, jqgridparam );
                 string fileName = "关重件录入数据";
                 string excelType = "xls";
                 MemoryStream ms = DeriveExcel.ExportExcel_KeyPartsBind(dt, excelType);
@@ -145,7 +146,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 {
                     fileName = fileName + ".xls";
                 }
-                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "关重件录入数据导出成功");
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "关重件录入入数据导出成功");
                 return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
             }
             catch (Exception ex)
@@ -256,5 +257,103 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
 
+
+        #region 环保件导出
+        public ActionResult GetExcel_Data2(string VIN, string OrderCd, string ProducePlanCd, string MatCd, string CarType, string TimeStart, string TimeEnd, JqGridParam jqgridparam)
+        {
+            try
+            {
+
+                #region 根据当前搜索条件查出数据并导出
+                /*
+             
+
+                StringBuilder strSql = new StringBuilder();
+
+                strSql.Append($"select a.VIN,b.MatNm as bMatNm,a.OrderCd,a.CarType,a.ProductMatCd,a.CarColor1,a.BarCode,a.RsvFld1,a.SupplierCd,a.SupplierNm,a.MatCd,a.MatNm,a.FacNm,a.WorkshopNm,a.WorkSectionNm,a.PlineNm,a.WcCd,a.StfNm,a.Datetime from Q_KeyPartsBind_Pro a left join BBdbR_ProductBase b on a.ProductMatCd = b.MatCd  where a.VIN like @VIN and a.OrderCd like @OrderCd and a.CarType like @CarType and a.ProductMatCd like @ProductMatCd and a.MatCd like @MatCd and a.MatNm like @MatNm and a.SupplierCd like @SupplierCd and a.PlineNm like @PlineNm and a.WcCd like @WcCd and a.BarCode like @BarCode ");
+
+                List<DbParameter> parameter = new List<DbParameter>();
+                parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@OrderCd", "%" + OrderCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
+              //  parameter.Add(DbFactory.CreateDbParameter("@ProductMatCd", "%" + ProductMatCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
+               // parameter.Add(DbFactory.CreateDbParameter("@MatNm", "%" + MatNm + "%"));
+               // parameter.Add(DbFactory.CreateDbParameter("@SupplierCd", "%" + SupplierCd + "%"));
+               // parameter.Add(DbFactory.CreateDbParameter("@PlineNm", "%" + PlineNm + "%"));
+               // parameter.Add(DbFactory.CreateDbParameter("@WcCd", "%" + WcCd + "%"));
+               // parameter.Add(DbFactory.CreateDbParameter("@BarCode", "%" + BarCode + "%"));
+                //开始时间
+                if (TimeStart != "" && TimeStart != null)
+                {
+                    strSql.Append(" and DateDiff(dd,@TimeStart,Datetime) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeStart", TimeStart));
+                }
+
+                //结束时间
+                if (TimeEnd != "" && TimeEnd != null)
+                {
+                    strSql.Append(" and DateDiff(dd,Datetime,@TimeEnd) >=0 ");
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
+                }
+                strSql.Append("  order by Datetime desc ");
+                DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
+                 */
+                #endregion
+
+                // DataTable dt = MyBll.GetPageListByCondition(VIN, OrderCd, CarType, ProductMatCd, MatCd, MatNm, SupplierCd, PlineNm, WcCd, TimeStart, TimeEnd, BarCode, jqgridparam);
+                //DataTable dt = MyBll.GetPageListByCondition(VIN, OrderCd, CarType, ProductMatCd, MatCd, MatNm, SupplierCd, PlineNm, WcCd, TimeStart, TimeEnd, jqgridparam );
+                // DataTable dt = MyBll.GetECPageList(VIN,  OrderCd,  ProducePlanCd,  MatCd,  CarType,  TimeStart,  TimeEnd,  jqgridparam);
+
+                string sql = $"select A.VIN,A.Code,A.Tm,B.ProducePlanCd,B.OrderCd,B.MatCd,B.CarType from P_EnvironmentalCode A with(nolock) join P_PublishPlan_Pro B with(nolock) on A.VIN = B.VIN  and A.Enabled<>'0' and B.Enabled='1' where A.VIN like @VIN  and ProducePlanCd like @ProducePlanCd and OrderCd like @OrderCd and MatCd like @MatCd and CarType like @CarType and Tm=(select MAX(Tm) from P_EnvironmentalCode C with(nolock) where C.VIN=A.VIN) ";
+
+                List<DbParameter> parameter = new List<DbParameter>();
+                parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@ProducePlanCd", "%" + ProducePlanCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@OrderCd", "%" + OrderCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
+                parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
+
+                //开始时间
+                if (TimeStart != "" && TimeStart != null)
+                {
+                    //sql += $" and DATEDIFF(DD, '{TimeStart}', Tm) >= 0";
+                    //开始时间把@放在前面
+                    sql += " and DateDiff(dd,@TimeStart,Tm) >=0 ";
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeStart", TimeStart));
+                }
+
+                //结束时间
+                if (TimeEnd != "" && TimeEnd != null)
+                {
+                    //sql += $" and DATEDIFF(DD, Tm, '{TimeEnd}') >= 0";
+                    //结束时间把@放在后面
+                    sql += " and DateDiff(dd,Tm,@TimeEnd) >=0 ";
+                    parameter.Add(DbFactory.CreateDbParameter("@TimeEnd", TimeEnd));
+                }
+
+                sql += $" order by tm desc";
+                DataTable dt = DataFactory.Database().FindTableBySql(sql, parameter.ToArray(), false);
+
+                string fileName = "环保件录入数据";
+                string excelType = "xls";
+                MemoryStream ms = DeriveExcel.ExportExcel_KeyPartsBind2(dt, excelType);
+                if (!fileName.EndsWith(".xls"))
+                {
+                    fileName = fileName + ".xls";
+                }
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "环保件录入入数据导出成功");
+                return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
+            }
+            catch (Exception ex)
+            {
+                Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "-1", "环保件录入数据导出操作失败：" + ex.Message);
+                return null;
+            }
+
+        }
+        #endregion
+
     }
 }
+ 

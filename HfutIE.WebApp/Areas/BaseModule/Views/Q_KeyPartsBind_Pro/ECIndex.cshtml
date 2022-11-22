@@ -101,10 +101,10 @@
         var CarType= $("#CarType").val();
         var ProductMatCd = $("#ProductMatCd").val();
         var MatCd = $("#MatCd").val();
-        var MatNm = $("#MatNm").val();
-        var SupplierCd= $("#SupplierCd").val();
-        var PlineNm = $("#PlineNm").val();
-        var WcCd = $("#WcCd").val();
+        //var MatNm = $("#MatNm").val();
+        //var SupplierCd= $("#SupplierCd").val();
+        //var PlineNm = $("#PlineNm").val();
+        //var WcCd = $("#WcCd").val();
 
         var count = $("#gridTable").getGridParam("records");
         if (count == 0) {
@@ -113,8 +113,8 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/BaseModule/Q_KeyPartsBind_Pro/GetExcel_Data?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) + "&VIN=" + escape(VIN) + "&OrderCd=" + escape(OrderCd) + "&CarType=" + escape(CarType) + "&ProductMatCd=" + escape(ProductMatCd)
-                    + "&MatCd=" + escape(MatCd) + "&MatNm=" + escape(MatNm) + "&SupplierCd=" + escape(SupplierCd) + "&PlineNm=" + escape(PlineNm) + "&WcCd=" + escape(WcCd);
+                location.href = "/BaseModule/Q_KeyPartsBind_Pro/GetExcel_Data2?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) + "&VIN=" + escape(VIN) + "&OrderCd=" + escape(OrderCd) + "&CarType=" + escape(CarType) + "&ProductMatCd=" + escape(ProductMatCd)
+                    + "&MatCd=" + escape(MatCd) ;
                 Loading(false);
             }, 200);
         }

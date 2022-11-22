@@ -23,11 +23,11 @@
 
     //产线名称下拉框
     function GetPlineList() {
-        AjaxJson("/BaseModule/BBdbR_DataAcqPro/GetPlineList", {}, function (data) {
-            for (var i = 0; i < data.rows.length; i++) {
-                $("#PlineNm").append("<option value='" + data.rows[i]["PlineNm"] + "'>" + data.rows[i]["PlineNm"] + "</option>");
-            }
-        });
+        //AjaxJson("/BaseModule/BBdbR_DataAcqPro/GetPlineList", {}, function (data) {
+        //    for (var i = 0; i < data.rows.length; i++) {
+        //        $("#PlineNm").append("<option value='" + data.rows[i]["PlineNm"] + "'>" + data.rows[i]["PlineNm"] + "</option>");
+        //    }
+        //});
         $("#PlineNm").val("");
     }
 
@@ -196,6 +196,11 @@
             @*<input id="PlineNm" type="text" class="txt" style="width: 125px" />*@
             <select id="PlineNm" style="width: 125px; height: 25px">
                 <option value="">全部</option>
+                <option value="内饰A线">内饰A线</option>
+                <option value="内饰B线">内饰B线</option>
+                <option value="底盘A线">底盘A线</option>
+                <option value="底盘B线">底盘B线</option>
+                <option value="合装线">合装线</option>
                 <option value="OK线">OK线</option>
             </select>
         </td>

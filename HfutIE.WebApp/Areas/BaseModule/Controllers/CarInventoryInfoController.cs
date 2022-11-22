@@ -112,7 +112,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 sql = $@" 
                     select B.OrderCd,B.ProducePlanCd,A.VIN,SUBSTRING(A.VIN,10,8)as ChassisCd,A.CarType,A.CarColor1,A.MatCd,A.OP_CODE,B.FeedbackTime,MatNm,AviNm from (
                     select  A.VIN,A.CarType,A.CarColor1,A.MatCd,B.OP_CODE,C.MatNm,D.AviNm--B.ProducePlanCd,B.OrderCd,
-                    from P_LineProductionQueue_Pro A with(nolock)
+                    from P_ProducePlan_Pro A with(nolock)
                     join (select VIN,MAX(OP_CODE) OP_CODE from P_PlanFeedBack_Pro with(nolock) where FeedbackTime is not null group by VIN ) B 
                     on A.VIN=B.VIN and A.CarType like '%{CarType}%' --车型筛选
                     LEFT JOIN BBdbR_MatBase C ON A.MatCd= C.MatCd LEFT JOIN  BBdbR_AVIBase D ON B.OP_CODE = D.OP_CODE 
