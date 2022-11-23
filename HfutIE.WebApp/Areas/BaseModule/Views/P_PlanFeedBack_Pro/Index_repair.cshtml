@@ -125,7 +125,7 @@
         }).trigger('reloadGrid');//?keywords=''&Condition=''
 
     }
-   
+
     $(document).keypress(function (e) {
         // 回车键事件
         if (e.which == 13) {
@@ -189,19 +189,15 @@
     //修改后导出
     //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
-       // var AviCd = $("#AviCd").val();
-        //var VIN = $("#VIN").val();
-        //var MatCd = $("#MatCd").val();
-        //var ProducePlanCd = $("#ProducePlanCd").val();
-        //let ColletionTimeStart = $("#ColletionTimeStart").val();
-        //let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+        var AviCd = $("#AviCd").val();
         var VIN = $("#VIN").val();
-        var CarType = $("#CarType").val();
-        var TimeStart = $("#TimeStart").val();
-        var TimeEnd = $("#TimeEnd").val();
-        var GroupNm = $("#QualityCheckPointGroupNm").val();
-
-        var KeyValue = GetJqGridRowValue("#gridTable", "CarQualityResultId");
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
+       
+/*
+        var KeyValue = GetJqGridRowValue("#gridTable", "gridPager");
         if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
             //未选择结果行
         }
@@ -217,7 +213,8 @@
                 return;
             }
         }
-        var count = $("#gridTable2").getGridParam("records");
+        */
+        var count = $("#gridTable").getGridParam("records");
         if (count == 0) {
             tipDialog("没有要导出的信息！", 1.5, 0);
             return;
@@ -229,8 +226,8 @@
         else {
             window.setTimeout(function () {
                 //网址
-                location.href = "/BaseModule/P_PlanFeedBack_Pro/GetExcel_Data2?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) +
-                    "&QualityCheckPointGroupNm=" + escape(GroupNm) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/BaseModule/P_PlanFeedBack_Pro/GetExcel_Data2?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) +
+                    "&MatCd=" + escape(MatCd) + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd);
                 Loading(false);
             }, 200);
         }
@@ -274,9 +271,9 @@
             </td>
             <td id="timetd">
                 <label>计划开始时间：</label>
-                <input id="ColletionTimeStart" type="text" class="txt Wdate" value="@DateTime.Today.AddDays(-7).AddHours(00).AddMinutes(00).AddSeconds(00).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'ColletionTimeEnd\')||\'%y-%M-%d\'}'}); blur();" readonly style="width: 150px" />
+                <input id="ColletionTimeStart" type="text" class="txt Wdate" value="@DateTime.Today.AddDays(-7).AddHours(00).AddMinutes(00).AddSeconds(00).ToString("yyyy-MM-dd")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'ColletionTimeEnd\')||\'%y-%M-%d\'}'}); blur();" readonly style="width: 150px" />
                 <label>计划结束时间：</label>
-                <input id="ColletionTimeEnd" type="text" class="txt Wdate" value="@DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("yyyy-MM-dd HH:mm:ss")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'ColletionTimeStart\')}'}); blur();" readonly style="width: 150px;" />
+                <input id="ColletionTimeEnd" type="text" class="txt Wdate" value="@DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("yyyy-MM-dd")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'ColletionTimeStart\')}'}); blur();" readonly style="width: 150px;" />
             </td>
             <td>
                 <input id="btnSearch" type="button" class="btnSearch" value="搜 索" onclick="btn_Search()" />

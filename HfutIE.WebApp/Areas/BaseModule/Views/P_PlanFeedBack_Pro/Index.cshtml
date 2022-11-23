@@ -277,14 +277,15 @@
     //修改后导出
     //根据检索条件搜索出来的数据直接导出
     function btn_derive() {
+        var AviCd = $("#AviCd").val();
         var VIN = $("#VIN").val();
-        var CarType = $("#CarType").val();
-        var TimeStart = $("#TimeStart").val();
-        var TimeEnd = $("#TimeEnd").val();
-        var GroupNm = $("#QualityCheckPointGroupNm").val();
+        var MatCd = $("#MatCd").val();
+        var ProducePlanCd = $("#ProducePlanCd").val();
+        let ColletionTimeStart = $("#ColletionTimeStart").val();
+        let ColletionTimeEnd = $("#ColletionTimeEnd").val();
 
 
-        var KeyValue = GetJqGridRowValue("#gridTable", "CarQualityResultId");
+       /* var KeyValue = GetJqGridRowValue("#gridTable", "CarQualityResultId");
         if (KeyValue == undefined || KeyValue == "" || KeyValue == 'null' || KeyValue == 'undefined') {
             //未选择结果行
         }
@@ -300,7 +301,8 @@
                 return;
             }
         }
-        var count = $("#gridTable2").getGridParam("records");
+        */
+        var count = $("#gridTable").getGridParam("records");
         if (count == 0) {
             tipDialog("没有要导出的信息！", 1.5, 0);
             return;
@@ -312,8 +314,8 @@
         else {
             window.setTimeout(function () {
                 //网址
-                location.href = "/BaseModule/P_PlanFeedBack_Pro/GetExcel_Data?TimeStart=" + escape(TimeStart) + "&TimeEnd=" + escape(TimeEnd) +
-                    "&QualityCheckPointGroupNm=" + escape(GroupNm) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType);
+                location.href = "/BaseModule/P_PlanFeedBack_Pro/GetExcel_Data?AviCd=" + escape(AviCd) + "&VIN=" + escape(VIN) + "&MatCd=" + escape(MatCd)
+                    + "&ProducePlanCd=" + escape(ProducePlanCd) + "&ColletionTimeStart=" + escape(ColletionTimeStart) + "&ColletionTimeEnd=" + escape(ColletionTimeEnd);
                 Loading(false);
             }, 200);
         }

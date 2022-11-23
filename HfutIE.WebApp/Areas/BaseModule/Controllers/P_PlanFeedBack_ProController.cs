@@ -331,7 +331,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                 parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN));
                 parameter.Add(DbFactory.CreateDbParameter("@MatCd", "%" + MatCd + "%"));
                 parameter.Add(DbFactory.CreateDbParameter("@ProducePlanCd", "%" + ProducePlanCd + "%"));
-                if (ColletionTimeStart != "" && ColletionTimeStart != null)
+               /* if (ColletionTimeStart != "" && ColletionTimeStart != null)
                 {
                     strSql.Append(" and DateDiff(dd,@ColletionTimeStart,PlanTime) >=0 ");
                     parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeStart", ColletionTimeStart));
@@ -343,6 +343,7 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
                     parameter.Add(DbFactory.CreateDbParameter("@ColletionTimeEnd", ColletionTimeEnd));
                 }
                 else { }
+                */
                 DataTable dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 #endregion
                 string fileName = "报工反馈数据";

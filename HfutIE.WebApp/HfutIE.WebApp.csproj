@@ -10051,7 +10051,6 @@
     <Content Include="Views\TightOnly\Tg_Only.cshtml" />
     <Content Include="Views\TightOnly\Tg_FDJ.cshtml" />
     <Content Include="Views\TightOnly\Tg_FZ.cshtml" />
-    <Content Include="Views\TightOnly\Tg_FDJFZ.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
