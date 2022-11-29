@@ -947,7 +947,7 @@ a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
                 else { }
 
                 //按照时间排序
-                strSql.Append(" order by CollectionTime desc");
+                strSql.Append(" order by VIN,WcCd,Ord,Serial");
 
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new

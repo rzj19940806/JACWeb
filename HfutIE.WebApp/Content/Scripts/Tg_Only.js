@@ -33,7 +33,7 @@ function GetStaticInfoFZ() {
         AjaxJson('/TightOnly/GetStaticInfoFZ', null, function (data) {
             if (data.code == 1) {
                 allStaticInfo = data.props;
-                if (!allStaticInfo.DvcLocatn == "ALL") {
+                if (allStaticInfo.DvcLocatn != "ALL") {
                     allStaticInfo.WcNm += allStaticInfo.DvcLocatn;
                 }
                 barcodeRule = data.BarCode;
@@ -42,6 +42,33 @@ function GetStaticInfoFZ() {
                 $("#people").html(data.props.StfNm);
                 MqttConnect(); 
                 updateLog("设备登陆成功:【工位：" + data.props.WcNm + "】【人员：" + data.props.StfNm + "】");
+            } else if (data.code == -1) {
+                uperrorLog("设备登陆错误:【错误信息：" + data.msg + "】");
+                $("#vin_input").attr("readonly", "true");
+            }
+        });
+    } catch (e) {
+        uperrorLog("HTML静态信息错误:【错误信息：" + e + "】");
+    }
+}
+//加载静态信息--发动机
+function GetStaticInfoFDJ() {
+    try {
+        var IP = "10.138.13.90";
+        var userAgent = window.navigator.userAgent;
+        if (userAgent.indexOf('Firefox') != -1) {
+            IP = "0.0.0.0";
+        }
+        AjaxJson('/TightOnly/GetStaticInfoFDJ', {IP:IP}, function (data) {
+            if (data.code == 1) {
+                allStaticInfo = data.props;
+                if (allStaticInfo.DvcLocatn != "ALL") {
+                    allStaticInfo.WcNm += allStaticInfo.DvcLocatn;
+                }
+                $("#station").html(allStaticInfo.WcNm);
+                $("#people").html(data.props.StfNm);
+                MqttConnect();      //连接Mqtt
+                updateLog("设备登陆成功:【工位：" + allStaticInfo.WcNm + "】【人员：" + data.props.StfNm + "】");
             } else if (data.code == -1) {
                 uperrorLog("设备登陆错误:【错误信息：" + data.msg + "】");
                 $("#vin_input").attr("readonly", "true");
@@ -217,6 +244,28 @@ function carStart(allStaticInfo, data) {
         uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
     }
 }
+//加载左侧和中间区域---发动机
+function carStartFDJ(allStaticInfo, data) {
+    try {
+        allStaticInfo["VIN"] = data.vinInfo[0].vin;
+        allStaticInfo["OrderCd"] = data.vinInfo[0].ordercd;
+        allStaticInfo["SequenceNo"] = data.vinInfo[0].pastno;
+        allStaticInfo["BodyNo"] = data.vinInfo[0].bodyno;
+        allStaticInfo["ProductMatCd"] = data.vinInfo[0].matcd;
+        allStaticInfo["CarType"] = data.vinInfo[0].cartype;
+        allStaticInfo["CarColor1"] = data.vinInfo[0].carcolor1;
+        //左侧加载图片
+        CarPicture(data.vinInfo[0].cartype + data.vinInfo[0].carcolor1);
+        $("#vin").html(data.vinInfo[0].vin);//Vin码
+        $("#sequence").html(data.vinInfo[0].sequenceno);//顺序号
+        $("#color").html(data.vinInfo[0].carcolor1);//颜色
+        $("#cartype").html(data.vinInfo[0].cartype);//车型
+        $("#car_dis").html(data.Product[0].matnm);//车身描述
+
+    } catch (e) {
+        uperrorLog("车身入站错误：【工位：" + allStaticInfo.WcNm + "】【错误信息：" + e + "】");
+    }
+}
 //加载左侧车身照片
 function CarPicture(name) {
     AjaxJson("/VideoModule/BBdbR_GuidanceFile/GetPicture?name=" + name, {}, function (data) {
@@ -372,7 +421,7 @@ function manualCarStart(allStaticInfo, vin, isscan) {
                 updateLog(data.Msg);
                 //左侧显示
                 AjaxJson('/TightOnly/ShowInfo', { VIN: data.Show, WcId: allStaticInfo.WcId }, function (data) {
-                    carStart(allStaticInfo, data);
+                    carStartFDJ(allStaticInfo, data);
                 });
             }
         }
@@ -391,7 +440,7 @@ function manualCarStart(allStaticInfo, vin, isscan) {
             setTimeout(function () {
                 swal(
                     {
-                        title: data.vinInfo[0].vin,
+                        title: allStaticInfo.VIN,
                         text: "当前车身没有拧紧任务，将在5s后自动加载后续车身",
                         confirmButtonText: "提前刷新",
                         cancelButtonText: "取消刷新",

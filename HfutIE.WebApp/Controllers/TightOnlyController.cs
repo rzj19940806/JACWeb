@@ -23,8 +23,8 @@ namespace HfutIE.WebApp.Controllers
         public ActionResult Only()
         {
             var IP = NetHelper.GetIPAddress();
-            //IP = "10.138.13.94";
-            if (IP == "10.138.13.90") { return View("Tg_FDJFZ"); }
+            //IP = "10.138.13.90";
+            if (IP == "10.138.13.90") { return View("Tg_FDJ"); }
             else if (IP == "10.138.13.94"|| IP == "10.138.13.89") { return View("Tg_FZ"); }
             else { return View("Tg_Only"); }
 
@@ -73,7 +73,6 @@ namespace HfutIE.WebApp.Controllers
             {
                 //1.获取账户基础信息
                 //1.1获取用户名与人员主键
-                string StfNm = ManageProvider.Provider.Current().Account;
                 string UserId = ManageProvider.Provider.Current().UserId;
                 //1.2根据用户主键查找人员主键编号名称
                 if (UserId != "System")
@@ -141,7 +140,6 @@ namespace HfutIE.WebApp.Controllers
             {
                 //1.获取账户基础信息
                 //1.1获取用户名与人员主键
-                string StfNm = ManageProvider.Provider.Current().Account;
                 string UserId = ManageProvider.Provider.Current().UserId;
                 //1.2根据用户主键查找人员主键编号名称
                 if (UserId != "System")
@@ -172,7 +170,7 @@ namespace HfutIE.WebApp.Controllers
             }
             try
             {
-                //获取需要拧紧的图号
+                //获取需要拧紧的图号---还需要考虑发动机分装待修改
                 string sql = " SELECT DISTINCT Code FROM dbo.TightConfigView WHERE WcId='198' AND Type='图号'";
                 DataTable dt = database.FindTableBySql(sql);
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -187,7 +185,66 @@ namespace HfutIE.WebApp.Controllers
             }
             return Content(new { code, msg, props = BaseInfoProps, BarCode, strs }.ToJson());
         }
+        //发动机获取静态信息
+        public ActionResult GetStaticInfoFDJ(string IP)
+        {
+            int code = 1;
+            string msg = "";
+            //基础静态信息---工厂模型、账户信息
+            Dictionary<string, string> BaseInfoProps = new Dictionary<string, string>();
+            try
+            {
+                //2.获取工厂模型
+                //2.2根据IP地址获取设备-工位---公司
+                //获取工位--字典中使用classid代替
+                q_KeyParts.GetRowValue("BBdbR_DvcBase", "ClassId,DvcCatg,DvcTyp,DvcLocatn", "IPAddr", IP, ref BaseInfoProps);
+                //获取工位
+                q_KeyParts.GetRowValue("BBdbR_WcBase", "WcCd,WcNm,PlineId", "WcId", BaseInfoProps["ClassId"], ref BaseInfoProps);
+                //获取产线
+                q_KeyParts.GetRowValue("BBdbR_PlineBase", "PlineCd,PlineNm,EndPoint,WorkSectionId", "PlineId", BaseInfoProps["PlineId"], ref BaseInfoProps);
+                //获取工艺段
+                q_KeyParts.GetRowValue("BBdbR_WorkSectionBase", "WorkSectionCd,WorkSectionNm,WorkshopId", "WorkSectionId", BaseInfoProps["WorkSectionId"], ref BaseInfoProps);
+                //获取车间
+                q_KeyParts.GetRowValue("BBdbR_WorkshopBase", "WorkshopCd,WorkshopNm,FacId", "WorkshopId", BaseInfoProps["WorkshopId"], ref BaseInfoProps);
+                //获取工厂
+                q_KeyParts.GetRowValue("BBdbR_FacBase", "FacCd,FacNm,CompanyId", "FacId", BaseInfoProps["FacId"], ref BaseInfoProps);
+                //获取公司
+                q_KeyParts.GetRowValue("BBdbR_CompanyBase", "CompanyCd,CompanyNm", "CompanyId", BaseInfoProps["CompanyId"], ref BaseInfoProps);
+                //修正
+                BaseInfoProps.Add("WcId", BaseInfoProps["ClassId"]);
+                BaseInfoProps.Remove("ClassId");
 
+            }
+            catch (Exception ex)
+            {
+                code = -1;
+                msg += "获取工厂模型信息时发生错误:" + ex.Message;
+            }
+            try
+            {
+                //1.获取账户基础信息
+                //1.1获取用户名与人员主键
+                string UserId = ManageProvider.Provider.Current().UserId;
+                //1.2根据用户主键查找人员主键编号名称
+                if (UserId != "System")
+                {
+                    q_KeyParts.GetRowValue("Base_User", "UserId StfId,Code StfCd,RealName StfNm", "UserId", UserId, ref BaseInfoProps);
+                }
+                else
+                {
+                    BaseInfoProps.Add("StfId", "System");
+                    BaseInfoProps.Add("StfCd", "System");
+                    BaseInfoProps.Add("StfNm", "超级管理员");
+                }
+            }
+            catch (Exception ex)
+            {
+                code = -1;
+                msg += "获取人员信息时发生错误:" + ex.Message;
+            }
+
+            return Content(new { code, msg, props = BaseInfoProps }.ToJson());
+        }
         //VIN码入站
         public ActionResult VinIn(string VIN,string WcId,string ShowNm,bool IsScan)
         {
@@ -840,7 +897,7 @@ namespace HfutIE.WebApp.Controllers
             if (dt.Rows.Count == 1)
             {
                 string VIN = dt.Rows[0][0].ToString();
-                return Content(VIN);
+                return Content(new { VIN }.ToJson());
             }
             else
             {

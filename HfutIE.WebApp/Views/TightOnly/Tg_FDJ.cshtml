@@ -52,7 +52,7 @@
             try {
                 SetAllWH();         //加载界面的宽高
                 GetCurrentDate();   //实时时间刷新
-                GetStaticInfo();    //加载静态信息
+                GetStaticInfoFDJ();    //加载静态信息
                 bindKeyDown("vin_input", function () {
                     let vin = $("#vin_input").val().trim().toUpperCase();
                     $("#vin_input").val("");
@@ -78,9 +78,9 @@
                     uperrorLog("无未完成任务:【工位：" + allStaticInfo.WcNm + "】【提示：页面初次加载时请手动扫码】");
                 } else {
                     var topic = "/KeyParts/AutoTighten/" + allStaticInfo.WcId;
-                    var msg = `1_${data}`;
+                    var msg = `1_${data.VIN}`;
                     publishMqtt(msg, topic);//拧紧控制
-                    manualCarStart(allStaticInfo, data, false);
+                    manualCarStart(allStaticInfo, data.VIN, false);
                 } 
                 $("#vin_input").focus();
             });
@@ -298,18 +298,11 @@
             </div>
 
             <div class="main" id="main">
-                <div class="main_box main_box_left" id="main_left">
-                    <div class="main_title" id="instruction_dis">
-                        装配指示
-                    </div>
-                    <div class="in_main_box_left" id="in_main_box_left">
-                    </div>
-                </div>
-                <div class="main_box main_box_right" id="main_right">
+                <div class="main_box_FDJ" id="main_right">
                     <div class="main_title" id="instruction_dis">
                         拧紧作业指示
                     </div>
-                    <div id="Tighten" class="tighten_box_1" style="width:100%;"></div>
+                    <div id="Tighten" class="tighten_box_1"></div>
                 </div>
                 <div class="clear"></div>
             </div>

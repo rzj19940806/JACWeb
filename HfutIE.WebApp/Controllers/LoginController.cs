@@ -157,7 +157,7 @@ namespace HfutIE.WebApp.Controllers
         public ActionResult GetIpAddress()
         {
             string IPAddress = NetHelper.GetIPAddress();
-            //IPAddress = "10.138.13.94";
+            //IPAddress = "10.138.13.90";
             return Content(IPAddress);
         }
         #region 通过设备IP获取设备类型
@@ -168,7 +168,7 @@ namespace HfutIE.WebApp.Controllers
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
                 string IPAddress = NetHelper.GetIPAddress();
-                //IPAddress = "10.138.13.94";
+                //IPAddress = "10.138.13.90";
                 strSql.Append(@"select DvcTyp from BBdbR_DvcBase where IPAddr = '" + IPAddress + "' and Enabled =1");
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), false);
                 if (dt.Rows.Count == 1)
