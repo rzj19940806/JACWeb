@@ -145,7 +145,7 @@
         var StartTime = $("#StartTime").val();
         var EndTime = $("#EndTime").val();
         var VIN = $("#InputVIN").val();
-        var Cd = $("#InputCd").val();
+        var Cd = $("#InputCd").val();//输入工位
         var CarType = $("#ConditionCarType").val();
 
         //EOL界面
@@ -217,7 +217,7 @@
         //拧紧界面
             //胎压界面上表查询
             $("#gridTableNJup").jqGrid('setGridParam', {
-                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")?" + "&CarType=" + escape(CarType) + "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
+                url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")?"+ "&VIN=" + escape(VIN) + "&Cd=" + escape(Cd) + "&StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime), page: 1, datatype: 'json'
             }).trigger('reloadGrid');
 
 
@@ -1230,41 +1230,28 @@
     //加载拧紧表格
     function GetGridNJup() {
         $("#gridTableNJup").jqGrid({
-        //url: "@Url.Content("~/EquipmentManaModule/E_EOLCheckResult/GetNJCheckResultByCondition")",
         datatype: "json",
         height: $(window).height() - 170,
         autowidth: true,
         colModel: [
-            { label: '主键', name: 'ID', index: 'ID', width: 0, align: 'center', sortable: true, hidden: true },
             { label: 'VIN', name: 'Vin', index: 'Vin', width: 0, align: 'center', sortable: true },
             { label: '工位', name: 'WcCd', index: 'WcCd', width: 0, align: 'center', sortable: true },
-            //{ label: '车型编号', name: 'Cd', index: 'Cd', width: 0, align: 'center', sortable: true },
-            //{ label: '车型', name: 'CarType', index: 'CarType', width: 0, align: 'center', sortable: true },
-            { label: '绑定类型', name: 'Type', index: 'Type', width: 0, align: 'center', sortable: true, hidden: true },
             { label: '扭矩', name: 'Torque', index: 'Torque', width: 0, align: 'center', sortable: true },
-            { label: '角度', name: 'Angle', index: 'Angle', width: 0, align: 'center', sortable: true },
-            { label: '拧紧状态', name: 'tg_result', index: 'tg_result', width: 0, align: 'center', sortable: true },
+            { label: '转角', name: 'Angle', index: 'Angle', width: 0, align: 'center', sortable: true },
+            { label: '合格状态', name: 'IsOK', index: 'IsOK', width: 0, align: 'center', sortable: true, formatter: myFormat },
             { label: '螺丝号', name: 'Serial', index: 'Serial', width: 0, align: 'center', sortable: true },
             { label: '顺序号', name: 'Ord', index: 'Ord', width: 0, align: 'center', sortable: true },
-            { label: '执行时间', name: 'CollectionTime', index: 'CollectionTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
-            { label: '枪编号', name: 'ControllerPort', index: 'ControllerPort', width: 0, align: 'center',},
+            { label: '时间', name: 'CollectionTime', index: 'CollectionTime', width: 0, align: 'center', sortable: true, formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+            { label: '理论合格总数', name: 'Num', index: 'Num', width: 0, align: 'center', },
+            { label: '控制器IP', name: 'ControllerID', index: 'ControllerID', width: 0, align: 'center', },
+            { label: '枪端口', name: 'ControllerPort', index: 'ControllerPort', width: 0, align: 'center',},
             { label: '车型/图号', name: 'Code', index: 'Code', width: 0, align: 'center', sortable: true },
             { label: '图号', name: 'RsvFld1', index: 'RsvFld1', width: 0, align: 'center', sortable: true },
             { label: '条码', name: 'RsvFld3', index: 'RsvFld3', width: 0, align: 'center', sortable: true },
             { label: 'JOB号', name: 'JobCd', index: 'JobCd', width: 50, align: 'center', sortable: true },
-            //{ label: '批次号', name: 'PSET_NO', index: 'PSET_NO', width: 0, align: 'center', sortable: true },
-            //{ label: '批次大小', name: 'BATCH_SIZE', index: 'BATCH_SIZE', width: 0, align: 'center', sortable: true },
-            //{ label: '批次号', name: 'BATCH_COUNT', index: 'BATCH_COUNT', width: 100, align: 'center', sortable: true },
-            //{ label: '批次状态', name: 'BATCH_STATUS', index: 'BATCH_STATUS', width: 100, align: 'center', sortable: true },
-            { label: '扭矩最小值', name: 'TorqueLL', index: 'TorqueLL', width: 50, align: 'center', sortable: true },
-            { label: '扭矩最大值', name: 'TorqueUL', index: 'TorqueUL', width: 0, align: 'center', sortable: true },
-            { label: '扭矩目标值', name: 'TorqueSL', index: 'TorqueSL', width: 0, align: 'center', sortable: true },
-            //{ label: '角度状态', name: 'ANGLE_STATUS', index: 'ANGLE_STATUS', width: 0, align: 'center', sortable: true },
-            { label: '角度最小值', name: 'AngleUL', index: 'AngleUL', width: 0, align: 'center', sortable: true ,hidden: true },
-            { label: '角度最大值', name: 'AngleUL', index: 'AngleUL', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '角度目标值', name: 'AngleSL', index: 'AngleSL', width: 0, align: 'center', sortable: true, hidden: true },
-            { label: '拧紧号', name: 'WcJobCd', index: 'WcJobCd', width: 0, align: 'center', sortable: true, hidden: true },
-            //{ label: '拧紧状态', name: 'TIGHTENING_STATUS', index: 'TIGHTENING_STATUS', width: 0, align: 'center', sortable: true },
+            { label: '扭矩下限', name: 'TorqueLL', index: 'TorqueLL', width: 50, align: 'center', sortable: true },
+            { label: '扭矩上限', name: 'TorqueUL', index: 'TorqueUL', width: 0, align: 'center', sortable: true },
+            { label: '扭矩标准值', name: 'TorqueSL', index: 'TorqueSL', width: 0, align: 'center', sortable: true },
         ],
             pager: "#gridPagerNJup",
             sortname: '',
@@ -1282,6 +1269,14 @@
     });
     }
 
+    function myFormat(cellvalue, options, rowObject) {
+        if (cellvalue == "1") {
+            return "合格";
+        }
+        else {
+            return "不合格";
+        }
+    }
 
     //EOL数据导出
     function btn_deriveEOL() {
@@ -1388,8 +1383,7 @@
         var StartTime = $("#StartTime").val();                  //开始时间
         var EndTime = $("#EndTime").val();                      //结束时间
         var VIN = $("#InputVIN").val();                         //VIN号
-        var CarType = $("#ConditionCarType").val();             //车型
-        var Cd = $("#InputCd").val();                           //车型编码
+        var Cd = $("#InputCd").val();                           //工位
 
         var count = $("#gridTableNJup").getGridParam("records");
         if (count == 0) {
@@ -1402,7 +1396,7 @@
         }
         else {
             window.setTimeout(function () {
-                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataNJ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN) + "&CarType=" + escape(CarType) + "&Cd=" + escape(Cd);
+                location.href = "/EquipmentManaModule/E_EOLCheckResult/GetExcel_DataNJ?StartTime=" + escape(StartTime) + "&EndTime=" + escape(EndTime) + "&VIN=" + escape(VIN)  + "&Cd=" + escape(Cd);
                 Loading(false);
             }, 200);
         }

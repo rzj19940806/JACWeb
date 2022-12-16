@@ -9195,64 +9195,57 @@ namespace HfutIE.Utilities
             cell200.SetCellValue("VIN");
 
             ICell cell201 = row2.CreateCell(1);
-            cell201.SetCellValue("车型编号");
+            cell201.SetCellValue("工位");
 
             ICell cell202 = row2.CreateCell(2);
-            cell202.SetCellValue("车型");
+            cell202.SetCellValue("扭矩");
 
             ICell cell203 = row2.CreateCell(3);
-            cell203.SetCellValue("JOB号");
+            cell203.SetCellValue("转角");
 
             ICell cell204 = row2.CreateCell(4);
-            cell204.SetCellValue("批次号");
+            cell204.SetCellValue("合格状态");
 
             ICell cell205 = row2.CreateCell(5);
-            cell205.SetCellValue("批次大小");
+            cell205.SetCellValue("螺丝号");
 
             ICell cell206 = row2.CreateCell(6);
-            cell206.SetCellValue("批次号");
+            cell206.SetCellValue("顺序号");
 
             ICell cell207 = row2.CreateCell(7);
-            cell207.SetCellValue("批次状态");
+            cell207.SetCellValue("时间");
 
-            ICell cell208 = row2.CreateCell(8);
-            cell208.SetCellValue("拧紧状态");
+            ICell cell217 = row2.CreateCell(8);
+            cell217.SetCellValue("理论合格总数");
 
-            ICell cell209 = row2.CreateCell(9);
-            cell209.SetCellValue("扭矩最小值");
+            ICell cell208 = row2.CreateCell(9);
+            cell208.SetCellValue("控制器IP");
 
-            ICell cell210 = row2.CreateCell(10);
-            cell210.SetCellValue("扭矩最大值");
+            ICell cell209 = row2.CreateCell(10);
+            cell209.SetCellValue("枪端口");
 
-            ICell cell211 = row2.CreateCell(11);
-            cell211.SetCellValue("扭矩目标值");
+            ICell cell210 = row2.CreateCell(11);
+            cell210.SetCellValue("车型/图号");
 
-            ICell cell212 = row2.CreateCell(12);
-            cell212.SetCellValue("扭矩");
+            ICell cell211 = row2.CreateCell(12);
+            cell211.SetCellValue("图号");
 
-            ICell cell213 = row2.CreateCell(13);
-            cell213.SetCellValue("角度状态");
+            ICell cell212 = row2.CreateCell(13);
+            cell212.SetCellValue("条码");
 
-            ICell cell214 = row2.CreateCell(14);
-            cell214.SetCellValue("角度最小值");
+            ICell cell213 = row2.CreateCell(14);
+            cell213.SetCellValue("JOB号");
 
-            ICell cell215 = row2.CreateCell(15);
-            cell215.SetCellValue("角度最大值");
+            ICell cell214 = row2.CreateCell(15);
+            cell214.SetCellValue("扭矩下限");
 
-            ICell cell216 = row2.CreateCell(16);
-            cell216.SetCellValue("角度目标值");
+            ICell cell215 = row2.CreateCell(16);
+            cell215.SetCellValue("扭矩上限");
 
-            ICell cell217 = row2.CreateCell(17);
-            cell217.SetCellValue("角度");
+            ICell cell216 = row2.CreateCell(17);
+            cell216.SetCellValue("扭矩标准值");
 
-            ICell cell218 = row2.CreateCell(18);
-            cell218.SetCellValue("拧紧号");
-
-            ICell cell219 = row2.CreateCell(19);
-            cell219.SetCellValue("拧紧状态");
-
-            ICell cell220 = row2.CreateCell(20);
-            cell220.SetCellValue("执行时间");
+           
 
 
 
@@ -9263,33 +9256,16 @@ namespace HfutIE.Utilities
                 int b = 0;
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    string dgvValue = string.Empty;
-                    //dgvValue = dt.Rows[k][j].ToString();
-
-                    if (j == 11) //过点方式
+                    string dgvValue = dt.Rows[k][j].ToString();
+                    if (j == 4)
                     {
                         if (dt.Rows[k][j].ToString() == "1")
                         {
-                            dgvValue = "工作";
-                        }
-                        else if (dt.Rows[k][j].ToString() == "0")
-                        {
-                            dgvValue = "休息";
+                            dgvValue = "合格";
                         }
                         else
                         {
-                            dgvValue = dt.Rows[k][j].ToString();
-                        }
-                    }
-                    else
-                    {
-                        if (dt.Rows[k][j].ToString() == "&nbsp;")
-                        {
-                            dgvValue = "";
-                        }
-                        else
-                        {
-                            dgvValue = dt.Rows[k][j].ToString();
+                            dgvValue = "不合格";
                         }
                     }
                     ICell cell = row3.CreateCell(b);

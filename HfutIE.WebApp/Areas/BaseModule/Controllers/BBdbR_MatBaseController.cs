@@ -304,6 +304,37 @@ namespace HfutIE.WebApp.Areas.BaseModule.Controllers
             }
         }
 
+        public ActionResult DeleteMatPic(string KeyValue)//删除物料基础信息
+        {
+            //不管是多个主键还是单个主键，将主键拆分出来，放在数组中
+            string[] array = KeyValue.Split(',');
+
+            try
+            {
+                var Message = "删除失败。";//定义返回信息，该信息将返回到界面上，给用户观看
+                int IsOk = 0;//判断删除方法是否成，0表示不成功，大于0表示成功
+
+                for (int i = 0; i < array.Length; i++)
+                {
+
+                    string str = "UPDATE dbo.BBdbR_MatBase SET MatImg=null WHERE MatId='" + array[i] + "'";
+                    IsOk=DbHelperSQL.ExecuteSql(str);
+
+                }
+                if (IsOk > 0)//表示删除成功
+                {
+                    Message = "删除成功。";//修改返回信息
+                }
+                WriteLog(IsOk, array, Message);
+                return Content(new JsonMessage { Success = true, Code = IsOk.ToString(), Message = Message }.ToString());
+            }
+            catch (Exception ex)
+            {
+                WriteLog(-1, array, "操作失败：" + ex.Message);
+                return Content(new JsonMessage { Success = false, Code = "-1", Message = "操作失败：" + ex.Message }.ToString());
+            }
+        }
+
 
 
         public ActionResult DeleteMaterial2(string KeyValue2)//删除物料文档配置

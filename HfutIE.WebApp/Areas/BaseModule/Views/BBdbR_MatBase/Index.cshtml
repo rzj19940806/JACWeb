@@ -425,6 +425,15 @@
             windowload();
         }
     }
+    //删除物料图片信息
+    function btn_delpic() {
+        var KeyValue = GetJqGridRowValue("#gridTable", "MatId");
+        if (IsDelData(KeyValue)) {
+            var delparm = 'KeyValue=' + KeyValue;
+            delConfig('/BaseModule/BBdbR_MatBase/DeleteMatPic', delparm, KeyValue.split(",").length);
+            windowload();
+        }
+    }
 
 
 

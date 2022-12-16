@@ -896,40 +896,42 @@ namespace HfutIE.WebApp.Areas.EquipmentManaModule.Controllers
                 DataTable dt = new DataTable();
 
                 //初始语句未加搜索条件
-                strSql.Append(@"select a.*,b.TorqueUL,b.TorqueLL,b.TorqueSL,b.AngleUL,AngleLL,AngleSL,Ord,case when IsOK='1'then '合格'else '不合格'end  as tg_result 
-from Tg_TightenDataDoc a left join Tg_JobTorqueConfig b on  
-a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
+                strSql.Append(@"select 
+                               a.WcCd,
+                               a.ControllerID,
+                               a.ControllerPort,
+                               a.JobCd,
+                               a.Code,
+                               a.Torque,
+                               a.Angle,
+                               a.Serial,
+                               a.IsOK,
+                               a.CollectionTime,
+                               a.RsvFld1,
+                               a.RsvFld3,
+                               a.Num,
+                               a.Vin,b.Ord,b.TorqueUL,b.TorqueLL,b.TorqueSL from Tg_TightenDataDoc a join Tg_JobTorqueConfig b on  
+                        a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
-                //模糊搜索车型
-                if (CarType != "" && CarType != null)
-                {
-                    //strSql.Append(" and C.CarType like '%" + CarType + "%' ");
-                    strSql.Append(" and (a.Code like @CarType and (a.Type='车辆类型'or a.type='车型+图号') )");
-                    parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
-                }
-
+               
                 //模糊搜索VIN号
                 if (VIN != "" && VIN != null)
                 {
-                    //strSql.Append(" and IDENTIFY like '%" + VIN + "%' ");
                     strSql.Append(" and a.Vin like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
                 }
 
-                //模糊搜索cd
+                //模糊搜索工位
                 if (Cd != "" && Cd != null)
                 {
-                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
-                    strSql.Append(" and( (a.Code like @Cd and a.Type='图号') or(a.RsvFld1 like @Cd and a.Type='车型+图号'))");
+                    strSql.Append(" and a.WcCd like @Cd");
                     parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
                 if (StartTime != null && StartTime != "")
                 {
-                    //string StartTime2 = DateDiff(StartTime);    //转换为到今天的天数以减少查询时间
-                    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) <= '" + StartTime2 + "' ");
                     //开始时间把@放在前面
                     strSql.Append(" and DateDiff(dd,@StartTime,CollectionTime) >=0 ");
                     parameter.Add(DbFactory.CreateDbParameter("@StartTime", StartTime));
@@ -938,16 +940,13 @@ a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
                 //结束时间
                 if (EndTime != null && EndTime != "")
                 {
-                    //string EndTime2 = DateDiff(EndTime);    //转换为到今天的天数以减少查询时间
-                    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) >= '" + EndTime2 + "' ");
                     //结束时间把@放在后面
                     strSql.Append(" and DateDiff(dd,CollectionTime,@EndTime) >=0 ");
                     parameter.Add(DbFactory.CreateDbParameter("@EndTime", EndTime));
                 }
-                else { }
 
                 //按照时间排序
-                strSql.Append(" order by VIN,WcCd,Ord,Serial,CollectionTime,ControllerPort");
+                strSql.Append(" order by WcCd,CollectionTime,ControllerID,ControllerPort");
 
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
                 var JsonData = new
@@ -1295,91 +1294,46 @@ a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
                 StringBuilder strSql = new StringBuilder();
                 DataTable dt = new DataTable();
 
-                ////初始语句未加搜索条件
-                //strSql.Append(@"select A.IDENTIFY,P.MatCd as Cd,C.CarType,A.JOB_NO,A.PSET_NO,A.BATCH_SIZE,A.BATCH_COUNT,A.BATCH_STATUS,A.TORQUE_STATUS,A.TORQUE_MIN,A.TORQUE_MAX,A.TORQUE_TARGET,A.TORQUE,A.ANGLE_STATUS,A.ANGLE_MIN,A.ANGLE_MAX,A.ANGLE_TARGET,A.ANGLE,A.TIGHTENING_ID,A.TIGHTENING_STATUS,A.TIME_STAMP from E_SCREW A left join P_ProducePlan_Pro C ON A.IDENTIFY = C.VIN left join P_PublishPlan_Pro P on A.IDENTIFY=P.VIN where exists (select 1 from E_SCREW B where A.IDENTIFY=B.IDENTIFY group by IDENTIFY having  A.TIME_STAMP=MAX(B.TIME_STAMP))  ");
 
-                //List<DbParameter> parameter = new List<DbParameter>();
-                ////模糊搜索车型
-                //if (CarType != "" && CarType != null)
-                //{
-                //    //strSql.Append(" and C.CarType like '%" + CarType + "%' ");
-                //    strSql.Append(" and C.CarType like @CarType ");
-                //    parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
-                //}
-
-                ////模糊搜索VIN号
-                //if (VIN != "" && VIN != null)
-                //{
-                //    //strSql.Append(" and IDENTIFY like '%" + VIN + "%' ");
-                //    strSql.Append(" and IDENTIFY like @VIN ");
-                //    parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
-                //}
-
-                ////模糊搜索cd
-                //if (Cd != "" && Cd != null)
-                //{
-                //    //strSql.Append(" and VIN like '%" + VIN + "%' ");
-                //    strSql.Append(" and P.MatCd like @Cd ");
-                //    parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
-                //}
-
-                ////开始时间
-                //if (StartTime != null && StartTime != "")
-                //{
-                //    //string StartTime2 = DateDiff(StartTime);    //转换为到今天的天数以减少查询时间
-                //    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) <= '" + StartTime2 + "' ");
-                //    //开始时间把@放在前面
-                //    strSql.Append(" and DateDiff(dd,@StartTime,TIME_STAMP) >=0 ");
-                //    parameter.Add(DbFactory.CreateDbParameter("@StartTime", StartTime));
-                //}
-
-                ////结束时间
-                //if (EndTime != null && EndTime != "")
-                //{
-                //    //string EndTime2 = DateDiff(EndTime);    //转换为到今天的天数以减少查询时间
-                //    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) >= '" + EndTime2 + "' ");
-                //    //结束时间把@放在后面
-                //    strSql.Append(" and DateDiff(dd,TIME_STAMP,@EndTime) >=0 ");
-                //    parameter.Add(DbFactory.CreateDbParameter("@EndTime", EndTime));
-                //}
-                //else { }
-
-                ////按照时间排序
-                //strSql.Append(" order by TIME_STAMP desc");
                 //初始语句未加搜索条件
-                strSql.Append(@"select a.*,b.TorqueUL,b.TorqueLL,b.TorqueSL,b.AngleUL,AngleLL,AngleSL,Serial,Ord,'合格' from Tg_TightenDataDoc a join Tg_JobTorqueConfig b on  
-a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord ");
+                strSql.Append(@"select 
+                               a.Vin,
+                               a.WcCd,
+                               a.Torque,
+                               a.Angle,
+                               a.IsOK,
+                               a.Serial,
+                               b.Ord,
+                               a.CollectionTime,
+                               a.Num,
+                               a.ControllerID,
+                               a.ControllerPort,
+                               a.Code,
+                               a.RsvFld1,
+                               a.RsvFld3,
+                               a.JobCd,
+                               b.TorqueUL,b.TorqueLL,b.TorqueSL from Tg_TightenDataDoc a join Tg_JobTorqueConfig b on  
+                               a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord  where 1=1   ");
 
                 List<DbParameter> parameter = new List<DbParameter>();
-                //模糊搜索车型
-                if (CarType != "" && CarType != null)
-                {
-                    //strSql.Append(" and C.CarType like '%" + CarType + "%' ");
-                    strSql.Append(" and (a.Code like @CarType and (a.Type='车辆类型'or a.type='车型+图号') )");
-                    parameter.Add(DbFactory.CreateDbParameter("@CarType", "%" + CarType + "%"));
-                }
 
                 //模糊搜索VIN号
                 if (VIN != "" && VIN != null)
                 {
-                    //strSql.Append(" and IDENTIFY like '%" + VIN + "%' ");
                     strSql.Append(" and a.Vin like @VIN ");
                     parameter.Add(DbFactory.CreateDbParameter("@VIN", "%" + VIN + "%"));
                 }
 
-                //模糊搜索cd
+                //模糊搜索工位
                 if (Cd != "" && Cd != null)
                 {
-                    //strSql.Append(" and VIN like '%" + VIN + "%' ");
-                    strSql.Append(" and( (a.Code like @Cd and a.Type='图号') or(a.RsvFld1 like @Cd and a.Type='车型+图号'))");
+                    strSql.Append(" and a.WcCd like @Cd");
                     parameter.Add(DbFactory.CreateDbParameter("@Cd", "%" + Cd + "%"));
                 }
 
                 //开始时间
                 if (StartTime != null && StartTime != "")
                 {
-                    //string StartTime2 = DateDiff(StartTime);    //转换为到今天的天数以减少查询时间
-                    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) <= '" + StartTime2 + "' ");
                     //开始时间把@放在前面
                     strSql.Append(" and DateDiff(dd,@StartTime,CollectionTime) >=0 ");
                     parameter.Add(DbFactory.CreateDbParameter("@StartTime", StartTime));
@@ -1388,18 +1342,15 @@ a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord ");
                 //结束时间
                 if (EndTime != null && EndTime != "")
                 {
-                    //string EndTime2 = DateDiff(EndTime);    //转换为到今天的天数以减少查询时间
-                    //strSql.Append(@" and DateDiff(dd,TIME_STAMP,getdate()) >= '" + EndTime2 + "' ");
                     //结束时间把@放在后面
                     strSql.Append(" and DateDiff(dd,CollectionTime,@EndTime) >=0 ");
                     parameter.Add(DbFactory.CreateDbParameter("@EndTime", EndTime));
                 }
-                else { }
 
                 //按照时间排序
-                strSql.Append(" order by CollectionTime desc");
+                strSql.Append(" order by WcCd,CollectionTime,ControllerID,ControllerPort");
+
                 dt = DataFactory.Database().FindTableBySql(strSql.ToString(), parameter.ToArray(), false);
-                dt.Columns.Remove("ScrewID");
                 #endregion
 
 
@@ -1411,11 +1362,6 @@ a.WcJobCd=b.WcJobCd and a.RsvFld2=b.Ord ");
                 {
                     fileName = fileName + ".xls";
                 }
-                #region 解决乱码
-                //Encoding ec = Encoding.GetEncoding("iso-8859-1");
-                //byte[] btArr = ec.GetBytes(fileName);
-                //string fileName2 = Encoding.Default.GetString(btArr);
-                #endregion
                 Base_SysLogBll.Instance.WriteLog(DESEncrypt.Decrypt(CookieHelper.GetCookie("ModuleId")), OperationType.Other, "1", "拧紧检测数据导出成功");
                 return File(ms, "application/vnd.ms-excel", Url.Encode(fileName));
             }
