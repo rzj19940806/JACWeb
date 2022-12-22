@@ -6,6 +6,7 @@ using HfutIE.Repository;
 using HfutIE.Utilities;
 using NPOI.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -18,6 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 
 namespace HfutIE.WebApp.Areas.VideoModule.Controllers
 {
@@ -159,7 +161,7 @@ namespace HfutIE.WebApp.Areas.VideoModule.Controllers
                     BinaryReader r = new BinaryReader(file.InputStream);
                     byte[] Content = r.ReadBytes(file.ContentLength);
 
-
+                   
                     state = repositoryfactory.Repository().Insert(videoFile);
 
                     StringBuilder sql = new StringBuilder();
@@ -187,6 +189,25 @@ namespace HfutIE.WebApp.Areas.VideoModule.Controllers
             return Json(new { Code = state, Message = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Deduplicate()
+        {
+            string str = "SELECT DISTINCT(a.GuidanceFileName) FROM dbo.BBdbR_GuidanceFile A,dbo.BBdbR_GuidanceFile B WHERE A.GuidanceFileName=B.GuidanceFileName AND a.WcNm=b.WcNm AND a.GuidanceFileID!=b.GuidanceFileID";
+            DataTable dt = DbHelperSQL.OpenTable(str);
+            ArrayList list = new ArrayList();
+            for(int i = 0; i < dt.Rows.Count; i++)
+            {
+                string name = dt.Rows[i][0].ToString();
+                string str1 = "SELECT GuidanceFileID  FROM dbo.BBdbR_GuidanceFile WHERE GuidanceFileName='" + name + "'";
+                DataTable dt1 = DbHelperSQL.OpenTable(str1);
+                for(int j = 1; j < dt1.Rows.Count; j++)
+                {
+                    string str2 = "DELETE dbo.BBdbR_GuidanceFile WHERE GuidanceFileID='" + dt1.Rows[j][0] + "'";
+                    list.Add(str2);
+                }
+            }
+            DbHelperSQL.ExecuteSqlTran(list);
+            return Content(new JsonMessage { Success = true, Code = "1", Message = "成功" }.ToString());
+        }
         //删除
         public ActionResult DeleteVideo(string KeyValue)
         {

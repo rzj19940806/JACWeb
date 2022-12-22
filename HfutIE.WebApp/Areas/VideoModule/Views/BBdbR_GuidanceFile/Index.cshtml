@@ -2,6 +2,7 @@
     ViewBag.Title = "指导文件";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+
 <script type="text/javascript">
 
     var IsZD = GetQuery('IsZD');//是否是终端界面
@@ -81,38 +82,47 @@
         fileIn.click();
 
         fileIn[0].addEventListener('change', function () {
-
             Loading(true, "正在上传文件，时间可能较长，请耐心等待...");
+            for (var i = 0; i < $("#videoFile").prop("files").length; i++) {
+                var videofile = $("#videoFile").prop("files")[i];
+                var formData = new FormData();
+                    formData.append("file", videofile);
 
-            var videofile = $("#videoFile").prop("files")[0];
-            var formData = new FormData();
-            formData.append("file", videofile);
+                    $.ajax({
+                        type: "POST",
+                        url: "/VideoModule/BBdbR_GuidanceFile/UploadingVideo?plineId=" + plineId + "&wcId=" + areaId + "&wcNm=" + area_name,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            tipDialog(data.Message, 1, data.Code);
 
+                            var conditions = new Array();
+                            conditions.push(condition);
+                            $("#gridTable").jqGrid('setGridParam', {
+                                url: "@Url.Content("~/VideoModule/BBdbR_GuidanceFile/GetGridPage")?ParameterJson=" + JSON.stringify(conditions), datatype: 'json'
+                            }).trigger('reloadGrid');
+                        },
+                        error: function (data) {
+                            tipDialog(data.Message, 1, data.Code);
+                        }
+                    });
+
+            }
             var file = $("#videoFile");
             file.after(file.clone().val(""));
             file.remove();
 
-            $.ajax({
-                type: "POST",
-                url: "/VideoModule/BBdbR_GuidanceFile/UploadingVideo?plineId=" + plineId + "&wcId=" + areaId + "&wcNm=" + area_name,
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (data) {
-                    tipDialog(data.Message, 1, data.Code);
-
-                    var conditions = new Array();
-                    conditions.push(condition);
-                    $("#gridTable").jqGrid('setGridParam', {
-                        url: "@Url.Content("~/VideoModule/BBdbR_GuidanceFile/GetGridPage")?ParameterJson=" + JSON.stringify(conditions), datatype: 'json'
-                    }).trigger('reloadGrid');
-                },
-                error: function (data) {
-                    tipDialog(data.Message, 1, data.Code);
-                }
-            });
         });
     }
+
+    function deduplicate() {
+        AjaxJson("/VideoModule/BBdbR_GuidanceFile/Deduplicate", {}, function (data) {
+            tipDialog(data.Message, 3, data.Code);
+        });
+        windowload();
+    }
+
     //下载,这是下载
     function down() {
         var GuidanceFileID = GetJqGridRowValue("#gridTable", "guidancefileid");
@@ -206,7 +216,7 @@
         <!--列表-->
         <div id="grid_List">
             <div class="bottomline QueryArea" style="margin: 1px; margin-top: 0px; margin-bottom: 0px;">
-                <input id="videoFile" type="file" name="name" value="" hidden="hidden" />
+                <input id="videoFile" type="file" name="name" value="" multiple="multiple" hidden="hidden" />
                 <a id="href" href="" hidden="hidden"><span id="a_click"></span>content</a>
                 <table id="gridTable"></table>
                 <div id="gridPager"></div>
